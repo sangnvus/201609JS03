@@ -1,0 +1,10 @@
+﻿1. xóa dòng thừa bảng Record of change
+
+2. 2.1 -> file Examination có phải làm, nộp không?
+   a để ý lại có cái Configuration Items mà tìm trong folder không thấy (2 project tham khảo)
+
+3. vẽ lại for document -> hình 2.1
+ theo hình riêng của mình, bỏ if any -> need to update để ở mũi tên
+
+4. CI Baseline Procedure for source code -> hình 2.2
+vẽ theo hình riêng của mình
