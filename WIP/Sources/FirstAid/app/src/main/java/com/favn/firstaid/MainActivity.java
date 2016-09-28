@@ -90,14 +90,18 @@ public class MainActivity extends AppCompatActivity
             fragmentManager.beginTransaction().replace(R.id.fragment_container, new EmergencyFragment()).commit();
         } else if (id == R.id.nav_learning) {
             fragmentManager.beginTransaction().replace(R.id.fragment_container, new LearningFragment()).commit();
-        } else if (id == R.id.nav_slideshow) {
-
-        } else if (id == R.id.nav_manage) {
-
-        } else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_send) {
-
+        } else if (id == R.id.nav_testing) {
+            fragmentManager.beginTransaction().replace(R.id.fragment_container, new TestFragment()).commit();
+        } else if (id == R.id.nav_qa) {
+            fragmentManager.beginTransaction().replace(R.id.fragment_container, new QAFragment()).commit();
+        } else if (id == R.id.nav_noti) {
+            fragmentManager.beginTransaction().replace(R.id.fragment_container, new NotificationFragment()).commit();
+        } else if (id == R.id.nav_setting) {
+            fragmentManager.beginTransaction().replace(R.id.fragment_container, new SettingFragment()).commit();
+        } else if (id == R.id.nav_history) {
+            fragmentManager.beginTransaction().replace(R.id.fragment_container, new HistoryFragment()).commit();
+        } else if (id == R.id.nav_infor) {
+            fragmentManager.beginTransaction().replace(R.id.fragment_container, new InformationFragment()).commit();
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

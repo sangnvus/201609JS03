@@ -9,4 +9,10 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Emergency</string>
     <string name="learning_fragment">Learning</string>
+    <string name="testing_fragment">Testing</string>
+    <string name="qa_fragment">Q and A</string>
+    <string name="noti_fragment">Notification</string>
+    <string name="setting_fragment">Setting</string>
+    <string name="history_fragment">History</string>
+    <string name="infor_fragment">Information</string>
 </resources>
