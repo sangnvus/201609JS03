@@ -15,4 +15,5 @@
     <string name="setting_fragment">Setting</string>
     <string name="history_fragment">History</string>
     <string name="infor_fragment">Information</string>
+    <string name="sos_calling">SOS Calling</string>
 </resources>
