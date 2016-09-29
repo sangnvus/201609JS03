@@ -5,7 +5,7 @@
     tools:context="com.favn.firstaid.EmergencyFragment">
 
 
-
+    <!--yfiuhou-->
     <!-- TODO: Design UI of Emergency Fragment -->
     <TextView
         android:layout_width="match_parent"
