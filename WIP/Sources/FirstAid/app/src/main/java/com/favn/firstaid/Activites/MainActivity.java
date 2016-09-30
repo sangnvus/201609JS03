@@ -1,6 +1,7 @@
-package com.favn.firstaid;
+package com.favn.firstaid.Activites;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -14,6 +15,15 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.favn.firstaid.Activites.DirectionActivity;
+import com.favn.firstaid.Fragments.AboutFragment;
+import com.favn.firstaid.Fragments.EmergencyFragment;
+import com.favn.firstaid.Fragments.HistoryFragment;
+import com.favn.firstaid.Fragments.LearningFragment;
+import com.favn.firstaid.Fragments.NotificationFragment;
+import com.favn.firstaid.Fragments.QAFragment;
+import com.favn.firstaid.Fragments.SettingFragment;
+import com.favn.firstaid.Fragments.TestFragment;
+import com.favn.firstaid.R;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -72,12 +82,15 @@ public class MainActivity extends AppCompatActivity
 
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
         if (id == R.id.action_sos_calling) {
-            // TODO: Add calling action to 115
+            Intent callIntent = new Intent(Intent.ACTION_CALL);
+            callIntent.setData(Uri.parse("tel:115"));
+
+            try{
+                startActivity(callIntent);
+            }
+            catch (android.content.ActivityNotFoundException ex){
+            }
         }
         if (id == R.id.action_direction) {
             startActivity(new Intent(this, DirectionActivity.class));

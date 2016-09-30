@@ -1,4 +1,4 @@
-package com.favn.firstaid;
+package com.favn.firstaid.Fragments;
 
 
 import android.os.Bundle;
@@ -7,14 +7,16 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.favn.firstaid.R;
+
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class QAFragment extends Fragment {
+public class NotificationFragment extends Fragment {
 
 
-    public QAFragment() {
+    public NotificationFragment() {
         // Required empty public constructor
     }
 
@@ -23,7 +25,7 @@ public class QAFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_qa, container, false);
+        return inflater.inflate(R.layout.fragment_notification, container, false);
     }
 
 }

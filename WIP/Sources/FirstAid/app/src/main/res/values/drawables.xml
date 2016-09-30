@@ -1,8 +1,12 @@
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
-    <item name="ic_menu_camera" type="drawable">@android:drawable/ic_menu_camera</item>
-    <item name="ic_menu_gallery" type="drawable">@android:drawable/ic_menu_gallery</item>
-    <item name="ic_menu_slideshow" type="drawable">@android:drawable/ic_menu_slideshow</item>
-    <item name="ic_menu_manage" type="drawable">@android:drawable/ic_menu_manage</item>
-    <item name="ic_menu_share" type="drawable">@android:drawable/ic_menu_share</item>
-    <item name="ic_menu_send" type="drawable">@android:drawable/ic_menu_send</item>
+    <item name="ic_calling" type="drawable">@drawable/ic_calling</item>
+    <item name="ic_direction" type="drawable">@drawable/ic_direction</item>
+    <item name="ic_emergency" type="drawable">@drawable/ic_emergency</item>
+    <item name="ic_learning" type="drawable">@drawable/ic_learning</item>
+    <item name="ic_testing" type="drawable">@drawable/ic_testing</item>
+    <item name="ic_question_answer" type="drawable">@drawable/ic_question_answer</item>
+    <item name="ic_settings" type="drawable">@drawable/ic_settings</item>
+    <item name="ic_history" type="drawable">@drawable/ic_history</item>
+    <item name="ic_notifications" type="drawable">@drawable/ic_notifications</item>
+    <item name="ic_about" type="drawable">@drawable/ic_about</item>
 </resources>
