@@ -93,7 +93,7 @@ public class MainActivity extends AppCompatActivity
             }
         }
         if (id == R.id.action_direction) {
-            startActivity(new Intent(this, DirectionActivity.class));
+            startActivity(new Intent(this, MapsActivity.class));
         }
         if(id == R.id.nav_history) {
             // TODO: check suitable method
