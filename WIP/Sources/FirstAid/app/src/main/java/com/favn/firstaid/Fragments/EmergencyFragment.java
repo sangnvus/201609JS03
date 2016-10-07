@@ -1,29 +1,41 @@
 package com.favn.firstaid.Fragments;
 
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.ListFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
 
+import com.favn.firstaid.Activites.InstructionDetail;
+import com.favn.firstaid.Adapter.InjuryAdapter;
+import com.favn.firstaid.Adapter.InstructionAdapter;
+import com.favn.firstaid.Database.DatabaseOpenHelper;
+import com.favn.firstaid.Models.Injury;
+import com.favn.firstaid.Models.Instruction;
 import com.favn.firstaid.R;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.util.List;
 
 
 /**
  * A simple {@link Fragment} subclass.
  */
 public class EmergencyFragment extends Fragment implements AdapterView.OnItemClickListener {
-    // data mock up
-    String[] data = {"monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"};
+    private InjuryAdapter adapter;
+    private DatabaseOpenHelper dbHelper;
+    private ListView listView;
+    private List<Injury> mInjuryList;
 
-    ListView listView;
     public EmergencyFragment() {
         // Required empty public constructor
     }
@@ -37,9 +49,16 @@ public class EmergencyFragment extends Fragment implements AdapterView.OnItemCli
 
         listView = (ListView)rootView.findViewById(R.id.listView);
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), R.layout.item_layout, R.id.textView3, data);
-        listView.setAdapter(adapter);
+        dbHelper = new DatabaseOpenHelper(getActivity());
 
+        File database = getActivity().getApplicationContext().getDatabasePath(DatabaseOpenHelper.DB_PATH);
+        if(database.exists() == false) {
+            dbHelper.getReadableDatabase();
+            copyDatabase(getActivity());
+        }
+        mInjuryList = dbHelper.getListInjury();
+        adapter = new InjuryAdapter(getActivity(), mInjuryList);
+        listView.setAdapter(adapter);
         listView.setOnItemClickListener(this);
 
         return rootView;
@@ -47,8 +66,30 @@ public class EmergencyFragment extends Fragment implements AdapterView.OnItemCli
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        Injury injury = (Injury) listView.getItemAtPosition(position);
+        int injuryId  = injury.getId();
 
-        Toast.makeText(getActivity(), "" + position, Toast.LENGTH_SHORT).show();
+        Intent intent = new Intent(getActivity(), InstructionDetail.class);
+        intent.putExtra("id", injuryId);
+        startActivity(intent);
+    }
 
+    private boolean copyDatabase(Context context) {
+        try {
+            InputStream inputStream = context.getAssets().open(DatabaseOpenHelper.DB_NAME);
+            String outFileName = DatabaseOpenHelper.DB_PATH + DatabaseOpenHelper.DB_NAME;
+            OutputStream outputStream = new FileOutputStream(outFileName);
+            byte[] buff = new byte[1024];
+            int length = 0;
+            while ((length = inputStream.read(buff)) > 0) {
+                outputStream.write(buff, 0, length);
+            }
+            outputStream.flush();
+            outputStream.close();
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 }
