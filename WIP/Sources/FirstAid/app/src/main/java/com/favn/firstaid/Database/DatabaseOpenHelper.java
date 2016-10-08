@@ -3,12 +3,17 @@ package com.favn.firstaid.Database;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
 import com.favn.firstaid.Models.Injury;
 import com.favn.firstaid.Models.Instruction;
 
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,16 +35,58 @@ public class DatabaseOpenHelper extends SQLiteOpenHelper {
         this.mContext = context;
     }
 
+    public void createDatabase() {
+        if (checkDatabase()) {
+        } else {
+            this.getReadableDatabase();
+            try {
+                copyDatabase();
+            } catch (Exception e) {
+                Log.e("DB error",e.getMessage());
+            }
+        }
+    }
+
+    private boolean checkDatabase() {
+        SQLiteDatabase checkDB = null;
+        try {
+            String dbPath = mContext.getDatabasePath(DB_NAME).getPath();
+            checkDB = SQLiteDatabase.openDatabase(dbPath, null, SQLiteDatabase.OPEN_READONLY);
+        } catch (SQLiteException e) {
+
+        }
+        if (checkDB != null) {
+            checkDB.close();
+        }
+        return checkDB != null ? true : false;
+    }
+
+    private boolean copyDatabase() {
+        try {
+            InputStream inputStream = mContext.getAssets().open(DatabaseOpenHelper.DB_NAME);
+            String outFileName = DatabaseOpenHelper.DB_PATH + DatabaseOpenHelper.DB_NAME;
+            OutputStream outputStream = new FileOutputStream(outFileName);
+            byte[] buff = new byte[1024];
+            int length = 0;
+            while ((length = inputStream.read(buff)) > 0) {
+                outputStream.write(buff, 0, length);
+            }
+            outputStream.flush();
+            outputStream.close();
+            return true;
+        } catch (Exception e) {
+            Log.e("DB error",e.getMessage());
+            return false;
+        }
+    }
+
     public void openDatabase() {
         String dbPath = mContext.getDatabasePath(DB_NAME).getPath();
-        if(mDatabase != null && mDatabase.isOpen()) {
-            return;
-        }
         mDatabase = SQLiteDatabase.openDatabase(dbPath, null, SQLiteDatabase.OPEN_READWRITE);
     }
 
-    public void closeDatabase() {
-        if(mDatabase!=null) {
+    public synchronized void closeDatabase() {
+        if (mDatabase != null) {
             mDatabase.close();
         }
     }
@@ -64,7 +111,7 @@ public class DatabaseOpenHelper extends SQLiteOpenHelper {
         Instruction instruction = null;
         List<Instruction> instructionList = new ArrayList<>();
         openDatabase();
-        Cursor cursor = mDatabase.rawQuery("SELECT * FROM " + TABLE_NAME_INSTRUCTION + " WHERE field1 == '" + id+ "'", null);
+        Cursor cursor = mDatabase.rawQuery("SELECT * FROM " + TABLE_NAME_INSTRUCTION + " WHERE field1 == '" + id + "'", null);
         cursor.moveToFirst();
         while (!cursor.isAfterLast()) {
             instruction = new Instruction(cursor.getInt(0), cursor.getString(1));
