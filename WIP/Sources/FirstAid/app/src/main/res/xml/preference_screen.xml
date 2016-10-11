@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <SwitchPreference
+        android:key="switch_notification"
+        android:summary="@string/summary_switch_notification"
+        android:title="@string/switch_notification" />
+
+
+    <SwitchPreference
+        android:key="switch_sending_information"
+        android:summary="@string/summary_switch_sending_information"
+        android:title="@string/switch_sending_information" />
+
+
+</PreferenceScreen>
+
+
+

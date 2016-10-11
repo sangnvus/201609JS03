@@ -18,4 +18,11 @@
     <string name="sos_calling">SOS Calling</string>
     <string name="title_activity_maps">Map</string>
     <string name="title_activity_instruction_detail">InstructionDetail</string>
+
+    <!-- Setting screen string value -->
+    <string name="switch_notification">Thông báo</string>
+    <string name="summary_switch_notification">Nhận thông báo</string>
+    <string name="switch_sending_information">Gửi thông tin</string>
+    <string name="summary_switch_sending_information">Gửi vị trí và số điện thoại khi gọi 115</string>
+    <string name="notification_clear">Xóa thông báo</string>
 </resources>

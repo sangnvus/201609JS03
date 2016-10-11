@@ -3,9 +3,13 @@ package com.favn.firstaid.Fragments;
 
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -13,6 +17,7 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.favn.firstaid.Activites.InstructionDetail;
+import com.favn.firstaid.Activites.MapsActivity;
 import com.favn.firstaid.Adapter.InjuryAdapter;
 import com.favn.firstaid.Database.DatabaseOpenHelper;
 import com.favn.firstaid.Models.Injury;
@@ -48,7 +53,8 @@ public class EmergencyFragment extends Fragment implements AdapterView.OnItemCli
         adapter = new InjuryAdapter(getActivity(), mInjuryList);
         listView.setAdapter(adapter);
         listView.setOnItemClickListener(this);
-
+        setHasOptionsMenu(true);
+        container.removeAllViews();
         return rootView;
     }
 
@@ -60,5 +66,33 @@ public class EmergencyFragment extends Fragment implements AdapterView.OnItemCli
         Intent intent = new Intent(getActivity(), InstructionDetail.class);
         intent.putExtra("id", injuryId);
         startActivity(intent);
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.main, menu);
+        super.onCreateOptionsMenu(menu,inflater);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        int id = item.getItemId();
+
+        if (id == R.id.action_sos_calling) {
+            Intent callIntent = new Intent(Intent.ACTION_CALL);
+            callIntent.setData(Uri.parse("tel:115"));
+
+            try{
+                startActivity(callIntent);
+            }
+            catch (android.content.ActivityNotFoundException ex){
+            }
+        }
+        if (id == R.id.action_direction) {
+            startActivity(new Intent(getActivity(), MapsActivity.class));
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 }

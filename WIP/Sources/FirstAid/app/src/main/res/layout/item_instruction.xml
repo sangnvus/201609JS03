@@ -6,7 +6,7 @@
 
     <CheckedTextView
         android:id="@+id/checked_text_step_number"
-        android:text="CheckedTextView"
+        android:text="Bước"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 

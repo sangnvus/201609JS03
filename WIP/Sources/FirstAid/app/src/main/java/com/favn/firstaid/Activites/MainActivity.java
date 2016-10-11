@@ -11,6 +11,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -40,14 +41,6 @@ public class MainActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-//        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-//        fab.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-//                        .setAction("Action", null).show();
-//            }
-//        });
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -57,6 +50,7 @@ public class MainActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+        navigationView.getMenu().getItem(0).setChecked(true);
     }
 
     @Override
@@ -69,42 +63,6 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main, menu);
-
-        return super.onCreateOptionsMenu(menu);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-
-        int id = item.getItemId();
-
-        if (id == R.id.action_sos_calling) {
-            Intent callIntent = new Intent(Intent.ACTION_CALL);
-            callIntent.setData(Uri.parse("tel:115"));
-
-            try{
-                startActivity(callIntent);
-            }
-            catch (android.content.ActivityNotFoundException ex){
-            }
-        }
-        if (id == R.id.action_direction) {
-            startActivity(new Intent(this, MapsActivity.class));
-        }
-        if(id == R.id.nav_history) {
-            // TODO: check suitable method
-            //android.support.v4.app.NavUtils.navigateUpFromSameTask(this);
-            //onNavigateUpFromChild(this);
-            onNavigateUp();
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
-
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
@@ -114,7 +72,7 @@ public class MainActivity extends AppCompatActivity
         FragmentManager fragmentManager = getSupportFragmentManager();
         Class fragmentClass = null;
         if (id == R.id.nav_emergency) {
-            fragmentClass =  EmergencyFragment.class;
+            fragmentClass = EmergencyFragment.class;
         } else if (id == R.id.nav_learning) {
             fragmentClass = LearningFragment.class;
         } else if (id == R.id.nav_testing) {
@@ -124,11 +82,11 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.nav_noti) {
             fragmentClass = NotificationFragment.class;
         } else if (id == R.id.nav_setting) {
-            fragmentClass =SettingFragment.class;
+            fragmentClass = SettingFragment.class;
         } else if (id == R.id.nav_history) {
-            fragmentClass =HistoryFragment.class;
+            fragmentClass = HistoryFragment.class;
         } else if (id == R.id.nav_infor) {
-            fragmentClass =AboutFragment.class;
+            fragmentClass = AboutFragment.class;
         }
 
         try {
