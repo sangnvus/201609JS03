@@ -11,11 +11,9 @@
         android:layout_height="match_parent">
 
         <!--TODO: thay textview bang khung search-->
-        <TextView
-            android:text="TextView"
+        <SearchView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/textView2" />
+            android:layout_height="wrap_content" />
 
         <ListView
             android:layout_width="match_parent"

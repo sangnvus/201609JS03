@@ -5,9 +5,108 @@
     tools:context="com.favn.firstaid.Fragments.QAFragment">
 
     <!-- TODO: Update blank fragment layout -->
-    <TextView
+
+    <LinearLayout
+        android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="@string/qa_fragment" />
+        android:gravity="center_horizontal">
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="236dp"
+            android:layout_above="@+id/llButton"
+            android:id="@+id/llInfor">
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="144dp"
+                android:layout_height="match_parent"
+                android:weightSum="1"
+                android:gravity="top">
+
+                <TextView
+                    android:text="Tên"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/tvName"
+                    android:textSize="18sp"
+                    android:layout_marginLeft="20dp"
+                    android:textColor="@color/cast_expanded_controller_background_color"
+                    android:layout_marginTop="20dp"
+                    android:layout_weight="0.15" />
+
+                <TextView
+                    android:text="Email"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/tvEmail"
+                    android:textSize="18sp"
+                    android:layout_marginLeft="20dp"
+                    android:textColor="@color/cast_expanded_controller_background_color"
+                    android:layout_weight="0.14"
+                    android:layout_marginTop="10dp" />
+
+                <TextView
+                    android:text="Nội dung"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/tvContent"
+                    android:textSize="18sp"
+                    android:layout_marginLeft="20dp"
+                    android:textColor="@color/cast_expanded_controller_background_color"
+                    android:layout_weight="0.2"
+                    android:layout_marginTop="10dp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:weightSum="1">
+
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="textPersonName"
+                    android:id="@+id/etName"
+                    android:layout_marginTop="20dp" />
+
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="53dp"
+                    android:inputType="textEmailAddress"
+                    android:id="@+id/etEmail" />
+
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:inputType="textMultiLine"
+                    android:id="@+id/etContent"
+                    android:gravity="top" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/llButton"
+            android:gravity="center">
+
+            <Button
+                android:text="Gửi"
+                android:layout_width="121dp"
+                android:layout_height="wrap_content"
+                android:id="@+id/btnSend"
+                android:background="@color/colorPrimary"
+                android:textSize="18sp"
+                android:textColor="@color/cast_libraries_material_featurehighlight_text_body_color" />
+        </LinearLayout>
+
+    </LinearLayout>
 
 </FrameLayout>

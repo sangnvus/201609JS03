@@ -25,4 +25,7 @@
     <string name="switch_sending_information">Gửi thông tin</string>
     <string name="summary_switch_sending_information">Gửi vị trí và số điện thoại khi gọi 115</string>
     <string name="notification_clear">Xóa thông báo</string>
+
+
+    <string name="history_clear">Xóa lịch sử</string>
 </resources>
