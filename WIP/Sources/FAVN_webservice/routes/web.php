@@ -15,19 +15,6 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('talk', function() {
-	echo 'Ha love Kien';
-});
+Route::resource('question', 'question_controller');
 
-
-Route::get('addquestion', function() {
-	$QUESTION = new App\QUESTION();
-	$QUESTION->asker = 'Huong Nhat';
-	$QUESTION->asker_email = 'Huong Nhat';
-	$QUESTION->title = 'Huong Nhat';
-	$QUESTION->content = 'Huong Nhat';
-
-	$QUESTION->save();
-
-	echo 'insert successfully';
-});
+Route::resource('injury', 'injury_controller');
