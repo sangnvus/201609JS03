@@ -64,7 +64,9 @@ return [
     |
     */
 
-    'timezone' => 'UTC',
+    //'timezone' => 'UTC',
+    // 2016/10/12 KienMT : Change time zone for app
+    'timezone' => 'asia/saigon',
 
     /*
     |--------------------------------------------------------------------------
