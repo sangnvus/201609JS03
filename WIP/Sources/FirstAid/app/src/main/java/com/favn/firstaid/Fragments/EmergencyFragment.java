@@ -1,11 +1,13 @@
 package com.favn.firstaid.Fragments;
 
 
+import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.view.MenuItemCompat;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -14,7 +16,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.Toast;
+import android.widget.SearchView;
 
 import com.favn.firstaid.Activites.InstructionDetail;
 import com.favn.firstaid.Activites.MapsActivity;
@@ -92,7 +94,13 @@ public class EmergencyFragment extends Fragment implements AdapterView.OnItemCli
         if (id == R.id.action_direction) {
             startActivity(new Intent(getActivity(), MapsActivity.class));
         }
+        if (id == R.id.action_search) {
+
+            return true;
+        }
 
         return super.onOptionsItemSelected(item);
     }
+
+
 }

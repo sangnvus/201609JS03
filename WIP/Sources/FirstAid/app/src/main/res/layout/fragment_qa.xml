@@ -1,5 +1,4 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app=""
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -11,7 +10,8 @@
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:gravity="center_horizontal">
+        android:gravity="center_horizontal"
+        android:weightSum="1">
 
         <LinearLayout
             android:orientation="vertical"
@@ -29,7 +29,7 @@
                 android:textSize="18sp"
                 android:layout_marginLeft="20dp"
                 android:textColor="@color/cast_expanded_controller_background_color"
-                android:layout_marginTop="20dp" />
+                android:layout_marginTop="10dp" />
 
             <EditText
                 android:layout_width="match_parent"
@@ -46,8 +46,7 @@
                 android:id="@+id/tv_Email"
                 android:textSize="18sp"
                 android:layout_marginLeft="20dp"
-                android:textColor="@color/cast_expanded_controller_background_color"
-                android:layout_marginTop="10dp" />
+                android:textColor="@color/cast_expanded_controller_background_color" />
 
             <EditText
                 android:layout_width="match_parent"
@@ -65,7 +64,7 @@
                 android:textSize="18sp"
                 android:layout_marginLeft="20dp"
                 android:textColor="@color/cast_expanded_controller_background_color"
-                android:layout_marginTop="10dp" />
+                android:layout_marginTop="0dp" />
 
             <EditText
                 android:layout_width="match_parent"
@@ -75,13 +74,15 @@
                 android:gravity="top"
                 android:layout_marginLeft="20dp"
                 android:layout_marginRight="20dp"
-                style="@style/Widget.AppCompat.EditText" />
+                style="@style/Widget.AppCompat.EditText"
+                android:layout_weight="1.26"
+                android:lines="4" />
         </LinearLayout>
 
         <LinearLayout
             android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:id="@+id/llButton"
             android:gravity="center">
 
