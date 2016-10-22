@@ -26,14 +26,14 @@
             android:gravity="center"
             android:textSize="24sp"
             android:layout_marginTop="20dp"
-            android:id="@+id/txtTitle" />
+            android:id="@+id/tv_title" />
 
         <TextView
             android:text="Xe có chiều dài 8.100mm, rộng 2.500mm và cao 3.300mm, trục cơ sở 4.600mm. Hệ động lực gồm một động cơ diesel common-rail V6 dung tích 10,7 lít, công suất 428 mã lực tại 1.800v/ph, kết hợp với hộp số tự động 12 cấp Mercedes Powershift 3.  Xe cứu hoả được trang bị hệ thống dập lửa mạnh mẽ. Hệ thống bơm cứu hoả N45 có khả năng bơm 4.500 lít/phút. Một thùng chứa nước 2.500 lít và thùng chứa bọt 200 lít. Hệ thống phun bọt điều khiển điện-điện tử Digimatic 42 có công suất tới 42 lít/phút. Ngoài ra, chiếc xe cũng được trang bị một súng phun nước/bọt với công suất 3.000 lít/phút (nước) ở tầm xa tới 70 mét."
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="50dp"
-            android:id="@+id/txtInfor" />
+            android:id="@+id/tv_infor" />
 
         <TextView
             android:text="Chưa có nhiệm vụ"
@@ -44,7 +44,7 @@
             android:layout_weight="0.09"
             android:textColor="@android:color/background_light"
             android:background="@android:color/holo_red_light"
-            android:id="@+id/txtNoti" />
+            android:id="@+id/tv_notification" />
 
         <Button
             android:text="Create Notification"

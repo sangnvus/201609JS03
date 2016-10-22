@@ -46,5 +46,14 @@ public class Quest extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
+        Button delete = (Button) findViewById(R.id.button_delete);
+        delete.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), Infor.class);
+                startActivity(intent);
+            }
+        });
     }
 }

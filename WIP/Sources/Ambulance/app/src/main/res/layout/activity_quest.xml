@@ -17,9 +17,8 @@
 
         <LinearLayout
             android:orientation="vertical"
-            android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_marginRight="10dp">
+            android:layout_width="180dp">
             <Button
                 android:text="Chỉ đường"
                 android:layout_width="170dp"
@@ -27,7 +26,7 @@
                 android:id="@+id/button_direction"
                 android:background="@android:color/holo_red_light"
                 android:textColor="@android:color/background_light"
-                android:layout_marginTop="20dp" />
+                android:layout_marginTop="0dp" />
 
             <Button
                 android:text="Đã đón"
@@ -48,26 +47,36 @@
                 android:textColor="@android:color/background_light" />
 
             <Button
-                android:text="Hủy"
+                android:text="Không hoàn thành"
                 android:layout_width="170dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
                 android:id="@+id/button_cancel"
                 android:background="@android:color/holo_red_light"
                 android:textColor="@android:color/background_light" />
+
+            <Button
+                android:text="Hủy nhiệm vụ"
+                android:layout_width="170dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:id="@+id/button_delete"
+                android:background="@android:color/holo_red_light"
+                android:textColor="@android:color/background_light" />
         </LinearLayout>
 
         <LinearLayout
+            android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:weightSum="1">
-
-
             <fragment
+                android:id="@+id/map"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:name="com.google.android.gms.maps.MapFragment"
-                android:id="@+id/map" />
+                />
+
         </LinearLayout>
     </LinearLayout>
 </RelativeLayout>
