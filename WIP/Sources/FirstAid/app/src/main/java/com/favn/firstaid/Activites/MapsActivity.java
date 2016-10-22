@@ -16,8 +16,10 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.Toast;
 
+import com.favn.firstaid.Adapter.HospitalAdapter;
 import com.favn.firstaid.Models.Direction.Direction;
 import com.favn.firstaid.Models.Direction.Route;
 import com.favn.firstaid.Models.DirectionFinder;
@@ -244,19 +246,32 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         final Dialog dialog = new Dialog(this);
 
-        View view = getLayoutInflater().inflate(R.layout.item_instruction, null);
+        View view = getLayoutInflater().inflate(R.layout.dialog_hospital_list, null);
 //
-//        ListView lv = (ListView) view.findViewById(R.id.custom_list);
+        ListView lv = (ListView) view.findViewById(R.id.listview_hospital);
+
+
+        List<Hospital> hospitalList = new ArrayList<Hospital>();
+        hospitalList.add(new Hospital("BV abc", 21.0093735,105.5307141));
+        hospitalList.add(new Hospital("BV def", 21.009574,105.5209513));
+        hospitalList.add(new Hospital("BV ghi", 21.017933,105.5318903));
+        hospitalList.add(new Hospital("BV klm", 20.999166,105.5285813));
+        hospitalList.add(new Hospital("BV klm", 21.011349,105.5235913));
+        hospitalList.add(new Hospital("BV abc", 21.0093735,105.5307141));
+        hospitalList.add(new Hospital("BV def", 21.009574,105.5209513));
+        hospitalList.add(new Hospital("BV ghi", 21.017933,105.5318903));
+        hospitalList.add(new Hospital("BV klm", 20.999166,105.5285813));
+        hospitalList.add(new Hospital("BV klm", 21.011349,105.5235913));
+        HospitalAdapter adapter;
+
+        adapter = new HospitalAdapter(this, hospitalList);
 //
-//        // Change MyActivity.this and myListOfItems to your own values
-//        CustomListAdapterDialog clad = new CustomListAdapterDialog(MyActivity.this, myListOfItems);
-//
-//        lv.setAdapter(clad);
+        lv.setAdapter(adapter);
 //
 //        lv.setOnItemClickListener(........);
 
         dialog.setContentView(view);
-
+        dialog.setTitle("Bệnh viện gần đây");
         dialog.show();
 
     }
