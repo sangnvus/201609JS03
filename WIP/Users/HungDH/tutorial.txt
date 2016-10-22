@@ -1,0 +1,25 @@
+Listview with Adapter
+https://guides.codepath.com/android/Populating-a-ListView-with-a-CursorAdapter
+
+Sqlite
+http://blog.reigndesign.com/blog/using-your-own-sqlite-database-in-android-applications/
+
+Location
+https://www.youtube.com/watch?v=lchyOhPREh4
+http://wptrafficanalyzer.in/blog/showing-current-location-in-google-maps-using-api-v2-with-supportmapfragment
+
+Nearby Place
+http://wptrafficanalyzer.in/blog/showing-nearby-places-using-google-places-api-and-google-map-android-api-v2/
+
+Navigation Drawer
+http://www.androidhive.info/2013/11/android-sliding-menu-using-navigation-drawer/
+
+JSON To Java By GSON
+https://duythanhcse.wordpress.com/2015/04/02/bai-61-cach-dua-dinh-dang-json-ve-java-class-bang-gson/
+https://www.mkyong.com/java/how-do-convert-java-object-to-from-json-format-gson-api/
+
+GMap Direction
+https://cuonglekms.wordpress.com/2015/06/21/android-advance-google-map-directions-api/
+
+
+
