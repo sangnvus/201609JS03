@@ -29,5 +29,9 @@
 
     <string name="history_clear">Xóa lịch sử</string>
 
-    <string name="information">Nội dung được sử dụng trong phần mềm là những thông tin chính xác được xác thực từ tổ chức y tế uy tín.</string>
+    <string name="information">Nội dung được sử dụng trong phần mềm là những
+        thông tin chính xác được xác thực từ tổ chức y tế uy tín.</string>
+
+    <!-- Buttons string value -->
+    <string name="faq_button">Câu hỏi thường gặp</string>
 </resources>
