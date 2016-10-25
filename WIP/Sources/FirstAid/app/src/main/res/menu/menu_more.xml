@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/more_qa"
+            android:icon="@drawable/ic_question_answer"
+            android:title="Ý kiến - Hỏi đáp" />
+        <item
+            android:id="@+id/more_notification"
+            android:icon="@drawable/ic_notifications"
+            android:title="Thông báo" />
+        <item
+            android:id="@+id/more_share"
+            android:icon="@drawable/ic_settings"
+            android:title="Chia sẻ" />
+    </group>
+</menu>

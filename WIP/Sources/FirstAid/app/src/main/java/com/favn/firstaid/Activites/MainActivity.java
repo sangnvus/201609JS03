@@ -1,7 +1,5 @@
 package com.favn.firstaid.Activites;
 
-import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -11,14 +9,11 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
-import android.view.Menu;
 import android.view.MenuItem;
 
-import com.favn.firstaid.Activites.DirectionActivity;
 import com.favn.firstaid.Fragments.AboutFragment;
 import com.favn.firstaid.Fragments.EmergencyFragment;
-import com.favn.firstaid.Fragments.HistoryFragment;
+import com.favn.firstaid.Fragments.MoreFragment;
 import com.favn.firstaid.Fragments.LearningFragment;
 import com.favn.firstaid.Fragments.NotificationFragment;
 import com.favn.firstaid.Fragments.QAFragment;
@@ -83,8 +78,8 @@ public class MainActivity extends AppCompatActivity
             fragmentClass = NotificationFragment.class;
         } else if (id == R.id.nav_setting) {
             fragmentClass = SettingFragment.class;
-        } else if (id == R.id.nav_history) {
-            fragmentClass = HistoryFragment.class;
+        } else if (id == R.id.nav_more) {
+            fragmentClass = MoreFragment.class;
         } else if (id == R.id.nav_infor) {
             fragmentClass = AboutFragment.class;
         }

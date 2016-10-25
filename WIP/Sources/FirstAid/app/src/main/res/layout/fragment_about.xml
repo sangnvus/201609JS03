@@ -16,18 +16,18 @@
             android:text="Thông tin phần mềm"
             android:id="@+id/text_title"
             android:layout_marginTop="10dp"
-            android:gravity="center"
             android:textStyle="bold"
-            android:textSize="18sp" />
+            android:textSize="18sp"
+            android:layout_marginLeft="10dp" />
 
         <TextView
             android:text="@string/information"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/text_information"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="20dp"
-            android:layout_marginTop="20dp" />
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="0dp" />
     </LinearLayout>
 
 </FrameLayout>

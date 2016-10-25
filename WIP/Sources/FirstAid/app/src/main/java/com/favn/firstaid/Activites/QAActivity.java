@@ -2,21 +2,17 @@ package com.favn.firstaid.Activites;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
 import com.favn.firstaid.R;
 
-public class DirectionActivity extends AppCompatActivity {
+public class QAActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_direction);
+        setContentView(R.layout.activity_qa);
 
-        //Toolbar toolbar = (Toolbar)findViewById(R.id.);
-
-        //setSupportActionBar(toolbar);
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }

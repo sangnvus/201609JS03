@@ -27,9 +27,9 @@
             android:icon="@drawable/ic_settings"
             android:title="Cài đặt" />
         <item
-            android:id="@+id/nav_history"
+            android:id="@+id/nav_more"
             android:icon="@drawable/ic_history"
-            android:title="Lịch sử" />
+            android:title="Thêm" />
         <item
             android:id="@+id/nav_infor"
             android:icon="@drawable/ic_about"
