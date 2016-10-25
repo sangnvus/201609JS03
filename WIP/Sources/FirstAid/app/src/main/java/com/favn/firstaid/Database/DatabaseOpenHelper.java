@@ -23,9 +23,9 @@ import java.util.List;
 
 public class DatabaseOpenHelper extends SQLiteOpenHelper {
     public static String DB_PATH = "/data/data/com.favn.firstaid/databases/";
-    public static String DB_NAME = "favn.db";
+    public static String DB_NAME = "favn1.db";
     public static String TABLE_NAME_INJURY = "injury";
-    public static String TABLE_NAME_INSTRUCTION = "intruction";
+    public static String TABLE_NAME_INSTRUCTION = "instruction";
     private static int DB_VERSION = 1;
     private SQLiteDatabase mDatabase;
     private Context mContext;
@@ -111,10 +111,11 @@ public class DatabaseOpenHelper extends SQLiteOpenHelper {
         Instruction instruction = null;
         List<Instruction> instructionList = new ArrayList<>();
         openDatabase();
-        Cursor cursor = mDatabase.rawQuery("SELECT * FROM " + TABLE_NAME_INSTRUCTION + " WHERE field1 == '" + id + "'", null);
+        Cursor cursor = mDatabase.rawQuery("SELECT * FROM " + TABLE_NAME_INSTRUCTION + " WHERE " +
+                "Field1 == " + id, null);
         cursor.moveToFirst();
         while (!cursor.isAfterLast()) {
-            instruction = new Instruction(cursor.getInt(0), cursor.getString(1));
+            instruction = new Instruction(cursor.getInt(0), cursor.getInt(1), cursor.getString(2), cursor.getString(3), cursor.getString(4));
             instructionList.add(instruction);
             cursor.moveToNext();
         }

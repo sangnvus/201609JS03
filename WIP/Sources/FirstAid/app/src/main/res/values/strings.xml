@@ -29,7 +29,6 @@
 
     <string name="history_clear">Xóa lịch sử</string>
 
-    <string name="information">Nội dung được sử dụng trong phần mềm là những thông tin chính xác được xác thực từ tổ chức y tế uy tín.</string>
 
     <!--demo item injury-->
     <string-array name="injury_arrays">
@@ -51,5 +50,12 @@
         <item>09:30 18/10/2016  Cập nhật phiên bản 2.0</item>
         <item>17:17 20/10/2016  Cập nhật phiên bản 2.1</item>
     </string-array>
+
+
+    <string name="information">Nội dung được sử dụng trong phần mềm là những
+        thông tin chính xác được xác thực từ tổ chức y tế uy tín.</string>
+
+    <!-- Buttons string value -->
+    <string name="faq_button">Câu hỏi thường gặp</string>
 
 </resources>
