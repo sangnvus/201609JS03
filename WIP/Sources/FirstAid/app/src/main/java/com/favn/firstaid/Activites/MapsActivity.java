@@ -3,28 +3,27 @@ package com.favn.firstaid.Activites;
 import android.Manifest;
 import android.app.Dialog;
 import android.content.pm.PackageManager;
-import android.graphics.Color;
-import android.location.Geocoder;
 import android.location.Location;
-import android.location.Address;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Toast;
 
 import com.favn.firstaid.Adapter.HospitalAdapter;
-import com.favn.firstaid.Models.Direction.Direction;
 import com.favn.firstaid.Models.Direction.Route;
-import com.favn.firstaid.Models.DirectionFinder;
-import com.favn.firstaid.Models.DirectionFinderListener;
+import com.favn.firstaid.Models.Direction.DirectionFinder;
+import com.favn.firstaid.Models.Direction.DirectionFinderListener;
+import com.favn.firstaid.Models.DistanceMatrix.DistanceMatrixFinder;
+import com.favn.firstaid.Models.DistanceMatrix.DistanceMatrixFinderListener;
 import com.favn.firstaid.Models.Hospital;
 import com.favn.firstaid.R;
 import com.google.android.gms.common.ConnectionResult;
@@ -41,16 +40,16 @@ import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
-import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
-import com.google.android.gms.maps.model.PolylineOptions;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener, DirectionFinderListener {
+public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback,
+        GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener,
+        LocationListener, DirectionFinderListener, DistanceMatrixFinderListener {
 
     private GoogleMap mGoogleMap;
     private GoogleApiClient mGoogleApiClient;
@@ -75,19 +74,19 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             initMap();
         }
 
-        btNavigate = (Button)findViewById(R.id.button_navigation);
+        btNavigate = (Button) findViewById(R.id.button_navigation);
         btNavigate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                sendRequest();
+//                sendRequest();
             }
         });
 
-        linearLayout = (LinearLayout)findViewById(R.id.layout_hospital_show);
+        linearLayout = (LinearLayout) findViewById(R.id.layout_hospital_show);
         linearLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showDialog();
+                sendDistanceRequest();
             }
         });
 
@@ -157,8 +156,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     public void onConnected(@Nullable Bundle bundle) {
         mLocationRequest = LocationRequest.create();
         mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-        mLocationRequest.setInterval(10000);
-
+        //mLocationRequest.setInterval(10000);
 
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             // TODO: Consider calling
@@ -195,16 +193,22 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 //        }
     }
 
-    private void sendRequest() {
+    private void sendDistanceRequest() {
         String origin = "21.0120967,105.5248733";
-        //String destination = hospitalList.get(0).getLatitude() + "," + hospitalList.get(0).getLongitude();
+        new DistanceMatrixFinder(this, origin, getHospitalsDestination()).execute();
 
-        try {
-            new DirectionFinder(this, origin, getHospitalsDestination()).execute();
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
     }
+
+//    private void sendRequest() {
+//        String origin = "21.0120967,105.5248733";
+//        //String destination = hospitalList.get(0).getLatitude() + "," + hospitalList.get(0).getLongitude();
+//
+//        try {
+//            new DirectionFinder(this, origin, getHospitalsDestination()).execute();
+//        } catch (UnsupportedEncodingException e) {
+//            e.printStackTrace();
+//        }
+//    }
 
 
     @Override
@@ -243,53 +247,47 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 //        }
     }
 
-    public String[] getHospitalsDestination() {
+    public Hospital[] getHospitalsDestination() {
         List<Hospital> hospitalList = new ArrayList<Hospital>();
-        hospitalList.add(new Hospital("BV abc", 21.0093735,105.5307141));
-        hospitalList.add(new Hospital("BV def", 21.009574,105.5209513));
-        hospitalList.add(new Hospital("BV ghi", 21.017933,105.5318903));
-        hospitalList.add(new Hospital("BV klm", 20.999166,105.5285813));
-        hospitalList.add(new Hospital("BV klm", 21.011349,105.5235913));
+        hospitalList.add(new Hospital("BV abc", 21.0093735, 105.5307141));
+        hospitalList.add(new Hospital("BV def", 21.009574, 105.5209513));
+        hospitalList.add(new Hospital("BV ghi", 21.017933, 105.5318903));
+        hospitalList.add(new Hospital("BV klm", 20.999166, 105.5285813));
+        hospitalList.add(new Hospital("BV klm", 21.011349, 105.5235913));
 
-        String hospitalsDestination[] = new String[hospitalList.size()];
-        for (int i = 0; i< hospitalList.size(); i++) {
-            hospitalsDestination[i] = hospitalList.get(i).getLatLngText();
+        Hospital hospitalsDestination[] = new Hospital[hospitalList.size()];
+        for (int i = 0; i < hospitalList.size(); i++) {
+            hospitalsDestination[i] = hospitalList.get(i);
         }
         return hospitalsDestination;
     }
 
     // Show list of nearest hospital
-    private void showDialog(){
-
+    private void showDialog(List<Hospital> hospitalList) {
         final Dialog dialog = new Dialog(this);
-
         View view = getLayoutInflater().inflate(R.layout.dialog_hospital_list, null);
-//
-        ListView lv = (ListView) view.findViewById(R.id.listview_hospital);
+        final ListView lv = (ListView) view.findViewById(R.id.listview_hospital);
 
-
-        List<Hospital> hospitalList = new ArrayList<Hospital>();
-        hospitalList.add(new Hospital("BV abc", 21.0093735,105.5307141));
-        hospitalList.add(new Hospital("BV def", 21.009574,105.5209513));
-        hospitalList.add(new Hospital("BV ghi", 21.017933,105.5318903));
-        hospitalList.add(new Hospital("BV klm", 20.999166,105.5285813));
-        hospitalList.add(new Hospital("BV klm", 21.011349,105.5235913));
-        hospitalList.add(new Hospital("BV abc", 21.0093735,105.5307141));
-        hospitalList.add(new Hospital("BV def", 21.009574,105.5209513));
-        hospitalList.add(new Hospital("BV ghi", 21.017933,105.5318903));
-        hospitalList.add(new Hospital("BV klm", 20.999166,105.5285813));
-        hospitalList.add(new Hospital("BV klm", 21.011349,105.5235913));
         HospitalAdapter adapter;
-
         adapter = new HospitalAdapter(this, hospitalList);
-//
         lv.setAdapter(adapter);
-//
-//        lv.setOnItemClickListener(........);
+
+        lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Hospital hospital = (Hospital) lv.getItemAtPosition(position);
+                Log.d("dialog", hospital.getName());
+            }
+        });
 
         dialog.setContentView(view);
         dialog.setTitle("Bệnh viện gần đây");
         dialog.show();
 
+    }
+
+    @Override
+    public void onDistanceMatrixFinderSuccess(List<Hospital> hospitalList) {
+        showDialog(hospitalList);
     }
 }

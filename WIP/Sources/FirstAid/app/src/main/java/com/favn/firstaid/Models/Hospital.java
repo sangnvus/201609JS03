@@ -1,5 +1,9 @@
 package com.favn.firstaid.Models;
 
+import com.favn.firstaid.Models.Common.Distance;
+
+import java.util.Comparator;
+
 /**
  * Created by Hung Gia on 10/18/2016.
  */
@@ -8,6 +12,7 @@ public class Hospital {
     private String name;
     private double latitude;
     private double longitude;
+    private Distance distance;
 
     public Hospital(String name, double latitude, double longitude) {
         this.name = name;
@@ -15,28 +20,27 @@ public class Hospital {
         this.longitude = longitude;
     }
 
-    public String getName() {
-        return name;
+    public Hospital(String name, double latitude, double longitude, Distance distance) {
+        this.name = name;
+        this.latitude = latitude;
+        this.longitude = longitude;
+        this.distance = distance;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public String getName() {
+        return name;
     }
 
     public double getLatitude() {
         return latitude;
     }
 
-    public void setLatitude(double latitude) {
-        this.latitude = latitude;
-    }
-
     public double getLongitude() {
         return longitude;
     }
 
-    public void setLongitude(double longitude) {
-        this.longitude = longitude;
+    public Distance getDistance() {
+        return distance;
     }
 
     public String getLatLngText() {

@@ -1,4 +1,4 @@
-package com.favn.firstaid.Models;
+package com.favn.firstaid.Models.Direction;
 
 import com.favn.firstaid.Models.Direction.Direction;
 import com.favn.firstaid.Models.Direction.Route;

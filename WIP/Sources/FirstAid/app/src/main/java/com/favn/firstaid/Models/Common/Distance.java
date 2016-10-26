@@ -1,4 +1,4 @@
-package com.favn.firstaid.Models.Direction;
+package com.favn.firstaid.Models.Common;
 
 /**
  * Created by Hung Gia on 10/19/2016.
@@ -6,9 +6,9 @@ package com.favn.firstaid.Models.Direction;
 
 public class Distance {
     private String text;
-    private double value;
+    private int value;
 
-    public Distance(String text, double value) {
+    public Distance(String text, int value) {
         this.text = text;
         this.value = value;
     }
@@ -17,7 +17,7 @@ public class Distance {
         return text;
     }
 
-    public double getValue() {
+    public int getValue() {
         return value;
     }
 

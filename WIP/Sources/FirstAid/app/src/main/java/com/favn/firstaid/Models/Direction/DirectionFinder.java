@@ -1,22 +1,17 @@
-package com.favn.firstaid.Models;
+package com.favn.firstaid.Models.Direction;
 
 import android.os.AsyncTask;
 import android.util.Log;
 
-import com.favn.firstaid.Models.Direction.Direction;
-import com.favn.firstaid.Models.Direction.Leg;
-import com.favn.firstaid.Models.Direction.Route;
+import com.favn.firstaid.Models.Common.Constant;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.Gson;
-
-import org.json.JSONException;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,8 +20,7 @@ import java.util.List;
  */
 
 public class DirectionFinder {
-    private static String DIRECTION_URL_API = "https://maps.googleapis.com/maps/api/directions/json?";
-    private static String API_KEY = "AIzaSyDT6ArSqhIvCaLHl95uQkTe6hTpgQEhB_k";
+
     private DirectionFinderListener listener;
     private String origin;
     private String[] destination;
@@ -49,7 +43,8 @@ public class DirectionFinder {
         Log.d("destination", destination.length + "");
         String urls[] = new String[destination.length];
         for (int i = 0; i < destination.length; i++) {
-            urls[i] = DIRECTION_URL_API + "origin=" + origin + "&destination=" + destination[i] + "&key=" + API_KEY;
+            urls[i] = Constant.DIRECTION_URL_API + "origin=" + origin + "&destination=" +
+                    destination[i] + "&key=" + Constant.API_KEY;
         }
         Log.d("destination", urls.length + "");
         return urls;
@@ -145,7 +140,7 @@ public class DirectionFinder {
             }
         }
         Log.d("DIRECTION nearest", nearestHospital.getRoutes()[0].getLegs()[0].getDistance().getText());
-       // Log.d("Polyline", nearestHospital.getRoutes()[0].getOverviewPolyline().getPoints());
+        // Log.d("Polyline", nearestHospital.getRoutes()[0].getOverviewPolyline().getPoints());
 
 
         return nearestHospital;
