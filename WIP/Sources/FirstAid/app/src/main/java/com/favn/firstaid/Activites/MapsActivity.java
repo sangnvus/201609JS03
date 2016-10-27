@@ -3,6 +3,7 @@ package com.favn.firstaid.Activites;
 import android.Manifest;
 import android.app.Dialog;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.location.Location;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -40,7 +41,9 @@ import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
+import com.google.android.gms.maps.model.PolylineOptions;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -199,16 +202,15 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     }
 
-//    private void sendRequest() {
-//        String origin = "21.0120967,105.5248733";
-//        //String destination = hospitalList.get(0).getLatitude() + "," + hospitalList.get(0).getLongitude();
-//
-//        try {
-//            new DirectionFinder(this, origin, getHospitalsDestination()).execute();
-//        } catch (UnsupportedEncodingException e) {
-//            e.printStackTrace();
-//        }
-//    }
+    private void sendDirectionRequest(String destination) {
+        String origin = "21.0120967,105.5248733";
+
+        try {
+            new DirectionFinder(this, origin, destination).execute();
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+    }
 
 
     @Override
@@ -218,7 +220,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
 
     @Override
-    public void onDirectionFinderSuccess(Route[] routes, List<LatLng> latLngs) {
+    public void onDirectionFinderSuccess(List<LatLng> latLngs) {
         polylinePaths = new ArrayList<>();
         originMarkers = new ArrayList<>();
         destinationMarkers = new ArrayList<>();
@@ -227,23 +229,23 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 //            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(route.startLocation, 16));
 //            ((TextView) findViewById(R.id.tvDuration)).setText(route.duration.text);
 //            ((TextView) findViewById(R.id.tvDistance)).setText(route.distance.text);
+        mGoogleMap.clear();
 
-//            originMarkers.add(mGoogleMap.addMarker(new MarkerOptions()
-//                    .position(new LatLng(route.getLegs()[0].getStartLocation().getLat(),
-//                            route.getLegs()[0].getStartLocation().getLng()))));
+            originMarkers.add(mGoogleMap.addMarker(new MarkerOptions()
+                    .position(latLngs.get(0))));
 //            destinationMarkers.add(mGoogleMap.addMarker(new MarkerOptions()
 //                    .position(new LatLng(route.getLegs()[0].getEnd_location().getLat(),
 //                            route.getLegs()[0].getStartLocation().getLng()))));
 //
-//            PolylineOptions polylineOptions = new PolylineOptions().
-//                    geodesic(true).
-//                    color(Color.BLUE).
-//                    width(10);
-//
-//            for (int i = 0; i < latLngs.size(); i++)
-//                polylineOptions.add(latLngs.get(i));
-//
-//            polylinePaths.add(mGoogleMap.addPolyline(polylineOptions));
+            PolylineOptions polylineOptions = new PolylineOptions().
+                    geodesic(true).
+                    color(Color.BLUE).
+                    width(10);
+
+            for (int i = 0; i < latLngs.size(); i++)
+                polylineOptions.add(latLngs.get(i));
+
+            polylinePaths.add(mGoogleMap.addPolyline(polylineOptions));
 //        }
     }
 
@@ -276,7 +278,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Hospital hospital = (Hospital) lv.getItemAtPosition(position);
-                Log.d("dialog", hospital.getName());
+                sendDirectionRequest(hospital.getLatLngText());
+                dialog.dismiss();
             }
         });
 

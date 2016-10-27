@@ -65,7 +65,9 @@ public class DistanceMatrixFinder {
                 InputStreamReader reader = new InputStreamReader(url.openStream(), "UTF-8");
                 DistanceMatrix results = new Gson().fromJson(reader, DistanceMatrix.class);
                 for (int i = 0; i < results.getRows()[0].getElements().length; i++) {
-                    Hospital hospital = new Hospital(destinations[i].getName(), 1, 1,
+                    Hospital hospital = new Hospital(destinations[i].getName(),
+                            destinations[i].getLatitude(),
+                            destinations[i].getLongitude(),
                             results.getRows()[0].getElements()[i].getDistance());
                     hospitalList.add(hospital);
                 }
@@ -87,7 +89,6 @@ public class DistanceMatrixFinder {
         protected void onPostExecute(String res) {
             try {
                 Collections.sort(hospitalList, new Comparator<Hospital>() {
-
                     public int compare(Hospital h1, Hospital h2) {
                         return h1.getDistance().getValue() - h2.getDistance().getValue();
                     }

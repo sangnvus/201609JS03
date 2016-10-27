@@ -10,11 +10,11 @@ import java.util.List;
 
 public class Route {
     private Leg legs[];
-    private Overview_polyline overviewPolyline;
+    private Overview_polyline overview_polyline;
 
     public Route(Leg[] legs, Overview_polyline overviewPolyline) {
         this.legs = legs;
-        this.overviewPolyline = overviewPolyline;
+        this.overview_polyline = overviewPolyline;
     }
 
     public Leg[] getLegs() {
@@ -22,6 +22,6 @@ public class Route {
     }
 
     public Overview_polyline getOverviewPolyline() {
-        return overviewPolyline;
+        return overview_polyline;
     }
 }

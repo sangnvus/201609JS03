@@ -23,10 +23,10 @@ public class DirectionFinder {
 
     private DirectionFinderListener listener;
     private String origin;
-    private String[] destination;
-    private List<Direction> hospitalDestination = new ArrayList<Direction>();
+    private String destination;
+    List<LatLng> listLatLng;
 
-    public DirectionFinder(DirectionFinderListener listener, String origin, String[] destination) {
+    public DirectionFinder(DirectionFinderListener listener, String origin, String destination) {
         this.listener = listener;
         this.origin = origin;
         this.destination = destination;
@@ -37,29 +37,28 @@ public class DirectionFinder {
         new DownloadRawData().execute(createUrl());
     }
 
-    private String[] createUrl() throws UnsupportedEncodingException {
+    private String createUrl() throws UnsupportedEncodingException {
         //String urlOrigin = URLEncoder.encode(origin, "utf-8");
         //String urlDestination = URLEncoder.encode(destination, "utf-8");
-        Log.d("destination", destination.length + "");
-        String urls[] = new String[destination.length];
-        for (int i = 0; i < destination.length; i++) {
-            urls[i] = Constant.DIRECTION_URL_API + "origin=" + origin + "&destination=" +
-                    destination[i] + "&key=" + Constant.API_KEY;
-        }
-        Log.d("destination", urls.length + "");
-        return urls;
+        Log.d("destination", destination + "");
+        String url = "";
+        url = Constant.DIRECTION_URL_API + "origin=" + origin + "&destination=" +
+                destination + "&key=" + Constant.API_KEY;
+
+        Log.d("destination", url);
+        return url;
     }
 
-    private class DownloadRawData extends AsyncTask<String[], Void, String> {
+    private class DownloadRawData extends AsyncTask<String, Void, String> {
         @Override
-        protected String doInBackground(String[]... params) {
-            String link[] = params[0];
+        protected String doInBackground(String... params) {
+            String link = params[0];
             try {
-                for (int i = 0; i < link.length; i++) {
-                    URL url = new URL(link[i]);
-                    InputStreamReader reader = new InputStreamReader(url.openStream(), "UTF-8");
-                    Direction results = new Gson().fromJson(reader, Direction.class);
-                }
+                URL url = new URL(link);
+                InputStreamReader reader = new InputStreamReader(url.openStream(), "UTF-8");
+                Direction results = new Gson().fromJson(reader, Direction.class);
+
+                listLatLng = decodePolyLine(results.getRoutes()[0].getOverviewPolyline().getPoints());
 
             } catch (MalformedURLException e) {
                 // TODO Auto-generated catch block
@@ -71,17 +70,14 @@ public class DirectionFinder {
                 // TODO Auto-generated catch block
                 e.printStackTrace();
             }
-            for (int i = 0; i < hospitalDestination.size(); i++) {
-                Log.d("DIRECTION", hospitalDestination.get(i).getRoutes()[0].getLegs()[0].getDistance().getText());
-            }
+
             return null;
         }
 
         @Override
         protected void onPostExecute(String res) {
             try {
-                //getNearestHospital(hospitalDestination);
-                //getDirection(getNearestHospital(hospitalDestination));
+                listener.onDirectionFinderSuccess(listLatLng);
             } catch (Exception e) {
                 e.printStackTrace();
             }

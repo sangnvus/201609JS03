@@ -12,5 +12,5 @@ import java.util.List;
 
 public interface DirectionFinderListener {
     void onDirectionFinderStart();
-    void onDirectionFinderSuccess(Route[] route, List<LatLng> latLngs);
+    void onDirectionFinderSuccess(List<LatLng> latLngs);
 }
