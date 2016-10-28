@@ -7,6 +7,7 @@ import android.graphics.Color;
 import android.location.Location;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.BottomSheetBehavior;
 import android.support.v4.app.ActivityCompat;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -14,13 +15,13 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.favn.firstaid.Adapter.HospitalAdapter;
-import com.favn.firstaid.Models.Direction.Route;
 import com.favn.firstaid.Models.Direction.DirectionFinder;
 import com.favn.firstaid.Models.Direction.DirectionFinderListener;
 import com.favn.firstaid.Models.DistanceMatrix.DistanceMatrixFinder;
@@ -64,8 +65,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     private List<Hospital> hospitalList = new ArrayList<>();
 
-    Button btNavigate;
-    LinearLayout linearLayout;
+    TextView linearLayout;
+    private BottomSheetBehavior mBottomSheetBehavior;
+    private ProgressBar mProgressBarLocation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,24 +79,33 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             initMap();
         }
 
-        btNavigate = (Button) findViewById(R.id.button_navigation);
-        btNavigate.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-//                sendRequest();
-            }
-        });
 
-        linearLayout = (LinearLayout) findViewById(R.id.layout_hospital_show);
+
+        linearLayout = (TextView) findViewById(R.id.test);
         linearLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 sendDistanceRequest();
+                Log.d("code", "here");
+//                if(mBottomSheetBehavior.getState() == BottomSheetBehavior.STATE_EXPANDED) {
+//                    mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+//                }
+//                else if(mBottomSheetBehavior.getState() == BottomSheetBehavior.STATE_COLLAPSED) {
+//                    mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
+//                }
+//                else if(mBottomSheetBehavior.getState() == BottomSheetBehavior.STATE_HIDDEN) {
+//                    mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+//                }
             }
         });
 
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        View bottomSheet = findViewById(R.id.bottom_sheet_hospital_list);
+        mBottomSheetBehavior = BottomSheetBehavior.from(bottomSheet);
+        mBottomSheetBehavior.setPeekHeight(300);
+
     }
 
     @Override
@@ -140,11 +151,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 .addOnConnectionFailedListener(this)
                 .build();
         mGoogleApiClient.connect();
-
     }
 
-    private void goToLocationZoom(double lat, double lng, float zoom) {
-        LatLng latLng = new LatLng(lat, lng);
+    private void goToLocationZoom(LatLng latLng, float zoom) {
         CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, zoom);
         mGoogleMap.moveCamera(cameraUpdate);
     }
@@ -159,8 +168,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     public void onConnected(@Nullable Bundle bundle) {
         mLocationRequest = LocationRequest.create();
         mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-        //mLocationRequest.setInterval(10000);
-
+//        //mLocationRequest.setInterval(10000);
+//
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             // TODO: Consider calling
             //    ActivityCompat#requestPermissions
@@ -172,6 +181,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             return;
         }
         LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);
+
     }
 
     @Override
@@ -186,14 +196,19 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     @Override
     public void onLocationChanged(Location location) {
-//        if(location == null) {
-//            Toast.makeText(this, "can't get current location", Toast.LENGTH_SHORT).show();
-//        } else {
-//            LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
-//            CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, 15);
-//            mGoogleMap.animateCamera(cameraUpdate);
-//            sendRequest(latLng);
-//        }
+        if(location == null) {
+            Toast.makeText(this, "can't get current location", Toast.LENGTH_SHORT).show();
+        } else {
+            LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
+            CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, 15);
+            mGoogleMap.animateCamera(cameraUpdate);
+
+            TextView txtCurrentLocation = (TextView) findViewById(R.id.textview_current_location);
+            txtCurrentLocation.setText("Vị trí hiện tại");
+            TextView txtLatLng = (TextView) findViewById(R.id.textview_current_latlng);
+            txtLatLng.setText("(" + latLng.latitude + ", " + latLng.longitude + ")");
+            txtLatLng.setVisibility(View.VISIBLE);
+        }
     }
 
     private void sendDistanceRequest() {
@@ -226,7 +241,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         destinationMarkers = new ArrayList<>();
 
 //        for (Route route : routes) {
-//            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(route.startLocation, 16));
+            mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLngs.get(0), 16));
 //            ((TextView) findViewById(R.id.tvDuration)).setText(route.duration.text);
 //            ((TextView) findViewById(R.id.tvDistance)).setText(route.distance.text);
         mGoogleMap.clear();
@@ -251,7 +266,12 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     public Hospital[] getHospitalsDestination() {
         List<Hospital> hospitalList = new ArrayList<Hospital>();
-        hospitalList.add(new Hospital("BV abc", 21.0093735, 105.5307141));
+        hospitalList.add(new Hospital("National Hospital of Obstetrics and Gynecology", 21.0093735, 105.5307141));
+        hospitalList.add(new Hospital("National Hospital of Traditional Medicine", 21.009574, 105.5209513));
+        hospitalList.add(new Hospital("Hanoi Heart Hospital", 21.017933, 105.5318903));
+        hospitalList.add(new Hospital("Bệnh viện Đa Khoa Hà Nội", 20.999166, 105.5285813));
+        hospitalList.add(new Hospital("Bệnh Viện Mắt Kỹ Thuật Cao HN", 21.011349, 105.5235913));
+        hospitalList.add(new Hospital("Bệnh viện đa khoa huyện Hải Hà", 21.0093735, 105.5307141));
         hospitalList.add(new Hospital("BV def", 21.009574, 105.5209513));
         hospitalList.add(new Hospital("BV ghi", 21.017933, 105.5318903));
         hospitalList.add(new Hospital("BV klm", 20.999166, 105.5285813));
@@ -264,11 +284,13 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         return hospitalsDestination;
     }
 
-    // Show list of nearest hospital
-    private void showDialog(List<Hospital> hospitalList) {
+
+    @Override
+    public void onDistanceMatrixFinderSuccess(List<Hospital> hospitalList) {
+
         final Dialog dialog = new Dialog(this);
-        View view = getLayoutInflater().inflate(R.layout.dialog_hospital_list, null);
-        final ListView lv = (ListView) view.findViewById(R.id.listview_hospital);
+        //View view = getLayoutInflater().inflate(R.layout.dialog_hospital_list, null);
+        final ListView lv = (ListView) findViewById(R.id.listview_hospital);
 
         HospitalAdapter adapter;
         adapter = new HospitalAdapter(this, hospitalList);
@@ -279,18 +301,19 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Hospital hospital = (Hospital) lv.getItemAtPosition(position);
                 sendDirectionRequest(hospital.getLatLngText());
-                dialog.dismiss();
+               // dialog.dismiss();
             }
         });
 
-        dialog.setContentView(view);
-        dialog.setTitle("Bệnh viện gần đây");
-        dialog.show();
+        //dialog.setContentView(view);
+        //dialog.setTitle("Bệnh viện gần đây");
+        //dialog.show();
 
     }
 
-    @Override
-    public void onDistanceMatrixFinderSuccess(List<Hospital> hospitalList) {
-        showDialog(hospitalList);
+    private List<Hospital> getNearbyHospital(LatLng latLng, List<Hospital> hospitalList) {
+        double x1 = latLng.latitude;
+        double y1 = latLng.longitude;
+        return null;
     }
 }
