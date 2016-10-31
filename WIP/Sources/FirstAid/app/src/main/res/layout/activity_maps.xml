@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -17,32 +16,77 @@
                   android:name="com.google.android.gms.maps.MapFragment"
                   android:layout_width="match_parent"
                   android:layout_height="match_parent"
-                  android:layout_marginBottom="100dp"/>
-
-
-    </RelativeLayout>
-
-
-    <android.support.v4.widget.NestedScrollView
-        android:id="@+id/bottom_sheet_hospital_list"
-        android:layout_width="match_parent"
-        android:layout_height="350dp"
-        android:background="@android:color/white"
-        android:clipToPadding="true"
-        android:fillViewport="true"
-        app:layout_behavior="android.support.design.widget.BottomSheetBehavior">
+                  android:layout_above="@+id/layout_curent_location"/>
 
         <LinearLayout
+            android:id="@+id/layout_curent_location"
             android:layout_width="match_parent"
-            android:layout_height="250dp"
-            android:orientation="vertical">
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:clickable="true"
+            android:orientation="vertical"
+            android:background="?android:attr/selectableItemBackground">
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="72dp"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="64dp"
+                    android:layout_gravity="center_vertical"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:layout_marginLeft="16dp"
+                        android:src="@drawable/ic_location"/>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="center_vertical"
+                        android:gravity="center_vertical"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/textview_current_location"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="16dp"
+                            android:text="Đang tìm vị trí..."
+                            android:textSize="18sp"/>
+
+                        <TextView
+                            android:id="@+id/textview_current_latlng"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="16dp"
+                            android:text=""
+                            android:visibility="gone"/>
+                    </LinearLayout>
+
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/colorSeparate"/>
+
+            <LinearLayout
+                android:id="@+id/layout_hospital_destination"
+                android:layout_width="match_parent"
+                android:layout_height="64dp"
                 android:layout_gravity="center_vertical"
                 android:gravity="center_vertical"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:visibility="gone">
 
                 <ImageView
                     android:layout_width="40dp"
@@ -58,15 +102,15 @@
                     android:orientation="vertical">
 
                     <TextView
-                        android:id="@+id/textview_current_location"
+                        android:id="@+id/textview_hospital_destination"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="16dp"
-                        android:text="Đang tìm vị trí..."
+                        android:text=""
                         android:textSize="18sp"/>
 
                     <TextView
-                        android:id="@+id/textview_current_latlng"
+                        android:id="@+id/textview_hospital_distance"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="16dp"
@@ -77,23 +121,21 @@
 
             </LinearLayout>
 
-            <TextView
+            <Button
                 android:id="@+id/test"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/colorSeparate"
+                android:background="@color/colorPrimary"
                 android:paddingBottom="4dp"
                 android:paddingLeft="16dp"
                 android:paddingTop="4dp"
-                android:text="BỆNH VIỆN GẦN ĐÂY"/>
-
-            <ListView
-                android:id="@+id/listview_hospital"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"/>
-
+                android:text="BỆNH VIỆN GẦN ĐÂY"
+                android:textColor="@color/colorWhite"/>
 
         </LinearLayout>
-    </android.support.v4.widget.NestedScrollView>
 
-</android.support.design.widget.CoordinatorLayout>
+
+    </RelativeLayout>
+
+
+</LinearLayout>

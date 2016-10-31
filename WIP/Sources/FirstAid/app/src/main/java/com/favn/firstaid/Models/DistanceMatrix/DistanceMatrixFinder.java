@@ -64,6 +64,7 @@ public class DistanceMatrixFinder {
                 URL url = new URL(link);
                 InputStreamReader reader = new InputStreamReader(url.openStream(), "UTF-8");
                 DistanceMatrix results = new Gson().fromJson(reader, DistanceMatrix.class);
+
                 for (int i = 0; i < results.getRows()[0].getElements().length; i++) {
                     Hospital hospital = new Hospital(destinations[i].getName(),
                             destinations[i].getLatitude(),
