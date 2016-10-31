@@ -7,6 +7,9 @@ use Illuminate\Database\Eloquent\Model;
 class Instruction extends Model
 {
     //
-    protected $table = 'Instruction';
-    protected $primaryKey = 'instruction_id';
+    protected $table = 'instructions';
+
+    public function injury(){
+    	return $this->belongsTo('App\Injury');
+    }
 }

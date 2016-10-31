@@ -7,8 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Injury extends Model
 {
     //
-    protected $table = 'Injury';
-    protected $primaryKey = 'injury_id';
+    protected $table = 'injuries';
 
     public function instruction(){
     	return $this->hasMany('App\Instruction')->orderBy('step');

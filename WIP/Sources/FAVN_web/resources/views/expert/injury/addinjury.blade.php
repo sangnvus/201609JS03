@@ -32,7 +32,7 @@
                                 <form action="expert/injury/addinjury" method="POST" enctype="multipart/form-data">
                                     <input type="hidden" name="_token" value="{{ csrf_token() }}"/>
                                     <div class="row">
-                                        <div class="col-md-8">
+                                        <div class="col-md-6">
                                             <div class="form-group">
                                                 <label>Tên chấn thương</label>
                                                 <input type="text" class="form-control" placeholder="Chấn thương..." name="injury_name">
@@ -51,7 +51,7 @@
                                     </div>
 
                                     <div class="row">
-                                        <div class="col-md-10">
+                                        <div class="col-md-8">
                                             <div class="form-group">
                                                 <label>Triệu chứng</label>
                                                 <textarea class="form-control" placeholder="Triệu chứng" name="symptom"></textarea>
@@ -61,33 +61,31 @@
 
                                     <div id="dynamicStep">
                                         <div  class="row">
-                                            <div class="col-md-5">
+                                            <div class="col-md-4">
                                                 <div class="form-group">
                                                     <label>Hướng dẫn bước 1</label>
-                                                    <input type="text" class="form-control" placeholder="Hướng dẫn" name="instruction_step1">
+                                                    <textarea type="text" class="form-control" placeholder="Hướng dẫn" name="instruction_step1"></textarea>
                                                 </div>
                                             </div>
-                                            <div class="col-md-5">
+                                            <div class="col-md-4">
                                                 <div class="form-group">
                                                     <label>Giải thích</label>
                                                     <textarea class="form-control" placeholder="Giải thích" name="detail_step1"></textarea>
                                                 </div>
                                             </div>
-                                        </div>
-                                        <div  class="row">
-                                            <div class="col-md-5">
-                                                <div class="form-group">
+                                            <div class="col-md-2">
+                                                <div style="width: 119px;" class="form-group">
                                                     <label>Hình ảnh</label>
                                                     <input type="file" class="form-control" name="image_step1">
                                                 </div>
                                             </div>
-                                            <div class="col-md-5">
-                                                <div class="form-group">
+                                            <div class="col-md-2">
+                                                <div style="width: 119px;" class="form-group">
                                                     <label>Âm thanh</label>
                                                     <input type="file" class="form-control" name="audio_step1">
                                                 </div>
                                             </div>
-                                        </div>  
+                                        </div>
                                     </div>
                                     <input type="hidden" id="count_step" name="count_step" value="">
 
@@ -139,28 +137,26 @@
 
                 newdiv.innerHTML = 
                 "<div  class='row'>" +
-                    "<div class='col-md-5'>" +
+                    "<div class='col-md-4'>" +
                         "<div class='form-group'>" +
                             "<label>Hướng dẫn bước " + (counter + 1) + "</label>" +
-                            "<input type='text' class='form-control' placeholder='Hướng dẫn' name='" + instruction_step+ "'>" +
+                            "<textarea type='text' class='form-control' placeholder='Hướng dẫn' name='" + instruction_step+ "'></textarea>" +
                         "</div>" + 
                     "</div>" +
-                    "<div class='col-md-5'>" +
+                    "<div class='col-md-4'>" +
                         "<div class='form-group'>" +
                             "<label>Giải thích</label>" +
                             "<textarea class='form-control' placeholder='Giải thích' name='" + detail_step + "'></textarea>" +
                         "</div>" +
                     "</div>" +
-                "</div>" +
-                "<div  class='row'>" +
-                    "<div class='col-md-5'>" +
-                        "<div class='form-group'>" +
+                    "<div class='col-md-2'>" +
+                        "<div style='width: 119px;' class='form-group'>" +
                             "<label>Hình ảnh</label>" +
                             "<input type='file' class='form-control' name='" + image_step+ "'>" +
                         "</div>" +
                     "</div>" +
-                    "<div class='col-md-5'>" +
-                        "<div class='form-group'>" +
+                    "<div class='col-md-2'>" +
+                        "<div style='width: 119px;' class='form-group'>" +
                             "<label>Âm thanh</label>" +
                             "<input type='file' class='form-control' name='" + audio_step+ "'>" +
                         "</div>" +
@@ -173,4 +169,5 @@
             document.getElementById('count_step').value = counter;
         }
     </script>
+
 @endsection
