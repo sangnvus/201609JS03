@@ -16,20 +16,21 @@
                   android:name="com.google.android.gms.maps.MapFragment"
                   android:layout_width="match_parent"
                   android:layout_height="match_parent"
-                  android:layout_above="@+id/layout_curent_location"/>
+                  android:layout_above="@+id/layout_location_information"/>
 
         <LinearLayout
-            android:id="@+id/layout_curent_location"
+            android:id="@+id/layout_location_information"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:clickable="true"
-            android:orientation="vertical"
-            android:background="?android:attr/selectableItemBackground">
+            android:orientation="vertical">
 
             <LinearLayout
+                android:id="@+id/layout_curent_location"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:background="?android:attr/selectableItemBackground"
                 android:orientation="vertical">
 
                 <LinearLayout
