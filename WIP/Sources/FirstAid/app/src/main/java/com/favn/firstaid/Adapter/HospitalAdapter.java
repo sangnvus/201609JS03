@@ -45,7 +45,7 @@ public class HospitalAdapter extends BaseAdapter{
         TextView hospitalName = (TextView)v.findViewById(R.id.text_hospital_name);
         hospitalName.setText(mHospitalList.get(position).getName());
         TextView hospitalDistance = (TextView)v.findViewById(R.id.text_hospital_distance);
-        hospitalDistance.setText(mHospitalList.get(position).getName());
+//        hospitalDistance.setText(mHospitalList.get(position).getDistance().getText());
         return v;
     }
 }

@@ -4,7 +4,7 @@
 		<nav class="pull-left">
 			<ul>
 				<li>
-					<a href="#">
+					<a href="expert/injury/listinjury">
 						Trang chủ
 					</a>
 				</li>

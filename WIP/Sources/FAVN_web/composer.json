@@ -22,7 +22,10 @@
         ],
         "psr-4": {
             "App\\": "app/"
-        }
+        },
+        "files":    [
+            "app/commonFunctions/common.php"
+        ]
     },
     "autoload-dev": {
         "classmap": [
