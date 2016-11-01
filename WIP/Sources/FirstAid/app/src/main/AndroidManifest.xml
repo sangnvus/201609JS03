@@ -21,6 +21,7 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
 
     <uses-feature
         android:glEsVersion="0x00020000"
@@ -57,7 +58,7 @@
         </activity>
         <activity
             android:name=".Activites.DirectionActivity"
-            android:parentActivityName=".Activites.MainActivity" >
+            android:parentActivityName=".Activites.MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".Activites.MainActivity" />
@@ -79,13 +80,14 @@
             android:label="@string/title_activity_maps" />
         <activity
             android:name=".Activites.InstructionDetail"
-            android:label="Hướng dẫn"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".Activites.QAActivity"
-            android:label="Ý kiến - Hỏi đáp"/>
-        <activity android:name=".Activites.NotificationActivity"
-            android:label="Thông báo">
-        </activity>
+        <activity
+            android:name=".Activites.QAActivity"
+            android:label="Ý kiến - Hỏi đáp" />
+        <activity
+            android:name=".Activites.NotificationActivity"
+            android:label="Thông báo"></activity>
+        <activity android:name=".Activites.GetPhoneNoActivity"></activity>
     </application>
 
 </manifest>

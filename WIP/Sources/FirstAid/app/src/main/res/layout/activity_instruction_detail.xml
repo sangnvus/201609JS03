@@ -5,30 +5,70 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
+    android:soundEffectsEnabled="true"
     tools:context="com.favn.firstaid.Activites.InstructionDetail">
 
-    <android.support.design.widget.AppBarLayout
+    <LinearLayout
+        android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:theme="@style/AppTheme.AppBarOverlay">
+        android:layout_height="match_parent">
+
+        <android.support.design.widget.AppBarLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:theme="@style/AppTheme.AppBarOverlay">
+
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                android:background="?attr/colorPrimary"
+                app:popupTheme="@style/AppTheme.PopupOverlay" />
+
+        </android.support.design.widget.AppBarLayout>
+
+        <include layout="@layout/content_instruction_detail"
+            android:layout_weight="91.19"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"/>
 
         <android.support.v7.widget.Toolbar
-            android:id="@+id/toolbar"
+            android:background="@color/colorPrimary"
+            android:theme="@style/Base.ThemeOverlay.AppCompat.Dark.ActionBar"
             android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:background="?attr/colorPrimary"
-            app:popupTheme="@style/AppTheme.PopupOverlay" />
+            android:layout_height="56dp"
+            android:layout_gravity="bottom"
+            android:weightSum="1">
 
-    </android.support.design.widget.AppBarLayout>
+            <ImageView
+                android:id="@+id/btn_speak"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:src="@drawable/quantum_ic_volume_up_white_36"
+                android:layout_weight="0.01"
+                android:layout_gravity="center"
+                android:layout_marginRight="60dp" />
 
-    <include layout="@layout/content_instruction_detail" />
+            <ImageView
+                android:id="@+id/btn_repeat"
+                android:layout_gravity="center"
+                android:src="@drawable/quantum_ic_replay_white_24"
+                android:layout_width="32dp"
+                android:layout_height="32dp" />
 
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fab_speak"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|end"
-        android:layout_margin="@dimen/fab_margin"
-        android:src="@android:drawable/ic_lock_silent_mode_off" />
+            <TextView
+                android:id="@+id/btn_next"
+                android:layout_gravity="center"
+                android:text="TIẾP"
+                android:gravity="center"
+                android:textColor="@color/cast_expanded_controller_text_color"
+                android:textSize="18sp"
+                android:layout_marginLeft="60dp"
+                android:layout_height="32dp"
+                android:layout_width="40dp" />
+
+        </android.support.v7.widget.Toolbar>
+
+    </LinearLayout>
 
 </android.support.design.widget.CoordinatorLayout>
