@@ -10,7 +10,7 @@
 
     <div class="sidebar-wrapper">
         <div class="logo">
-            <a href="expertdashboard.html" class="simple-text">
+            <a href="expert/injury/listinjury" class="simple-text">
                 Bảng điều khiển
             </a>
         </div>
@@ -23,13 +23,6 @@
                 </a>
             </li>
 
-            <li id="expert/injury/listinjury">
-                <a href="expert/injury/listinjury">
-                    <i class="pe-7s-user"></i>
-                    <p>Thông tin</p>
-                </a>
-            </li>
-
             <li id="nav-injuries-item">
                 <a href="expert/injury/listinjury">
                     <i class="pe-7s-bandaid"></i>
@@ -38,7 +31,7 @@
             </li>
 
             <li id="nav-qanda-item">
-                <a href="expert/injury/listinjury">
+                <a href="expert/qanda/listqanda/all">
                     <i class="pe-7s-comment"></i>
                     <p>Hỏi đáp/ Ý kiến</p>
                 </a>

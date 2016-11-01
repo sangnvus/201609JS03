@@ -7,10 +7,19 @@
         android:title="@string/switch_notification" />
 
 
-    <SwitchPreference
-        android:key="switch_sending_information"
-        android:summary="@string/summary_switch_sending_information"
-        android:title="@string/switch_sending_information" />
+    <PreferenceCategory android:title="Gửi thông tin">
+
+        <SwitchPreference
+            android:key="switch_sending_information"
+            android:summary="@string/summary_switch_sending_information"
+            android:title="@string/switch_sending_information" />
+        <EditTextPreference
+            android:selectAllOnFocus="true"
+            android:singleLine="true"
+            android:title="@string/sending_phone_number"
+            android:key="et_phone_number"
+            android:summary="@string/summary_switch_sending_phone_number" />
+    </PreferenceCategory>
 
 
 </PreferenceScreen>

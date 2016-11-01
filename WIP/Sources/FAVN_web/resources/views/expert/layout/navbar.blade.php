@@ -5,11 +5,13 @@
 			<ul class="nav navbar-nav navbar-right">
 				<li class="dropdown">
 					<a href="#" class="dropdown-toggle" data-toggle="dropdown">
-						Hello Hướng Nhật !
+					@if(isset($userLogin))
+						Xin chào {{ $userLogin->name }}
+					@endif
 						<b class="caret"></b>
 					</a>
 					<ul class="dropdown-menu">
-						<li><a href="#">Đăng xuất</a></li>
+						<li><a href="logout">Đăng xuất</a></li>
 					</ul>
 				</li>
 

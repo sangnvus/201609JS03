@@ -43,7 +43,7 @@ public class SettingFragment extends Fragment {
             super.onCreate(savedInstanceState);
             addPreferencesFromResource(R.xml.preference_screen);
 
-            createPreference();
+//            createPreference();
         }
 
         private void createPreference(){

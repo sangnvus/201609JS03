@@ -72,6 +72,12 @@
 <!-- Light Bootstrap Table DEMO methods, don't include it in your project! -->
 <script src="assets/js/demo.js"></script>
 
+<!-- Js confirm, alert box -->
+<script src="assets/js/bootbox.min.js"></script>
+
+<!-- jquery UI -->
+<script src="assets/js/jquery-ui.js"></script>
+
 <script type="text/javascript">
  $(document).ready(function(){
 
@@ -81,13 +87,7 @@
  });
 </script>
 
-<!-- set class active for li (menu list item) -->
-<script type="text/javascript">
-    document.getElementById("nav-injuries-item").className += "active";
-</script>
-
 @yield('script');
-
 </html>
 
 

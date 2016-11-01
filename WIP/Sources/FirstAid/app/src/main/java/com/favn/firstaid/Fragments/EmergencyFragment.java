@@ -36,6 +36,7 @@ public class EmergencyFragment extends Fragment implements AdapterView.OnItemCli
     private DatabaseOpenHelper dbHelper;
     private ListView listView;
     private List<Injury> mInjuryList;
+    final int kind = 1;
 
     public EmergencyFragment() {
         // Required empty public constructor
@@ -64,9 +65,12 @@ public class EmergencyFragment extends Fragment implements AdapterView.OnItemCli
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         Injury injury = (Injury) listView.getItemAtPosition(position);
         int injuryId = injury.getId();
+        String injuryName = injury.getInjuryName();
 
         Intent intent = new Intent(getActivity(), InstructionDetail.class);
         intent.putExtra("id", injuryId);
+        intent.putExtra("name", injuryName);
+        intent.putExtra("kind", kind);
         startActivity(intent);
     }
 

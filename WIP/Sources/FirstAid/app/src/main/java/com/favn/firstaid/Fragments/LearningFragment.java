@@ -35,6 +35,7 @@ public class LearningFragment extends Fragment implements AdapterView.OnItemClic
     private DatabaseOpenHelper dbHelper;
     private ListView listView;
     private List<Injury> mInjuryList;
+    final int kind = 2;
 
     public LearningFragment() {
         // Required empty public constructor
@@ -68,6 +69,7 @@ public class LearningFragment extends Fragment implements AdapterView.OnItemClic
 
         Intent intent = new Intent(getActivity(), InstructionDetail.class);
         intent.putExtra("id", injuryId);
+        intent.putExtra("kind", kind);
         startActivity(intent);
     }
 
