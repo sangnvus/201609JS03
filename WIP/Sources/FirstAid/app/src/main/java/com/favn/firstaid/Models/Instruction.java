@@ -7,14 +7,18 @@ package com.favn.firstaid.Models;
 public class Instruction {
     private int injuryId;
     private int step;
-    private String instruction;
+    private String content;
+    private String explanation;
     private String image;
     private String audio;
 
-    public Instruction(int injuryId, int step, String instruction, String image, String audio) {
+    public Instruction(int injuryId, int step, String content, String explanation, String image,
+                       String
+            audio) {
         this.injuryId = injuryId;
         this.step = step;
-        this.instruction = instruction;
+        this.content = content;
+        this.explanation = explanation;
         this.image = image;
         this.audio = audio;
     }
@@ -35,12 +39,20 @@ public class Instruction {
         this.step = step;
     }
 
-    public String getInstruction() {
-        return instruction;
+    public String getContent() {
+        return content;
     }
 
-    public void setInstruction(String instruction) {
-        this.instruction = instruction;
+    public void setContent(String content) {
+        this.content = content;
+    }
+
+    public String getExplanation() {
+        return explanation;
+    }
+
+    public void setExplanation(String explanation) {
+        this.explanation = explanation;
     }
 
     public String getImage() {

@@ -1,19 +1,15 @@
 package com.favn.firstaid.Adapter;
 
 import android.content.Context;
-import android.content.Intent;
-import android.support.design.widget.FloatingActionButton;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.favn.firstaid.Activites.InstructionDetail;
 import com.favn.firstaid.Models.Instruction;
 import com.favn.firstaid.R;
 
-import java.io.InputStream;
 import java.util.List;
 
 /**
@@ -48,6 +44,7 @@ public class InstructionAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
+        Instruction instruction = mInstructionList.get(position);
         View v = View.inflate(mContext, R.layout.item_instruction, null);
         TextView tvStep = (TextView) v.findViewById(R.id.text_step_number);
         TextView tvInstruction = (TextView) v.findViewById(R.id.text_instruction_content);
@@ -56,16 +53,16 @@ public class InstructionAdapter extends BaseAdapter {
 
         //TODO check null for image property
         int imagePath = v.getResources().getIdentifier("com.favn.firstaid:drawable/" +
-                mInstructionList.get(position).getImage(), null, null);
+                instruction.getImage(), null, null);
 
 //        InputStream is = getClass().getResourceAsStream("com.favn.firstaid:drawable/" +
 //                mInstructionList.get(position).getAudio());
 
-        tvStep.setText(mInstructionList.get(position).getStep() + "");
-        tvInstruction.setText(mInstructionList.get(position).getInstruction());
+        tvStep.setText(instruction.getStep() + "");
+        tvInstruction.setText(instruction.getContent());
         if(!isEmegency){
             TextView tvExplanation = (TextView) v.findViewById(R.id.text_instruction_explaination);
-            tvExplanation.setText("chưa có nội dung");
+            tvExplanation.setText(instruction.getExplanation());
         }
 
         imgImage.setImageResource(imagePath);
