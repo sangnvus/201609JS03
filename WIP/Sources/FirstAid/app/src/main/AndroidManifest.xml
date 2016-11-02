@@ -88,6 +88,9 @@
             android:name=".Activites.NotificationActivity"
             android:label="Thông báo"></activity>
         <activity android:name=".Activites.GetPhoneNoActivity"></activity>
+        <service
+            android:name=".Models.FetchAddressIntentService"
+            android:exported="false"/>
     </application>
 
 </manifest>

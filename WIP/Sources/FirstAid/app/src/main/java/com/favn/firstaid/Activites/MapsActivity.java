@@ -2,18 +2,20 @@ package com.favn.firstaid.Activites;
 
 import android.Manifest;
 import android.app.Dialog;
+import android.content.Intent;
 import android.content.IntentSender;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.location.Geocoder;
 import android.location.Location;
+import android.os.Handler;
+import android.os.ResultReceiver;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.v4.app.ActivityCompat;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.location.Address;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -31,6 +33,7 @@ import com.favn.firstaid.Models.Direction.DirectionFinder;
 import com.favn.firstaid.Models.Direction.DirectionFinderListener;
 import com.favn.firstaid.Models.DistanceMatrix.DistanceMatrixFinder;
 import com.favn.firstaid.Models.DistanceMatrix.DistanceMatrixFinderListener;
+import com.favn.firstaid.Models.FetchAddressIntentService;
 import com.favn.firstaid.Models.Hospital;
 import com.favn.firstaid.R;
 import com.google.android.gms.common.ConnectionResult;
@@ -89,7 +92,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private LinearLayout llHospitalDestination;
     private TextView tvCurrentLocation;
     private TextView tvLatLng;
-    private TextView tvUpdateTime;
     private BottomSheetBehavior mBottomSheetBehavior;
     private ProgressBar mProgressBarLocation;
     private Button btnFindHospital;
@@ -101,7 +103,10 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     public static final int UPDATE_SMALLEST_DISPLACEMENT = 10;
     protected final static String REQUESTING_LOCATION_UPDATES_KEY = "requesting-location-updates-key";
     protected final static String LOCATION_KEY = "location-key";
-    protected final static String LAST_UPDATED_TIME_STRING_KEY = "last-updated-time-string-key";
+    protected static final String LOCATION_ADDRESS_KEY = "location-address";
+
+    protected String mAddress;
+    private AddressResultReceiver mResultReceiver;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -113,6 +118,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             setContentView(R.layout.activity_maps);
             initMap();
         }
+
 
 
         llCurrentLocation = (LinearLayout) findViewById(R.id.layout_curent_location);
@@ -146,25 +152,16 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         tvCurrentLocation = (TextView) findViewById(R.id.text_current_location);
         tvLatLng = (TextView) findViewById(R.id.text_current_latlng);
-        tvUpdateTime = (TextView) findViewById(R.id.text_update_time);
 
         btnFindHospital = (Button) findViewById(R.id.test);
         btnFindHospital.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                try {
-                    geoLocate();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-
             }
         });
 
-        mRequestingLocationUpdates = false;
-        mLastUpdateTime = "";
-
+        mResultReceiver = new AddressResultReceiver(new Handler());
         updateValuesFromBundle(savedInstanceState);
 
         buildGoogleApiClient();
@@ -218,8 +215,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 mCurrentLocation = savedInstanceState.getParcelable(LOCATION_KEY);
 
             }
-            if (savedInstanceState.keySet().contains(LAST_UPDATED_TIME_STRING_KEY)) {
-                mLastUpdateTime = savedInstanceState.getString(LAST_UPDATED_TIME_STRING_KEY);
+            if (savedInstanceState.keySet().contains(LOCATION_ADDRESS_KEY)) {
+                mAddress = savedInstanceState.getString(LOCATION_ADDRESS_KEY);
+                displayAddress();
             }
             updateUI();
         }
@@ -279,26 +277,22 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     @Override
     public void onConnected(@Nullable Bundle bundle) {
-//        LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder()
-//                .addLocationRequest(mLocationRequest);
-//        builder.setAlwaysShow(true);
-//        PendingResult<LocationSettingsResult> result =
-//                LocationServices.SettingsApi.checkLocationSettings(
-//                        mGoogleApiClient,
-//                        builder.build()
-//                );
-//
-//        result.setResultCallback(this);
-//        startLocationUpdates();
+
+        startLocationUpdates();
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
 
             return;
         }
         if (mCurrentLocation == null) {
             mCurrentLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
-            mLastUpdateTime = DateFormat.getTimeInstance().format(new Date());
+            mLastLocation = mCurrentLocation;
+            if(!Geocoder.isPresent()) {
+                return;
+            }
+
             updateUI();
         }
+        startIntentService();
         Log.d("connection", "onlocation connect");
 
     }
@@ -316,12 +310,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     @Override
     public void onLocationChanged(Location location) {
-        Log.d("connection", "onlocation change");
-        Toast.makeText(this, "onlocation change", Toast.LENGTH_LONG
-        ).show();
+
         if (location == null) {
             Toast.makeText(this, "can't get current location", Toast.LENGTH_SHORT).show();
-            mLastUpdateTime = DateFormat.getTimeInstance().format(new Date());
         } else {
             mCurrentLocation = location;
             mLastLocation = mCurrentLocation;
@@ -333,7 +324,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         mLocationRequest = new LocationRequest();
         mLocationRequest.setInterval(UPDATE_INTERVAL_IN_MILLISECONDS);
         mLocationRequest.setFastestInterval(FASTEST_UPDATE_INTERVAL_IN_MILLISECONDS);
-       // mLocationRequest.setSmallestDisplacement(UPDATE_SMALLEST_DISPLACEMENT);
+        mLocationRequest.setSmallestDisplacement(UPDATE_SMALLEST_DISPLACEMENT);
         mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
     }
 
@@ -354,6 +345,15 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     protected void stopLocationUpdates() {
         LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
+    }
+
+    protected void startIntentService() {
+        Intent intent = new Intent(this, FetchAddressIntentService.class);
+        intent.putExtra(Constant.RECEIVER, mResultReceiver);
+        intent.putExtra(Constant.LOCATION_DATA_EXTRA, mCurrentLocation);
+        startService(intent);
+        Log.d("checkcode", "code here start intent service");
+
     }
 
     protected void buildLocationSettingsRequest() {
@@ -484,48 +484,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         mGoogleMap.animateCamera(cameraUpdate);
     }
 
-
-    private void geoLocate() throws IOException {
-        TextView txtCurrentLocation = (TextView) findViewById(R.id.text_current_location);
-        txtCurrentLocation.setText("test");
-        TextView txtLatLng = (TextView) findViewById(R.id.text_current_latlng);
-        txtLatLng.setText("(" + currentLatLng.latitude + ", " + currentLatLng.longitude + ")");
-        txtLatLng.setVisibility(View.VISIBLE);
-
-        Geocoder geocoder = new Geocoder(this);
-        List<Address> addresses = geocoder.getFromLocation(currentLatLng.latitude, currentLatLng
-                .longitude, 1);
-        Address address = addresses.get(0);
-
-        Address returnedAddress;
-        StringBuilder strReturnedAddress = new StringBuilder();
-        ;
-//            try {
-//
-        if (addresses != null) {
-            returnedAddress = addresses.get(0);
-            for (int i = 0; i < returnedAddress.getMaxAddressLineIndex(); i++) {
-                strReturnedAddress.append(returnedAddress.getAddressLine(i));
-                if (i < returnedAddress.getMaxAddressLineIndex() - 1) {
-                    strReturnedAddress.append(", ");
-                }
-            }
-            Log.d("location", strReturnedAddress.toString());
-            Log.d("location1", returnedAddress.getAdminArea());
-            Log.d("location2", returnedAddress.getCountryName());
-            Log.d("location3", returnedAddress.getLocality());
-            Log.d("location4", returnedAddress.getPremises());
-        } else {
-            Log.d("location", "No Address returned!");
-        }
-//            } catch (Exception e) {
-//                // TODO Auto-generated catch block
-//                e.printStackTrace();
-//                Log.d("location", "Cannot get Address!");
-//            }
-
-    }
-
     private List<Hospital> getNearbyHospital(LatLng latLng, List<Hospital> hospitalList) {
         double x1 = latLng.latitude;
         double y1 = latLng.longitude;
@@ -566,19 +524,38 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             tvCurrentLocation.setText("test");
             tvLatLng.setText("(" + mCurrentLocation.getLatitude() + ", " + mCurrentLocation
                     .getLongitude() + ")");
-            tvUpdateTime.setText(mLastUpdateTime);
             tvLatLng.setVisibility(View.VISIBLE);
-        } 
-
-
-
+        }
     }
 
     @Override
     public void onSaveInstanceState(Bundle savedInstanceState) {
         savedInstanceState.putBoolean(REQUESTING_LOCATION_UPDATES_KEY, mRequestingLocationUpdates);
         savedInstanceState.putParcelable(LOCATION_KEY, mCurrentLocation);
-        savedInstanceState.putString(LAST_UPDATED_TIME_STRING_KEY, mLastUpdateTime);
+        savedInstanceState.putString(LOCATION_ADDRESS_KEY, mAddress);
         super.onSaveInstanceState(savedInstanceState);
+    }
+
+    class AddressResultReceiver extends ResultReceiver {
+        public AddressResultReceiver(Handler handler) {
+            super(handler);
+        }
+
+        @Override
+        protected void onReceiveResult(int resultCode, Bundle resultData) {
+
+            // Display the address string or an error message sent from the intent service.
+            mAddress = resultData.getString(Constant.RESULT_DATA_KEY);
+            displayAddress();
+            Log.d("address", mAddress);
+            // Show a toast message if an address was found.
+            if (resultCode == Constant.SUCCESS_RESULT) {
+            }
+
+        }
+    }
+
+    protected void displayAddress() {
+        tvCurrentLocation.setText(mAddress);
     }
 }
