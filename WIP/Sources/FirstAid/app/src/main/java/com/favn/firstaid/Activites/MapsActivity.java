@@ -61,7 +61,9 @@ import com.google.android.gms.maps.model.PolylineOptions;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.text.DateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback,
@@ -71,7 +73,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private GoogleMap mGoogleMap;
     private GoogleApiClient mGoogleApiClient;
     private LocationRequest mLocationRequest;
-    private Location mlastLocation;
     private Location mCurrentLocation;
     private String mLastUpdateTime;
     private LatLng currentLatLng;
@@ -84,10 +85,11 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     private List<Hospital> hospitalList = new ArrayList<>();
 
-    private LinearLayout layoutCurrentLocation;
-    private LinearLayout layoutHospitalDestination;
-    private TextView txtCurrentLocation;
-    private TextView txtLatLng;
+    private LinearLayout llCurrentLocation;
+    private LinearLayout llHospitalDestination;
+    private TextView tvCurrentLocation;
+    private TextView tvLatLng;
+    private TextView tvUpdateTime;
     private BottomSheetBehavior mBottomSheetBehavior;
     private ProgressBar mProgressBarLocation;
     private Button btnFindHospital;
@@ -113,8 +115,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         }
 
 
-        layoutCurrentLocation = (LinearLayout) findViewById(R.id.layout_curent_location);
-        layoutCurrentLocation.setOnClickListener(new View.OnClickListener() {
+        llCurrentLocation = (LinearLayout) findViewById(R.id.layout_curent_location);
+        llCurrentLocation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 goToLocationZoom(currentLatLng, Constant.ZOOM_LEVEL_15);
@@ -139,12 +141,12 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 //            }
 //        });
 
-        // layoutHospitalDestination = (LinearLayout) findViewById(R.id.layout_hospital_destination);
+        // llHospitalDestination = (LinearLayout) findViewById(R.id.layout_hospital_destination);
 
 
-        txtCurrentLocation = (TextView) findViewById(R.id.textview_current_location);
-        txtLatLng = (TextView) findViewById(R.id.textview_current_latlng);
-
+        tvCurrentLocation = (TextView) findViewById(R.id.text_current_location);
+        tvLatLng = (TextView) findViewById(R.id.text_current_latlng);
+        tvUpdateTime = (TextView) findViewById(R.id.text_update_time);
 
         btnFindHospital = (Button) findViewById(R.id.test);
         btnFindHospital.setOnClickListener(new View.OnClickListener() {
@@ -177,6 +179,14 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
     @Override
+    protected void onPause() {
+        super.onPause();
+        if (mGoogleApiClient.isConnected()) {
+            stopLocationUpdates();
+        }
+    }
+
+    @Override
     protected void onStop() {
         super.onStop();
         if (mGoogleApiClient.isConnected()) {
@@ -203,17 +213,13 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             if (savedInstanceState.keySet().contains(REQUESTING_LOCATION_UPDATES_KEY)) {
                 mRequestingLocationUpdates = savedInstanceState.getBoolean(
                         REQUESTING_LOCATION_UPDATES_KEY);
-                // setButtonsEnabledState();
-                Log.d("location code", mRequestingLocationUpdates + "");
             }
             if (savedInstanceState.keySet().contains(LOCATION_KEY)) {
                 mCurrentLocation = savedInstanceState.getParcelable(LOCATION_KEY);
-                Log.d("location code", mCurrentLocation + "");
 
             }
             if (savedInstanceState.keySet().contains(LAST_UPDATED_TIME_STRING_KEY)) {
                 mLastUpdateTime = savedInstanceState.getString(LAST_UPDATED_TIME_STRING_KEY);
-                Log.d("location code", mLastUpdateTime + "");
             }
             updateUI();
         }
@@ -288,12 +294,12 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
             return;
         }
-        mLastLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
-        if (mLastLocation != null) {
-            Toast.makeText(this, mLastLocation + " here", Toast.LENGTH_SHORT).show();
-        } else {
-            Toast.makeText(this, "no location detected", Toast.LENGTH_LONG).show();
+        if (mCurrentLocation == null) {
+            mCurrentLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
+            mLastUpdateTime = DateFormat.getTimeInstance().format(new Date());
+            updateUI();
         }
+        Log.d("connection", "onlocation connect");
 
     }
 
@@ -310,22 +316,24 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     @Override
     public void onLocationChanged(Location location) {
-//        if (location == null) {
-//            Toast.makeText(this, "can't get current location", Toast.LENGTH_SHORT).show();
-//        } else {
-//            currentLatLng = new LatLng(location.getLatitude(), location.getLongitude());
-//            txtCurrentLocation.setText("test");
-//            txtLatLng.setText("(" + currentLatLng.latitude + ", " + currentLatLng.longitude + ")");
-//            txtLatLng.setVisibility(View.VISIBLE);
-//
-//        }
+        Log.d("connection", "onlocation change");
+        Toast.makeText(this, "onlocation change", Toast.LENGTH_LONG
+        ).show();
+        if (location == null) {
+            Toast.makeText(this, "can't get current location", Toast.LENGTH_SHORT).show();
+            mLastUpdateTime = DateFormat.getTimeInstance().format(new Date());
+        } else {
+            mCurrentLocation = location;
+            mLastLocation = mCurrentLocation;
+            updateUI();
+        }
     }
 
     protected void createLocationRequest() {
         mLocationRequest = new LocationRequest();
         mLocationRequest.setInterval(UPDATE_INTERVAL_IN_MILLISECONDS);
         mLocationRequest.setFastestInterval(FASTEST_UPDATE_INTERVAL_IN_MILLISECONDS);
-        mLocationRequest.setSmallestDisplacement(UPDATE_SMALLEST_DISPLACEMENT);
+       // mLocationRequest.setSmallestDisplacement(UPDATE_SMALLEST_DISPLACEMENT);
         mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
     }
 
@@ -342,6 +350,10 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         }
         PendingResult<Status> pendingResult = LocationServices.FusedLocationApi.requestLocationUpdates(
                 mGoogleApiClient, mLocationRequest, this);
+    }
+
+    protected void stopLocationUpdates() {
+        LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
     }
 
     protected void buildLocationSettingsRequest() {
@@ -474,9 +486,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
 
     private void geoLocate() throws IOException {
-        TextView txtCurrentLocation = (TextView) findViewById(R.id.textview_current_location);
+        TextView txtCurrentLocation = (TextView) findViewById(R.id.text_current_location);
         txtCurrentLocation.setText("test");
-        TextView txtLatLng = (TextView) findViewById(R.id.textview_current_latlng);
+        TextView txtLatLng = (TextView) findViewById(R.id.text_current_latlng);
         txtLatLng.setText("(" + currentLatLng.latitude + ", " + currentLatLng.longitude + ")");
         txtLatLng.setVisibility(View.VISIBLE);
 
@@ -550,6 +562,23 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
     private void updateUI() {
-//
+        if (mCurrentLocation != null) {
+            tvCurrentLocation.setText("test");
+            tvLatLng.setText("(" + mCurrentLocation.getLatitude() + ", " + mCurrentLocation
+                    .getLongitude() + ")");
+            tvUpdateTime.setText(mLastUpdateTime);
+            tvLatLng.setVisibility(View.VISIBLE);
+        } 
+
+
+
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle savedInstanceState) {
+        savedInstanceState.putBoolean(REQUESTING_LOCATION_UPDATES_KEY, mRequestingLocationUpdates);
+        savedInstanceState.putParcelable(LOCATION_KEY, mCurrentLocation);
+        savedInstanceState.putString(LAST_UPDATED_TIME_STRING_KEY, mLastUpdateTime);
+        super.onSaveInstanceState(savedInstanceState);
     }
 }
