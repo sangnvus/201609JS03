@@ -71,10 +71,12 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private GoogleMap mGoogleMap;
     private GoogleApiClient mGoogleApiClient;
     private LocationRequest mLocationRequest;
-    Location mlastLocation;
-    Location mCurrentLocation;
-    String mLastUpdateTime;
+    private Location mlastLocation;
+    private Location mCurrentLocation;
+    private String mLastUpdateTime;
     private LatLng currentLatLng;
+    protected Boolean mRequestingLocationUpdates;
+    protected Location mLastLocation;
 
     private List<Marker> originMarkers = new ArrayList<>();
     private List<Marker> destinationMarkers = new ArrayList<>();
@@ -84,10 +86,20 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     private LinearLayout layoutCurrentLocation;
     private LinearLayout layoutHospitalDestination;
+    private TextView txtCurrentLocation;
+    private TextView txtLatLng;
     private BottomSheetBehavior mBottomSheetBehavior;
     private ProgressBar mProgressBarLocation;
     private Button btnFindHospital;
+    protected LocationSettingsRequest mLocationSettingsRequest;
 
+    public static final long UPDATE_INTERVAL_IN_MILLISECONDS = 10000;
+    public static final long FASTEST_UPDATE_INTERVAL_IN_MILLISECONDS =
+            UPDATE_INTERVAL_IN_MILLISECONDS / 2;
+    public static final int UPDATE_SMALLEST_DISPLACEMENT = 10;
+    protected final static String REQUESTING_LOCATION_UPDATES_KEY = "requesting-location-updates-key";
+    protected final static String LOCATION_KEY = "location-key";
+    protected final static String LAST_UPDATED_TIME_STRING_KEY = "last-updated-time-string-key";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -96,7 +108,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         if (googleServiceAvailable()) {
-            Toast.makeText(this, "ready to map", Toast.LENGTH_SHORT).show();
             setContentView(R.layout.activity_maps);
             initMap();
         }
@@ -130,6 +141,11 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         // layoutHospitalDestination = (LinearLayout) findViewById(R.id.layout_hospital_destination);
 
+
+        txtCurrentLocation = (TextView) findViewById(R.id.textview_current_location);
+        txtLatLng = (TextView) findViewById(R.id.textview_current_latlng);
+
+
         btnFindHospital = (Button) findViewById(R.id.test);
         btnFindHospital.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -144,14 +160,29 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             }
         });
 
+        mRequestingLocationUpdates = false;
+        mLastUpdateTime = "";
+
+        updateValuesFromBundle(savedInstanceState);
+
+        buildGoogleApiClient();
+
+
     }
 
     @Override
     protected void onStart() {
         super.onStart();
+        mGoogleApiClient.connect();
     }
 
-
+    @Override
+    protected void onStop() {
+        super.onStop();
+        if (mGoogleApiClient.isConnected()) {
+            mGoogleApiClient.disconnect();
+        }
+    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -165,6 +196,29 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 return super.onOptionsItemSelected(item);
         }
     }
+
+    private void updateValuesFromBundle(Bundle savedInstanceState) {
+        Log.d("location code", "Updating values from bundle");
+        if (savedInstanceState != null) {
+            if (savedInstanceState.keySet().contains(REQUESTING_LOCATION_UPDATES_KEY)) {
+                mRequestingLocationUpdates = savedInstanceState.getBoolean(
+                        REQUESTING_LOCATION_UPDATES_KEY);
+                // setButtonsEnabledState();
+                Log.d("location code", mRequestingLocationUpdates + "");
+            }
+            if (savedInstanceState.keySet().contains(LOCATION_KEY)) {
+                mCurrentLocation = savedInstanceState.getParcelable(LOCATION_KEY);
+                Log.d("location code", mCurrentLocation + "");
+
+            }
+            if (savedInstanceState.keySet().contains(LAST_UPDATED_TIME_STRING_KEY)) {
+                mLastUpdateTime = savedInstanceState.getString(LAST_UPDATED_TIME_STRING_KEY);
+                Log.d("location code", mLastUpdateTime + "");
+            }
+            updateUI();
+        }
+    }
+
 
     private void initMap() {
         MapFragment mapFragment = (MapFragment) getFragmentManager().findFragmentById(R.id.map);
@@ -190,13 +244,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     public void onMapReady(GoogleMap googleMap) {
         mGoogleMap = googleMap;
 
-        mGoogleApiClient = new GoogleApiClient.Builder(this)
-                .addApi(LocationServices.API)
-                .addConnectionCallbacks(this)
-                .addOnConnectionFailedListener(this)
-                .build();
-        mGoogleApiClient.connect();
-
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             // TODO: Consider calling
             //    ActivityCompat#requestPermissions
@@ -215,26 +262,45 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(VIETNAM.getCenter(), Constant.ZOOM_LEVEL_5));
     }
 
-    @Override
-    public void onConnected(@Nullable Bundle bundle) {
+    protected synchronized void buildGoogleApiClient() {
+        mGoogleApiClient = new GoogleApiClient.Builder(this)
+                .addApi(LocationServices.API)
+                .addConnectionCallbacks(this)
+                .addOnConnectionFailedListener(this)
+                .build();
         createLocationRequest();
-        LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder()
-                .addLocationRequest(mLocationRequest);
-        builder.setAlwaysShow(true);
-        PendingResult<LocationSettingsResult> result =
-                LocationServices.SettingsApi.checkLocationSettings(
-                        mGoogleApiClient,
-                        builder.build()
-                );
-
-        result.setResultCallback(this);
-        startLocationUpdates();
-
     }
 
     @Override
-    public void onConnectionSuspended(int i) {
+    public void onConnected(@Nullable Bundle bundle) {
+//        LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder()
+//                .addLocationRequest(mLocationRequest);
+//        builder.setAlwaysShow(true);
+//        PendingResult<LocationSettingsResult> result =
+//                LocationServices.SettingsApi.checkLocationSettings(
+//                        mGoogleApiClient,
+//                        builder.build()
+//                );
+//
+//        result.setResultCallback(this);
+//        startLocationUpdates();
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
 
+            return;
+        }
+        mLastLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
+        if (mLastLocation != null) {
+            Toast.makeText(this, mLastLocation + " here", Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(this, "no location detected", Toast.LENGTH_LONG).show();
+        }
+
+    }
+
+
+    @Override
+    public void onConnectionSuspended(int i) {
+        mGoogleApiClient.connect();
     }
 
     @Override
@@ -244,23 +310,22 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     @Override
     public void onLocationChanged(Location location) {
-        if (location == null) {
-            Toast.makeText(this, "can't get current location", Toast.LENGTH_SHORT).show();
-        } else {
-            currentLatLng = new LatLng(location.getLatitude(), location.getLongitude());
-            TextView txtCurrentLocation = (TextView) findViewById(R.id.textview_current_location);
-            txtCurrentLocation.setText("test");
-            TextView txtLatLng = (TextView) findViewById(R.id.textview_current_latlng);
-            txtLatLng.setText("(" + currentLatLng.latitude + ", " + currentLatLng.longitude + ")");
-            txtLatLng.setVisibility(View.VISIBLE);
-
-        }
+//        if (location == null) {
+//            Toast.makeText(this, "can't get current location", Toast.LENGTH_SHORT).show();
+//        } else {
+//            currentLatLng = new LatLng(location.getLatitude(), location.getLongitude());
+//            txtCurrentLocation.setText("test");
+//            txtLatLng.setText("(" + currentLatLng.latitude + ", " + currentLatLng.longitude + ")");
+//            txtLatLng.setVisibility(View.VISIBLE);
+//
+//        }
     }
 
     protected void createLocationRequest() {
         mLocationRequest = new LocationRequest();
-        mLocationRequest.setInterval(10000);
-        mLocationRequest.setSmallestDisplacement(10);
+        mLocationRequest.setInterval(UPDATE_INTERVAL_IN_MILLISECONDS);
+        mLocationRequest.setFastestInterval(FASTEST_UPDATE_INTERVAL_IN_MILLISECONDS);
+        mLocationRequest.setSmallestDisplacement(UPDATE_SMALLEST_DISPLACEMENT);
         mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
     }
 
@@ -277,6 +342,21 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         }
         PendingResult<Status> pendingResult = LocationServices.FusedLocationApi.requestLocationUpdates(
                 mGoogleApiClient, mLocationRequest, this);
+    }
+
+    protected void buildLocationSettingsRequest() {
+        LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder();
+        builder.addLocationRequest(mLocationRequest);
+        mLocationSettingsRequest = builder.build();
+    }
+
+    protected void checkLocationSettings() {
+        PendingResult<LocationSettingsResult> result =
+                LocationServices.SettingsApi.checkLocationSettings(
+                        mGoogleApiClient,
+                        mLocationSettingsRequest
+                );
+        result.setResultCallback(this);
     }
 
     private void sendDistanceRequest(String origin) {
@@ -467,5 +547,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 // Location settings are unavailable so not possible to show any dialog now
                 break;
         }
+    }
+
+    private void updateUI() {
+//
     }
 }
