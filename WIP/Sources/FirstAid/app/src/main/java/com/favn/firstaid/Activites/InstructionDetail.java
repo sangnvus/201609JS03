@@ -13,6 +13,7 @@ import android.view.MenuItem;
 import android.util.Log;
 
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -46,7 +47,7 @@ public class InstructionDetail extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         Intent intent = getIntent();
-        int injuryId = intent.getExtras().getInt("id");
+        final int injuryId = intent.getExtras().getInt("id");
         String name = intent.getExtras().getString("name");
         int kind = intent.getExtras().getInt("kind");
         getSupportActionBar().setTitle(name);
@@ -54,12 +55,12 @@ public class InstructionDetail extends AppCompatActivity {
         //toast check kind
         if(kind == 1){
             isEmegency = true;
-            Toast.makeText(getApplicationContext(), "Emergency instruction",
-                    Toast.LENGTH_LONG).show();
+//            Toast.makeText(getApplicationContext(), "Emergency instruction",
+//                    Toast.LENGTH_LONG).show();
         } else {
             isEmegency = false;
-            Toast.makeText(getApplicationContext(), "Learning instruction",
-                    Toast.LENGTH_LONG).show();
+//            Toast.makeText(getApplicationContext(), "Learning instruction",
+//                    Toast.LENGTH_LONG).show();
         }
 
         listView = (ListView) findViewById(R.id.listview_instruction);
@@ -78,10 +79,39 @@ public class InstructionDetail extends AppCompatActivity {
 
         FrameLayout footerLayout = (FrameLayout) getLayoutInflater().inflate(R.layout.instruction_detail_footer,null);
         btnFaq = (Button) footerLayout.findViewById(R.id.button_faq);
+        btnFaq.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(InstructionDetail.this, FaqActivity.class);
+                intent.putExtra("id", injuryId);
+                startActivity(intent);
+            }
+        });
 
         listView.addFooterView(footerLayout);
-//        final String[] audio = {"com.favn.firstaid:raw/" + mInstructionList.get(position).getAudio()};
+
         final int[] audio = {R.raw.audio_1,R.raw.audio_2,R.raw.audio_3};
+
+//        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//
+//            @Override
+//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+//
+//                Instruction instruction = (Instruction) listView.getItemAtPosition(position);
+//                // ListView Clicked item index
+//                int itemPosition     = position;
+//
+//                // ListView Clicked item value
+//                cleanup();
+//                mp = MediaPlayer.create(InstructionDetail.this, audio[position]);
+//
+//                mp.start();
+//
+//            }
+//        });
+
+
+
 
         // Speak instruction step by step when click
         ImageView speak = (ImageView) findViewById(R.id.btn_speak);
@@ -94,15 +124,9 @@ public class InstructionDetail extends AppCompatActivity {
             public void onClick(View view) {
                 cleanup();
                 mp = MediaPlayer.create(InstructionDetail.this, audio[position]);
-//                listView.smoothScrollToPosition(position);
-//                Log.d("listview", position + "");
-//                position++;
-//                if (position == mInstructionList.size()) {
-//                    position = 0;
-//                }
 
                 mp.start();
-//
+
                 position++;
 
             }

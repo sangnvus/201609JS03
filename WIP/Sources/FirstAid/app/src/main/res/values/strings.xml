@@ -60,6 +60,7 @@
 
     <!-- Buttons string value -->
     <string name="faq_button">Câu hỏi thường gặp</string>
+    <string name="qa_button">Đặt câu hỏi cho chúng tôi</string>
     <string name="textview_locating">Đang tìm vị trí</string>
 
 </resources>

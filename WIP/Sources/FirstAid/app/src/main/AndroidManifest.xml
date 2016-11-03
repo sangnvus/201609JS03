@@ -86,8 +86,9 @@
             android:label="Ý kiến - Hỏi đáp" />
         <activity
             android:name=".Activites.NotificationActivity"
-            android:label="Thông báo"></activity>
-        <activity android:name=".Activites.GetPhoneNoActivity"></activity>
+            android:label="Thông báo" />
+        <activity android:name=".Activites.GetPhoneNoActivity" />
+        <activity android:name=".Activites.FaqActivity"></activity>
     </application>
 
 </manifest>
