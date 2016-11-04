@@ -32,43 +32,6 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"/>
 
-        <android.support.v7.widget.Toolbar
-            android:background="@color/colorPrimary"
-            android:theme="@style/Base.ThemeOverlay.AppCompat.Dark.ActionBar"
-            android:layout_width="match_parent"
-            android:layout_height="56dp"
-            android:layout_gravity="bottom"
-            android:weightSum="1">
-
-            <ImageView
-                android:id="@+id/btn_speak"
-                android:layout_width="32dp"
-                android:layout_height="32dp"
-                android:src="@drawable/quantum_ic_volume_up_white_36"
-                android:layout_weight="0.01"
-                android:layout_gravity="center"
-                android:layout_marginRight="60dp" />
-
-            <ImageView
-                android:id="@+id/btn_repeat"
-                android:layout_gravity="center"
-                android:src="@drawable/quantum_ic_replay_white_24"
-                android:layout_width="32dp"
-                android:layout_height="32dp" />
-
-            <TextView
-                android:id="@+id/btn_next"
-                android:layout_gravity="center"
-                android:text="TIẾP"
-                android:gravity="center"
-                android:textColor="@color/cast_expanded_controller_text_color"
-                android:textSize="18sp"
-                android:layout_marginLeft="60dp"
-                android:layout_height="32dp"
-                android:layout_width="40dp" />
-
-        </android.support.v7.widget.Toolbar>
-
     </LinearLayout>
 
 </android.support.design.widget.CoordinatorLayout>

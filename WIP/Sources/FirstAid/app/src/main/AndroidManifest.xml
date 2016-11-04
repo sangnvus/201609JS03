@@ -85,12 +85,11 @@
             android:label="Ý kiến - Hỏi đáp" />
         <activity
             android:name=".Activites.NotificationActivity"
-
             android:label="Thông báo" />
-        <activity android:name=".Activites.GetPhoneNoActivity" />
-        <activity android:name=".Activites.FaqActivity"></activity>
+        <activity android:name=".Activites.FaqActivity"
+            android:label="Câu hỏi thường gặp"></activity>
 
-        <activity android:name=".Activites.GetPhoneNoActivity"></activity>
+
         <service
             android:name=".Models.FetchAddressIntentService"
             android:exported="false"/>

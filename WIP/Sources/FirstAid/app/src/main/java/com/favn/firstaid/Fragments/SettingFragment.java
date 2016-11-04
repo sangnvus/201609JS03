@@ -42,8 +42,6 @@ public class SettingFragment extends Fragment {
         {
             super.onCreate(savedInstanceState);
             addPreferencesFromResource(R.xml.preference_screen);
-
-//            createPreference();
         }
 
         private void createPreference(){
@@ -53,17 +51,7 @@ public class SettingFragment extends Fragment {
                 public boolean onPreferenceClick(Preference preference) {
                     boolean checked = ((SwitchPreference) preference).isChecked();
                     if (checked) {
-                        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                        LayoutInflater inflater = getActivity().getLayoutInflater();
-                        builder.setView(inflater.inflate(R.layout.dialog_sending, null))
-                                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int id) {
-                                        // sign in the user ...
-                                    }
-                                });
-                        builder.setCancelable(true);
-                        builder.create().show();
+
                     } else {
 
                     }

@@ -15,10 +15,7 @@ import com.favn.firstaid.Fragments.AboutFragment;
 import com.favn.firstaid.Fragments.EmergencyFragment;
 import com.favn.firstaid.Fragments.MoreFragment;
 import com.favn.firstaid.Fragments.LearningFragment;
-import com.favn.firstaid.Fragments.NotificationFragment;
-import com.favn.firstaid.Fragments.QAFragment;
 import com.favn.firstaid.Fragments.SettingFragment;
-import com.favn.firstaid.Fragments.TestFragment;
 import com.favn.firstaid.R;
 
 public class MainActivity extends AppCompatActivity
@@ -70,12 +67,6 @@ public class MainActivity extends AppCompatActivity
             fragmentClass = EmergencyFragment.class;
         } else if (id == R.id.nav_learning) {
             fragmentClass = LearningFragment.class;
-        } else if (id == R.id.nav_testing) {
-            fragmentClass = TestFragment.class;
-        } else if (id == R.id.nav_qa) {
-            fragmentClass = QAFragment.class;
-        } else if (id == R.id.nav_noti) {
-            fragmentClass = NotificationFragment.class;
         } else if (id == R.id.nav_setting) {
             fragmentClass = SettingFragment.class;
         } else if (id == R.id.nav_more) {
