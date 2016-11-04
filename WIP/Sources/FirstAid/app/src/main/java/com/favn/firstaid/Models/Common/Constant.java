@@ -29,4 +29,12 @@ public class Constant {
     public static final String RESULT_DATA_KEY = PACKAGE_NAME + ".RESULT_DATA_KEY";
 
     public static final String LOCATION_DATA_EXTRA = PACKAGE_NAME + ".LOCATION_DATA_EXTRA";
+
+    // Add Constant for detect what control(listview, spinner,..) - added by Kienmt : 11/04/2016
+    public static final int LISTVIEW_EMERGENCY = 1;
+    public static final int SPINNER_INJURY = 2;
+    // End add constant
+
+
+
 }
