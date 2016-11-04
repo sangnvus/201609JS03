@@ -5,13 +5,16 @@
     tools:context="com.favn.firstaid.Fragments.QAFragment">
 
     <!-- TODO: Update blank fragment layout -->
-
+<ScrollView
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="center_horizontal"
-        android:weightSum="1">
+        android:weightSum="1"
+        android:layout_marginTop="5dp">
 
         <LinearLayout
             android:orientation="vertical"
@@ -19,84 +22,170 @@
             android:layout_height="wrap_content"
             android:weightSum="1"
             android:gravity="top"
-            android:id="@+id/llInfor">
-
+            android:background="#E0E0E0">
             <TextView
-                android:text="Trường hợp"
+                android:text="Tên của bạn"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/tv_injury"
-                android:textSize="18sp"
-                android:layout_marginLeft="16dp"
-                android:textColor="@color/cast_expanded_controller_background_color"
-                android:layout_marginTop="8dp"
-                android:layout_marginRight="16dp" />
-
-            <Spinner
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/spin_injury"
-                android:layout_marginTop="8dp"
-                android:layout_marginLeft="16dp"
-                android:layout_marginRight="16dp"
-                android:entries="@array/injury_arrays" />
-
-            <TextView
-                android:text="Tên"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/tv_Name"
+                android:layout_height="match_parent"
                 android:textSize="18sp"
                 android:layout_marginLeft="20dp"
-                android:textColor="@color/cast_expanded_controller_background_color"
-                android:layout_marginTop="10dp" />
-
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"/>
+        </LinearLayout>
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:weightSum="1"
+            android:gravity="top">
             <EditText
                 android:layout_width="match_parent"
                 android:inputType="textPersonName"
-                android:id="@+id/et_Name"
+                android:id="@+id/text_name"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp" />
+                android:textSize="18sp"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
+                android:hint="..."/>
+        </LinearLayout>
 
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:weightSum="1"
+            android:gravity="top"
+            android:background="#E0E0E0">
             <TextView
                 android:text="Email"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/tv_Email"
                 android:textSize="18sp"
                 android:layout_marginLeft="20dp"
-                android:textColor="@color/cast_expanded_controller_background_color" />
-
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"/>
+        </LinearLayout>
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:weightSum="1"
+            android:gravity="top">
             <EditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="textEmailAddress"
-                android:id="@+id/et_Email"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp" />
+                android:id="@+id/edittext_email"
+                android:textSize="18sp"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
+                android:hint="..."/>
+        </LinearLayout>
 
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:weightSum="1"
+            android:gravity="top"
+            android:background="#E0E0E0">
+            <TextView
+                android:text="Tiêu đề"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="18sp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"/>
+        </LinearLayout>
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:weightSum="1"
+            android:gravity="top">
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:weightSum="1"
+                android:gravity="top">
+                <RadioGroup
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingTop="8dp">
+                    <RadioButton
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:textSize="18sp"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginBottom="10dp"
+                        android:id="@+id/radio_injury" />
+                    <RadioButton
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:textSize="18sp"
+                        android:layout_marginTop="20dp"
+                        android:layout_marginBottom="10dp"
+                        android:id="@+id/radio_title" />
+                </RadioGroup>
+            </LinearLayout>
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:weightSum="1"
+                android:gravity="top">
+                <Spinner
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="18sp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="10dp"
+                    android:id="@+id/spin_injury" />
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="text"
+                    android:textSize="18sp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="10dp"
+                    android:hint="Khác..."/>
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:weightSum="1"
+            android:gravity="top"
+            android:background="#E0E0E0">
             <TextView
                 android:text="Nội dung"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/tv_Content"
+                android:layout_height="match_parent"
                 android:textSize="18sp"
                 android:layout_marginLeft="20dp"
-                android:textColor="@color/cast_expanded_controller_background_color"
-                android:layout_marginTop="0dp" />
-
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"/>
+        </LinearLayout>
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:weightSum="1"
+            android:gravity="top">
             <EditText
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
                 android:inputType="textMultiLine"
-                android:id="@+id/et_Content"
-                android:gravity="top"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"
-                style="@style/Widget.AppCompat.EditText"
-                android:layout_weight="1.26"
-                android:lines="4" />
+                android:layout_height="wrap_content"
+                android:textSize="18sp"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
+                android:hint="..."
+                android:lines="6"
+                android:id="@+id/edittext_content" />
         </LinearLayout>
 
         <LinearLayout
@@ -110,12 +199,15 @@
                 android:text="Gửi"
                 android:layout_width="121dp"
                 android:layout_height="wrap_content"
-                android:id="@+id/btn_Send"
+                android:id="@+id/button_send"
                 android:background="@color/colorPrimary"
                 android:textSize="18sp"
                 android:textColor="@color/cast_libraries_material_featurehighlight_text_body_color" />
         </LinearLayout>
 
     </LinearLayout>
+
+</ScrollView>
+
 
 </FrameLayout>

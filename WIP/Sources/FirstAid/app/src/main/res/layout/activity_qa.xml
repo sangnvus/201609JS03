@@ -42,8 +42,7 @@
                 android:id="@+id/spin_injury"
                 android:layout_marginTop="8dp"
                 android:layout_marginLeft="16dp"
-                android:layout_marginRight="16dp"
-                android:entries="@array/injury_arrays" />
+                android:layout_marginRight="16dp" />
 
             <TextView
                 android:text="Tên"

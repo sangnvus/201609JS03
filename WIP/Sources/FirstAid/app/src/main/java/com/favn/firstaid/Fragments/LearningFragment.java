@@ -26,6 +26,8 @@ import com.favn.firstaid.R;
 
 import java.util.List;
 
+import static com.favn.firstaid.Models.Common.Constant.LISTVIEW_EMERGENCY;
+
 
 /**
  * A simple {@link Fragment} subclass.
@@ -53,7 +55,11 @@ public class LearningFragment extends Fragment implements AdapterView.OnItemClic
         dbHelper.openDatabase();
 
         mInjuryList = dbHelper.getListInjury();
-        adapter = new InjuryAdapter(getActivity(), mInjuryList);
+
+        // TODO : pending data for learning screen
+        // adapter = new InjuryAdapter(getActivity(), mInjuryList);
+        adapter = new InjuryAdapter(getActivity(), mInjuryList, LISTVIEW_EMERGENCY);
+
         listView.setAdapter(adapter);
         listView.setOnItemClickListener(this);
         setHasOptionsMenu(true);
