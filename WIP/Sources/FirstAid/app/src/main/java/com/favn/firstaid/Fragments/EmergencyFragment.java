@@ -36,7 +36,7 @@ public class EmergencyFragment extends Fragment implements AdapterView.OnItemCli
     private DatabaseOpenHelper dbHelper;
     private ListView listView;
     private List<Injury> mInjuryList;
-    final int kind = 1;
+    public static final int FROM_EMERGENCY = 1;
 
     public EmergencyFragment() {
         // Required empty public constructor
@@ -70,7 +70,7 @@ public class EmergencyFragment extends Fragment implements AdapterView.OnItemCli
         Intent intent = new Intent(getActivity(), InstructionDetail.class);
         intent.putExtra("id", injuryId);
         intent.putExtra("name", injuryName);
-        intent.putExtra("kind", kind);
+        intent.putExtra("typeOfAction", FROM_EMERGENCY);
         startActivity(intent);
     }
 

@@ -1,0 +1,18 @@
+Naming convention for images and audios
+
+Image
+
+image for injury
+img_[injury_name]_image
+
+image for instruction step
+img_[injury_name]_step_[number]  | number: 1,2,3,4
+
+image file format is PNG
+
+Audio
+
+audio for instruction step
+audio_[injury_name]_step_[number]  | number: 1,2,3,4
+
+audio file format is MP3

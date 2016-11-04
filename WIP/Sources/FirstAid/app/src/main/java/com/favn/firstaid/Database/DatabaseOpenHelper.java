@@ -11,7 +11,6 @@ import com.favn.firstaid.Models.Injury;
 import com.favn.firstaid.Models.Instruction;
 
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
@@ -23,9 +22,12 @@ import java.util.List;
 
 public class DatabaseOpenHelper extends SQLiteOpenHelper {
     public static String DB_PATH = "/data/data/com.favn.firstaid/databases/";
-    public static String DB_NAME = "favn1.db";
-    public static String TABLE_NAME_INJURY = "injury";
-    public static String TABLE_NAME_INSTRUCTION = "instruction";
+    public static String DB_NAME = "faapp_db_ver1.db";
+    public static String TABLE_NAME_INJURIES = "injuries";
+    public static String TABLE_NAME_INSTRUCTIONS = "instructions";
+    public static String TABLE_NAME_HOSPITALS = "hospitals";
+    public static String TABLE_NAME_FAQS = "faqs";
+    public static String TABLE_NAME_NOTIFICATIONS = "notifications";
     private static int DB_VERSION = 1;
     private SQLiteDatabase mDatabase;
     private Context mContext;
@@ -42,7 +44,7 @@ public class DatabaseOpenHelper extends SQLiteOpenHelper {
             try {
                 copyDatabase();
             } catch (Exception e) {
-                Log.e("DB error",e.getMessage());
+                Log.e("DB error", e.getMessage());
             }
         }
     }
@@ -75,7 +77,7 @@ public class DatabaseOpenHelper extends SQLiteOpenHelper {
             outputStream.close();
             return true;
         } catch (Exception e) {
-            Log.e("DB error",e.getMessage());
+            Log.e("DB error", e.getMessage());
             return false;
         }
     }
@@ -95,10 +97,14 @@ public class DatabaseOpenHelper extends SQLiteOpenHelper {
         Injury injury = null;
         List<Injury> injuryListList = new ArrayList<>();
         openDatabase();
-        Cursor cursor = mDatabase.rawQuery("SELECT * FROM " + TABLE_NAME_INJURY, null);
+        Cursor cursor = mDatabase.rawQuery("SELECT * FROM " + TABLE_NAME_INJURIES, null);
         cursor.moveToFirst();
         while (!cursor.isAfterLast()) {
-            injury = new Injury(cursor.getInt(0), cursor.getString(1), cursor.getString(2));
+            int id = cursor.getInt(0);
+            String injuryName = cursor.getString(1);
+            String injurySymptom = cursor.getString(2);
+            String injuryImage = cursor.getString(4);
+            injury = new Injury(id, injuryName, injuryImage);
             injuryListList.add(injury);
             cursor.moveToNext();
         }
@@ -111,11 +117,17 @@ public class DatabaseOpenHelper extends SQLiteOpenHelper {
         Instruction instruction = null;
         List<Instruction> instructionList = new ArrayList<>();
         openDatabase();
-        Cursor cursor = mDatabase.rawQuery("SELECT * FROM " + TABLE_NAME_INSTRUCTION + " WHERE " +
-                "Field1 == " + id, null);
+        Cursor cursor = mDatabase.rawQuery("SELECT * FROM " + TABLE_NAME_INSTRUCTIONS + " WHERE " +
+                "injury_id == " + id, null);
         cursor.moveToFirst();
         while (!cursor.isAfterLast()) {
-            instruction = new Instruction(cursor.getInt(0), cursor.getInt(1), cursor.getString(2), cursor.getString(3), cursor.getString(4));
+            int injuryId = cursor.getInt(1);
+            int step = cursor.getInt(2);
+            String content = cursor.getString(3);
+            String explanation = cursor.getString(4);
+            String image = cursor.getString(5);
+            String audio = cursor.getString(6);
+            instruction = new Instruction(injuryId, step, content, explanation, image, audio);
             instructionList.add(instruction);
             cursor.moveToNext();
         }

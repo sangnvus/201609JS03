@@ -2,19 +2,20 @@ package com.favn.firstaid.Activites;
 
 import android.Manifest;
 import android.app.Dialog;
-import android.content.Context;
+import android.content.Intent;
+import android.content.IntentSender;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.location.Geocoder;
 import android.location.Location;
-import android.location.LocationManager;
+import android.os.Handler;
+import android.os.ResultReceiver;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.v4.app.ActivityCompat;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.location.Address;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -27,10 +28,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.favn.firstaid.Adapter.HospitalAdapter;
+import com.favn.firstaid.Models.Common.Constant;
 import com.favn.firstaid.Models.Direction.DirectionFinder;
 import com.favn.firstaid.Models.Direction.DirectionFinderListener;
 import com.favn.firstaid.Models.DistanceMatrix.DistanceMatrixFinder;
 import com.favn.firstaid.Models.DistanceMatrix.DistanceMatrixFinderListener;
+import com.favn.firstaid.Models.FetchAddressIntentService;
 import com.favn.firstaid.Models.Hospital;
 import com.favn.firstaid.R;
 import com.google.android.gms.common.ConnectionResult;
@@ -38,15 +41,22 @@ import com.google.android.gms.common.GoogleApiAvailability;
 
 import com.google.android.gms.common.api.GoogleApiClient;
 
+import com.google.android.gms.common.api.PendingResult;
+import com.google.android.gms.common.api.ResultCallback;
+import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.LocationListener;
+import com.google.android.gms.location.LocationSettingsRequest;
+import com.google.android.gms.location.LocationSettingsResult;
+import com.google.android.gms.location.LocationSettingsStatusCodes;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
@@ -54,18 +64,23 @@ import com.google.android.gms.maps.model.PolylineOptions;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.text.DateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 
 public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback,
         GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener,
-        LocationListener, DirectionFinderListener, DistanceMatrixFinderListener {
+        LocationListener, DirectionFinderListener, DistanceMatrixFinderListener, ResultCallback<LocationSettingsResult> {
 
     private GoogleMap mGoogleMap;
     private GoogleApiClient mGoogleApiClient;
     private LocationRequest mLocationRequest;
+    private Location mCurrentLocation;
+    private String mLastUpdateTime;
     private LatLng currentLatLng;
+    protected Boolean mRequestingLocationUpdates;
+    protected Location mLastLocation;
 
     private List<Marker> originMarkers = new ArrayList<>();
     private List<Marker> destinationMarkers = new ArrayList<>();
@@ -73,31 +88,44 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     private List<Hospital> hospitalList = new ArrayList<>();
 
-    LinearLayout layoutCurrentLocation;
-    LinearLayout layoutHospitalDestination;
+    private LinearLayout llCurrentLocation;
+    private LinearLayout llHospitalDestination;
+    private TextView tvCurrentLocation;
+    private TextView tvLatLng;
     private BottomSheetBehavior mBottomSheetBehavior;
     private ProgressBar mProgressBarLocation;
     private Button btnFindHospital;
-    Location lastLocation;
+    protected LocationSettingsRequest mLocationSettingsRequest;
+
+    public static final long UPDATE_INTERVAL_IN_MILLISECONDS = 10000;
+    public static final long FASTEST_UPDATE_INTERVAL_IN_MILLISECONDS =
+            UPDATE_INTERVAL_IN_MILLISECONDS / 2;
+    public static final int UPDATE_SMALLEST_DISPLACEMENT = 10;
+    protected final static String REQUESTING_LOCATION_UPDATES_KEY = "requesting-location-updates-key";
+    protected final static String LOCATION_KEY = "location-key";
+    protected static final String LOCATION_ADDRESS_KEY = "location-address";
+
+    protected String mAddress;
+    private AddressResultReceiver mResultReceiver;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getSupportActionBar().setHomeButtonEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         if (googleServiceAvailable()) {
-            Toast.makeText(this, "ready to map", Toast.LENGTH_SHORT).show();
             setContentView(R.layout.activity_maps);
             initMap();
         }
 
-        getSupportActionBar().setHomeButtonEnabled(true);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        layoutCurrentLocation = (LinearLayout) findViewById(R.id.layout_curent_location);
-        layoutCurrentLocation.setOnClickListener(new View.OnClickListener() {
+
+        llCurrentLocation = (LinearLayout) findViewById(R.id.layout_curent_location);
+        llCurrentLocation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                goToLocationZoom(currentLatLng, 15);
+                goToLocationZoom(currentLatLng, Constant.ZOOM_LEVEL_15);
             }
         });
 
@@ -119,33 +147,48 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 //            }
 //        });
 
-        // layoutHospitalDestination = (LinearLayout) findViewById(R.id.layout_hospital_destination);
+        // llHospitalDestination = (LinearLayout) findViewById(R.id.layout_hospital_destination);
+
+
+        tvCurrentLocation = (TextView) findViewById(R.id.text_current_location);
+        tvLatLng = (TextView) findViewById(R.id.text_current_latlng);
 
         btnFindHospital = (Button) findViewById(R.id.test);
         btnFindHospital.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                    isFarfromLastPosition();
-                try {
-                    geoLocate();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
 
             }
         });
-        LocationManager loc = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
-            return;
+
+        mResultReceiver = new AddressResultReceiver(new Handler());
+        updateValuesFromBundle(savedInstanceState);
+
+        buildGoogleApiClient();
+
+
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        mGoogleApiClient.connect();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if (mGoogleApiClient.isConnected()) {
+            stopLocationUpdates();
         }
-        lastLocation = loc.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        if (mGoogleApiClient.isConnected()) {
+            mGoogleApiClient.disconnect();
+        }
     }
 
     @Override
@@ -160,6 +203,26 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 return super.onOptionsItemSelected(item);
         }
     }
+
+    private void updateValuesFromBundle(Bundle savedInstanceState) {
+        Log.d("location code", "Updating values from bundle");
+        if (savedInstanceState != null) {
+            if (savedInstanceState.keySet().contains(REQUESTING_LOCATION_UPDATES_KEY)) {
+                mRequestingLocationUpdates = savedInstanceState.getBoolean(
+                        REQUESTING_LOCATION_UPDATES_KEY);
+            }
+            if (savedInstanceState.keySet().contains(LOCATION_KEY)) {
+                mCurrentLocation = savedInstanceState.getParcelable(LOCATION_KEY);
+
+            }
+            if (savedInstanceState.keySet().contains(LOCATION_ADDRESS_KEY)) {
+                mAddress = savedInstanceState.getString(LOCATION_ADDRESS_KEY);
+                displayAddress();
+            }
+            updateUI();
+        }
+    }
+
 
     private void initMap() {
         MapFragment mapFragment = (MapFragment) getFragmentManager().findFragmentById(R.id.map);
@@ -185,13 +248,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     public void onMapReady(GoogleMap googleMap) {
         mGoogleMap = googleMap;
 
-        mGoogleApiClient = new GoogleApiClient.Builder(this)
-                .addApi(LocationServices.API)
-                .addConnectionCallbacks(this)
-                .addOnConnectionFailedListener(this)
-                .build();
-        mGoogleApiClient.connect();
-
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             // TODO: Consider calling
             //    ActivityCompat#requestPermissions
@@ -204,15 +260,75 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         }
         mGoogleMap.setMyLocationEnabled(true);
         mGoogleMap.getUiSettings().setMyLocationButtonEnabled(false);
+
+        LatLngBounds VIETNAM = new LatLngBounds(Constant.SOUTHWEST, Constant.NORTHEAST);
+        mGoogleMap.setLatLngBoundsForCameraTarget(VIETNAM);
+        mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(VIETNAM.getCenter(), Constant.ZOOM_LEVEL_5));
+    }
+
+    protected synchronized void buildGoogleApiClient() {
+        mGoogleApiClient = new GoogleApiClient.Builder(this)
+                .addApi(LocationServices.API)
+                .addConnectionCallbacks(this)
+                .addOnConnectionFailedListener(this)
+                .build();
+        createLocationRequest();
     }
 
     @Override
     public void onConnected(@Nullable Bundle bundle) {
-        mLocationRequest = LocationRequest.create();
-        mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-        mLocationRequest.setInterval(300000);
 
-//
+        startLocationUpdates();
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+
+            return;
+        }
+        if (mCurrentLocation == null) {
+            mCurrentLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
+            mLastLocation = mCurrentLocation;
+            if(!Geocoder.isPresent()) {
+                return;
+            }
+
+            updateUI();
+        }
+        startIntentService();
+        Log.d("connection", "onlocation connect");
+
+    }
+
+
+    @Override
+    public void onConnectionSuspended(int i) {
+        mGoogleApiClient.connect();
+    }
+
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+        Log.d("connection location", "Connection failed: " + connectionResult.toString());
+    }
+
+    @Override
+    public void onLocationChanged(Location location) {
+
+        if (location == null) {
+            Toast.makeText(this, "can't get current location", Toast.LENGTH_SHORT).show();
+        } else {
+            mCurrentLocation = location;
+            mLastLocation = mCurrentLocation;
+            updateUI();
+        }
+    }
+
+    protected void createLocationRequest() {
+        mLocationRequest = new LocationRequest();
+        mLocationRequest.setInterval(UPDATE_INTERVAL_IN_MILLISECONDS);
+        mLocationRequest.setFastestInterval(FASTEST_UPDATE_INTERVAL_IN_MILLISECONDS);
+        mLocationRequest.setSmallestDisplacement(UPDATE_SMALLEST_DISPLACEMENT);
+        mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+    }
+
+    protected void startLocationUpdates() {
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             // TODO: Consider calling
             //    ActivityCompat#requestPermissions
@@ -223,29 +339,36 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             // for ActivityCompat#requestPermissions for more details.
             return;
         }
-        LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);
+        PendingResult<Status> pendingResult = LocationServices.FusedLocationApi.requestLocationUpdates(
+                mGoogleApiClient, mLocationRequest, this);
+    }
+
+    protected void stopLocationUpdates() {
+        LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
+    }
+
+    protected void startIntentService() {
+        Intent intent = new Intent(this, FetchAddressIntentService.class);
+        intent.putExtra(Constant.RECEIVER, mResultReceiver);
+        intent.putExtra(Constant.LOCATION_DATA_EXTRA, mCurrentLocation);
+        startService(intent);
+        Log.d("checkcode", "code here start intent service");
 
     }
 
-    @Override
-    public void onConnectionSuspended(int i) {
-
+    protected void buildLocationSettingsRequest() {
+        LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder();
+        builder.addLocationRequest(mLocationRequest);
+        mLocationSettingsRequest = builder.build();
     }
 
-    @Override
-    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-
-    }
-
-    @Override
-    public void onLocationChanged(Location location) {
-        if (location == null) {
-            Toast.makeText(this, "can't get current location", Toast.LENGTH_SHORT).show();
-        } else {
-            currentLatLng = new LatLng(location.getLatitude(), location.getLongitude());
-
-
-        }
+    protected void checkLocationSettings() {
+        PendingResult<LocationSettingsResult> result =
+                LocationServices.SettingsApi.checkLocationSettings(
+                        mGoogleApiClient,
+                        mLocationSettingsRequest
+                );
+        result.setResultCallback(this);
     }
 
     private void sendDistanceRequest(String origin) {
@@ -361,57 +484,78 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         mGoogleMap.animateCamera(cameraUpdate);
     }
 
-    private boolean isFarfromLastPosition() {
-
-        Log.d("distance", lastLocation.distanceTo(lastLocation) +"");
-        return false;
-    }
-
-    private void geoLocate() throws IOException {
-        TextView txtCurrentLocation = (TextView) findViewById(R.id.textview_current_location);
-        txtCurrentLocation.setText("test");
-        TextView txtLatLng = (TextView) findViewById(R.id.textview_current_latlng);
-        txtLatLng.setText("(" + currentLatLng.latitude + ", " + currentLatLng.longitude + ")");
-        txtLatLng.setVisibility(View.VISIBLE);
-
-        Geocoder geocoder = new Geocoder(this);
-        List<Address> addresses = geocoder.getFromLocation(currentLatLng.latitude, currentLatLng
-                .longitude, 1);
-        Address address = addresses.get(0);
-
-        Address returnedAddress;
-        StringBuilder strReturnedAddress = new StringBuilder();
-        ;
-//            try {
-//
-                if(addresses != null) {
-                    returnedAddress = addresses.get(0);
-                    for(int i=0; i<returnedAddress.getMaxAddressLineIndex(); i++) {
-                        strReturnedAddress.append(returnedAddress.getAddressLine(i));
-                        if(i < returnedAddress.getMaxAddressLineIndex() - 1) {
-                            strReturnedAddress.append(", ");
-                        }
-                    }
-                    Log.d("location", strReturnedAddress.toString());
-                    Log.d("location1", returnedAddress.getAdminArea());
-                    Log.d("location2", returnedAddress.getCountryName());
-                    Log.d("location3", returnedAddress.getLocality());
-                    Log.d("location4", returnedAddress.getPremises());
-                }
-                else{
-                    Log.d("location", "No Address returned!");
-                }
-//            } catch (Exception e) {
-//                // TODO Auto-generated catch block
-//                e.printStackTrace();
-//                Log.d("location", "Cannot get Address!");
-//            }
-
-    }
-
     private List<Hospital> getNearbyHospital(LatLng latLng, List<Hospital> hospitalList) {
         double x1 = latLng.latitude;
         double y1 = latLng.longitude;
         return null;
+    }
+
+    @Override
+    public void onResult(@NonNull LocationSettingsResult locationSettingsResult) {
+        final Status status = locationSettingsResult.getStatus();
+        switch (status.getStatusCode()) {
+            case LocationSettingsStatusCodes.SUCCESS:
+                // NO need to show the dialog;
+
+                break;
+
+            case LocationSettingsStatusCodes.RESOLUTION_REQUIRED:
+                try {
+                    // Show the dialog by calling startResolutionForResult(), and check the result
+                    // in onActivityResult().
+
+                    status.startResolutionForResult(this, 100);
+
+                } catch (IntentSender.SendIntentException e) {
+
+                    //failed to show dialog
+                }
+
+                break;
+
+            case LocationSettingsStatusCodes.SETTINGS_CHANGE_UNAVAILABLE:
+                // Location settings are unavailable so not possible to show any dialog now
+                break;
+        }
+    }
+
+    private void updateUI() {
+        if (mCurrentLocation != null) {
+            tvCurrentLocation.setText("test");
+            tvLatLng.setText("(" + mCurrentLocation.getLatitude() + ", " + mCurrentLocation
+                    .getLongitude() + ")");
+            tvLatLng.setVisibility(View.VISIBLE);
+        }
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle savedInstanceState) {
+        savedInstanceState.putBoolean(REQUESTING_LOCATION_UPDATES_KEY, mRequestingLocationUpdates);
+        savedInstanceState.putParcelable(LOCATION_KEY, mCurrentLocation);
+        savedInstanceState.putString(LOCATION_ADDRESS_KEY, mAddress);
+        super.onSaveInstanceState(savedInstanceState);
+    }
+
+    class AddressResultReceiver extends ResultReceiver {
+        public AddressResultReceiver(Handler handler) {
+            super(handler);
+        }
+
+        @Override
+        protected void onReceiveResult(int resultCode, Bundle resultData) {
+
+            // Display the address string or an error message sent from the intent service.
+            mAddress = resultData.getString(Constant.RESULT_DATA_KEY);
+            displayAddress();
+            Log.d("address", mAddress);
+            // Show a toast message if an address was found.
+            if (resultCode == Constant.SUCCESS_RESULT) {
+            }
+
+        }
+    }
+
+    protected void displayAddress() {
+        tvCurrentLocation.setText(mAddress);
     }
 }
