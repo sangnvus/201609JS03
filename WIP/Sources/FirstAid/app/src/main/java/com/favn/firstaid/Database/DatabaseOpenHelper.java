@@ -22,7 +22,7 @@ import java.util.List;
 
 public class DatabaseOpenHelper extends SQLiteOpenHelper {
     public static String DB_PATH = "/data/data/com.favn.firstaid/databases/";
-    public static String DB_NAME = "faapp_db_ver1.db";
+    public static String DB_NAME = "favn_ver2.db";
     public static String TABLE_NAME_INJURIES = "injuries";
     public static String TABLE_NAME_INSTRUCTIONS = "instructions";
     public static String TABLE_NAME_HOSPITALS = "hospitals";

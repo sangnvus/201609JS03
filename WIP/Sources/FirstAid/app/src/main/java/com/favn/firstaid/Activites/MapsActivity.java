@@ -1,8 +1,12 @@
 package com.favn.firstaid.Activites;
 
 import android.Manifest;
+import android.app.Activity;
 import android.app.Dialog;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.IntentSender;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
@@ -21,6 +25,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
@@ -34,7 +39,9 @@ import com.favn.firstaid.Models.Direction.DirectionFinderListener;
 import com.favn.firstaid.Models.DistanceMatrix.DistanceMatrixFinder;
 import com.favn.firstaid.Models.DistanceMatrix.DistanceMatrixFinderListener;
 import com.favn.firstaid.Models.FetchAddressIntentService;
+import com.favn.firstaid.Models.GpsChangeReceiver;
 import com.favn.firstaid.Models.Hospital;
+import com.favn.firstaid.Models.NetworkChangeReceiver;
 import com.favn.firstaid.R;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
@@ -62,11 +69,8 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 
-import java.io.IOException;
 import java.io.UnsupportedEncodingException;
-import java.text.DateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback,
@@ -79,7 +83,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private Location mCurrentLocation;
     private String mLastUpdateTime;
     private LatLng currentLatLng;
-    protected Boolean mRequestingLocationUpdates;
     protected Location mLastLocation;
 
     private List<Marker> originMarkers = new ArrayList<>();
@@ -90,11 +93,15 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     private LinearLayout llCurrentLocation;
     private LinearLayout llHospitalDestination;
+    private ImageView imgGpsStatus;
+    private TextView tvProviderStatus;
     private TextView tvCurrentLocation;
     private TextView tvLatLng;
     private BottomSheetBehavior mBottomSheetBehavior;
     private ProgressBar mProgressBarLocation;
     private Button btnFindHospital;
+
+
     protected LocationSettingsRequest mLocationSettingsRequest;
 
     public static final long UPDATE_INTERVAL_IN_MILLISECONDS = 10000;
@@ -104,28 +111,49 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     protected final static String REQUESTING_LOCATION_UPDATES_KEY = "requesting-location-updates-key";
     protected final static String LOCATION_KEY = "location-key";
     protected static final String LOCATION_ADDRESS_KEY = "location-address";
+    protected static final int REQUEST_CHECK_SETTINGS = 0x1;
 
     protected String mAddress;
     private AddressResultReceiver mResultReceiver;
 
+    private final static String GPS_TAG = "GPS";
+    GpsChangeReceiver gpsChangeReceiver;
+    NetworkChangeReceiver networkChangeReceiver;
+    private boolean isGpsAvailable;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_maps);
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+
+        llCurrentLocation = (LinearLayout) findViewById(R.id.layout_current_location);
+        tvCurrentLocation = (TextView) findViewById(R.id.text_current_location);
+        imgGpsStatus = (ImageView) findViewById(R.id.image_gps_status);
+        tvLatLng = (TextView) findViewById(R.id.text_current_latlng);
+        btnFindHospital = (Button) findViewById(R.id.test);
+        tvProviderStatus = (TextView) findViewById(R.id.text_provider_status);
+
+
+        gpsChangeReceiver = new GpsChangeReceiver();
+        networkChangeReceiver = new NetworkChangeReceiver();
+        mResultReceiver = new AddressResultReceiver(new Handler());
+        isGpsAvailable = false;
+
         if (googleServiceAvailable()) {
-            setContentView(R.layout.activity_maps);
             initMap();
         }
 
-
-
-        llCurrentLocation = (LinearLayout) findViewById(R.id.layout_curent_location);
+        // Action zoom to current location
         llCurrentLocation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                goToLocationZoom(currentLatLng, Constant.ZOOM_LEVEL_15);
+                checkLocationSettings();
+                if (mCurrentLocation != null) {
+                    goToCurrentLocationZoom();
+                }
             }
         });
 
@@ -150,10 +178,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         // llHospitalDestination = (LinearLayout) findViewById(R.id.layout_hospital_destination);
 
 
-        tvCurrentLocation = (TextView) findViewById(R.id.text_current_location);
-        tvLatLng = (TextView) findViewById(R.id.text_current_latlng);
-
-        btnFindHospital = (Button) findViewById(R.id.test);
         btnFindHospital.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -161,13 +185,37 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             }
         });
 
-        mResultReceiver = new AddressResultReceiver(new Handler());
+
         updateValuesFromBundle(savedInstanceState);
-
         buildGoogleApiClient();
-
+        buildLocationSettingsRequest();
 
     }
+
+    // Broadcast for GPS status
+    BroadcastReceiver gpsBroadcastReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            Toast.makeText(getBaseContext(), "GPS status change", Toast.LENGTH_LONG).show();
+        }
+    };
+
+    // Broadcast for Connectivity status
+    BroadcastReceiver connectivityBroadcastReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            Toast.makeText(getBaseContext(), "connecttivity status change", Toast.LENGTH_LONG)
+                    .show();
+//            ConnectivityManager cm = (ConnectivityManager) context
+//                    .getSystemService(Context.CONNECTIVITY_SERVICE);
+//
+//            NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+//
+//            isNetworkAvailable = (activeNetwork != null) ?  true : false;
+//
+//            Log.d("networkchck", isNetworkAvailable + "");
+        }
+    };
 
     @Override
     protected void onStart() {
@@ -178,9 +226,18 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     @Override
     protected void onPause() {
         super.onPause();
+        unregisterReceiver(gpsBroadcastReceiver);
+        unregisterReceiver(connectivityBroadcastReceiver);
         if (mGoogleApiClient.isConnected()) {
             stopLocationUpdates();
         }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        registerReceiver(gpsBroadcastReceiver, new IntentFilter(Constant.INTENT_FILTER_PROVIDERS_CHANGED));
+        registerReceiver(connectivityBroadcastReceiver, new IntentFilter(Constant.INTENT_FILTER_CONNECTIVITY_CHANGED));
     }
 
     @Override
@@ -207,13 +264,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private void updateValuesFromBundle(Bundle savedInstanceState) {
         Log.d("location code", "Updating values from bundle");
         if (savedInstanceState != null) {
-            if (savedInstanceState.keySet().contains(REQUESTING_LOCATION_UPDATES_KEY)) {
-                mRequestingLocationUpdates = savedInstanceState.getBoolean(
-                        REQUESTING_LOCATION_UPDATES_KEY);
-            }
             if (savedInstanceState.keySet().contains(LOCATION_KEY)) {
                 mCurrentLocation = savedInstanceState.getParcelable(LOCATION_KEY);
-
             }
             if (savedInstanceState.keySet().contains(LOCATION_ADDRESS_KEY)) {
                 mAddress = savedInstanceState.getString(LOCATION_ADDRESS_KEY);
@@ -277,8 +329,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     @Override
     public void onConnected(@Nullable Bundle bundle) {
-
-        startLocationUpdates();
+        Log.d("checkGPS", "onLocationConnected");
+        checkLocationSettings();
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
 
             return;
@@ -286,14 +338,17 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         if (mCurrentLocation == null) {
             mCurrentLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
             mLastLocation = mCurrentLocation;
-            if(!Geocoder.isPresent()) {
+            if (!Geocoder.isPresent()) {
                 return;
             }
-
             updateUI();
+
         }
         startIntentService();
-        Log.d("connection", "onlocation connect");
+        if (mCurrentLocation != null) {
+            goToCurrentLocationZoom();
+            Log.d("checkGPS", "zoom in onConnected");
+        }
 
     }
 
@@ -318,6 +373,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             mLastLocation = mCurrentLocation;
             updateUI();
         }
+
+
     }
 
     protected void createLocationRequest() {
@@ -347,18 +404,18 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
     }
 
+    // Call address intent service
     protected void startIntentService() {
         Intent intent = new Intent(this, FetchAddressIntentService.class);
         intent.putExtra(Constant.RECEIVER, mResultReceiver);
         intent.putExtra(Constant.LOCATION_DATA_EXTRA, mCurrentLocation);
         startService(intent);
-        Log.d("checkcode", "code here start intent service");
-
     }
 
     protected void buildLocationSettingsRequest() {
         LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder();
         builder.addLocationRequest(mLocationRequest);
+        builder.setAlwaysShow(true);
         mLocationSettingsRequest = builder.build();
     }
 
@@ -369,6 +426,55 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                         mLocationSettingsRequest
                 );
         result.setResultCallback(this);
+    }
+
+
+    @Override
+    public void onResult(@NonNull LocationSettingsResult locationSettingsResult) {
+        final Status status = locationSettingsResult.getStatus();
+        switch (status.getStatusCode()) {
+            case LocationSettingsStatusCodes.SUCCESS:
+                Log.i(GPS_TAG, "All location settings are satisfied.");
+                isGpsAvailable = true;
+                startLocationUpdates();
+                //notifyGpsStatus();
+                break;
+            case LocationSettingsStatusCodes.RESOLUTION_REQUIRED:
+                Log.i(GPS_TAG, "Location settings are not satisfied. Show the user a dialog to" +
+                        "upgrade location settings ");
+
+                try {
+                    // Show the dialog by calling startResolutionForResult(), and check the result
+                    // in onActivityResult().
+                    status.startResolutionForResult(MapsActivity.this, REQUEST_CHECK_SETTINGS);
+                } catch (IntentSender.SendIntentException e) {
+                    Log.i(GPS_TAG, "PendingIntent unable to execute request.");
+                }
+                break;
+            case LocationSettingsStatusCodes.SETTINGS_CHANGE_UNAVAILABLE:
+                Log.i(GPS_TAG, "Location settings are inadequate, and cannot be fixed here. Dialog " +
+                        "not created.");
+                break;
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        switch (requestCode) {
+            // Check for the integer request code originally supplied to startResolutionForResult().
+            case REQUEST_CHECK_SETTINGS:
+                switch (resultCode) {
+                    case Activity.RESULT_OK:
+                        Log.i(GPS_TAG, "User agreed to make required location settings changes.");
+                        startLocationUpdates();
+                        notifyGpsStatus("GPS đã bật");
+                        break;
+                    case Activity.RESULT_CANCELED:
+                        notifyGpsStatus("GPS đã tắt");
+                        break;
+                }
+                break;
+        }
     }
 
     private void sendDistanceRequest(String origin) {
@@ -484,40 +590,17 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         mGoogleMap.animateCamera(cameraUpdate);
     }
 
+    private void goToCurrentLocationZoom() {
+        goToLocationZoom(new LatLng(mCurrentLocation.getLatitude(), mCurrentLocation
+                .getLongitude()), Constant.ZOOM_LEVEL_15);
+    }
+
     private List<Hospital> getNearbyHospital(LatLng latLng, List<Hospital> hospitalList) {
         double x1 = latLng.latitude;
         double y1 = latLng.longitude;
         return null;
     }
 
-    @Override
-    public void onResult(@NonNull LocationSettingsResult locationSettingsResult) {
-        final Status status = locationSettingsResult.getStatus();
-        switch (status.getStatusCode()) {
-            case LocationSettingsStatusCodes.SUCCESS:
-                // NO need to show the dialog;
-
-                break;
-
-            case LocationSettingsStatusCodes.RESOLUTION_REQUIRED:
-                try {
-                    // Show the dialog by calling startResolutionForResult(), and check the result
-                    // in onActivityResult().
-
-                    status.startResolutionForResult(this, 100);
-
-                } catch (IntentSender.SendIntentException e) {
-
-                    //failed to show dialog
-                }
-
-                break;
-
-            case LocationSettingsStatusCodes.SETTINGS_CHANGE_UNAVAILABLE:
-                // Location settings are unavailable so not possible to show any dialog now
-                break;
-        }
-    }
 
     private void updateUI() {
         if (mCurrentLocation != null) {
@@ -530,7 +613,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     @Override
     public void onSaveInstanceState(Bundle savedInstanceState) {
-        savedInstanceState.putBoolean(REQUESTING_LOCATION_UPDATES_KEY, mRequestingLocationUpdates);
         savedInstanceState.putParcelable(LOCATION_KEY, mCurrentLocation);
         savedInstanceState.putString(LOCATION_ADDRESS_KEY, mAddress);
         super.onSaveInstanceState(savedInstanceState);
@@ -555,7 +637,29 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         }
     }
 
+    private static final int GPS_STATUS_NOT_FIXED = 1;
+    private static final int GPS_STATUS_FIXED = 2;
+    private static final int GPS_OFF = 0;
+
+    // Update UI
+    private void updateGpsIcon(int gpsStatus) {
+        switch (gpsStatus) {
+            case GPS_OFF:
+                imgGpsStatus.setImageResource(R.drawable.ic_gps_off);
+                break;
+            case GPS_STATUS_NOT_FIXED:
+                imgGpsStatus.setImageResource(R.drawable.ic_gps_not_fixed);
+                break;
+            case GPS_STATUS_FIXED:
+                imgGpsStatus.setImageResource(R.drawable.ic_gps_fixed);
+                break;
+        }
+    }
     protected void displayAddress() {
         tvCurrentLocation.setText(mAddress);
+    }
+
+    private void notifyGpsStatus(String status) {
+        tvProviderStatus.setText(status.toString());
     }
 }

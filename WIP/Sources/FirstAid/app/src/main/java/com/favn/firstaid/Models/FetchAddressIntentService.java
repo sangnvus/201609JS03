@@ -51,7 +51,7 @@ public class FetchAddressIntentService extends IntentService {
 
             addresses = geocoder.getFromLocation(location.getLatitude(), location.getLongitude(), 1);
         } catch (IOException ioException) {
-            errorMessage = "service is not available";
+            errorMessage = "không có mạng";
         } catch (IllegalArgumentException illegalArgumentException) {
             errorMessage = "invalid LatLng";
         }
