@@ -7,21 +7,15 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.util.Log;
 
+import com.favn.firstaid.Models.Common.Constant;
+
 /**
  * Created by Hung Gia on 11/3/2016.
  */
 
 public class NetworkChangeReceiver extends BroadcastReceiver {
-    private boolean isNetworkAvailable;
     @Override
     public void onReceive(Context context, Intent intent) {
-        ConnectivityManager cm = (ConnectivityManager) context
-                .getSystemService(Context.CONNECTIVITY_SERVICE);
-
-        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
-
-        isNetworkAvailable = (activeNetwork != null) ?  true : false;
-
-        Log.d("networkchck", isNetworkAvailable + "");
+        context.sendBroadcast(new Intent(Constant.INTENT_FILTER_CONNECTIVITY_CHANGED));
     }
 }
