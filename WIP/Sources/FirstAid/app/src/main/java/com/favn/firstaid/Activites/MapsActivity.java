@@ -12,6 +12,9 @@ import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.location.Geocoder;
 import android.location.Location;
+import android.location.LocationManager;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Handler;
 import android.os.ResultReceiver;
 import android.support.annotation.NonNull;
@@ -39,9 +42,7 @@ import com.favn.firstaid.Models.Direction.DirectionFinderListener;
 import com.favn.firstaid.Models.DistanceMatrix.DistanceMatrixFinder;
 import com.favn.firstaid.Models.DistanceMatrix.DistanceMatrixFinderListener;
 import com.favn.firstaid.Models.FetchAddressIntentService;
-import com.favn.firstaid.Models.GpsChangeReceiver;
 import com.favn.firstaid.Models.Hospital;
-import com.favn.firstaid.Models.NetworkChangeReceiver;
 import com.favn.firstaid.R;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
@@ -113,13 +114,26 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     protected static final String LOCATION_ADDRESS_KEY = "location-address";
     protected static final int REQUEST_CHECK_SETTINGS = 0x1;
 
-    protected String mAddress;
-    private AddressResultReceiver mResultReceiver;
+    public static final String INTENT_FILTER_PROVIDERS_CHANGED = "android.location" +
+            ".PROVIDERS_CHANGED";
+    public static final String INTENT_FILTER_WIFI_STATE_CHANGED = "android.net.wifi" +
+            ".WIFI_STATE_CHANGED";
+    public static final String INTENT_FILTER_CONNECTIVITY_CHANGE = "android.net.conn" +
+            ".CONNECTIVITY_CHANGE";
 
     private final static String GPS_TAG = "GPS";
-    GpsChangeReceiver gpsChangeReceiver;
-    NetworkChangeReceiver networkChangeReceiver;
-    private boolean isGpsAvailable;
+
+    private static final int GPS_STATUS_NOT_FIXED = 1;
+    private static final int GPS_STATUS_FIXED = 2;
+    private static final int GPS_STATUS_OFF = 0;
+
+    protected String mAddress;
+    private AddressResultReceiver mResultReceiver;
+    // Intent filter
+    IntentFilter intentFilter;
+
+    private boolean isLocationEnable;
+    boolean isNetworkEnable;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -134,13 +148,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         imgGpsStatus = (ImageView) findViewById(R.id.image_gps_status);
         tvLatLng = (TextView) findViewById(R.id.text_current_latlng);
         btnFindHospital = (Button) findViewById(R.id.test);
-        tvProviderStatus = (TextView) findViewById(R.id.text_provider_status);
 
-
-        gpsChangeReceiver = new GpsChangeReceiver();
-        networkChangeReceiver = new NetworkChangeReceiver();
         mResultReceiver = new AddressResultReceiver(new Handler());
-        isGpsAvailable = false;
+        isLocationEnable = false;
 
         if (googleServiceAvailable()) {
             initMap();
@@ -181,41 +191,64 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         btnFindHospital.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                if (isNetworkEnable) {
+                    Log.d("btn", "click");
+                }
             }
         });
-
 
         updateValuesFromBundle(savedInstanceState);
         buildGoogleApiClient();
         buildLocationSettingsRequest();
 
-    }
+        intentFilter = new IntentFilter();
+        intentFilter.addAction(INTENT_FILTER_PROVIDERS_CHANGED);
+        intentFilter.addAction(INTENT_FILTER_WIFI_STATE_CHANGED);
+        intentFilter.addAction(INTENT_FILTER_CONNECTIVITY_CHANGE);
 
-    // Broadcast for GPS status
-    BroadcastReceiver gpsBroadcastReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            Toast.makeText(getBaseContext(), "GPS status change", Toast.LENGTH_LONG).show();
-        }
-    };
+
+    }
 
     // Broadcast for Connectivity status
     BroadcastReceiver connectivityBroadcastReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            Toast.makeText(getBaseContext(), "connecttivity status change", Toast.LENGTH_LONG)
-                    .show();
-//            ConnectivityManager cm = (ConnectivityManager) context
-//                    .getSystemService(Context.CONNECTIVITY_SERVICE);
-//
-//            NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
-//
-//            isNetworkAvailable = (activeNetwork != null) ?  true : false;
-//
-//            Log.d("networkchck", isNetworkAvailable + "");
+            if (intent.getAction().matches(INTENT_FILTER_PROVIDERS_CHANGED)) {
+                Log.d("gps", "gps connection");
+
+                LocationManager locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
+                boolean isGpsProviderEnabled = locationManager.isProviderEnabled(LocationManager
+                        .GPS_PROVIDER);
+                boolean isNetworkProviderEnabled = locationManager.isProviderEnabled(LocationManager
+                        .NETWORK_PROVIDER);
+
+                if (isGpsProviderEnabled == false && isNetworkProviderEnabled == false) {
+                    // set gps icon to off
+                    updateGpsIcon(GPS_STATUS_OFF);
+                } else if (isGpsProviderEnabled == true || isNetworkProviderEnabled == true) {
+                    startLocationUpdates();
+                }
+                else {
+                    updateGpsIcon(GPS_STATUS_NOT_FIXED);
+                    Log.d("gps change", "gps not fixed set");
+                }
+                Toast.makeText(context, "GPS Enabled: " + isGpsProviderEnabled + " Network Location Enabled: " + isNetworkProviderEnabled, Toast.LENGTH_LONG).show();
+            } else {
+                checkNetworkAvailable(context);
+            }
         }
     };
+
+    private void checkNetworkAvailable(Context context) {
+        ConnectivityManager connectivityManager = (ConnectivityManager) context
+                .getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetwork = connectivityManager.getActiveNetworkInfo();
+        if (activeNetwork == null || activeNetwork.getType() == 0) {
+            isNetworkEnable = false;
+        } else {
+            isNetworkEnable = true;
+        }
+    }
 
     @Override
     protected void onStart() {
@@ -226,7 +259,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     @Override
     protected void onPause() {
         super.onPause();
-        unregisterReceiver(gpsBroadcastReceiver);
         unregisterReceiver(connectivityBroadcastReceiver);
         if (mGoogleApiClient.isConnected()) {
             stopLocationUpdates();
@@ -236,8 +268,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     @Override
     protected void onResume() {
         super.onResume();
-        registerReceiver(gpsBroadcastReceiver, new IntentFilter(Constant.INTENT_FILTER_PROVIDERS_CHANGED));
-        registerReceiver(connectivityBroadcastReceiver, new IntentFilter(Constant.INTENT_FILTER_CONNECTIVITY_CHANGED));
+        registerReceiver(connectivityBroadcastReceiver, intentFilter);
     }
 
     @Override
@@ -329,7 +360,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     @Override
     public void onConnected(@Nullable Bundle bundle) {
-        Log.d("checkGPS", "onLocationConnected");
         checkLocationSettings();
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
 
@@ -342,12 +372,10 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 return;
             }
             updateUI();
-
         }
         startIntentService();
         if (mCurrentLocation != null) {
             goToCurrentLocationZoom();
-            Log.d("checkGPS", "zoom in onConnected");
         }
 
     }
@@ -372,8 +400,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             mCurrentLocation = location;
             mLastLocation = mCurrentLocation;
             updateUI();
+            Log.d("gps change", "gps");
+            updateGpsIcon(GPS_STATUS_FIXED);
         }
-
 
     }
 
@@ -381,7 +410,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         mLocationRequest = new LocationRequest();
         mLocationRequest.setInterval(UPDATE_INTERVAL_IN_MILLISECONDS);
         mLocationRequest.setFastestInterval(FASTEST_UPDATE_INTERVAL_IN_MILLISECONDS);
-        mLocationRequest.setSmallestDisplacement(UPDATE_SMALLEST_DISPLACEMENT);
+       // mLocationRequest.setSmallestDisplacement(UPDATE_SMALLEST_DISPLACEMENT);
         mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
     }
 
@@ -435,9 +464,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         switch (status.getStatusCode()) {
             case LocationSettingsStatusCodes.SUCCESS:
                 Log.i(GPS_TAG, "All location settings are satisfied.");
-                isGpsAvailable = true;
+                isLocationEnable = true;
                 startLocationUpdates();
-                //notifyGpsStatus();
                 break;
             case LocationSettingsStatusCodes.RESOLUTION_REQUIRED:
                 Log.i(GPS_TAG, "Location settings are not satisfied. Show the user a dialog to" +
@@ -467,10 +495,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                     case Activity.RESULT_OK:
                         Log.i(GPS_TAG, "User agreed to make required location settings changes.");
                         startLocationUpdates();
-                        notifyGpsStatus("GPS đã bật");
                         break;
                     case Activity.RESULT_CANCELED:
-                        notifyGpsStatus("GPS đã tắt");
                         break;
                 }
                 break;
@@ -637,14 +663,11 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         }
     }
 
-    private static final int GPS_STATUS_NOT_FIXED = 1;
-    private static final int GPS_STATUS_FIXED = 2;
-    private static final int GPS_OFF = 0;
 
     // Update UI
     private void updateGpsIcon(int gpsStatus) {
         switch (gpsStatus) {
-            case GPS_OFF:
+            case GPS_STATUS_OFF:
                 imgGpsStatus.setImageResource(R.drawable.ic_gps_off);
                 break;
             case GPS_STATUS_NOT_FIXED:
@@ -655,11 +678,10 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 break;
         }
     }
+
     protected void displayAddress() {
         tvCurrentLocation.setText(mAddress);
     }
 
-    private void notifyGpsStatus(String status) {
-        tvProviderStatus.setText(status.toString());
-    }
+
 }
