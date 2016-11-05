@@ -43,6 +43,7 @@ import com.favn.firstaid.Models.DistanceMatrix.DistanceMatrixFinder;
 import com.favn.firstaid.Models.DistanceMatrix.DistanceMatrixFinderListener;
 import com.favn.firstaid.Models.FetchAddressIntentService;
 import com.favn.firstaid.Models.Hospital;
+import com.favn.firstaid.Models.TestNetwork;
 import com.favn.firstaid.R;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
@@ -191,9 +192,11 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         btnFindHospital.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (isNetworkEnable) {
+               // if (isNetworkEnable) {
                     Log.d("btn", "click");
-                }
+                    TestNetwork testNetwork = new TestNetwork(getBaseContext());
+                    testNetwork.test();
+               // }
             }
         });
 
@@ -410,7 +413,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         mLocationRequest = new LocationRequest();
         mLocationRequest.setInterval(UPDATE_INTERVAL_IN_MILLISECONDS);
         mLocationRequest.setFastestInterval(FASTEST_UPDATE_INTERVAL_IN_MILLISECONDS);
-       // mLocationRequest.setSmallestDisplacement(UPDATE_SMALLEST_DISPLACEMENT);
+        mLocationRequest.setSmallestDisplacement(UPDATE_SMALLEST_DISPLACEMENT);
         mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
     }
 
