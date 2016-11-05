@@ -10,10 +10,13 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.favn.firstaid.Adapter.InstructionAdapter;
 import com.favn.firstaid.Database.DatabaseOpenHelper;
@@ -31,7 +34,6 @@ public class InstructionDetail extends AppCompatActivity {
     private boolean isEmegency;
     private int playingAudioId;
     private MediaPlayer mMediaPlayer = null;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,10 +83,12 @@ public class InstructionDetail extends AppCompatActivity {
 
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int pos, long id) {
+                final TextView stepAnimation = (TextView) view.findViewById(R.id.text_step_number);
                 if (playingAudioId == audio[pos] && mMediaPlayer.isPlaying() == true) {
                     mMediaPlayer.stop();
+                    stepAnimation.clearAnimation();
                 } else {
-                    playAudio(audio[pos]);
+                    playAudio(audio[pos], stepAnimation);
                 }
             }
         });
@@ -98,16 +102,19 @@ public class InstructionDetail extends AppCompatActivity {
         }
     }
 
-    private void playAudio(int audioId) {
+    private void playAudio(int audioId, TextView stepAnim) {
         playingAudioId = audioId;
+        Animation beat = AnimationUtils.loadAnimation(this, R.anim.heartbeat);
         // stop the previous playing audio
-        if (mMediaPlayer != null && mMediaPlayer.isPlaying()) {
+        if (mMediaPlayer != null && mMediaPlayer.isPlaying() && stepAnim.isEnabled()) {
             mMediaPlayer.stop();
             mMediaPlayer.release();
             mMediaPlayer = null;
+            stepAnim.clearAnimation();
         }
         mMediaPlayer = MediaPlayer.create(this, audioId);
         mMediaPlayer.start();
+        stepAnim.startAnimation(beat);
     }
 
     @Override
