@@ -1,20 +1,24 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context="com.favn.firstaid.Fragments.EmergencyFragment">
+             xmlns:tools="http://schemas.android.com/tools"
+             android:layout_width="match_parent"
+             android:layout_height="match_parent"
+             tools:context="com.favn.firstaid.Fragments.EmergencyFragment">
 
 
     <LinearLayout
-        android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
         <!--TODO: thay textview bang khung search-->
 
+        <include
+            android:id="@+id/include_advice"
+            layout="@layout/layout_advice"/>
+
         <ListView
+            android:id="@+id/listView"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:id="@+id/listView" />
+            android:layout_height="match_parent"/>
     </LinearLayout>
 </FrameLayout>

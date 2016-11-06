@@ -13,4 +13,5 @@
 
     <color name="colorInActive">#ff000000</color>
     <color name="colorGpsFixed">#2196F3</color>
+    <color name="colorAdvice">#4CAF50</color>
 </resources>

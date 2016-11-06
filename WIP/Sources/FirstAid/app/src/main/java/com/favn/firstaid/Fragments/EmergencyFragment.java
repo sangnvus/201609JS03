@@ -1,11 +1,14 @@
 package com.favn.firstaid.Fragments;
 
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.MenuItemCompat;
 import android.view.LayoutInflater;
@@ -46,7 +49,7 @@ public class EmergencyFragment extends Fragment implements AdapterView.OnItemCli
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.fragment_emergency, container, false);
+        final ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.fragment_emergency, container, false);
         listView = (ListView) rootView.findViewById(R.id.listView);
         dbHelper = new DatabaseOpenHelper(getActivity());
         dbHelper.createDatabase();
@@ -58,6 +61,27 @@ public class EmergencyFragment extends Fragment implements AdapterView.OnItemCli
         listView.setOnItemClickListener(this);
         setHasOptionsMenu(true);
         container.removeAllViews();
+
+
+        // Hide advice layout
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                final View view = rootView.findViewById(R.id.include_advice);
+                view.animate()
+                        .translationY(-view.getHeight())
+                        .alpha(0.0f)
+                        .setDuration(500)
+                        .setListener(new AnimatorListenerAdapter() {
+                            @Override
+                            public void onAnimationEnd(Animator animation) {
+                                super.onAnimationEnd(animation);
+                                view.setVisibility(View.GONE);
+                            }
+                        });
+            }
+        }, 3000);
+
         return rootView;
     }
 

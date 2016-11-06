@@ -20,6 +20,7 @@ import android.os.ResultReceiver;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.BottomSheetBehavior;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.app.ActivityCompat;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -43,7 +44,6 @@ import com.favn.firstaid.Models.DistanceMatrix.DistanceMatrixFinder;
 import com.favn.firstaid.Models.DistanceMatrix.DistanceMatrixFinderListener;
 import com.favn.firstaid.Models.FetchAddressIntentService;
 import com.favn.firstaid.Models.Hospital;
-import com.favn.firstaid.Models.TestNetwork;
 import com.favn.firstaid.R;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
@@ -96,7 +96,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private LinearLayout llCurrentLocation;
     private LinearLayout llHospitalDestination;
     private ImageView imgGpsStatus;
-    private TextView tvProviderStatus;
     private TextView tvCurrentLocation;
     private TextView tvLatLng;
     private BottomSheetBehavior mBottomSheetBehavior;
@@ -110,7 +109,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     public static final long FASTEST_UPDATE_INTERVAL_IN_MILLISECONDS =
             UPDATE_INTERVAL_IN_MILLISECONDS / 2;
     public static final int UPDATE_SMALLEST_DISPLACEMENT = 10;
-    protected final static String REQUESTING_LOCATION_UPDATES_KEY = "requesting-location-updates-key";
     protected final static String LOCATION_KEY = "location-key";
     protected static final String LOCATION_ADDRESS_KEY = "location-address";
     protected static final int REQUEST_CHECK_SETTINGS = 0x1;
@@ -122,7 +120,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     public static final String INTENT_FILTER_CONNECTIVITY_CHANGE = "android.net.conn" +
             ".CONNECTIVITY_CHANGE";
 
-    private final static String GPS_TAG = "GPS";
 
     private static final int GPS_STATUS_NOT_FIXED = 1;
     private static final int GPS_STATUS_FIXED = 2;
@@ -134,7 +131,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     IntentFilter intentFilter;
 
     private boolean isLocationEnable;
-    boolean isNetworkEnable;
+    private boolean isNetworkEnable;
+    private boolean isAddressFound;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -167,40 +165,25 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 }
             }
         });
+        LinearLayout BottomSheet = (LinearLayout) findViewById(R.id.bottom_sheet);
+        mBottomSheetBehavior = BottomSheetBehavior.from(BottomSheet);
+        mBottomSheetBehavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
+            @Override
+            public void onStateChanged(@NonNull View bottomSheet, int newState) {
 
-        // View bottomSheet = findViewById(R.id.bottom_sheet_hospital_list);
-        // mBottomSheetBehavior = BottomSheetBehavior.from(bottomSheet);
-//        mBottomSheetBehavior.setPeekHeight(300);
-//        mBottomSheetBehavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
-//            @Override
-//            public void onStateChanged(@NonNull View bottomSheet, int newState) {
-//
-//                if (newState == BottomSheetBehavior.STATE_EXPANDED) {
-//                    mockup();
-//                    Log.d("test", "test");
-//                }
-//            }
-//
-//            @Override
-//            public void onSlide(@NonNull View bottomSheet, float slideOffset) {
-//            }
-//        });
+                if (newState == BottomSheetBehavior.STATE_EXPANDED) {
+                    Log.d("test", "test");
+                }
+            }
+
+            @Override
+            public void onSlide(@NonNull View bottomSheet, float slideOffset) {
+            }
+        });
 
         // llHospitalDestination = (LinearLayout) findViewById(R.id.layout_hospital_destination);
 
 
-        btnFindHospital.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-               // if (isNetworkEnable) {
-                    Log.d("btn", "click");
-                    TestNetwork testNetwork = new TestNetwork(getBaseContext());
-                    testNetwork.test();
-               // }
-            }
-        });
-
-        updateValuesFromBundle(savedInstanceState);
         buildGoogleApiClient();
         buildLocationSettingsRequest();
 
@@ -209,7 +192,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         intentFilter.addAction(INTENT_FILTER_WIFI_STATE_CHANGED);
         intentFilter.addAction(INTENT_FILTER_CONNECTIVITY_CHANGE);
 
-
+        updateLocationUI();
     }
 
     // Broadcast for Connectivity status
@@ -217,8 +200,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         @Override
         public void onReceive(Context context, Intent intent) {
             if (intent.getAction().matches(INTENT_FILTER_PROVIDERS_CHANGED)) {
-                Log.d("gps", "gps connection");
-
                 LocationManager locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
                 boolean isGpsProviderEnabled = locationManager.isProviderEnabled(LocationManager
                         .GPS_PROVIDER);
@@ -230,11 +211,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                     updateGpsIcon(GPS_STATUS_OFF);
                 } else if (isGpsProviderEnabled == true || isNetworkProviderEnabled == true) {
                     startLocationUpdates();
-                }
-                else {
                     updateGpsIcon(GPS_STATUS_NOT_FIXED);
-                    Log.d("gps change", "gps not fixed set");
                 }
+
                 Toast.makeText(context, "GPS Enabled: " + isGpsProviderEnabled + " Network Location Enabled: " + isNetworkProviderEnabled, Toast.LENGTH_LONG).show();
             } else {
                 checkNetworkAvailable(context);
@@ -295,21 +274,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         }
     }
 
-    private void updateValuesFromBundle(Bundle savedInstanceState) {
-        Log.d("location code", "Updating values from bundle");
-        if (savedInstanceState != null) {
-            if (savedInstanceState.keySet().contains(LOCATION_KEY)) {
-                mCurrentLocation = savedInstanceState.getParcelable(LOCATION_KEY);
-            }
-            if (savedInstanceState.keySet().contains(LOCATION_ADDRESS_KEY)) {
-                mAddress = savedInstanceState.getString(LOCATION_ADDRESS_KEY);
-                displayAddress();
-            }
-            updateUI();
-        }
-    }
-
-
     private void initMap() {
         MapFragment mapFragment = (MapFragment) getFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
@@ -328,7 +292,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         }
         return true;
     }
-
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
@@ -365,7 +328,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     public void onConnected(@Nullable Bundle bundle) {
         checkLocationSettings();
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-
             return;
         }
         if (mCurrentLocation == null) {
@@ -374,13 +336,11 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             if (!Geocoder.isPresent()) {
                 return;
             }
-            updateUI();
+            updateLocationUI();
         }
-        startIntentService();
         if (mCurrentLocation != null) {
             goToCurrentLocationZoom();
         }
-
     }
 
 
@@ -396,17 +356,18 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     @Override
     public void onLocationChanged(Location location) {
-
         if (location == null) {
             Toast.makeText(this, "can't get current location", Toast.LENGTH_SHORT).show();
         } else {
             mCurrentLocation = location;
             mLastLocation = mCurrentLocation;
-            updateUI();
-            Log.d("gps change", "gps");
+            updateLocationUI();
             updateGpsIcon(GPS_STATUS_FIXED);
-        }
 
+            if (isNetworkEnable) {
+                startAddressIntentService();
+            }
+        }
     }
 
     protected void createLocationRequest() {
@@ -437,7 +398,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
     // Call address intent service
-    protected void startIntentService() {
+    protected void startAddressIntentService() {
         Intent intent = new Intent(this, FetchAddressIntentService.class);
         intent.putExtra(Constant.RECEIVER, mResultReceiver);
         intent.putExtra(Constant.LOCATION_DATA_EXTRA, mCurrentLocation);
@@ -466,25 +427,20 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         final Status status = locationSettingsResult.getStatus();
         switch (status.getStatusCode()) {
             case LocationSettingsStatusCodes.SUCCESS:
-                Log.i(GPS_TAG, "All location settings are satisfied.");
+                // All location settings are satisfied.
                 isLocationEnable = true;
                 startLocationUpdates();
                 break;
             case LocationSettingsStatusCodes.RESOLUTION_REQUIRED:
-                Log.i(GPS_TAG, "Location settings are not satisfied. Show the user a dialog to" +
-                        "upgrade location settings ");
-
+                // Location settings are not satisfied. Show the user a dialog to
+                // upgrade location settings
                 try {
                     // Show the dialog by calling startResolutionForResult(), and check the result
                     // in onActivityResult().
                     status.startResolutionForResult(MapsActivity.this, REQUEST_CHECK_SETTINGS);
                 } catch (IntentSender.SendIntentException e) {
-                    Log.i(GPS_TAG, "PendingIntent unable to execute request.");
+                    //PendingIntent unable to execute request.
                 }
-                break;
-            case LocationSettingsStatusCodes.SETTINGS_CHANGE_UNAVAILABLE:
-                Log.i(GPS_TAG, "Location settings are inadequate, and cannot be fixed here. Dialog " +
-                        "not created.");
                 break;
         }
     }
@@ -496,7 +452,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             case REQUEST_CHECK_SETTINGS:
                 switch (resultCode) {
                     case Activity.RESULT_OK:
-                        Log.i(GPS_TAG, "User agreed to make required location settings changes.");
+                        // User agreed to make required location settings changes.
                         startLocationUpdates();
                         break;
                     case Activity.RESULT_CANCELED:
@@ -515,6 +471,85 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             new DirectionFinder(this, origin, destination).execute();
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void onDistanceMatrixFinderSuccess(List<Hospital> hospitalList) {
+
+        final ListView lv = (ListView) findViewById(R.id.listview_hospital);
+
+        HospitalAdapter adapter = new HospitalAdapter(this, hospitalList);
+        lv.setAdapter(adapter);
+        lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Hospital hospital = (Hospital) lv.getItemAtPosition(position);
+                sendDirectionRequest(currentLatLng.latitude + "," + currentLatLng.longitude,
+                        hospital.getLatLngText());
+            }
+        });
+
+
+    }
+
+    private void goToLocationZoom(LatLng latLng, float zoom) {
+        CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, zoom);
+        mGoogleMap.animateCamera(cameraUpdate);
+    }
+
+    private void goToCurrentLocationZoom() {
+        goToLocationZoom(new LatLng(mCurrentLocation.getLatitude(), mCurrentLocation
+                .getLongitude()), Constant.ZOOM_LEVEL_15);
+    }
+
+
+    @Override
+    public void onSaveInstanceState(Bundle savedInstanceState) {
+        super.onSaveInstanceState(savedInstanceState);
+        savedInstanceState.putParcelable(LOCATION_KEY, mCurrentLocation);
+        savedInstanceState.putString(LOCATION_ADDRESS_KEY, mAddress);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        mCurrentLocation = savedInstanceState.getParcelable(LOCATION_KEY);
+        mAddress = savedInstanceState.getString(LOCATION_ADDRESS_KEY);
+    }
+
+
+    // Update UI
+    private void updateGpsIcon(int gpsStatus) {
+        switch (gpsStatus) {
+            case GPS_STATUS_OFF:
+                imgGpsStatus.setImageResource(R.drawable.ic_gps_off);
+                break;
+            case GPS_STATUS_NOT_FIXED:
+                imgGpsStatus.setImageResource(R.drawable.ic_gps_not_fixed);
+                break;
+            case GPS_STATUS_FIXED:
+                imgGpsStatus.setImageResource(R.drawable.ic_gps_fixed);
+                break;
+        }
+    }
+
+    private void updateLocationUI() {
+        if (!isLocationEnable && !isNetworkEnable && mCurrentLocation == null) {
+            tvCurrentLocation.setText("Không rõ vị trí");
+            tvLatLng.setVisibility(View.GONE);
+        }
+
+        if (mCurrentLocation != null) {
+            tvLatLng.setText("(" + mCurrentLocation.getLatitude() + ", " + mCurrentLocation
+                    .getLongitude() + ")");
+            tvLatLng.setVisibility(View.VISIBLE);
+
+            if (isAddressFound) {
+                tvCurrentLocation.setText(mAddress);
+            } else {
+                tvCurrentLocation.setText("Vị trí");
+            }
         }
     }
 
@@ -594,57 +629,10 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         return hospitalsDestination;
     }
 
-
-    @Override
-    public void onDistanceMatrixFinderSuccess(List<Hospital> hospitalList) {
-
-        final ListView lv = (ListView) findViewById(R.id.listview_hospital);
-
-        HospitalAdapter adapter = new HospitalAdapter(this, hospitalList);
-        lv.setAdapter(adapter);
-        lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Hospital hospital = (Hospital) lv.getItemAtPosition(position);
-                sendDirectionRequest(currentLatLng.latitude + "," + currentLatLng.longitude,
-                        hospital.getLatLngText());
-            }
-        });
-
-
-    }
-
-    private void goToLocationZoom(LatLng latLng, float zoom) {
-        CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, zoom);
-        mGoogleMap.animateCamera(cameraUpdate);
-    }
-
-    private void goToCurrentLocationZoom() {
-        goToLocationZoom(new LatLng(mCurrentLocation.getLatitude(), mCurrentLocation
-                .getLongitude()), Constant.ZOOM_LEVEL_15);
-    }
-
     private List<Hospital> getNearbyHospital(LatLng latLng, List<Hospital> hospitalList) {
         double x1 = latLng.latitude;
         double y1 = latLng.longitude;
         return null;
-    }
-
-
-    private void updateUI() {
-        if (mCurrentLocation != null) {
-            tvCurrentLocation.setText("test");
-            tvLatLng.setText("(" + mCurrentLocation.getLatitude() + ", " + mCurrentLocation
-                    .getLongitude() + ")");
-            tvLatLng.setVisibility(View.VISIBLE);
-        }
-    }
-
-    @Override
-    public void onSaveInstanceState(Bundle savedInstanceState) {
-        savedInstanceState.putParcelable(LOCATION_KEY, mCurrentLocation);
-        savedInstanceState.putString(LOCATION_ADDRESS_KEY, mAddress);
-        super.onSaveInstanceState(savedInstanceState);
     }
 
     class AddressResultReceiver extends ResultReceiver {
@@ -654,37 +642,14 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         @Override
         protected void onReceiveResult(int resultCode, Bundle resultData) {
-
-            // Display the address string or an error message sent from the intent service.
-            mAddress = resultData.getString(Constant.RESULT_DATA_KEY);
-            displayAddress();
-            Log.d("address", mAddress);
-            // Show a toast message if an address was found.
+            // Set address if was found.
             if (resultCode == Constant.SUCCESS_RESULT) {
+                mAddress = resultData.getString(Constant.RESULT_DATA_KEY);
+                isAddressFound = true;
+            } else {
+                isAddressFound = false;
             }
-
         }
     }
-
-
-    // Update UI
-    private void updateGpsIcon(int gpsStatus) {
-        switch (gpsStatus) {
-            case GPS_STATUS_OFF:
-                imgGpsStatus.setImageResource(R.drawable.ic_gps_off);
-                break;
-            case GPS_STATUS_NOT_FIXED:
-                imgGpsStatus.setImageResource(R.drawable.ic_gps_not_fixed);
-                break;
-            case GPS_STATUS_FIXED:
-                imgGpsStatus.setImageResource(R.drawable.ic_gps_fixed);
-                break;
-        }
-    }
-
-    protected void displayAddress() {
-        tvCurrentLocation.setText(mAddress);
-    }
-
 
 }
