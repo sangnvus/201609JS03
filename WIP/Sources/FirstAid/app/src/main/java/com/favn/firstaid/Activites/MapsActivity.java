@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.IntentSender;
@@ -17,12 +18,14 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Handler;
 import android.os.ResultReceiver;
+import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.app.ActivityCompat;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MenuItem;
@@ -172,7 +175,13 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             public void onStateChanged(@NonNull View bottomSheet, int newState) {
 
                 if (newState == BottomSheetBehavior.STATE_EXPANDED) {
-                    Log.d("test", "test");
+
+                    if (!isNetworkEnable) {
+//                        createNetworkSetting();
+                    } else {
+//                        sendDistanceRequest(mCurrentLocation.getLatitude() + "," + mCurrentLocation
+//                                .getLongitude());
+                    }
                 }
             }
 
@@ -553,6 +562,24 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         }
     }
 
+
+    // Map, Distance, Direction implements
+
+    private void createNetworkSetting() {
+        new AlertDialog.Builder(this)
+                .setTitle("Kết nối Internet")
+                .setMessage("Vào cài đặt Internet")
+                .setNegativeButton(android.R.string.cancel, null) // dismisses by default
+                .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Intent intent = new Intent(Settings.ACTION_WIRELESS_SETTINGS);
+                        startActivity(intent);
+                    }
+                })
+                .create()
+                .show();
+    }
 
     @Override
     public void onDirectionFinderStart() {
