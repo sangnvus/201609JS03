@@ -19,6 +19,9 @@ public class HealthFacility {
     private double longitude;
     private Distance distance;
 
+    public HealthFacility() {
+    }
+
     public HealthFacility(String name, double latitude, double longitude) {
         this.name = name;
         this.latitude = latitude;
