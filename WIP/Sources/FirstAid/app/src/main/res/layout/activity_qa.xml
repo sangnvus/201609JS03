@@ -49,7 +49,8 @@
                     android:textSize="18sp"
                     android:layout_marginTop="10dp"
                     android:layout_marginBottom="10dp"
-                    android:hint="..."/>
+                    android:hint="..."
+                    android:maxLength="45" />
             </LinearLayout>
 
             <LinearLayout
@@ -82,7 +83,8 @@
                     android:textSize="18sp"
                     android:layout_marginTop="10dp"
                     android:layout_marginBottom="10dp"
-                    android:hint="..."/>
+                    android:hint="..."
+                    android:maxLength="255" />
             </LinearLayout>
 
             <LinearLayout
@@ -154,7 +156,8 @@
                         android:layout_marginTop="10dp"
                         android:layout_marginBottom="10dp"
                         android:hint="Khác..."
-                        android:id="@+id/edittext_title" />
+                        android:id="@+id/edittext_title"
+                        android:maxLength="255" />
                 </LinearLayout>
             </LinearLayout>
 
@@ -189,7 +192,8 @@
                     android:layout_marginBottom="10dp"
                     android:hint="..."
                     android:lines="6"
-                    android:id="@+id/edittext_content" />
+                    android:id="@+id/edittext_content"
+                    android:maxLength="500" />
             </LinearLayout>
 
             <LinearLayout

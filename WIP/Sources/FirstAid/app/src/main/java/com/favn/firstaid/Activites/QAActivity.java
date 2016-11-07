@@ -1,19 +1,14 @@
 package com.favn.firstaid.Activites;
 
-import android.content.Context;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
-import android.widget.ListView;
 import android.widget.RadioButton;
 import android.widget.Spinner;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import com.favn.firstaid.Adapter.InjuryAdapter;
 import com.favn.firstaid.Database.DatabaseOpenHelper;
@@ -57,7 +52,7 @@ public class QAActivity extends AppCompatActivity {
 
     // Init elements, controls and variables
     private void initControl() {
-        urlAddress = "http://10.20.19.77:8080/Captons_Project/Source/WIP/Sources/FAVN_web/public/question";
+        urlAddress = "http://10.20.19.69:8080/Captons_Project/Source/WIP/Sources/FAVN_web/public/question";
 
         // Init dbHelper object
         dbHelper = new DatabaseOpenHelper(this);
@@ -107,19 +102,24 @@ public class QAActivity extends AppCompatActivity {
         btnSend.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                // Check validate input
+                if(isValidateInput() == false){
+                    return;
+                }
+
                 // Assign values
                 String asker = etName.getText().toString();
                 String asker_email = etEmail.getText().toString();
                 String content = etContent.getText().toString();
 
-                String injuryID;
+                String injury_id;
                 String title;
                 if (rdInjury.isChecked() == true) {
-                    injuryID = String.valueOf(mInjuryList.get(spnListInjury.getSelectedItemPosition()).getId());
+                    injury_id = String.valueOf(mInjuryList.get(spnListInjury.getSelectedItemPosition()).getId());
                     title = "";
                 } else {
                     title = etTittle.getText().toString();
-                    injuryID = "";
+                    injury_id = "";
                 }
 
                 QuestionSender qs = new QuestionSender();
@@ -127,12 +127,42 @@ public class QAActivity extends AppCompatActivity {
                 qs.setUrlAddress(urlAddress);
                 qs.setAsker(asker);
                 qs.setAsker_email(asker_email);
-                qs.setInjuryID(injuryID);
+                qs.setInjury_id(injury_id);
                 qs.setTitle(title);
+                qs.setContent(content);
                 qs.execute();
             }
         });
+    }
 
+    // Validate input
+    private boolean isValidateInput(){
+        if(etName.getText().length() < 1) {
+            etName.setError("Chưa nhập tên");
+            etName.requestFocus();
+            return false;
+        }
+
+        if(etEmail.getText().length() < 1) {
+            etEmail.setError("Chưa nhập email");
+            etEmail.requestFocus();
+            return false;
+        }
+
+        if(etContent.getText().length() < 1) {
+            etContent.setError("Chưa nhập nội dung");
+            etContent.requestFocus();
+            return false;
+        }
+
+        if(rdTitle.isChecked() == true) {
+            if(etContent.getText().length() < 1) {
+                etContent.setError("Chưa nhập tiêu đề");
+                etContent.requestFocus();
+                return false;
+            }
+        }
+        return true;
     }
 
     // Disable control
@@ -141,6 +171,18 @@ public class QAActivity extends AppCompatActivity {
         etTittle.setEnabled(false);
         rdInjury.setChecked(true);
         spnListInjury.setEnabled(true);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                // app icon in action bar clicked; goto parent activity.
+                this.onBackPressed();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
 }
