@@ -11,6 +11,7 @@
         android:id="@+id/image_injury_item"
         android:layout_width="@dimen/image_size"
         android:layout_height="@dimen/image_size"
+        android:layout_marginLeft="16dp"
         android:layout_alignParentLeft="true"
         android:layout_marginBottom="8dp"
         android:layout_marginRight="8dp"
