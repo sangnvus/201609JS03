@@ -169,7 +169,8 @@
                 android:paddingLeft="16dp"
                 android:paddingTop="4dp"
                 android:text="BỆNH VIỆN GẦN ĐÂY"
-                android:textColor="@color/colorWhite"/>
+                android:textColor="@color/colorWhite"
+                android:theme="@style/PrimaryButton"/>
 
         </LinearLayout>
 

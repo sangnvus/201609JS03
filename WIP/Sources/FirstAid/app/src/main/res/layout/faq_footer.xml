@@ -9,5 +9,6 @@
         android:id="@+id/button_qa"
         android:text="@string/qa_button"
         android:background="@color/colorPrimary"
-        android:textColor="@color/colorWhite" />
+        android:textColor="@color/colorWhite"
+        android:theme="@style/PrimaryButton"/>
 </LinearLayout>

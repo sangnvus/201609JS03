@@ -117,7 +117,8 @@
                 android:id="@+id/btn_Send"
                 android:background="@color/colorPrimary"
                 android:textSize="18sp"
-                android:textColor="@color/cast_libraries_material_featurehighlight_text_body_color" />
+                android:textColor="@color/cast_libraries_material_featurehighlight_text_body_color"
+                android:theme="@style/PrimaryButton"/>
         </LinearLayout>
 
     </LinearLayout>
