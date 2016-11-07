@@ -11,6 +11,7 @@ import android.content.IntentFilter;
 import android.content.IntentSender;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
+import android.graphics.PointF;
 import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationManager;
@@ -38,7 +39,8 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.favn.firstaid.Adapter.HospitalAdapter;
+import com.favn.firstaid.Adapter.HealthFacilityAdapter;
+import com.favn.firstaid.Database.DatabaseOpenHelper;
 import com.favn.firstaid.Models.Common.Constant;
 import com.favn.firstaid.Models.Direction.DirectionFinder;
 import com.favn.firstaid.Models.Direction.DirectionFinderListener;
@@ -93,8 +95,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private List<Marker> destinationMarkers = new ArrayList<>();
     private List<Polyline> polylinePaths = new ArrayList<>();
 
-    private List<HealthFacility> healthFacilityList = new ArrayList<>();
-
     private LinearLayout llCurrentLocation;
     private LinearLayout llHospitalDestination;
     private ImageView imgGpsStatus;
@@ -136,6 +136,11 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private boolean isNetworkEnable;
     private boolean isAddressFound;
 
+    // Get database
+    private HealthFacilityAdapter healthFacilityAdapterAdapter;
+    private DatabaseOpenHelper dbHelper;
+    List<HealthFacility> healthFacilityList = new ArrayList<HealthFacility>();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -174,7 +179,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             public void onStateChanged(@NonNull View bottomSheet, int newState) {
 
                 if (newState == BottomSheetBehavior.STATE_EXPANDED) {
-
+                    getHealthFacilityData();
 //                    if (!isNetworkEnable) {
 //                        createNetworkSetting();
 //                    } else {
@@ -201,6 +206,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         intentFilter.addAction(INTENT_FILTER_CONNECTIVITY_CHANGE);
 
         updateLocationUI();
+        dbHelper = new DatabaseOpenHelper(this);
     }
 
     // Broadcast for Connectivity status
@@ -470,36 +476,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         }
     }
 
-    private void sendDistanceRequest(String origin) {
-        new DistanceMatrixFinder(this, origin, getHospitalsDestination()).execute();
-    }
 
-    private void sendDirectionRequest(String origin, String destination) {
-        try {
-            new DirectionFinder(this, origin, destination).execute();
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
-    }
-
-    @Override
-    public void onDistanceMatrixFinderSuccess(List<HealthFacility> healthFacilityList) {
-
-        final ListView lv = (ListView) findViewById(R.id.listview_hospital);
-
-        HospitalAdapter adapter = new HospitalAdapter(this, healthFacilityList);
-        lv.setAdapter(adapter);
-        lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                HealthFacility healthFacility = (HealthFacility) lv.getItemAtPosition(position);
-                sendDirectionRequest(currentLatLng.latitude + "," + currentLatLng.longitude,
-                        healthFacility.getLatLngText());
-            }
-        });
-
-
-    }
 
     private void goToLocationZoom(LatLng latLng, float zoom) {
         CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, zoom);
@@ -580,6 +557,116 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 .show();
     }
 
+    private void getHealthFacilityData() {
+        if (isLocationEnable && (mCurrentLocation != null)&& !isNetworkEnable) {
+            healthFacilityList = dbHelper.getListHealthFacility(getPoints());
+            displayHealthFacility(healthFacilityList);
+        } else if (isLocationEnable && isNetworkEnable) {
+
+        } else {
+
+
+        }
+
+    }
+
+    private PointF[] getPoints() {
+        PointF[] points = new PointF[4];
+        PointF center = new PointF((float)mCurrentLocation.getLatitude(), (float)mCurrentLocation
+                .getLongitude());
+        double radius = 20000;
+        final double mult = 1; // mult = 1.1; is more reliable
+        PointF p1 = calculateDerivedPosition(center, mult * radius, 0);
+        PointF p2 = calculateDerivedPosition(center, mult * radius, 90);
+        PointF p3 = calculateDerivedPosition(center, mult * radius, 180);
+        PointF p4 = calculateDerivedPosition(center, mult * radius, 270);
+
+        Log.d("location", p1 + "");
+        Log.d("location", p2 + "");
+        Log.d("location", p3 + "");
+        Log.d("location", p4 + "");
+        points[0] = p1;
+        points[1] = p2;
+        points[2] = p3;
+        points[3] = p4;
+        return points;
+    }
+
+    public static PointF calculateDerivedPosition(PointF point,
+                                                  double range, double bearing)
+    {
+        double EarthRadius = 6371000; // m
+
+        double latA = Math.toRadians(point.x);
+        double lonA = Math.toRadians(point.y);
+        double angularDistance = range / EarthRadius;
+        double trueCourse = Math.toRadians(bearing);
+
+        double lat = Math.asin(
+                Math.sin(latA) * Math.cos(angularDistance) +
+                        Math.cos(latA) * Math.sin(angularDistance)
+                                * Math.cos(trueCourse));
+
+        double dlon = Math.atan2(
+                Math.sin(trueCourse) * Math.sin(angularDistance)
+                        * Math.cos(latA),
+                Math.cos(angularDistance) - Math.sin(latA) * Math.sin(lat));
+
+        double lon = ((lonA + dlon + Math.PI) % (Math.PI * 2)) - Math.PI;
+
+        lat = Math.toDegrees(lat);
+        lon = Math.toDegrees(lon);
+
+        PointF newPoint = new PointF((float) lat, (float) lon);
+
+        return newPoint;
+
+    }
+    private void sendDistanceRequest(String origin) {
+        new DistanceMatrixFinder(this, origin, getHospitalsDestination()).execute();
+    }
+
+    private void sendDirectionRequest(String origin, String destination) {
+        try {
+            new DirectionFinder(this, origin, destination).execute();
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void onDistanceMatrixFinderSuccess(List<HealthFacility> healthFacilityList) {
+
+        final ListView lv = (ListView) findViewById(R.id.listview_hospital);
+
+        HealthFacilityAdapter adapter = new HealthFacilityAdapter(this, healthFacilityList);
+        lv.setAdapter(adapter);
+        lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                HealthFacility healthFacility = (HealthFacility) lv.getItemAtPosition(position);
+                sendDirectionRequest(currentLatLng.latitude + "," + currentLatLng.longitude,
+                        healthFacility.getLatLngText());
+            }
+        });
+
+
+    }
+
+    private void displayHealthFacility(List<HealthFacility> healthFacilities) {
+        final ListView lv = (ListView) findViewById(R.id.listview_hospital);
+
+        HealthFacilityAdapter adapter = new HealthFacilityAdapter(this, healthFacilityList);
+        lv.setAdapter(adapter);
+        lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                HealthFacility healthFacility = (HealthFacility) lv.getItemAtPosition(position);
+                sendDirectionRequest(currentLatLng.latitude + "," + currentLatLng.longitude,
+                        healthFacility.getLatLngText());
+            }
+        });
+    }
     @Override
     public void onDirectionFinderStart() {
 //        progressDialog = ProgressDialog.show(this, "Please wait.",
