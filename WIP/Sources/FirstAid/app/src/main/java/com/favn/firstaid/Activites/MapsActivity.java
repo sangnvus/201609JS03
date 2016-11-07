@@ -22,7 +22,6 @@ import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.BottomSheetBehavior;
-import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.app.ActivityCompat;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
@@ -46,7 +45,7 @@ import com.favn.firstaid.Models.Direction.DirectionFinderListener;
 import com.favn.firstaid.Models.DistanceMatrix.DistanceMatrixFinder;
 import com.favn.firstaid.Models.DistanceMatrix.DistanceMatrixFinderListener;
 import com.favn.firstaid.Models.FetchAddressIntentService;
-import com.favn.firstaid.Models.Hospital;
+import com.favn.firstaid.Models.HealthFacility;
 import com.favn.firstaid.R;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
@@ -94,7 +93,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private List<Marker> destinationMarkers = new ArrayList<>();
     private List<Polyline> polylinePaths = new ArrayList<>();
 
-    private List<Hospital> hospitalList = new ArrayList<>();
+    private List<HealthFacility> healthFacilityList = new ArrayList<>();
 
     private LinearLayout llCurrentLocation;
     private LinearLayout llHospitalDestination;
@@ -176,12 +175,12 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
                 if (newState == BottomSheetBehavior.STATE_EXPANDED) {
 
-                    if (!isNetworkEnable) {
+//                    if (!isNetworkEnable) {
 //                        createNetworkSetting();
-                    } else {
+//                    } else {
 //                        sendDistanceRequest(mCurrentLocation.getLatitude() + "," + mCurrentLocation
 //                                .getLongitude());
-                    }
+//                    }
                 }
             }
 
@@ -484,18 +483,18 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
     @Override
-    public void onDistanceMatrixFinderSuccess(List<Hospital> hospitalList) {
+    public void onDistanceMatrixFinderSuccess(List<HealthFacility> healthFacilityList) {
 
         final ListView lv = (ListView) findViewById(R.id.listview_hospital);
 
-        HospitalAdapter adapter = new HospitalAdapter(this, hospitalList);
+        HospitalAdapter adapter = new HospitalAdapter(this, healthFacilityList);
         lv.setAdapter(adapter);
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Hospital hospital = (Hospital) lv.getItemAtPosition(position);
+                HealthFacility healthFacility = (HealthFacility) lv.getItemAtPosition(position);
                 sendDirectionRequest(currentLatLng.latitude + "," + currentLatLng.longitude,
-                        hospital.getLatLngText());
+                        healthFacility.getLatLngText());
             }
         });
 
@@ -636,27 +635,23 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 //        }
     }
 
-    public Hospital[] getHospitalsDestination() {
-        List<Hospital> hospitalList = new ArrayList<Hospital>();
-        hospitalList.add(new Hospital("National Hospital of Obstetrics and Gynecology", 21.0093735, 105.5307141));
-        hospitalList.add(new Hospital("National Hospital of Traditional Medicine", 21.009574, 105.5209513));
-        hospitalList.add(new Hospital("Hanoi Heart Hospital", 21.017933, 105.5318903));
-        hospitalList.add(new Hospital("Bệnh viện Đa Khoa Hà Nội", 20.999166, 105.5285813));
-        hospitalList.add(new Hospital("Bệnh Viện Mắt Kỹ Thuật Cao HN", 21.011349, 105.5235913));
-        hospitalList.add(new Hospital("Bệnh viện đa khoa huyện Hải Hà", 21.0093735, 105.5307141));
-        hospitalList.add(new Hospital("BV def", 21.009574, 105.5209513));
-        hospitalList.add(new Hospital("BV ghi", 21.017933, 105.5318903));
-        hospitalList.add(new Hospital("BV klm", 20.999166, 105.5285813));
-        hospitalList.add(new Hospital("BV klm", 21.011349, 105.5235913));
+    public HealthFacility[] getHospitalsDestination() {
+        List<HealthFacility> healthFacilityList = new ArrayList<HealthFacility>();
+        healthFacilityList.add(new HealthFacility("National HealthFacility of Obstetrics and Gynecology", 21.0093735, 105.5307141));
+        healthFacilityList.add(new HealthFacility("National HealthFacility of Traditional Medicine", 21.009574, 105.5209513));
+        healthFacilityList.add(new HealthFacility("Hanoi Heart HealthFacility", 21.017933, 105.5318903));
+        healthFacilityList.add(new HealthFacility("Bệnh viện Đa Khoa Hà Nội", 20.999166, 105.5285813));
+        healthFacilityList.add(new HealthFacility("Bệnh Viện Mắt Kỹ Thuật Cao HN", 21.011349, 105.5235913));
+        healthFacilityList.add(new HealthFacility("Bệnh viện đa khoa huyện Hải Hà", 21.0093735, 105.5307141));
 
-        Hospital hospitalsDestination[] = new Hospital[hospitalList.size()];
-        for (int i = 0; i < hospitalList.size(); i++) {
-            hospitalsDestination[i] = hospitalList.get(i);
+        HealthFacility hospitalsDestination[] = new HealthFacility[healthFacilityList.size()];
+        for (int i = 0; i < healthFacilityList.size(); i++) {
+            hospitalsDestination[i] = healthFacilityList.get(i);
         }
         return hospitalsDestination;
     }
 
-    private List<Hospital> getNearbyHospital(LatLng latLng, List<Hospital> hospitalList) {
+    private List<HealthFacility> getNearbyHospital(LatLng latLng, List<HealthFacility> healthFacilityList) {
         double x1 = latLng.latitude;
         double y1 = latLng.longitude;
         return null;

@@ -1,10 +1,9 @@
 package com.favn.firstaid.Models.DistanceMatrix;
 
 import android.os.AsyncTask;
-import android.util.Log;
 
 import com.favn.firstaid.Models.Common.Constant;
-import com.favn.firstaid.Models.Hospital;
+import com.favn.firstaid.Models.HealthFacility;
 import com.google.gson.Gson;
 
 import java.io.IOException;
@@ -24,10 +23,10 @@ import java.util.List;
 public class DistanceMatrixFinder {
     private DistanceMatrixFinderListener listener;
     private String origin;
-    private Hospital destinations[];
-    private List<Hospital> hospitalList = new ArrayList<>();
+    private HealthFacility destinations[];
+    private List<HealthFacility> healthFacilityList = new ArrayList<>();
 
-    public DistanceMatrixFinder(DistanceMatrixFinderListener listener, String origin, Hospital[]
+    public DistanceMatrixFinder(DistanceMatrixFinderListener listener, String origin, HealthFacility[]
             destinations) {
         this.listener = listener;
         this.origin = origin;
@@ -66,11 +65,11 @@ public class DistanceMatrixFinder {
                 DistanceMatrix results = new Gson().fromJson(reader, DistanceMatrix.class);
 
                 for (int i = 0; i < results.getRows()[0].getElements().length; i++) {
-                    Hospital hospital = new Hospital(destinations[i].getName(),
+                    HealthFacility healthFacility = new HealthFacility(destinations[i].getName(),
                             destinations[i].getLatitude(),
                             destinations[i].getLongitude(),
                             results.getRows()[0].getElements()[i].getDistance());
-                    hospitalList.add(hospital);
+                    healthFacilityList.add(healthFacility);
                 }
             } catch (MalformedURLException e) {
                 // TODO Auto-generated catch block
@@ -89,12 +88,12 @@ public class DistanceMatrixFinder {
         @Override
         protected void onPostExecute(String res) {
             try {
-                Collections.sort(hospitalList, new Comparator<Hospital>() {
-                    public int compare(Hospital h1, Hospital h2) {
+                Collections.sort(healthFacilityList, new Comparator<HealthFacility>() {
+                    public int compare(HealthFacility h1, HealthFacility h2) {
                         return h1.getDistance().getValue() - h2.getDistance().getValue();
                     }
                 });
-                listener.onDistanceMatrixFinderSuccess(hospitalList);
+                listener.onDistanceMatrixFinderSuccess(healthFacilityList);
             } catch (Exception e) {
                 e.printStackTrace();
             }
