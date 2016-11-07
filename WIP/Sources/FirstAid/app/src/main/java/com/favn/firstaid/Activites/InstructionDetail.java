@@ -90,6 +90,13 @@ public class InstructionDetail extends AppCompatActivity {
         });
     }
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if(mMediaPlayer!=null) {
+            mMediaPlayer.stop();
+        }
+    }
 
     private void playAudio(int audioId) {
         playingAudioId = audioId;

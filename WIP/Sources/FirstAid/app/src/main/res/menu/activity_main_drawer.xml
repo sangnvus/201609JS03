@@ -11,18 +11,6 @@
             android:icon="@drawable/ic_learning"
             android:title="Học" />
         <item
-            android:id="@+id/nav_testing"
-            android:icon="@drawable/ic_testing"
-            android:title="Kiểm tra" />
-        <item
-            android:id="@+id/nav_qa"
-            android:icon="@drawable/ic_question_answer"
-            android:title="Ý kiến - Hỏi đáp" />
-        <item
-            android:id="@+id/nav_noti"
-            android:icon="@drawable/ic_notifications"
-            android:title="Thông báo" />
-        <item
             android:id="@+id/nav_setting"
             android:icon="@drawable/ic_settings"
             android:title="Cài đặt" />
