@@ -1,6 +1,6 @@
 package com.favn.firstaid.Models.DistanceMatrix;
 
-import com.favn.firstaid.Models.Hospital;
+import com.favn.firstaid.Models.HealthFacility;
 
 import java.util.List;
 
@@ -9,5 +9,5 @@ import java.util.List;
  */
 
 public interface DistanceMatrixFinderListener {
-    void onDistanceMatrixFinderSuccess(List<Hospital> hospitalList);
+    void onDistanceMatrixFinderSuccess(List<HealthFacility> healthFacilityList);
 }

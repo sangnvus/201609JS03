@@ -7,6 +7,7 @@ import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
+import com.favn.firstaid.Models.HealthFacility;
 import com.favn.firstaid.Models.Injury;
 import com.favn.firstaid.Models.Instruction;
 
@@ -25,7 +26,7 @@ public class DatabaseOpenHelper extends SQLiteOpenHelper {
     public static String DB_NAME = "favn_ver2.db";
     public static String TABLE_NAME_INJURIES = "injuries";
     public static String TABLE_NAME_INSTRUCTIONS = "instructions";
-    public static String TABLE_NAME_HOSPITALS = "hospitals";
+    public static String TABLE_NAME_HEALTH_FACILITIES = "health_facilities";
     public static String TABLE_NAME_FAQS = "faqs";
     public static String TABLE_NAME_NOTIFICATIONS = "notifications";
     private static int DB_VERSION = 1;
@@ -93,6 +94,17 @@ public class DatabaseOpenHelper extends SQLiteOpenHelper {
         }
     }
 
+    @Override
+    public void onCreate(SQLiteDatabase db) {
+
+    }
+
+    @Override
+    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+
+    }
+
+    // CRUD Injuries
     public List<Injury> getListInjury() {
         Injury injury = null;
         List<Injury> injuryListList = new ArrayList<>();
@@ -113,6 +125,7 @@ public class DatabaseOpenHelper extends SQLiteOpenHelper {
         return injuryListList;
     }
 
+    /** CRUD Instructions */
     public List<Instruction> getListInstruction(int id) {
         Instruction instruction = null;
         List<Instruction> instructionList = new ArrayList<>();
@@ -136,13 +149,33 @@ public class DatabaseOpenHelper extends SQLiteOpenHelper {
         return instructionList;
     }
 
-    @Override
-    public void onCreate(SQLiteDatabase db) {
+    // CRUD Health Facility
+    public List<HealthFacility> getListHealthFacility(int id) {
+        HealthFacility healthFacility = null;
+        List<HealthFacility> healthFacilities = new ArrayList<>();
+        openDatabase();
+        Cursor cursor = mDatabase.rawQuery("SELECT * FROM " + TABLE_NAME_HEALTH_FACILITIES, null);
+        cursor.moveToFirst();
+        while (!cursor.isAfterLast()) {
+            int healthFacilityId = cursor.getInt(0);
+            String name = cursor.getString(1);
+            int type = cursor.getInt(2);
+            String address = cursor.getString(3);
+            String vicinity = cursor.getString(4);
+            String phone = cursor.getString(5);
+            double latitude = cursor.getDouble(6);
+            double longitude = cursor.getDouble(7);
 
-    }
+            healthFacility = new HealthFacility(healthFacilityId, name, type, address, vicinity,
+                    phone,
+                    latitude,
+                    longitude);
 
-    @Override
-    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-
+            healthFacilities.add(healthFacility);
+            cursor.moveToNext();
+        }
+        cursor.close();
+        closeDatabase();
+        return healthFacilities;
     }
 }

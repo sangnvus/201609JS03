@@ -42,12 +42,8 @@ public class Constant {
     public static final int SPINNER_INJURY = 2;
     // End add constant
 
-
-
     // Intent filter
     public static final String INTENT_FILTER_PROVIDERS_CHANGED = "android.location" +
             ".PROVIDERS_CHANGED";
 
-    public static final String INTENT_FILTER_CONNECTIVITY_CHANGED = "android.net.conn" +
-            ".CONNECTIVITY_CHANGE";
 }
