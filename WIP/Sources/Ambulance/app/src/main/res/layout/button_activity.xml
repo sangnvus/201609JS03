@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingTop="10dp">
+
+    <Button
+        android:text="Chỉ đường"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/button_direction"
+        android:background="@android:color/holo_red_light"
+        android:textColor="@android:color/background_light"
+        android:layout_marginTop="0dp" />
+
+    <Button
+        android:text="Đã đón"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/button_received"
+        android:background="@android:color/holo_red_light"
+        android:layout_marginTop="20dp"
+        android:textColor="@android:color/background_light" />
+
+    <Button
+        android:text="Hoàn thành nhiệm vụ"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/button_complete"
+        android:layout_marginTop="20dp"
+        android:background="@android:color/holo_red_light"
+        android:textColor="@android:color/background_light" />
+
+    <Button
+        android:text="Không hoàn thành"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:id="@+id/button_cancel"
+        android:background="@android:color/holo_red_light"
+        android:textColor="@android:color/background_light" />
+
+    <Button
+        android:text="Hủy nhiệm vụ"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:id="@+id/button_delete"
+        android:background="@android:color/holo_red_light"
+        android:textColor="@android:color/background_light" />
+</LinearLayout>

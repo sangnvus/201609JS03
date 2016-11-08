@@ -5,8 +5,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 
 public class MainActivity extends AppCompatActivity {
+
+    private ImageView bg;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -21,5 +24,8 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
+        bg = (ImageView) findViewById(R.id.bg_login);
+
     }
 }

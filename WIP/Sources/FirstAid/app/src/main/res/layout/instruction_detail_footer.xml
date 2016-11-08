@@ -8,5 +8,6 @@
         android:id="@+id/button_faq"
         android:text="@string/faq_button"
         android:background="@color/colorPrimary"
-        android:textColor="@color/colorWhite" />
+        android:textColor="@color/colorWhite"
+        android:theme="@style/PrimaryButton"/>
 </FrameLayout>
