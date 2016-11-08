@@ -4,7 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/bottom_sheet"
     android:layout_width="match_parent"
-    android:layout_height="450dp"
+    android:layout_height="600dp"
     android:background="@color/colorWhite"
     android:clipToPadding="true"
     app:behavior_peekHeight="64dp"
@@ -25,27 +25,54 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="16dp"
                 android:text="CƠ SỞ Y TẾ GẦN ĐÂY"
                 android:textColor="@color/colorWhite"/>
         </LinearLayout>
 
+        <!--Setting for filter Health Facility-->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <android.support.v7.widget.AppCompatCheckBox
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:checked="true"
+                android:text="Bệnh viện"/>
+
+            <android.support.v7.widget.AppCompatCheckBox
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Trạm y tế"
+                android:checked="true"/>
+
+
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/colorSeparate"/>
+        <!--Loading status-->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
+
             <ProgressBar
                 android:id="@+id/progress_loading_health_facility"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:indeterminateBehavior="cycle"
                 android:visibility="gone"/>
+
             <TextView
                 android:id="@+id/textview_status"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Cần kết nối mạng"/>
         </LinearLayout>
-
 
 
         <ListView
