@@ -137,26 +137,35 @@ public class QAActivity extends AppCompatActivity {
 
     // Validate input
     private boolean isValidateInput(){
-        if(etName.getText().length() < 1) {
+        if(etName.getText().toString().trim().length() < 1) {
             etName.setError("Chưa nhập tên");
             etName.requestFocus();
             return false;
         }
 
-        if(etEmail.getText().length() < 1) {
+        String email = etEmail.getText().toString();
+        if(email.trim().length() < 1) {
             etEmail.setError("Chưa nhập email");
             etEmail.requestFocus();
             return false;
         }
 
-        if(etContent.getText().length() < 1) {
+        String emailPattern = "[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+";
+        if (!email.matches(emailPattern))
+        {
+            etEmail.setError("Sai định dạng email");
+            etEmail.requestFocus();
+            return false;
+        }
+
+        if(etContent.getText().toString().trim().length() < 1) {
             etContent.setError("Chưa nhập nội dung");
             etContent.requestFocus();
             return false;
         }
 
         if(rdTitle.isChecked() == true) {
-            if(etContent.getText().length() < 1) {
+            if(etContent.getText().toString().trim().length() < 1) {
                 etContent.setError("Chưa nhập tiêu đề");
                 etContent.requestFocus();
                 return false;
