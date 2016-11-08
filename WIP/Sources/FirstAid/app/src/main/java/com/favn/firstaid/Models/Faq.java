@@ -1,5 +1,9 @@
 package com.favn.firstaid.Models;
 
+import android.content.Context;
+import android.os.AsyncTask;
+import android.widget.Toast;
+
 /**
  * Created by Mikey on 11/1/2016.
  */
@@ -7,6 +11,7 @@ package com.favn.firstaid.Models;
 public class Faq {
     private String question;
     private String answer;
+    private Context context;
 
     public Faq(String question, String answer) {
         this.question = question;
@@ -28,4 +33,6 @@ public class Faq {
     public void setAnswer(String answer) {
         this.answer = answer;
     }
+
+
 }

@@ -5,6 +5,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.graphics.PointF;
 import android.util.Log;
 
 import com.favn.firstaid.Models.HealthFacility;
@@ -23,7 +24,7 @@ import java.util.List;
 
 public class DatabaseOpenHelper extends SQLiteOpenHelper {
     public static String DB_PATH = "/data/data/com.favn.firstaid/databases/";
-    public static String DB_NAME = "favn_ver2.db";
+    public static String DB_NAME = "favn_ver4.db";
     public static String TABLE_NAME_INJURIES = "injuries";
     public static String TABLE_NAME_INSTRUCTIONS = "instructions";
     public static String TABLE_NAME_HEALTH_FACILITIES = "health_facilities";
@@ -149,12 +150,21 @@ public class DatabaseOpenHelper extends SQLiteOpenHelper {
         return instructionList;
     }
 
+
     // CRUD Health Facility
-    public List<HealthFacility> getListHealthFacility(int id) {
+    public List<HealthFacility> getListHealthFacility(PointF[] points) {
         HealthFacility healthFacility = null;
         List<HealthFacility> healthFacilities = new ArrayList<>();
         openDatabase();
-        Cursor cursor = mDatabase.rawQuery("SELECT * FROM " + TABLE_NAME_HEALTH_FACILITIES, null);
+        String WHERE_CLAUSE = "WHERE "
+                + "latitude > " + String.valueOf(points[2].x) + " AND "
+                + "latitude < " + String.valueOf(points[0].x) + " AND "
+                + "longitude < " + String.valueOf(points[1].y) + " AND "
+                + "longitude > " + String.valueOf(points[3].y);
+        Cursor cursor = mDatabase.rawQuery("SELECT * FROM " + TABLE_NAME_HEALTH_FACILITIES +
+                        " " +WHERE_CLAUSE,
+                null);
+
         cursor.moveToFirst();
         while (!cursor.isAfterLast()) {
             int healthFacilityId = cursor.getInt(0);

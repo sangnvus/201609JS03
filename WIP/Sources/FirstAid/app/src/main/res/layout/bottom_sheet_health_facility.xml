@@ -4,7 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/bottom_sheet"
     android:layout_width="match_parent"
-    android:layout_height="350dp"
+    android:layout_height="450dp"
     android:background="@color/colorWhite"
     android:clipToPadding="true"
     app:behavior_peekHeight="64dp"

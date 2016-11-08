@@ -30,6 +30,8 @@ import com.favn.firstaid.R;
 
 import java.util.List;
 
+import static com.favn.firstaid.Models.Common.Constant.LISTVIEW_EMERGENCY;
+
 
 /**
  * A simple {@link Fragment} subclass.
@@ -56,7 +58,7 @@ public class EmergencyFragment extends Fragment implements AdapterView.OnItemCli
         dbHelper.openDatabase();
 
         mInjuryList = dbHelper.getListInjury();
-        adapter = new InjuryAdapter(getActivity(), mInjuryList);
+        adapter = new InjuryAdapter(getActivity(), mInjuryList, LISTVIEW_EMERGENCY);
         listView.setAdapter(adapter);
         listView.setOnItemClickListener(this);
         setHasOptionsMenu(true);
