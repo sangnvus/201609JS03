@@ -6,7 +6,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
-import com.favn.firstaid.Models.Hospital;
+import com.favn.firstaid.Models.HealthFacility;
 import com.favn.firstaid.R;
 
 import java.util.List;
@@ -17,21 +17,21 @@ import java.util.List;
 
 public class HospitalAdapter extends BaseAdapter{
     private Context mContext;
-    private List<Hospital> mHospitalList;
+    private List<HealthFacility> mHealthFacilityList;
 
-    public HospitalAdapter(Context mContext, List<Hospital> mHospitalList) {
+    public HospitalAdapter(Context mContext, List<HealthFacility> mHealthFacilityList) {
         this.mContext = mContext;
-        this.mHospitalList = mHospitalList;
+        this.mHealthFacilityList = mHealthFacilityList;
     }
 
     @Override
     public int getCount() {
-        return mHospitalList.size();
+        return mHealthFacilityList.size();
     }
 
     @Override
     public Object getItem(int position) {
-        return mHospitalList.get(position);
+        return mHealthFacilityList.get(position);
     }
 
     @Override
@@ -43,9 +43,9 @@ public class HospitalAdapter extends BaseAdapter{
     public View getView(int position, View convertView, ViewGroup parent) {
         View v = View.inflate(mContext, R.layout.item_hospital, null);
         TextView hospitalName = (TextView)v.findViewById(R.id.text_hospital_name);
-        hospitalName.setText(mHospitalList.get(position).getName());
+        hospitalName.setText(mHealthFacilityList.get(position).getName());
         TextView hospitalDistance = (TextView)v.findViewById(R.id.text_hospital_distance);
-//        hospitalDistance.setText(mHospitalList.get(position).getDistance().getText());
+//        hospitalDistance.setText(mHealthFacilityList.get(position).getDistance().getText());
         return v;
     }
 }
