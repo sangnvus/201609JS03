@@ -10,10 +10,13 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.favn.firstaid.Adapter.InstructionAdapter;
 import com.favn.firstaid.Database.DatabaseOpenHelper;
@@ -31,7 +34,9 @@ public class InstructionDetail extends AppCompatActivity {
     private boolean isEmegency;
     private int playingAudioId;
     private MediaPlayer mMediaPlayer = null;
-
+    private int listSize;
+    private Animation beat;
+    private List<View> v1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,7 +62,7 @@ public class InstructionDetail extends AppCompatActivity {
         mInstructionList = dbHelper.getListInstruction(injuryId);
         instructionAdapter = new InstructionAdapter(this, mInstructionList, isEmegency);
         listView.setAdapter(instructionAdapter);
-
+        listSize = mInstructionList.size();
 
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -76,16 +81,21 @@ public class InstructionDetail extends AppCompatActivity {
         listView.addFooterView(footerLayout);
 
         final int[] audio = {R.raw.audio_1, R.raw.audio_2, R.raw.audio_3};
+        beat = AnimationUtils.loadAnimation(this, R.anim.heartbeat);
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int pos, long id) {
-                if (playingAudioId == audio[pos] && mMediaPlayer.isPlaying() == true) {
+                final TextView stepAnimation = (TextView) view.findViewById(R.id.text_step_number);
+                if (playingAudioId == audio[pos] && mMediaPlayer.isPlaying()) {
                     mMediaPlayer.stop();
+                    stepAnimation.clearAnimation();
                 } else {
-                    playAudio(audio[pos]);
+                    playAudio(audio[pos], stepAnimation);
                 }
+//                v1 = null;
+//                v1.add(stepAnimation);
             }
         });
     }
@@ -98,16 +108,28 @@ public class InstructionDetail extends AppCompatActivity {
         }
     }
 
-    private void playAudio(int audioId) {
+    private void playAudio(int audioId, TextView stepAnim) {
         playingAudioId = audioId;
+
         // stop the previous playing audio
         if (mMediaPlayer != null && mMediaPlayer.isPlaying()) {
             mMediaPlayer.stop();
             mMediaPlayer.release();
             mMediaPlayer = null;
+//            for(View v: v1) {
+//                v.clearAnimation();
+//            }
         }
         mMediaPlayer = MediaPlayer.create(this, audioId);
         mMediaPlayer.start();
+        stepAnim.startAnimation(beat);
+
+    }
+
+    private void checkAnimation(View view){
+        TextView step = (TextView) view.findViewById(R.id.text_step_number);
+        for (int i = 0; i < listSize; i++) {
+        }
     }
 
     @Override
