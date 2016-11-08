@@ -1,5 +1,6 @@
 package com.favn.firstaid.Database;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -105,7 +106,7 @@ public class DatabaseOpenHelper extends SQLiteOpenHelper {
 
     }
 
-    // CRUD Injuries
+    // Get Injuries
     public List<Injury> getListInjury() {
         Injury injury = null;
         List<Injury> injuryListList = new ArrayList<>();
@@ -126,7 +127,56 @@ public class DatabaseOpenHelper extends SQLiteOpenHelper {
         return injuryListList;
     }
 
-    /** CRUD Instructions */
+    // START CRUD INJURY FUNCTIONS - Kienmt : 11/08/2016
+    // Insert injury
+    public long insertInjury(Injury injury) {
+        ContentValues values = new ContentValues();
+
+        values.put("id", injury.getId());
+        values.put("injury_name", injury.getInjuryName());
+        values.put("symptom", injury.getInjurySymptom());
+        values.put("priority", injury.getPriority());
+        values.put("image", injury.getImage());
+        values.put("updated_at", injury.getUpdated_at());
+        values.put("created_at", injury.getCreated_at());
+
+        return mDatabase.insert(TABLE_NAME_INJURIES, null, values);
+
+    }
+
+    // Insert injury
+    public long updateInjury(Injury injury) {
+        ContentValues values = new ContentValues();
+
+        values.put("id", injury.getId());
+        values.put("injury_name", injury.getInjuryName());
+        values.put("symptom", injury.getInjurySymptom());
+        values.put("priority", injury.getPriority());
+        values.put("image", injury.getImage());
+        values.put("updated_at", injury.getUpdated_at());
+        values.put("created_at", injury.getCreated_at());
+
+        values.put("id", 100);
+        values.put("injury_name", "new injury_name");
+        values.put("symptom", "new symptom");
+        values.put("priority", "new priority");
+        values.put("image", "new image");
+        values.put("updated_at", "new updated_at");
+        values.put("created_at", "new created_at");
+
+        String whereClause = "id = " + injury.getId();
+
+        return mDatabase.update(TABLE_NAME_INJURIES, values, whereClause, null);
+
+    }
+
+    // Delete injury
+
+    // END CRUD INJURY FUNCTIONS
+
+
+
+    // Get Instructions
     public List<Instruction> getListInstruction(int id) {
         Instruction instruction = null;
         List<Instruction> instructionList = new ArrayList<>();
@@ -151,7 +201,9 @@ public class DatabaseOpenHelper extends SQLiteOpenHelper {
     }
 
 
-    // CRUD Health Facility
+
+
+    // Get Health Facility
     public List<HealthFacility> getListHealthFacility(PointF[] points) {
         HealthFacility healthFacility = null;
         List<HealthFacility> healthFacilities = new ArrayList<>();
