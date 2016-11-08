@@ -35,18 +35,19 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
+
             <android.support.v7.widget.AppCompatCheckBox
+                android:id="@+id/checkbox_filter_hospital"
+                android:paddingLeft="16dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:checked="true"
                 android:text="Bệnh viện"/>
 
-            <android.support.v7.widget.AppCompatCheckBox
+            <TextView
+                android:id="@+id/textview_notify"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Trạm y tế"
-                android:checked="true"/>
-
+                android:text="Cần kết nối mạng"/>
 
         </LinearLayout>
 
@@ -56,22 +57,23 @@
             android:background="@color/colorSeparate"/>
         <!--Loading status-->
         <LinearLayout
+            android:id="@+id/layout_loading_status"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:visibility="gone">
 
             <ProgressBar
                 android:id="@+id/progress_loading_health_facility"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:indeterminateBehavior="cycle"
-                android:visibility="gone"/>
+                android:indeterminateBehavior="cycle"/>
 
             <TextView
-                android:id="@+id/textview_status"
+                android:id="@+id/textview_loading_status"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Cần kết nối mạng"/>
+                android:text="Đang tải dữ liệu"/>
         </LinearLayout>
 
 

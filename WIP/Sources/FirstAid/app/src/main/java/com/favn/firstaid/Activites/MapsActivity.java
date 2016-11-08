@@ -31,7 +31,8 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -88,8 +89,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private GoogleApiClient mGoogleApiClient;
     private LocationRequest mLocationRequest;
     private Location mCurrentLocation;
-    private String mLastUpdateTime;
-    private LatLng currentLatLng;
     protected Location mLastLocation;
 
     private List<Marker> originMarkers = new ArrayList<>();
@@ -103,7 +102,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private TextView tvLatLng;
     private BottomSheetBehavior mBottomSheetBehavior;
     private ProgressBar mProgressBarLocation;
-    private Button btnFindHospital;
+    private CheckBox chkHospital;
+    private TextView tvNotify;
 
 
     protected LocationSettingsRequest mLocationSettingsRequest;
@@ -123,10 +123,10 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     public static final String INTENT_FILTER_CONNECTIVITY_CHANGE = "android.net.conn" +
             ".CONNECTIVITY_CHANGE";
 
-
     private static final int GPS_STATUS_NOT_FIXED = 1;
     private static final int GPS_STATUS_FIXED = 2;
     private static final int GPS_STATUS_OFF = 0;
+
 
     protected String mAddress;
     private AddressResultReceiver mResultReceiver;
@@ -136,6 +136,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private boolean isLocationEnable;
     private boolean isNetworkEnable;
     private boolean isAddressFound;
+    private boolean isFilterHospital;
 
     // Get database
     private HealthFacilityAdapter healthFacilityAdapterAdapter;
@@ -148,13 +149,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         setContentView(R.layout.activity_maps);
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
-
-        llCurrentLocation = (LinearLayout) findViewById(R.id.layout_current_location);
-        tvCurrentLocation = (TextView) findViewById(R.id.text_current_location);
-        imgGpsStatus = (ImageView) findViewById(R.id.image_gps_status);
-        tvLatLng = (TextView) findViewById(R.id.text_current_latlng);
-        btnFindHospital = (Button) findViewById(R.id.test);
+        createUIWidget();
 
         mResultReceiver = new AddressResultReceiver(new Handler());
         isLocationEnable = false;
@@ -163,6 +158,29 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             initMap();
         }
 
+
+        buildGoogleApiClient();
+        buildLocationSettingsRequest();
+
+        intentFilter = new IntentFilter();
+        intentFilter.addAction(INTENT_FILTER_PROVIDERS_CHANGED);
+        intentFilter.addAction(INTENT_FILTER_WIFI_STATE_CHANGED);
+        intentFilter.addAction(INTENT_FILTER_CONNECTIVITY_CHANGE);
+
+        updateLocationUI();
+        dbHelper = new DatabaseOpenHelper(this);
+
+
+    }
+
+    private void createUIWidget() {
+        llCurrentLocation = (LinearLayout) findViewById(R.id.layout_current_location);
+        tvCurrentLocation = (TextView) findViewById(R.id.text_current_location);
+        imgGpsStatus = (ImageView) findViewById(R.id.image_gps_status);
+        tvLatLng = (TextView) findViewById(R.id.text_current_latlng);
+        tvNotify = (TextView) findViewById(R.id.textview_notify);
+
+        isFilterHospital = false;
         // Action zoom to current location
         llCurrentLocation.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -189,20 +207,15 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             }
         });
 
-        // llHospitalDestination = (LinearLayout) findViewById(R.id.layout_hospital_destination);
+        chkHospital = (CheckBox) findViewById(R.id.checkbox_filter_hospital);
 
-
-        buildGoogleApiClient();
-        buildLocationSettingsRequest();
-
-
-        intentFilter = new IntentFilter();
-        intentFilter.addAction(INTENT_FILTER_PROVIDERS_CHANGED);
-        intentFilter.addAction(INTENT_FILTER_WIFI_STATE_CHANGED);
-        intentFilter.addAction(INTENT_FILTER_CONNECTIVITY_CHANGE);
-
-        updateLocationUI();
-        dbHelper = new DatabaseOpenHelper(this);
+        chkHospital.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                isFilterHospital = isChecked;
+                displayHealthFacility(healthFacilityList);
+            }
+        });
     }
 
     // Broadcast for Connectivity status
@@ -475,7 +488,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     private void buildNetworkSetting() {
         isNetworkEnable = NetworkStatus.checkNetworkEnable(this);
-        if(!isNetworkEnable) {
+        if (!isNetworkEnable) {
             createNetworkSetting();
         }
     }
@@ -561,11 +574,15 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
     private void getHealthFacilityData() {
-        if (isLocationEnable && (mCurrentLocation != null)&& !isNetworkEnable) {
+        if (isLocationEnable && (mCurrentLocation != null) && !isNetworkEnable) {
             healthFacilityList = dbHelper.getListHealthFacility(getPoints());
-            displayHealthFacility();
+            displayHealthFacility(healthFacilityList);
+            String strNotify = (isNetworkEnable) ? Constant.NOTIFY_ENABLE_NETWORK_RESULT :
+                    Constant.NOTIFY_NOT_ENABLE_NETWORK_RESULT;
+            tvNotify.setText(strNotify);
         } else if (isLocationEnable && isNetworkEnable) {
-
+            sendDistanceRequest(mCurrentLocation.getLatitude() + "," + mCurrentLocation.getLongitude
+                    ());
         } else {
 
 
@@ -575,7 +592,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     private PointF[] getPoints() {
         PointF[] points = new PointF[4];
-        PointF center = new PointF((float)mCurrentLocation.getLatitude(), (float)mCurrentLocation
+        PointF center = new PointF((float) mCurrentLocation.getLatitude(), (float) mCurrentLocation
                 .getLongitude());
         double radius = 20000;
         final double mult = 1; // mult = 1.1; is more reliable
@@ -592,8 +609,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
     public static PointF calculateDerivedPosition(PointF point,
-                                                  double range, double bearing)
-    {
+                                                  double range, double bearing) {
         double EarthRadius = 6371000; // m
 
         double latA = Math.toRadians(point.x);
@@ -621,8 +637,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         return newPoint;
 
     }
+
     private void sendDistanceRequest(String origin) {
-        new DistanceMatrixFinder(this, origin, getHospitalsDestination()).execute();
+        new DistanceMatrixFinder(this, origin, getHospitalsDestinationArray()).execute();
     }
 
     private void sendDirectionRequest(String origin, String destination) {
@@ -634,46 +651,32 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
     @Override
-    public void onDistanceMatrixFinderSuccess(List<HealthFacility> healthFacilityList) {
-
-//        final ListView lv = (ListView) findViewById(R.id.listview_hospital);
-//
-//        HealthFacilityAdapter adapter = new HealthFacilityAdapter(this, healthFacilityList);
-//        lv.setAdapter(adapter);
-//        lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//            @Override
-//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//                HealthFacility healthFacility = (HealthFacility) lv.getItemAtPosition(position);
-//                sendDirectionRequest(currentLatLng.latitude + "," + currentLatLng.longitude,
-//                        healthFacility.getLatLngText());
-//            }
-//        });
-
-
+    public void onDistanceMatrixFinderSuccess(List<HealthFacility> healthFacilityListResult) {
+        healthFacilityList = healthFacilityListResult;
+        displayHealthFacility(healthFacilityList);
     }
 
-    private void displayHealthFacility() {
+    private void displayHealthFacility(List<HealthFacility> healthFacilityList) {
         final ListView lv = (ListView) findViewById(R.id.listview_hospital);
 
-        List<HealthFacility> hospitalList = new ArrayList<>();
-
-        for(HealthFacility healthFacility: healthFacilityList) {
-            if(healthFacility.getType() == 1) {
-                hospitalList.add(healthFacility);
-            }
-        }
         HealthFacilityAdapter adapter = new HealthFacilityAdapter(this, healthFacilityList);
-
+        if (isFilterHospital) {
+            adapter.getFilter().filter(Constant.FILTER_HOSPITAL);
+        } else {
+            adapter.getFilter().filter(null);
+        }
         lv.setAdapter(adapter);
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 HealthFacility healthFacility = (HealthFacility) lv.getItemAtPosition(position);
-                sendDirectionRequest(currentLatLng.latitude + "," + currentLatLng.longitude,
+                sendDirectionRequest(mCurrentLocation.getLatitude() + "," +
+                                mCurrentLocation.getLongitude(),
                         healthFacility.getLatLngText());
             }
         });
     }
+
     @Override
     public void onDirectionFinderStart() {
 //        progressDialog = ProgressDialog.show(this, "Please wait.",
@@ -729,16 +732,14 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 //        }
     }
 
-    public HealthFacility[] getHospitalsDestination() {
-        List<HealthFacility> healthFacilityList = new ArrayList<HealthFacility>();
-
+    public HealthFacility[] getHospitalsDestinationArray() {
+        healthFacilityList = dbHelper.getListHealthFacility(getPoints());
         HealthFacility hospitalsDestination[] = new HealthFacility[healthFacilityList.size()];
         for (int i = 0; i < healthFacilityList.size(); i++) {
             hospitalsDestination[i] = healthFacilityList.get(i);
         }
         return hospitalsDestination;
     }
-
 
 
     class AddressResultReceiver extends ResultReceiver {

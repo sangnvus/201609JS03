@@ -46,4 +46,10 @@ public class Constant {
     public static final String INTENT_FILTER_PROVIDERS_CHANGED = "android.location" +
             ".PROVIDERS_CHANGED";
 
+    // Notify
+    public static final String NOTIFY_ENABLE_NETWORK_RESULT = "Kết quả offline";
+    public static final String NOTIFY_NOT_ENABLE_NETWORK_RESULT = "Kết quả internet";
+
+    public static final String FILTER_HOSPITAL = "1";
+
 }

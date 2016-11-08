@@ -4,9 +4,12 @@ import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.TextView;
 
 import com.favn.firstaid.Models.HealthFacility;
+import com.favn.firstaid.Models.HealthFacilityFilter;
 import com.favn.firstaid.R;
 
 import java.util.List;
@@ -15,12 +18,21 @@ import java.util.List;
  * Created by Hung Gia on 10/21/2016.
  */
 
-public class HealthFacilityAdapter extends BaseAdapter{
+public class HealthFacilityAdapter extends BaseAdapter implements Filterable{
     private Context mContext;
     private List<HealthFacility> mHealthFacilityList;
+    private HealthFacilityFilter healthFacilityFilter;
 
-    public HealthFacilityAdapter(Context mContext, List<HealthFacility> mHealthFacilityList) {
+    public HealthFacilityAdapter(Context mContext, List<HealthFacility> healthFacilityList) {
         this.mContext = mContext;
+        this.mHealthFacilityList = healthFacilityList;
+    }
+
+    public List<HealthFacility> getmHealthFacilityList() {
+        return mHealthFacilityList;
+    }
+
+    public void setmHealthFacilityList(List<HealthFacility> mHealthFacilityList) {
         this.mHealthFacilityList = mHealthFacilityList;
     }
 
@@ -58,5 +70,14 @@ public class HealthFacilityAdapter extends BaseAdapter{
             hospitalDistance.setText(mHealthFacilityList.get(position).getDistance().getText());
         }
         return v;
+    }
+
+
+    @Override
+    public Filter getFilter() {
+        if (healthFacilityFilter == null) {
+            healthFacilityFilter = new HealthFacilityFilter(this);
+        }
+        return healthFacilityFilter;
     }
 }

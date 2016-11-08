@@ -1,6 +1,7 @@
 package com.favn.firstaid.Models.DistanceMatrix;
 
 import android.os.AsyncTask;
+import android.util.Log;
 
 import com.favn.firstaid.Models.Common.Constant;
 import com.favn.firstaid.Models.HealthFacility;
@@ -50,6 +51,7 @@ public class DistanceMatrixFinder {
         //TODO consider to add mode: driving
         url = Constant.DISTANCE_URL_API + "origins=" + origin + "&destinations=" +
                 destinationLocation + "&key=" + Constant.API_KEY;
+        Log.d("url", url + "");
         return url;
     }
 
@@ -65,7 +67,12 @@ public class DistanceMatrixFinder {
                 DistanceMatrix results = new Gson().fromJson(reader, DistanceMatrix.class);
 
                 for (int i = 0; i < results.getRows()[0].getElements().length; i++) {
-                    HealthFacility healthFacility = new HealthFacility(destinations[i].getName(),
+                    HealthFacility healthFacility = new HealthFacility(
+                            destinations[i].getName(),
+                            destinations[i].getType(),
+                            destinations[i].getAddress(),
+                            destinations[i].getVicinity(),
+                            destinations[i].getPhone(),
                             destinations[i].getLatitude(),
                             destinations[i].getLongitude(),
                             results.getRows()[0].getElements()[i].getDistance());

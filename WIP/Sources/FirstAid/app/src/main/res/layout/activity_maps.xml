@@ -163,17 +163,6 @@
 
             </RelativeLayout>
 
-            <Button
-                android:id="@+id/test"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@color/colorPrimary"
-                android:paddingBottom="4dp"
-                android:paddingLeft="16dp"
-                android:paddingTop="4dp"
-                android:text="BỆNH VIỆN GẦN ĐÂY"
-                android:textColor="@color/colorWhite"
-                android:theme="@style/PrimaryButton"/>
 
         </LinearLayout>
 
