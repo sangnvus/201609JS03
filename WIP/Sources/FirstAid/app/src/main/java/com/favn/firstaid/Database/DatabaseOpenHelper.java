@@ -188,10 +188,12 @@ public class DatabaseOpenHelper extends SQLiteOpenHelper {
             int injuryId = cursor.getInt(1);
             int step = cursor.getInt(2);
             String content = cursor.getString(3);
-            String explanation = cursor.getString(4);
-            String image = cursor.getString(5);
-            String audio = cursor.getString(6);
-            instruction = new Instruction(injuryId, step, content, explanation, image, audio);
+            boolean isMakeCall = cursor.getInt(4) == 1;
+            String explanation = cursor.getString(5);
+            String image = cursor.getString(6);
+            String audio = cursor.getString(7);
+            instruction = new Instruction(injuryId, step, content, isMakeCall, explanation, image,
+                    audio);
             instructionList.add(instruction);
             cursor.moveToNext();
         }

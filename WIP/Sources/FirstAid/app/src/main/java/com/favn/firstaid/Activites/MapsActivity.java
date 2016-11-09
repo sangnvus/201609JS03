@@ -639,7 +639,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
     private void sendDistanceRequest(String origin) {
-        new DistanceMatrixFinder(this, origin, getHospitalsDestinationArray()).execute();
+        new DistanceMatrixFinder(this, origin, getHealthFacilityDestinationArray()).execute();
     }
 
     private void sendDirectionRequest(String origin, String destination) {
@@ -732,7 +732,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 //        }
     }
 
-    public HealthFacility[] getHospitalsDestinationArray() {
+    public HealthFacility[] getHealthFacilityDestinationArray() {
         healthFacilityList = dbHelper.getListHealthFacility(getPoints());
         HealthFacility hospitalsDestination[] = new HealthFacility[healthFacilityList.size()];
         for (int i = 0; i < healthFacilityList.size(); i++) {

@@ -47,7 +47,7 @@
                 android:id="@+id/textview_notify"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Cần kết nối mạng"/>
+                android:text=""/>
 
         </LinearLayout>
 
