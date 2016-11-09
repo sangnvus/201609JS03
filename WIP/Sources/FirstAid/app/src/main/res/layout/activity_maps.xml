@@ -27,7 +27,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
-            android:clickable="true"
             android:orientation="vertical">
 
             <LinearLayout
@@ -88,9 +87,10 @@
                 android:background="@color/colorSeparate"/>
 
             <RelativeLayout
-                android:id="@+id/layout_hospital_destination"
+                android:id="@+id/layout_health_facility_destination"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:background="?android:attr/selectableItemBackground"
                 android:visibility="gone">
 
                 <LinearLayout
@@ -136,9 +136,9 @@
                 </LinearLayout>
 
                 <LinearLayout
+                    android:id="@+id/layout_health_facility_navigate"
                     android:layout_width="wrap_content"
                     android:layout_height="64dp"
-
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
                     android:layout_gravity="center_vertical"
@@ -149,15 +149,16 @@
                         android:layout_width="1dp"
                         android:layout_height="match_parent"
                         android:layout_marginBottom="8dp"
-                        android:layout_marginRight="20dp"
+                        android:layout_marginRight="16dp"
                         android:layout_marginTop="8dp"
                         android:background="@color/colorSeparate"/>
 
-                    <ImageView
-                        android:layout_width="@dimen/image_size"
-                        android:layout_height="@dimen/image_size"
-                        android:clickable="true"
-                        android:src="@drawable/ic_navigate"/>
+
+                    <Button
+                        android:id="@+id/button_navigate"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:background="@drawable/ic_navigate"/>
                 </LinearLayout>
 
 
