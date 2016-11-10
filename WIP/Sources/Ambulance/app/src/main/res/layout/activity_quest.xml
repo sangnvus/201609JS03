@@ -8,7 +8,7 @@
     android:paddingLeft="8dp"
     android:paddingRight="8dp"
     android:paddingTop="8dp"
-    tools:context="com.example.mikey.ambulance.Quest">
+    tools:context="com.example.mikey.ambulance.Activities.Quest">
 
     <LinearLayout
         android:orientation="horizontal"

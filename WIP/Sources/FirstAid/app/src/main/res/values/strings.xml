@@ -63,4 +63,6 @@
     <string name="qa_button">Đặt câu hỏi cho chúng tôi</string>
     <string name="textview_locating">Đang tìm vị trí</string>
 
+    <!--share on facebook-->
+    <string name="facebook_app_id">1439009406128646</string>
 </resources>

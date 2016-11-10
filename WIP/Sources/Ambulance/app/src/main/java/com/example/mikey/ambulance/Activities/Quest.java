@@ -1,12 +1,14 @@
-package com.example.mikey.ambulance;
+package com.example.mikey.ambulance.Activities;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+
+import com.example.mikey.ambulance.R;
 
 public class Quest extends AppCompatActivity {
 
