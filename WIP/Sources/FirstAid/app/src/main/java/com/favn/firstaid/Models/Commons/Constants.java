@@ -1,4 +1,4 @@
-package com.favn.firstaid.Models.Common;
+package com.favn.firstaid.Models.Commons;
 
 import com.google.android.gms.maps.model.LatLng;
 
@@ -6,7 +6,7 @@ import com.google.android.gms.maps.model.LatLng;
  * Created by Hung Gia on 10/26/2016.
  */
 
-public class Constant {
+public class Constants {
     //API string
     public static String DIRECTION_URL_API = "https://maps.googleapis" +
             ".com/maps/api/directions/json?";
@@ -37,7 +37,7 @@ public class Constant {
 
     public static final String LOCATION_DATA_EXTRA = PACKAGE_NAME + ".LOCATION_DATA_EXTRA";
 
-    // Add Constant for detect what control(listview, spinner,..) - added by Kienmt : 11/04/2016
+    // Add Constants for detect what control(listview, spinner,..) - added by Kienmt : 11/04/2016
     public static final int LISTVIEW_EMERGENCY = 1;
     public static final int SPINNER_INJURY = 2;
     // End add constant

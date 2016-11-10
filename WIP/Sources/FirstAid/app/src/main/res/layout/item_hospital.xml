@@ -40,7 +40,7 @@
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
         android:layout_gravity="center_vertical"
-        android:layout_marginRight="16dp"
+        android:layout_marginRight="@dimen/activity_horizontal_margin"
         android:gravity="center_vertical"
         android:visibility="gone">
 
@@ -48,14 +48,14 @@
             android:layout_width="1dp"
             android:layout_height="match_parent"
             android:layout_marginBottom="8dp"
-            android:layout_marginRight="16dp"
+            android:layout_marginRight="@dimen/activity_horizontal_margin"
             android:layout_marginTop="8dp"
             android:background="@color/colorSeparate"/>
 
         <Button
             android:id="@+id/button_calling_health_facility"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:layout_width="@dimen/image_size_40"
+            android:layout_height="@dimen/image_size_40"
             android:focusable="false"
             android:background="@drawable/ic_call_green"/>
     </LinearLayout>

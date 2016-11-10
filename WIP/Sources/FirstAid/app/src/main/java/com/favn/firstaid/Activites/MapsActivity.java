@@ -10,7 +10,6 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.IntentSender;
 import android.content.pm.PackageManager;
-import android.graphics.Color;
 import android.graphics.PointF;
 import android.location.Geocoder;
 import android.location.Location;
@@ -44,8 +43,8 @@ import android.widget.Toast;
 
 import com.favn.firstaid.Adapter.HealthFacilityAdapter;
 import com.favn.firstaid.Database.DatabaseOpenHelper;
-import com.favn.firstaid.Models.Common.Constant;
-import com.favn.firstaid.Models.Common.NetworkStatus;
+import com.favn.firstaid.Models.Commons.Constants;
+import com.favn.firstaid.Models.Commons.NetworkStatus;
 import com.favn.firstaid.Models.Direction.DirectionFinder;
 import com.favn.firstaid.Models.Direction.DirectionFinderListener;
 import com.favn.firstaid.Models.DistanceMatrix.DistanceMatrixFinder;
@@ -345,9 +344,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         mGoogleMap.setMyLocationEnabled(true);
         mGoogleMap.getUiSettings().setMyLocationButtonEnabled(false);
 
-        LatLngBounds VIETNAM = new LatLngBounds(Constant.SOUTHWEST, Constant.NORTHEAST);
+        LatLngBounds VIETNAM = new LatLngBounds(Constants.SOUTHWEST, Constants.NORTHEAST);
         mGoogleMap.setLatLngBoundsForCameraTarget(VIETNAM);
-        mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(VIETNAM.getCenter(), Constant.ZOOM_LEVEL_5));
+        mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(VIETNAM.getCenter(), Constants.ZOOM_LEVEL_5));
     }
 
     protected synchronized void buildGoogleApiClient() {
@@ -435,8 +434,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     // Call address intent service
     protected void startAddressIntentService() {
         Intent intent = new Intent(this, FetchAddressIntentService.class);
-        intent.putExtra(Constant.RECEIVER, mResultReceiver);
-        intent.putExtra(Constant.LOCATION_DATA_EXTRA, mCurrentLocation);
+        intent.putExtra(Constants.RECEIVER, mResultReceiver);
+        intent.putExtra(Constants.LOCATION_DATA_EXTRA, mCurrentLocation);
         startService(intent);
     }
 
@@ -512,7 +511,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     private void goToCurrentLocationZoom() {
         goToLocationZoom(new LatLng(mCurrentLocation.getLatitude(), mCurrentLocation
-                .getLongitude()), Constant.ZOOM_LEVEL_15);
+                .getLongitude()), Constants.ZOOM_LEVEL_15);
     }
 
 
@@ -588,8 +587,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         if (isLocationEnable && (mCurrentLocation != null) && !isNetworkEnable) {
             healthFacilityList = dbHelper.getListHealthFacility(getPoints());
             displayHealthFacility(healthFacilityList);
-            String strNotify = (isNetworkEnable) ? Constant.NOTIFY_ENABLE_NETWORK_RESULT :
-                    Constant.NOTIFY_NOT_ENABLE_NETWORK_RESULT;
+            String strNotify = (isNetworkEnable) ? Constants.NOTIFY_ENABLE_NETWORK_RESULT :
+                    Constants.NOTIFY_NOT_ENABLE_NETWORK_RESULT;
             tvNotify.setText(strNotify);
         } else if (isLocationEnable && isNetworkEnable) {
             sendDistanceRequest(mCurrentLocation.getLatitude() + "," + mCurrentLocation.getLongitude
@@ -673,7 +672,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         HealthFacilityAdapter adapter = new HealthFacilityAdapter(this, healthFacilityList);
         if (isFilterHospital) {
-            adapter.getFilter().filter(Constant.FILTER_HOSPITAL);
+            adapter.getFilter().filter(Constants.FILTER_HOSPITAL);
         } else {
             adapter.getFilter().filter(null);
         }
@@ -692,7 +691,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
                 updateDestinationUI(healthFacilityDestination);
                 mHealthFacilityLatLng = latLng;
-                goToLocationZoom(latLng, Constant.ZOOM_LEVEL_15);
+                goToLocationZoom(latLng, Constants.ZOOM_LEVEL_15);
 
                 createMarker(latLng, healthFacilityDestination.getName());
                 mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
@@ -824,7 +823,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     private void zoomDestinationLocation() {
         if (mHealthFacilityLatLng != null) {
-            goToLocationZoom(mHealthFacilityLatLng, Constant.ZOOM_LEVEL_15);
+            goToLocationZoom(mHealthFacilityLatLng, Constants.ZOOM_LEVEL_15);
         }
     }
 
@@ -844,8 +843,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         @Override
         protected void onReceiveResult(int resultCode, Bundle resultData) {
             // Set address if was found.
-            if (resultCode == Constant.SUCCESS_RESULT) {
-                mAddress = resultData.getString(Constant.RESULT_DATA_KEY);
+            if (resultCode == Constants.SUCCESS_RESULT) {
+                mAddress = resultData.getString(Constants.RESULT_DATA_KEY);
                 isAddressFound = true;
             } else {
                 isAddressFound = false;

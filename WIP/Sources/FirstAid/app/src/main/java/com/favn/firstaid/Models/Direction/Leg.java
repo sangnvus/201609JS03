@@ -1,6 +1,6 @@
 package com.favn.firstaid.Models.Direction;
 
-import com.favn.firstaid.Models.Common.Distance;
+import com.favn.firstaid.Models.Commons.Distance;
 
 /**
  * Created by Hung Gia on 10/19/2016.

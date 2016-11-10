@@ -8,9 +8,8 @@ import android.location.Location;
 import android.os.Bundle;
 import android.os.ResultReceiver;
 import android.text.TextUtils;
-import android.util.Log;
 
-import com.favn.firstaid.Models.Common.Constant;
+import com.favn.firstaid.Models.Commons.Constants;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -32,15 +31,15 @@ public class FetchAddressIntentService extends IntentService {
     @Override
     protected void onHandleIntent(Intent intent) {
         String errorMessage = "";
-        mReceiver = intent.getParcelableExtra(Constant.RECEIVER);
+        mReceiver = intent.getParcelableExtra(Constants.RECEIVER);
         if (mReceiver == null) {
             return;
         }
 
-        Location location = intent.getParcelableExtra(Constant.LOCATION_DATA_EXTRA);
+        Location location = intent.getParcelableExtra(Constants.LOCATION_DATA_EXTRA);
         if (location == null) {
             errorMessage = "location is null";
-            deliverResultToReceiver(Constant.FAILURE_RESULT, errorMessage);
+            deliverResultToReceiver(Constants.FAILURE_RESULT, errorMessage);
             return;
         }
 
@@ -60,7 +59,7 @@ public class FetchAddressIntentService extends IntentService {
             if (errorMessage.isEmpty()) {
                 errorMessage = "no address found";
             }
-            deliverResultToReceiver(Constant.FAILURE_RESULT, errorMessage);
+            deliverResultToReceiver(Constants.FAILURE_RESULT, errorMessage);
         } else {
             Address address = addresses.get(0);
             ArrayList<String> addressList = new ArrayList<String>();
@@ -78,13 +77,13 @@ public class FetchAddressIntentService extends IntentService {
             }
             String addressAfter = TextUtils.join(", ", addressList);
             String addressStringReturn = featureName + addressAfter;
-            deliverResultToReceiver(Constant.SUCCESS_RESULT, addressStringReturn);
+            deliverResultToReceiver(Constants.SUCCESS_RESULT, addressStringReturn);
         }
     }
 
     private void deliverResultToReceiver(int resultCode, String message) {
         Bundle bundle = new Bundle();
-        bundle.putString(Constant.RESULT_DATA_KEY, message);
+        bundle.putString(Constants.RESULT_DATA_KEY, message);
         mReceiver.send(resultCode, bundle);
     }
 }

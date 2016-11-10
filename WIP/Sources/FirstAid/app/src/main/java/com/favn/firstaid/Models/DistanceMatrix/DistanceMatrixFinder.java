@@ -3,7 +3,7 @@ package com.favn.firstaid.Models.DistanceMatrix;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import com.favn.firstaid.Models.Common.Constant;
+import com.favn.firstaid.Models.Commons.Constants;
 import com.favn.firstaid.Models.HealthFacility;
 import com.google.gson.Gson;
 
@@ -49,8 +49,8 @@ public class DistanceMatrixFinder {
             }
         }
         //TODO consider to add mode: driving
-        url = Constant.DISTANCE_URL_API + "origins=" + origin + "&destinations=" +
-                destinationLocation + "&key=" + Constant.API_KEY;
+        url = Constants.DISTANCE_URL_API + "origins=" + origin + "&destinations=" +
+                destinationLocation + "&key=" + Constants.API_KEY;
         Log.d("url", url + "");
         return url;
     }

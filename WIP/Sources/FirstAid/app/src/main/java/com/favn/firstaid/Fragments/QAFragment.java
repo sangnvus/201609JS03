@@ -18,7 +18,7 @@ import com.favn.firstaid.R;
 
 import java.util.List;
 
-import static com.favn.firstaid.Models.Common.Constant.SPINNER_INJURY;
+import static com.favn.firstaid.Models.Commons.Constants.SPINNER_INJURY;
 
 
 /**

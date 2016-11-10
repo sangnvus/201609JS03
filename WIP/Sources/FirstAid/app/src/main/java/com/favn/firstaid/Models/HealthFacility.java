@@ -1,8 +1,6 @@
 package com.favn.firstaid.Models;
 
-import com.favn.firstaid.Models.Common.Distance;
-
-import java.util.Comparator;
+import com.favn.firstaid.Models.Commons.Distance;
 
 /**
  * Created by Hung Gia on 10/18/2016.

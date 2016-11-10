@@ -1,10 +1,8 @@
-package com.favn.firstaid.Models.Common;
+package com.favn.firstaid.Models.Commons;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 
 /**
  * Created by Hung Gia on 11/5/2016.

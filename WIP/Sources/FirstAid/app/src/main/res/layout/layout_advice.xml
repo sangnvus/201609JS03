@@ -8,7 +8,7 @@
               android:orientation="vertical">
 
     <TextView
-        android:paddingLeft="16dp"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Hãy nhớ rằng bạn cần phải có đủ sức khỏe thì mới có thể giúp đỡ người khác được!"
