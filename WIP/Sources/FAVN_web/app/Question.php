@@ -9,7 +9,7 @@ use App\Answer;
 class Question extends Model
 {
     //
-    protected $table = 'Questions';
+    protected $table = 'questions';
 
     public function injury(){
     	return $this->belongsTo('App\Injury');

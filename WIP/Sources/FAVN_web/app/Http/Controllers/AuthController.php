@@ -12,11 +12,13 @@ class AuthController extends Controller
 {
 	// Return view login
 	public function showLoginView(){
-		//Logout current user
-		if(Auth::check()){
-			Auth::logout();
-		}
-		return view('login');
+		// //Logout current user
+		// if(Auth::check()){
+		// 	Auth::logout();
+		// }
+		// return view('login');
+
+		echo 'hello';
 	}
 
 	// Handle login
