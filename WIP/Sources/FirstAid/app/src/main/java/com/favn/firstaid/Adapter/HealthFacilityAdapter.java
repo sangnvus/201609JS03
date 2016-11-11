@@ -1,12 +1,20 @@
 package com.favn.firstaid.Adapter;
 
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.Button;
+import android.widget.Filter;
+import android.widget.Filterable;
+import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.favn.firstaid.Models.HealthFacility;
+import com.favn.firstaid.Models.HealthFacilityFilter;
 import com.favn.firstaid.R;
 
 import java.util.List;
@@ -15,12 +23,21 @@ import java.util.List;
  * Created by Hung Gia on 10/21/2016.
  */
 
-public class HealthFacilityAdapter extends BaseAdapter{
+public class HealthFacilityAdapter extends BaseAdapter implements Filterable{
     private Context mContext;
     private List<HealthFacility> mHealthFacilityList;
+    private HealthFacilityFilter healthFacilityFilter;
 
-    public HealthFacilityAdapter(Context mContext, List<HealthFacility> mHealthFacilityList) {
+    public HealthFacilityAdapter(Context mContext, List<HealthFacility> healthFacilityList) {
         this.mContext = mContext;
+        this.mHealthFacilityList = healthFacilityList;
+    }
+
+    public List<HealthFacility> getmHealthFacilityList() {
+        return mHealthFacilityList;
+    }
+
+    public void setmHealthFacilityList(List<HealthFacility> mHealthFacilityList) {
         this.mHealthFacilityList = mHealthFacilityList;
     }
 
@@ -42,21 +59,45 @@ public class HealthFacilityAdapter extends BaseAdapter{
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         View v = View.inflate(mContext, R.layout.item_hospital, null);
-        HealthFacility healthFacility = mHealthFacilityList.get(position);
+        final HealthFacility healthFacility = mHealthFacilityList.get(position);
 
         TextView tvHealthFacilityName  = (TextView)v.findViewById(R.id.text_health_facility_name);
         tvHealthFacilityName.setText(healthFacility.getName());
 
         TextView tvHealthFacilityAddress = (TextView) v.findViewById(R.id.text_health_facility_address);
 
-        String address = (healthFacility.getAddress() != null) ? healthFacility.getAddress() :
-                "Ở khu vực " + healthFacility.getVicinity();
+        String address = (healthFacility.getAddress() != null) ? healthFacility.getAddress() : healthFacility.getVicinity();
         tvHealthFacilityAddress.setText(address);
 
+        if(healthFacility.getPhone() != null) {
+            LinearLayout llHealthFacilityCalling = (LinearLayout) v.findViewById(R.id
+                    .layout_health_facility_calling);
+            llHealthFacilityCalling.setVisibility(View.VISIBLE);
+
+            Button btnCall = (Button) v.findViewById(R.id.button_calling_health_facility);
+            btnCall.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent callIntent = new Intent(Intent.ACTION_CALL);
+                    callIntent.setData(Uri.parse("tel:" + healthFacility.getPhone()));
+                }
+            });
+        }
+
         if (healthFacility.getDistance() != null) {
-            TextView hospitalDistance = (TextView) v.findViewById(R.id.text_hospital_distance);
-            hospitalDistance.setText(mHealthFacilityList.get(position).getDistance().getText());
+            TextView tvItemHealthFacilityDistance = (TextView) v.findViewById(R.id.text_item_health_facility_distance);
+            tvItemHealthFacilityDistance.setText(mHealthFacilityList.get(position).getDistance().getText());
+            tvItemHealthFacilityDistance.setVisibility(View.VISIBLE);
         }
         return v;
+    }
+
+
+    @Override
+    public Filter getFilter() {
+        if (healthFacilityFilter == null) {
+            healthFacilityFilter = new HealthFacilityFilter(this);
+        }
+        return healthFacilityFilter;
     }
 }

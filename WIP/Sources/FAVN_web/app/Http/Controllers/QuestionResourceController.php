@@ -18,8 +18,8 @@ class QuestionResourceController extends Controller
     public function index()
     {
         //
-        $QUESTION = QUESTION::all();
-        return Response($QUESTION, 201);
+        //$QUESTION = QUESTION::all();
+        //return Response($QUESTION, 201);
     }
 
     /**
@@ -56,7 +56,7 @@ class QuestionResourceController extends Controller
         // Save to db
         $question->save();
 
-        echo 'insert successfully';
+        echo 'Gửi câu hỏi thành công';
 
 
     }

@@ -3,7 +3,7 @@ package com.favn.firstaid.Models.Direction;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import com.favn.firstaid.Models.Common.Constant;
+import com.favn.firstaid.Models.Commons.Constants;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.Gson;
 
@@ -33,7 +33,6 @@ public class DirectionFinder {
     }
 
     public void execute() throws UnsupportedEncodingException {
-        //listener.onDirectionFinderStart();
         new DownloadRawData().execute(createUrl());
     }
 
@@ -42,8 +41,8 @@ public class DirectionFinder {
         //String urlDestination = URLEncoder.encode(destination, "utf-8");
         Log.d("destination", destination + "");
         String url = "";
-        url = Constant.DIRECTION_URL_API + "origin=" + origin + "&destination=" +
-                destination + "&key=" + Constant.API_KEY;
+        url = Constants.DIRECTION_URL_API + "origin=" + origin + "&destination=" +
+                destination + "&key=" + Constants.API_KEY;
 
         Log.d("destination", url);
         return url;

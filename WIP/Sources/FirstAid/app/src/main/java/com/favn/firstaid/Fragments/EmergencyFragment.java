@@ -3,14 +3,11 @@ package com.favn.firstaid.Fragments;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
-import android.app.SearchManager;
-import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
-import android.support.v4.view.MenuItemCompat;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -19,7 +16,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.SearchView;
 
 import com.favn.firstaid.Activites.InstructionDetail;
 import com.favn.firstaid.Activites.MapsActivity;
@@ -30,7 +26,7 @@ import com.favn.firstaid.R;
 
 import java.util.List;
 
-import static com.favn.firstaid.Models.Common.Constant.LISTVIEW_EMERGENCY;
+import static com.favn.firstaid.Models.Commons.Constants.LISTVIEW_EMERGENCY;
 
 
 /**

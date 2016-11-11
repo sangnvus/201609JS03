@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Instruction extends Model
 {
     //
-    protected $table = 'Instructions';
+    protected $table = 'instructions';
 
     public function injury(){
     	return $this->belongsTo('App\Injury');

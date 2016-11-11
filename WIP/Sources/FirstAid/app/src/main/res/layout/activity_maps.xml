@@ -13,7 +13,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginBottom="60dp">
+        android:layout_marginBottom="@dimen/layout_height_64">
 
         <fragment xmlns:android="http://schemas.android.com/apk/res/android"
                   android:id="@+id/map"
@@ -27,7 +27,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
-            android:clickable="true"
             android:orientation="vertical">
 
             <LinearLayout
@@ -39,16 +38,16 @@
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="64dp"
+                    android:layout_height="@dimen/layout_height_64"
                     android:layout_gravity="center_vertical"
                     android:gravity="center_vertical"
                     android:orientation="horizontal">
 
                     <ImageView
                         android:id="@+id/image_gps_status"
-                        android:layout_width="@dimen/image_size"
-                        android:layout_height="@dimen/image_size"
-                        android:layout_marginLeft="16dp"
+                        android:layout_width="@dimen/image_size_40"
+                        android:layout_height="@dimen/image_size_40"
+                        android:layout_marginLeft="@dimen/activity_horizontal_margin"
                         android:src="@drawable/ic_gps_off"/>
 
                     <LinearLayout
@@ -63,7 +62,7 @@
                             android:id="@+id/text_current_location"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginLeft="16dp"
+                            android:layout_marginLeft="@dimen/activity_horizontal_margin"
                             android:text=""
                             android:textSize="18sp"/>
 
@@ -71,7 +70,7 @@
                             android:id="@+id/text_current_latlng"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginLeft="16dp"
+                            android:layout_marginLeft="@dimen/activity_horizontal_margin"
                             android:text=""
                             android:visibility="gone"/>
 
@@ -88,14 +87,15 @@
                 android:background="@color/colorSeparate"/>
 
             <RelativeLayout
-                android:id="@+id/layout_hospital_destination"
+                android:id="@+id/layout_health_facility_destination"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:background="?android:attr/selectableItemBackground"
                 android:visibility="gone">
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="64dp"
+                    android:layout_height="@dimen/layout_height_64"
                     android:layout_alignParentLeft="true"
                     android:layout_gravity="center_vertical"
                     android:gravity="center_vertical"
@@ -103,9 +103,9 @@
 
 
                     <ImageView
-                        android:layout_width="@dimen/image_size"
-                        android:layout_height="@dimen/image_size"
-                        android:layout_marginLeft="16dp"
+                        android:layout_width="@dimen/image_size_40"
+                        android:layout_height="@dimen/image_size_40"
+                        android:layout_marginLeft="@dimen/activity_horizontal_margin"
                         android:src="@drawable/ic_location"/>
 
                     <LinearLayout
@@ -119,15 +119,15 @@
                             android:id="@+id/textview_hospital_destination"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginLeft="16dp"
+                            android:layout_marginLeft="@dimen/activity_horizontal_margin"
                             android:text=""
-                            android:textSize="18sp"/>
+                            android:textSize="18dp"/>
 
                         <TextView
                             android:id="@+id/textview_hospital_distance"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginLeft="16dp"
+                            android:layout_marginLeft="@dimen/activity_horizontal_margin"
                             android:text=""
                             android:visibility="gone"/>
                     </LinearLayout>
@@ -136,44 +136,46 @@
                 </LinearLayout>
 
                 <LinearLayout
+                    android:id="@+id/layout_health_facility_navigate"
                     android:layout_width="wrap_content"
-                    android:layout_height="64dp"
-
+                    android:layout_height="@dimen/layout_height_64"
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
                     android:layout_gravity="center_vertical"
-                    android:layout_marginRight="16dp"
+                    android:layout_marginRight="@dimen/activity_horizontal_margin"
                     android:gravity="center_vertical">
 
                     <View
                         android:layout_width="1dp"
                         android:layout_height="match_parent"
                         android:layout_marginBottom="8dp"
-                        android:layout_marginRight="20dp"
+                        android:layout_marginRight="@dimen/activity_horizontal_margin"
                         android:layout_marginTop="8dp"
                         android:background="@color/colorSeparate"/>
 
-                    <ImageView
-                        android:layout_width="@dimen/image_size"
-                        android:layout_height="@dimen/image_size"
-                        android:clickable="true"
-                        android:src="@drawable/ic_navigate"/>
+
+                    <Button
+                        android:id="@+id/button_navigate"
+                        android:layout_width="@dimen/image_size_40"
+                        android:layout_height="@dimen/image_size_40"
+                        android:background="@drawable/ic_navigate"/>
+                    <Button
+                        android:id="@+id/button_clear_direction"
+                        android:layout_width="@dimen/image_size_40"
+                        android:layout_height="@dimen/image_size_40"
+                        android:background="@drawable/ic_clear"
+                        android:visibility="gone"/>
+                    <ProgressBar
+                        android:id="@+id/progress_loading_direction"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:indeterminateBehavior="cycle"
+                        android:visibility="gone"/>
                 </LinearLayout>
 
 
             </RelativeLayout>
 
-            <Button
-                android:id="@+id/test"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@color/colorPrimary"
-                android:paddingBottom="4dp"
-                android:paddingLeft="16dp"
-                android:paddingTop="4dp"
-                android:text="BỆNH VIỆN GẦN ĐÂY"
-                android:textColor="@color/colorWhite"
-                android:theme="@style/PrimaryButton"/>
 
         </LinearLayout>
 

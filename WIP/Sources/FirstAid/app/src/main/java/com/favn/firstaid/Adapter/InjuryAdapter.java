@@ -11,7 +11,7 @@ import com.favn.firstaid.R;
 
 import java.util.List;
 
-import static com.favn.firstaid.Models.Common.Constant.LISTVIEW_EMERGENCY;
+import static com.favn.firstaid.Models.Commons.Constants.LISTVIEW_EMERGENCY;
 
 /**
  * Created by Hung Gia on 10/6/2016.
