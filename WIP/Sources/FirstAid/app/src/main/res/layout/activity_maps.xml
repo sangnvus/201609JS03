@@ -47,7 +47,7 @@
                         android:id="@+id/image_gps_status"
                         android:layout_width="@dimen/image_size_40"
                         android:layout_height="@dimen/image_size_40"
-                        android:layout_marginLeft="@dimen/layout_height_64"
+                        android:layout_marginLeft="@dimen/activity_horizontal_margin"
                         android:src="@drawable/ic_gps_off"/>
 
                     <LinearLayout
@@ -159,6 +159,18 @@
                         android:layout_width="@dimen/image_size_40"
                         android:layout_height="@dimen/image_size_40"
                         android:background="@drawable/ic_navigate"/>
+                    <Button
+                        android:id="@+id/button_clear_direction"
+                        android:layout_width="@dimen/image_size_40"
+                        android:layout_height="@dimen/image_size_40"
+                        android:background="@drawable/ic_clear"
+                        android:visibility="gone"/>
+                    <ProgressBar
+                        android:id="@+id/progress_loading_direction"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:indeterminateBehavior="cycle"
+                        android:visibility="gone"/>
                 </LinearLayout>
 
 

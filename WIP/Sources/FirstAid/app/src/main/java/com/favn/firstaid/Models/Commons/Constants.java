@@ -46,10 +46,12 @@ public class Constants {
     public static final String INTENT_FILTER_PROVIDERS_CHANGED = "android.location" +
             ".PROVIDERS_CHANGED";
 
-    // Notify
-    public static final String NOTIFY_ENABLE_NETWORK_RESULT = "Kết quả offline";
-    public static final String NOTIFY_NOT_ENABLE_NETWORK_RESULT = "Kết quả internet";
+    // Warning
+    public static final String WARNING_NO_GPS = "| Không xác định được vị trí";
+    public static final String WARN_NO_NETWORK_RESULT = "| Bệnh viện trong bán kính 20 km";
 
+    // Filter Health Facility
     public static final String FILTER_HOSPITAL = "1";
+    public static final String FILTER_MEDICINE_CENTER = "2";
 
 }

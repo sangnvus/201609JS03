@@ -36,6 +36,12 @@ public class HealthFacilityFilter extends Filter {
                         filteredList.add(healthFacility);
                     }
                 }
+            } else if (constraint.equals("2")) {
+                for (HealthFacility healthFacility : healthFacilityAdapter.getmHealthFacilityList()) {
+                    if (healthFacility.getType() == 2) {
+                        filteredList.add(healthFacility);
+                    }
+                }
             }
             results.values = filteredList;
             results.count = filteredList.size();
