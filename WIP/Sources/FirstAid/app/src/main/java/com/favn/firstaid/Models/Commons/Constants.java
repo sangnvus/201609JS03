@@ -7,6 +7,11 @@ import com.google.android.gms.maps.model.LatLng;
  */
 
 public class Constants {
+
+    /**
+     * Location, Map, Direction
+     */
+
     //API string
     public static String DIRECTION_URL_API = "https://maps.googleapis" +
             ".com/maps/api/directions/json?";
@@ -46,6 +51,10 @@ public class Constants {
     public static final String INTENT_FILTER_PROVIDERS_CHANGED = "android.location" +
             ".PROVIDERS_CHANGED";
 
+    // Location text
+    public static final String LOCATION_VI_TRI = "Vị trí";
+    public static final String LOCATION_NO_RESULT_KHONG_RO_VI_TRI = "Không rõ vị trí";
+
     // Warning
     public static final String WARNING_NO_GPS = "| Không xác định được vị trí";
     public static final String WARN_NO_NETWORK_RESULT = "| Bệnh viện trong bán kính 20 km";
@@ -53,5 +62,9 @@ public class Constants {
     // Filter Health Facility
     public static final String FILTER_HOSPITAL = "1";
     public static final String FILTER_MEDICINE_CENTER = "2";
+
+    // Numeric
+    public static final double EARTH_RADIUS = 6371000; // m
+    public static final double SEARCH_RADIUS = 20000;  // m
 
 }
