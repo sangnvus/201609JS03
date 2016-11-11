@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Center extends Model
 {
     //
-    protected $table = 'Centers';
+    protected $table = 'centers';
 
     public function user(){
     	return $this->hasMany('App\User');
