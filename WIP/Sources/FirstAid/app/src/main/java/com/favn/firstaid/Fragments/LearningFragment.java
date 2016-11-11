@@ -8,8 +8,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ImageView;
 import android.widget.ListView;
 
+import com.favn.firstaid.Activites.BannerDetail;
 import com.favn.firstaid.Activites.InstructionDetail;
 import com.favn.firstaid.Adapter.InjuryAdapter;
 import com.favn.firstaid.Database.DatabaseOpenHelper;
@@ -56,6 +58,16 @@ public class LearningFragment extends Fragment implements AdapterView.OnItemClic
         listView.setOnItemClickListener(this);
         setHasOptionsMenu(true);
         container.removeAllViews();
+
+        ImageView banner = (ImageView) rootView.findViewById(R.id.image_banner);
+        banner.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), BannerDetail.class);
+                startActivity(intent);
+            }
+        });
+
         // Inflate the layout for this fragment
         return rootView;
     }

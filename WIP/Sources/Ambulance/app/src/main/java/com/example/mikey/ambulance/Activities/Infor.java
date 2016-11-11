@@ -1,4 +1,4 @@
-package com.example.mikey.ambulance;
+package com.example.mikey.ambulance.Activities;
 
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -7,6 +7,8 @@ import android.support.v7.app.NotificationCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+
+import com.example.mikey.ambulance.R;
 
 public class Infor extends AppCompatActivity {
 

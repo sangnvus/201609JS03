@@ -1,13 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <array name="more_icon">
-        <item>@android:drawable/ic_input_get</item>
+        <item>@android:drawable/ic_dialog_email</item>
         <item>@android:drawable/ic_dialog_info</item>
+        <item>@android:drawable/ic_input_get</item>
         <item>@android:drawable/ic_menu_share</item>
     </array>
     <array name="more_item">
         <item>"Ý kiến - Hỏi đáp"</item>
         <item>"Thông báo"</item>
+        <item>"Các khóa học sơ cứu"</item>
         <item>"Chia sẻ"</item>
     </array>
 </resources>

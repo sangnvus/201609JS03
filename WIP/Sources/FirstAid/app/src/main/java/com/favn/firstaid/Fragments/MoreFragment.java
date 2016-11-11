@@ -9,9 +9,6 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -19,8 +16,8 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
+import com.favn.firstaid.Activites.BannerDetail;
 import com.favn.firstaid.Activites.NotificationActivity;
 import com.favn.firstaid.Activites.QAActivity;
 import com.favn.firstaid.R;
@@ -28,12 +25,10 @@ import com.favn.firstaid.R;
 import java.util.ArrayList;
 import java.util.List;
 
-
 /**
  * A simple {@link Fragment} subclass.
  */
 public class MoreFragment extends Fragment {
-
 
     public MoreFragment() {
         // Required empty public constructor
@@ -127,7 +122,13 @@ public class MoreFragment extends Fragment {
                     startActivity(intent);
                 }
                 else if (position == 2) {
-
+                    Intent intent = new Intent(getActivity(), BannerDetail.class);
+                    startActivity(intent);
+                }
+                else if (position == 3) {
+//                    Intent intent = new Intent(getActivity(), ShareActivity.class);
+//                    startActivity(intent);
+                    shareIt();
                 }
             }
         });
@@ -136,6 +137,14 @@ public class MoreFragment extends Fragment {
         // Inflate the layout for this fragment
         setHasOptionsMenu(true);
         return rootView;
+    }
+
+    private void shareIt() {
+        Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
+        sharingIntent.setType("text/plain");
+        sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "Demo sharing");
+        sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, "Hot boy keo con voi https://www.facebook.com/your.vitieubu/ ");
+        startActivity(Intent.createChooser(sharingIntent, "Chia sẻ ứng dụng"));
     }
 
     private void initItems(){
