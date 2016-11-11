@@ -727,6 +727,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 goToLocationZoom(latLng, Constants.ZOOM_LEVEL_15);
 
                 createMarker(latLng, healthFacilityDestination.getName());
+                btnClearDirection.setVisibility(View.GONE);
+                btnNavigate.setVisibility(View.VISIBLE);
                 mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
             }
         });
