@@ -4,11 +4,7 @@
     android:id="@+id/activity_quest"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingBottom="8dp"
-    android:paddingLeft="8dp"
-    android:paddingRight="8dp"
-    android:paddingTop="8dp"
-    tools:context="com.example.mikey.ambulance.Quest">
+    tools:context="com.example.mikey.ambulance.Activities.Quest">
 
     <LinearLayout
         android:orientation="horizontal"
@@ -19,7 +15,10 @@
             android:orientation="vertical"
             android:layout_height="match_parent"
             android:layout_width="wrap_content"
-            android:layout_marginRight="10dp">
+            android:layout_marginRight="8dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp">
 
             <include
                 android:layout_width="match_parent"

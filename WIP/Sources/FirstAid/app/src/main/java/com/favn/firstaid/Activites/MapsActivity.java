@@ -536,7 +536,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 .getLongitude()), Constants.ZOOM_LEVEL_15);
     }
 
-
     @Override
     public void onSaveInstanceState(Bundle savedInstanceState) {
         super.onSaveInstanceState(savedInstanceState);
@@ -569,7 +568,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     private void updateLocationUI() {
         if (!isLocationEnable && !isNetworkEnable && mCurrentLocation == null) {
-            tvCurrentLocation.setText("Không rõ vị trí");
+            tvCurrentLocation.setText(Constants.LOCATION_NO_RESULT_KHONG_RO_VI_TRI);
             tvLatLng.setVisibility(View.GONE);
         }
 
@@ -581,7 +580,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             if (isAddressFound) {
                 tvCurrentLocation.setText(mAddress);
             } else {
-                tvCurrentLocation.setText("Vị trí");
+                tvCurrentLocation.setText(Constants.LOCATION_VI_TRI);
             }
         }
     }
@@ -634,12 +633,12 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         PointF[] points = new PointF[4];
         PointF center = new PointF((float) mCurrentLocation.getLatitude(), (float) mCurrentLocation
                 .getLongitude());
-        double radius = 20000;
+
         final double mult = 1; // mult = 1.1; is more reliable
-        PointF p1 = calculateDerivedPosition(center, mult * radius, 0);
-        PointF p2 = calculateDerivedPosition(center, mult * radius, 90);
-        PointF p3 = calculateDerivedPosition(center, mult * radius, 180);
-        PointF p4 = calculateDerivedPosition(center, mult * radius, 270);
+        PointF p1 = calculateDerivedPosition(center, mult * Constants.SEARCH_RADIUS, 0);
+        PointF p2 = calculateDerivedPosition(center, mult * Constants.SEARCH_RADIUS, 90);
+        PointF p3 = calculateDerivedPosition(center, mult * Constants.SEARCH_RADIUS, 180);
+        PointF p4 = calculateDerivedPosition(center, mult * Constants.SEARCH_RADIUS, 270);
 
         points[0] = p1;
         points[1] = p2;
@@ -649,11 +648,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
     public static PointF calculateDerivedPosition(PointF point, double range, double bearing) {
-        double EarthRadius = 6371000; // m
-
         double latA = Math.toRadians(point.x);
         double lonA = Math.toRadians(point.y);
-        double angularDistance = range / EarthRadius;
+        double angularDistance = range / Constants.EARTH_RADIUS;
         double trueCourse = Math.toRadians(bearing);
 
         double lat = Math.asin(
@@ -711,7 +708,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         updateLoadingUI(false);
         warnHealthFacilityResult();
         lv.setAdapter(adapter);
-
 
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
