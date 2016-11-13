@@ -13,12 +13,12 @@
                                 Người dùng
                                 <a href="admin/user/adduser" class="btn btn-info btn-fill">Thêm người dùng</a>
                             </h4>
-                            <p class="category">Danh sách người dùng</p>
+                            <p class="category">Phân loại người dùng theo</p>
                             <div class="row">
                                 <div class="col-md-3">
                                     <div class="stats">
                                         @if(isset($filterUser))
-                                            <select id="filterUser" class="form-control" name="cars">
+                                            <select id="filterUser" class="form-control" name="slcFilterUser">
                                                 <option value="0"
                                                     @if($filterUser == 0)
                                                         selected
@@ -47,7 +47,7 @@
 
                                             </select>
                                         @else
-                                            <select id="filterUser" class="form-control" name="cars">
+                                            <select id="filterUser" class="form-control" name="slcFilterUser">
                                                 <option value="0" selected>Tất cả</option>
                                                 <option value="1">Quản trị viên</option>
                                                 <option value="2">Chuyên gia</option>

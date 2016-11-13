@@ -10,15 +10,30 @@ use App\Injury;
 
 use App\Instruction;
 
+use App\LearningInstruction;
+
 use Illuminate\Support\Collection;
 
 class InjuryController extends Controller
 {
     // Show view 'list of injury'
-	public function showListInjuryView(Request $request){
+	public function showListInjuryView(){
+
+		$injury = Injury::whereNull('isDeleted')
+						->orWhere('isDeleted', '<>', 1)
+						->paginate(5);
+
+        return view('expert.injury.listinjury',  ['injury' => $injury]);
+	}
+
+	// Show view 'list of injury' by filter
+ 	public function showListInjuryViewByFilter($filterType){
 
 		$injury = Injury::paginate(5);
         return view('expert.injury.listinjury',  ['injury' => $injury]);
+
+        $injury = Injury::where('role_id', '=', $filterUser)->paginate(5);
+			return view('admin.user.listuser', ['users' => $users, 'filterUser' => $filterUser]);
 	}
 
 	// Show view 'add injury'
@@ -29,27 +44,7 @@ class InjuryController extends Controller
 	// Add injury.
 	public function addInjury(Request $request){
 		// validate control data
-		$this->validate($request, 
-			[
-				'injury_name' => 'required|max:45|unique:injuries,injury_name',
-				'symptom' => 'required|max:500',
-				'instruction_step1' => 'required|max:500',
-				'detail_step1' => 'required|max:500'
-			],
-			[
-				'injury_name.required' => 'Bạn phải nhập tên chấn thương.',
-				'injury_name.max' => 'Tên chấn thương phải nhỏ hơn 45 kí tự.',
-				'injury_name.unique' => 'Tên chấn thương đã tồn tại.',
-
-				'symptom.required' => 'Bạn phải nhập triệu chứng.',
-				'symptom.max' => 'Triệu chứng phải nhỏ hơn 500 kí tự.',
-
-				'instruction_step1.required' => 'Bạn phải nhập hướng dẫn.',
-				'instruction_step1.max' => 'Hướng dẫn phải nhỏ hơn 500 kí tự.',
-
-				'detail_step1.required' => 'Bạn phải nhập giải thích.',
-				'detail_step1.max' => 'Giải thích phải nhỏ hơn 500 kí tự.'
-			]);
+		$this->validateInjuryInstruction($request);
 
 		// Init object Injury 
 		$injury = new Injury;
@@ -58,30 +53,92 @@ class InjuryController extends Controller
 		$injury->injury_name = $request->injury_name;
 		$injury->symptom = $request->symptom;
 		$injury->priority = $request->priority;
+
 		//Save injury to db
 		$injury->save();
 
+		$this->saveInstruction($request, $injury);
+
+		$this->saveLearningInstruction($request, $injury);
+
+		return redirect('expert/injury/addinjury')->with('noti', 'Đã thêm một chấn thương');
+	}
+
+	// Param : $count -> number of step of instructions
+	private function validateInjuryInstruction($request){
+		// validate control data
+		$count_step_emergence = $request->count_step_emergence;
+		$count_step_learning = $request->count_step_learning;
+		$this->validate($request, 
+			[
+				'injury_name' => 'required|max:255|unique:injuries,injury_name',
+				'symptom' => 'required|max:500',
+			],
+			[
+				'injury_name.required' => 'Bạn phải nhập tên chấn thương.',
+				'injury_name.max' => 'Tên chấn thương phải nhỏ hơn 255 kí tự.',
+				'injury_name.unique' => 'Tên chấn thương đã tồn tại.',
+
+				'symptom.required' => 'Bạn phải nhập triệu chứng.',
+				'symptom.max' => 'Triệu chứng phải nhỏ hơn 500 kí tự.',
+			]);
+
+		// Validate emergency instruction 
+		for ($i = 1; $i <= $count_step_emergence; $i++) { 
+			$emergency_instruction_step = 'emergency_instruction_step'.$i;
+			$this->validate($request, 
+			[
+				$emergency_instruction_step => 'required|max:500',
+			],
+			[
+
+				$emergency_instruction_step.'.required' => 'Bạn phải nhập hướng dẫn sơ cứu bước '.$i,
+				$emergency_instruction_step.'.max' => 'Hướng dẫn phải nhỏ hơn 500 kí tự.',
+			]);
+		}
+
+		// Validate learning instruction
+		for ($i = 1; $i <= $count_step_learning; $i++) { 
+			$learning_instruction_step = 'learning_instruction_step'.$i;
+			$learning_detail_step = 'learning_detail_step'.$i;
+			$this->validate($request, 
+				[
+				$learning_instruction_step => 'required|max:500',
+				$learning_detail_step => 'required|max:500'
+				],
+				[
+
+				$learning_instruction_step.'.required' => 'Bạn phải nhập hướng dẫn học bước '.$i,
+				$learning_instruction_step.'.max' => 'Hướng dẫn phải nhỏ hơn 500 kí tự.',
+
+				$learning_detail_step.'.required' => 'Bạn phải nhập giải thích học bước '.$i,
+				$learning_detail_step.'.max' => 'Giải thích phải nhỏ hơn 500 kí tự.'
+				]);
+		}
+	}
+
+	// Call when user add new injury and type is instruction
+	// Param : $count -> number of step of instructions
+	private function saveInstruction($request, $injury) {
 		// Create and Asign instruction value
 		$injury_id = $injury->id;
-		$count = $request->count_step;
+		$count = $request->count_step_emergence;
+
 		for ($i=1; $i <= $count; $i++) { 
 			// Temporary instruction and detail for each step
-			$instruction_step = 'instruction_step'.$i;
-			$detail_step = 'detail_step'.$i;
-
-			// Check instruction step is null
-			if (IsNullOrEmptyString($request->$instruction_step) or IsNullOrEmptyString($request->$detail_step)) {
-			 	continue;
-			}
+			$instruction_step = 'emergency_instruction_step'.$i;
+			$isCall = "isCall".$i;
 
 			$instruction = new Instruction;
 			$instruction->injury_id = $injury_id;
 			$instruction->step = $i;
-			$instruction->instruction = $request->$instruction_step;
-			$instruction->explain_instruction = $request->$detail_step;
-			
+			$instruction->content = $request->$instruction_step;
+			if ($request->$isCall == 'on') {
+				$instruction->isMakeCall = True;
+			}
+						
 			// Temporary image control name for each step
-			$image_step_controlName = 'image_step'.$i;
+			$image_step_controlName = 'emergency_image_step'.$i;
 			if($request->hasFile($image_step_controlName)) {
 				$image_step = $request->file($image_step_controlName);
 				$image_name = $image_step->getClientOriginalName();
@@ -97,7 +154,7 @@ class InjuryController extends Controller
 			}
 
 			// Temporary audio control name for each step
-			$audio_step_controlName = 'audio_step'.$i;
+			$audio_step_controlName = 'emergency_audio_step'.$i;
 			if($request->hasFile($audio_step_controlName)) {
 				$audio_step = $request->file($audio_step_controlName);
 				$audio_name = $audio_step->getClientOriginalName();
@@ -114,9 +171,60 @@ class InjuryController extends Controller
 			// Save instruction of each step
 			$instruction->save();
 		}
+	}
 
-		return redirect('expert/injury/addinjury')->with('noti', 'Đã thêm một chấn thương');
+	// Call when user add new injury and type is learning instruction
+	private function saveLearningInstruction($request, $injury) {
+		// Create and Asign instruction value
+		$injury_id = $injury->id;
 
+		$count = $request->count_step_learning;
+		
+		for ($i=1; $i <= $count; $i++) { 
+			// Temporary instruction and detail for each step
+			$instruction_step = 'learning_instruction_step'.$i;
+			$detail_step = 'learning_detail_step'.$i;
+
+			$learningInstruction = new LearningInstruction;
+			$learningInstruction->injury_id = $injury_id;
+			$learningInstruction->step = $i;
+			$learningInstruction->content = $request->$instruction_step;
+			$learningInstruction->explain = $request->$detail_step;
+			
+			// Temporary image control name for each step
+			$image_step_controlName = 'learning_image_step'.$i;
+			if($request->hasFile($image_step_controlName)) {
+				$image_step = $request->file($image_step_controlName);
+				$image_name = $image_step->getClientOriginalName();
+				$image_name = str_random(4).'_'.$image_name;
+
+				while (file_exists('upload/injury/images/'.$image_name)) {
+					$image_name = str_random(4).'_'.$image_name;
+				}
+
+				$image_step->move('upload/injury/images', $image_name);
+				$learningInstruction->image = $image_name;
+
+			}
+
+			// Temporary audio control name for each step
+			$audio_step_controlName = 'learning_audio_step'.$i;
+			if($request->hasFile($audio_step_controlName)) {
+				$audio_step = $request->file($audio_step_controlName);
+				$audio_name = $audio_step->getClientOriginalName();
+				$audio_name = str_random(4).'_'.$audio_name;
+
+				while (file_exists('upload/injury/audios/'.$audio_name)) {
+					$audio_name = str_random(4).'_'.$audio_name;
+				}
+
+				$audio_step->move('upload/injury/audios', $audio_name);
+				$learningInstruction->audio = $audio_name;
+			}
+
+			// Save instruction of each step
+			$learningInstruction->save();
+		}
 	}
 
 	// Show view 'edit injury'
@@ -127,30 +235,11 @@ class InjuryController extends Controller
 
 	// Edit injury.
 	public function editInjury(Request $request, $injury_id){
-		// validate control data
-		$this->validate($request, 
-			[
-			'injury_name' => 'required|max:45',
-			'symptom' => 'required|max:500',
-			'instruction_step1' => 'required|max:500',
-			'detail_step1' => 'required|max:500'
-			],
-			[
-			'injury_name.required' => 'Bạn phải nhập tên chấn thương.',
-			'injury_name.max' => 'Tên chấn thương phải nhỏ hơn 45 kí tự.',
-
-			'symptom.required' => 'Bạn phải nhập triệu chứng.',
-			'symptom.max' => 'Triệu chứng phải nhỏ hơn 500 kí tự.',
-
-			'instruction_step1.required' => 'Bạn phải nhập hướng dẫn.',
-			'instruction_step1.max' => 'Hướng dẫn phải nhỏ hơn 500 kí tự.',
-
-			'detail_step1.required' => 'Bạn phải nhập giải thích.',
-			'detail_step1.max' => 'Giải thích phải nhỏ hơn 500 kí tự.'
-			]);
-
 		// Find object Injury 
 		$injury = Injury::find($injury_id);
+
+		// validate control data
+		$this->validateInjuryInstructionForEdit($request, $injury);
 
 		// Assign injury value
 		$injury->injury_name = $request->injury_name;
@@ -159,32 +248,30 @@ class InjuryController extends Controller
 		// Save injury to db
 		$injury->save();
 
-		// Delete old instructions
+		$this->editEmergencyInstruction($injury, $request);
+
+		$this->editLearningInstruction($injury, $request);
+
+		return redirect('expert/injury/editinjury/'.$injury_id)->with('noti', 'Đã sửa chấn thương thành công');
+	}
+
+	private function editEmergencyInstruction($injury, $request) {
+		$i = 0;
 		foreach ($injury->instruction as $ins) {
-			$ins->delete();
-		}
+			$i++;
+			// Temporary instruction and detail for each step
+			$instruction_step = 'emergency_instruction_step'.$i;
+			$isCall = "isCall".$i;
 
-		// Create and Asign instruction value
-		$injury_id = $injury->id;
-		$count = $request->count_step;
-		for ($i=1; $i <= $count; $i++) { 
-		// Temporary instruction and detail for each step
-			$instruction_step = 'instruction_step'.$i;
-			$detail_step = 'detail_step'.$i;
-
-		// Check instruction step is null
-			if (IsNullOrEmptyString($request->$instruction_step) or IsNullOrEmptyString($request->$detail_step)) {
-				continue;
+			$ins->content = $request->$instruction_step;
+			if ($request->$isCall == 'on') {
+				$ins->isMakeCall = True;
+			} else {
+				$ins->isMakeCall = False;
 			}
-
-			$instruction = new Instruction;
-			$instruction->injury_id = $injury_id;
-			$instruction->step = $i;
-			$instruction->instruction = $request->$instruction_step;
-			$instruction->explain_instruction = $request->$detail_step;
-
-		// Temporary image control name for each step
-			$image_step_controlName = 'image_step'.$i;
+						
+			// Temporary image control name for each step
+			$image_step_controlName = 'emergency_image_step'.$i;
 			if($request->hasFile($image_step_controlName)) {
 				$image_step = $request->file($image_step_controlName);
 				$image_name = $image_step->getClientOriginalName();
@@ -195,12 +282,12 @@ class InjuryController extends Controller
 				}
 
 				$image_step->move('upload/injury/images', $image_name);
-				$instruction->image = $image_name;
+				$ins->image = $image_name;
 
 			}
 
 			// Temporary audio control name for each step
-			$audio_step_controlName = 'audio_step'.$i;
+			$audio_step_controlName = 'emergency_audio_step'.$i;
 			if($request->hasFile($audio_step_controlName)) {
 				$audio_step = $request->file($audio_step_controlName);
 				$audio_name = $audio_step->getClientOriginalName();
@@ -211,14 +298,124 @@ class InjuryController extends Controller
 				}
 
 				$audio_step->move('upload/injury/audios', $audio_name);
-				$instruction->audio = $audio_name;
+				$ins->audio = $audio_name;
 			}
 
 			// Save instruction of each step
-			$instruction->save();
+			$ins->save();
+		}
+	}
+
+	private function editLearningInstruction($injury, $request) {
+		$i = 0;
+		foreach ($injury->learningInstruction as $ins) {
+			$i++;
+			$instruction_step = 'learning_instruction_step'.$i;
+			$detail_step = 'learning_detail_step'.$i;
+
+			$ins->content = $request->$instruction_step;
+			$ins->explain = $request->$detail_step;
+
+			// Temporary image control name for each step
+			$image_step_controlName = 'learning_image_step'.$i;
+			if($request->hasFile($image_step_controlName)) {
+				$image_step = $request->file($image_step_controlName);
+				$image_name = $image_step->getClientOriginalName();
+				$image_name = str_random(4).'_'.$image_name;
+
+				while (file_exists('upload/injury/images/'.$image_name)) {
+					$image_name = str_random(4).'_'.$image_name;
+				}
+
+				$image_step->move('upload/injury/images', $image_name);
+				$ins->image = $image_name;
+
+			}
+
+			// Temporary audio control name for each step
+			$audio_step_controlName = 'learning_audio_step'.$i;
+			if($request->hasFile($audio_step_controlName)) {
+				$audio_step = $request->file($audio_step_controlName);
+				$audio_name = $audio_step->getClientOriginalName();
+				$audio_name = str_random(4).'_'.$audio_name;
+
+				while (file_exists('upload/injury/audios/'.$audio_name)) {
+					$audio_name = str_random(4).'_'.$audio_name;
+				}
+
+				$audio_step->move('upload/injury/audios', $audio_name);
+				$ins->audio = $audio_name;
+			}
+
+			// Save instruction of each step
+			$ins->save();
+		}
+	}
+
+	// Param : $count -> number of step of instructions
+	private function validateInjuryInstructionForEdit($request, $injury){
+		// validate control data
+		$count_step_emergence = $request->count_step_emergence;
+		$count_step_learning = $request->count_step_learning;
+
+		// Validate injury name when delete
+		if($injury->injury_name != $request->injury_name){
+			$this->validate($request, 
+			[
+				'injury_name' => 'unique:injuries,injury_name',
+				
+			],
+			[
+				'injury_name.unique' => 'Tên chấn thương đã tồn tại.',
+			]);
 		}
 
-		return redirect('expert/injury/editinjury/'.$injury_id)->with('noti', 'Đã sửa chấn thương thành công');
+		$this->validate($request, 
+			[
+				'injury_name' => 'required|max:255',
+				'symptom' => 'required|max:500',
+			],
+			[
+				'injury_name.required' => 'Bạn phải nhập tên chấn thương.',
+				'injury_name.max' => 'Tên chấn thương phải nhỏ hơn 255 kí tự.',
+				'injury_name.unique' => 'Tên chấn thương đã tồn tại.',
+
+				'symptom.required' => 'Bạn phải nhập triệu chứng.',
+				'symptom.max' => 'Triệu chứng phải nhỏ hơn 500 kí tự.',
+			]);
+
+		// Validate emergency instruction 
+		for ($i = 1; $i <= $count_step_emergence; $i++) { 
+			$emergency_instruction_step = 'emergency_instruction_step'.$i;
+			$this->validate($request, 
+			[
+				$emergency_instruction_step => 'required|max:500',
+			],
+			[
+
+				$emergency_instruction_step.'.required' => 'Bạn phải nhập hướng dẫn sơ cứu bước '.$i,
+				$emergency_instruction_step.'.max' => 'Hướng dẫn phải nhỏ hơn 500 kí tự.',
+			]);
+		}
+
+		// Validate learning instruction
+		for ($i = 1; $i <= $count_step_learning; $i++) { 
+			$learning_instruction_step = 'learning_instruction_step'.$i;
+			$learning_detail_step = 'learning_detail_step'.$i;
+			$this->validate($request, 
+				[
+				$learning_instruction_step => 'required|max:500',
+				$learning_detail_step => 'required|max:500'
+				],
+				[
+
+				$learning_instruction_step.'.required' => 'Bạn phải nhập hướng dẫn học bước '.$i,
+				$learning_instruction_step.'.max' => 'Hướng dẫn phải nhỏ hơn 500 kí tự.',
+
+				$learning_detail_step.'.required' => 'Bạn phải nhập giải thích học bước '.$i,
+				$learning_detail_step.'.max' => 'Giải thích phải nhỏ hơn 500 kí tự.'
+				]);
+		}
 	}
 
 	// Delete injury
@@ -229,16 +426,29 @@ class InjuryController extends Controller
 
 		// Delete instructions of this injury
 		foreach ($injury->instruction as $ins) {
-			$ins->delete();
+			$ins->isDeleted = True;
+			$ins->save();
+		}
+
+		// Delete learning instruction of this injury
+		foreach ($injury->learningInstruction as $ins) {
+			$ins->isDeleted = True;
+			$ins->save();
 		}
 
 		// Delete question of this injury
 		foreach ($injury->question as $quest) {
-			$quest->delete();
+			foreach ($quest->answer as $answer) {
+				$answer->isDeleted = True;
+				$answer->save();
+			}
+			$quest->isDeleted = True;
+			$quest->save();
 		}
 
-		// Delete injury
-		$injury->delete();
+		// Delete injury_name
+		$injury->isDeleted = True;
+		$injury->save();
 
 		return redirect('expert/injury/listinjury')->with('noti', 'Xóa thành công chấn thương '.$injury_name);
 

@@ -114,6 +114,9 @@ Route::group(['prefix'=>'expert', 'middleware' => 'expertLogin'], function(){
 		// Call controller show list all injury
 		Route::get('listinjury', 'InjuryController@showListInjuryView');
 
+		// Call controller show list all injury
+		Route::get('listinjury/{filtertype}', 'InjuryController@showListInjuryViewByFilter');
+
 		// Call controller show view 'edit injury'
 		Route::get('editinjury/{injury_id}', 'InjuryController@showEditInjuryView');
 
