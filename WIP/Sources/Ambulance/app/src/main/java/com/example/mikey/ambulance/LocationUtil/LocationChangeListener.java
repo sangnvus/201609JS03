@@ -9,7 +9,6 @@ import com.google.android.gms.common.api.Status;
  */
 
 public interface LocationChangeListener {
-    void getLocationChange();
     void createLocationSettingDialog(Status status);
     void locationChangeSuccess(Location location);
 }

@@ -42,6 +42,7 @@ public class Task extends AppCompatActivity implements OnMapReadyCallback, Locat
     private Marker destinationMarkers;
     private Polyline polylinePaths;
 
+    private LocationFinder locationFinder;
     private boolean isLocationEnable;
     private boolean isNetworkEnable;
     IntentFilter intentFilter;
@@ -73,8 +74,8 @@ public class Task extends AppCompatActivity implements OnMapReadyCallback, Locat
 //        dialog.create().show();
 //
 
+        createLocationFinder();
         createUI();
-        getLocationChange();
         intentFilter = new IntentFilter();
         intentFilter.addAction(Constants.INTENT_FILTER_PROVIDERS_CHANGED);
         intentFilter.addAction(Constants.INTENT_FILTER_CONNECTIVITY_CHANGE);
@@ -104,6 +105,11 @@ public class Task extends AppCompatActivity implements OnMapReadyCallback, Locat
         registerReceiver(connectivityBroadcastReceiver, intentFilter);
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        locationFinder.disconnectGoogleApiClient();
+    }
 
     private boolean googleServiceAvailable() {
         GoogleApiAvailability api = GoogleApiAvailability.getInstance();
@@ -152,24 +158,30 @@ public class Task extends AppCompatActivity implements OnMapReadyCallback, Locat
     BroadcastReceiver connectivityBroadcastReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
+            // Only work when click on off button
             if (intent.getAction().matches(Constants.INTENT_FILTER_PROVIDERS_CHANGED)) {
                 isLocationEnable = LocationStatus.checkLocationProvider(context);
-                if (isLocationEnable) {
-                    getLocationChange();
-                }
+                Log.d("location", isLocationEnable + "gps");
+
             } else if(intent.getAction().matches(Constants.INTENT_FILTER_CONNECTIVITY_CHANGE)) {
                 isNetworkEnable = NetworkStatus.checkNetworkEnable(context);
                 if(!isNetworkEnable) {
                 createNetworkSetting();
                 }
+                // Check location enable in connectivity change
+                isLocationEnable = LocationStatus.checkLocationProvider(context);
+                Log.d("location", isLocationEnable + "connectivity");
             }
+
+            locationFinder.connectGoogleApiClient();
+            Log.d("location", isLocationEnable + "");
         }
     };
 
 
-    public void getLocationChange() {
-        LocationFinder locationFinder = new LocationFinder(this, this);
-        locationFinder.getLocation();
+    public void createLocationFinder() {
+        locationFinder = new LocationFinder(this, this);
+        locationFinder.buildLocationFinder();
     }
 
     // Override LocationChangeListener interface
@@ -209,7 +221,6 @@ public class Task extends AppCompatActivity implements OnMapReadyCallback, Locat
     public void onClick(View v) {
     switch (v.getId()) {
         case R.id.button_navigate:
-            getLocationChange();
             break;
         case R.id.button_picked_up:
             break;

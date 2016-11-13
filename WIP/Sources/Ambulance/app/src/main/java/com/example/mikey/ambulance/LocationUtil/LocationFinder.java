@@ -48,7 +48,7 @@ public class LocationFinder implements GoogleApiClient.ConnectionCallbacks,
         this.locationChangeListener = locationChangeListener;
     }
 
-    public void getLocation() {
+    public void buildLocationFinder() {
         buildGoogleApiClient();
         createLocationRequest();
         buildLocationSettingsRequest();
@@ -60,7 +60,14 @@ public class LocationFinder implements GoogleApiClient.ConnectionCallbacks,
                 .addOnConnectionFailedListener(this)
                 .addApi(LocationServices.API)
                 .build();
+    }
+
+    public void connectGoogleApiClient() {
         mGoogleApiClient.connect();
+    }
+
+    public void disconnectGoogleApiClient() {
+        mGoogleApiClient.disconnect();
     }
 
     @Override
@@ -105,7 +112,7 @@ public class LocationFinder implements GoogleApiClient.ConnectionCallbacks,
         mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
     }
 
-    protected void startLocationUpdates() {
+    public void startLocationUpdates() {
         if (ActivityCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_FINE_LOCATION) !=
                 PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(mContext,
                 Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -122,8 +129,6 @@ public class LocationFinder implements GoogleApiClient.ConnectionCallbacks,
         LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient,
                 mLocationRequest, this);
     }
-
-
 
     @Override
     public void onLocationChanged(Location location) {
