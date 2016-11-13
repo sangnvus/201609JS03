@@ -10,14 +10,14 @@ import android.view.View;
 
 import com.example.mikey.ambulance.R;
 
-public class Infor extends AppCompatActivity {
+public class Information extends AppCompatActivity {
 
     NotificationCompat.Builder notification;
     private  static final int id = 45612;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_infor);
+        setContentView(R.layout.activity_information);
 
         notification = new NotificationCompat.Builder(this);
         notification.setAutoCancel(true);
@@ -31,7 +31,7 @@ public class Infor extends AppCompatActivity {
         notification.setContentTitle("title");
         notification.setContentText("abcdef");
 
-        Intent intent = new Intent(this, Quest.class);
+        Intent intent = new Intent(this, Task.class);
         PendingIntent pendingIntent = PendingIntent.getActivities(this, 0, new Intent[]{intent}, PendingIntent.FLAG_UPDATE_CURRENT);
         notification.setContentIntent(pendingIntent);
 
