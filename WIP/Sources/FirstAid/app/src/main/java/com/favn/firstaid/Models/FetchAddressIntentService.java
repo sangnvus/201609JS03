@@ -76,7 +76,12 @@ public class FetchAddressIntentService extends IntentService {
                 addressList.add(address.getAddressLine(i));
             }
             String addressAfter = TextUtils.join(", ", addressList);
-            String addressStringReturn = featureName + addressAfter;
+            String addressStringReturn = "";
+            if(featureName.length() > 0) {
+                addressStringReturn  = featureName + ", "+ addressAfter;
+            } else {
+                addressStringReturn = addressAfter;
+            }
             deliverResultToReceiver(Constants.SUCCESS_RESULT, addressStringReturn);
         }
     }
