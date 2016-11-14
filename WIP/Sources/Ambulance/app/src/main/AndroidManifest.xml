@@ -12,7 +12,7 @@
         android:screenOrientation="landscape"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".Activities.Task">
+        <activity android:name=".Activities.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
@@ -20,7 +20,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".Activities.Information"/>
-        <!--<activity android:name=".Activities.Task"></activity>-->
+        <activity android:name=".Activities.Task"></activity>
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyAcYh4HrrRlHTYxkD0ZGgKEOD3CaK_JERE"/>

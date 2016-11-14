@@ -83,14 +83,12 @@ public class Task extends AppCompatActivity implements OnMapReadyCallback, Locat
 
     private void createUI() {
         btnNavigate = (Button) findViewById(R.id.button_navigate);
-        btnPickedUp = (Button) findViewById(R.id.button_picked_up);
+        btnPickedUp = (Button) findViewById(R.id.button_report_problem);
         btnFinishTask = (Button) findViewById(R.id.button_finish_task);
-        btnCancelTask = (Button) findViewById(R.id.button_cancel_task);
 
         btnNavigate.setOnClickListener(this);
         btnPickedUp.setOnClickListener(this);
         btnFinishTask.setOnClickListener(this);
-        btnCancelTask.setOnClickListener(this);
     }
 
     @Override
@@ -163,10 +161,10 @@ public class Task extends AppCompatActivity implements OnMapReadyCallback, Locat
                 isLocationEnable = LocationStatus.checkLocationProvider(context);
                 Log.d("location", isLocationEnable + "gps");
 
-            } else if(intent.getAction().matches(Constants.INTENT_FILTER_CONNECTIVITY_CHANGE)) {
+            } else if (intent.getAction().matches(Constants.INTENT_FILTER_CONNECTIVITY_CHANGE)) {
                 isNetworkEnable = NetworkStatus.checkNetworkEnable(context);
-                if(!isNetworkEnable) {
-                createNetworkSetting();
+                if (!isNetworkEnable) {
+                    createNetworkSetting();
                 }
                 // Check location enable in connectivity change
                 isLocationEnable = LocationStatus.checkLocationProvider(context);
@@ -182,6 +180,7 @@ public class Task extends AppCompatActivity implements OnMapReadyCallback, Locat
     public void createLocationFinder() {
         locationFinder = new LocationFinder(this, this);
         locationFinder.buildLocationFinder();
+        locationFinder.connectGoogleApiClient();
     }
 
     // Override LocationChangeListener interface
@@ -219,15 +218,13 @@ public class Task extends AppCompatActivity implements OnMapReadyCallback, Locat
 
     @Override
     public void onClick(View v) {
-    switch (v.getId()) {
-        case R.id.button_navigate:
-            break;
-        case R.id.button_picked_up:
-            break;
-        case R.id.button_finish_task:
-            break;
-        case R.id.button_cancel_task:
-            break;
-    }
+        switch (v.getId()) {
+            case R.id.button_navigate:
+                break;
+            case R.id.button_report_problem:
+                break;
+            case R.id.button_finish_task:
+                break;
+        }
     }
 }
