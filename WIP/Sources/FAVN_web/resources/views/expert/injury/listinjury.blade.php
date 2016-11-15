@@ -52,7 +52,7 @@
 							
 										<td>
 											@foreach($inj->instruction as $ins)
-												<span style="color: green; font-weight: bold;">Step {{ $ins->step }} :</span> {{ $ins->instruction }}<br/>
+												<span style="color: green; font-weight: bold;">Step {{ $ins->step }} :</span> {{ $ins->content }}<br/>
 											@endforeach
 										</td>
 									
@@ -106,4 +106,20 @@
 	    document.getElementById("nav-injuries-item").className += "active";
 	</script>
 
+
+	<!-- Fillter injury by dropdown list -->
+    <script type="text/javascript">
+        function redirect(goto){
+            if (goto != '') {
+                window.location = goto;
+            }
+        }
+
+        var selectEl = document.getElementById('filterType');
+
+        selectEl.onchange = function(){
+            var goto = 'admin/user/listuser/' + this.value;
+            redirect(goto);
+        };
+    </script>
 @endsection

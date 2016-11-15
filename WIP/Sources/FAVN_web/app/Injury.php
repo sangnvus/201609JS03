@@ -13,6 +13,10 @@ class Injury extends Model
     	return $this->hasMany('App\Instruction')->orderBy('step');
     }
 
+    public function learningInstruction(){
+    	return $this->hasMany('App\LearningInstruction')->orderBy('step');
+    }
+
     public function question(){
     	return $this->hasMany('App\Question');
     }

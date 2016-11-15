@@ -1,28 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.mikey.ambulance">
+          package="com.favn.mikey.ambulance">
+
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
     <application
         android:name="android.support.multidex.MultiDexApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
+        android:screenOrientation="landscape"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme"
-        android:screenOrientation="landscape">
-        <activity android:name=".Activities.MainActivity"
-            android:windowSoftInputMode="stateVisible|adjustResize">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+        android:theme="@style/AppTheme">
 
-                <category android:name="android.intent.category.LAUNCHER" />
+        <!--android:windowSoftInputMode="stateVisible|adjustResize"-->
+
+        <activity android:name="com.favn.ambulance.Activities.Task">
+
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+
+                <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity android:name=".Activities.Infor" />
-        <activity android:name=".Activities.Quest"/>
+
+        <activity android:name="com.favn.ambulance.Activities.Information"/>
+        <!--<activity android:name=".Activities.Task"></activity>-->
+
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyAcYh4HrrRlHTYxkD0ZGgKEOD3CaK_JERE" />
+            android:value="AIzaSyAcYh4HrrRlHTYxkD0ZGgKEOD3CaK_JERE"/>
+
+
     </application>
 
 </manifest>

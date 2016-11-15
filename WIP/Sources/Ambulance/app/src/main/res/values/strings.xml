@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">Cấp cứu</string>
+
+    <!--action buttons name-->
+    <string name="navigate">chỉ đường</string>
+    <string name="report_problem">báo sự cố</string>
+    <string name="finish_task">hoàn thành nhiệm vụ</string>
+
 </resources>

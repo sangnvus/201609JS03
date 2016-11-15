@@ -13,4 +13,9 @@
         android:layout_height="match_parent"
         android:id="@+id/list_notification"
         android:entries="@array/item_notification" />
+    <Button
+        android:layout_width="100dp"
+        android:layout_height="50dp"
+        android:text="add"
+        android:id="@+id/button_add" />
 </RelativeLayout>

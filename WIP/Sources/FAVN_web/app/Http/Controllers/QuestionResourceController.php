@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 
 use App\Http\Requests;
 
-use App\QUESTION;
+use App\Question;
 
 class QuestionResourceController extends Controller
 {
@@ -41,7 +41,7 @@ class QuestionResourceController extends Controller
     public function store(Request $request)
     {
         // Declare model question
-        $question = new QUESTION;
+        $question = new Question;
 
         // Assign value from request
         $injury_id = $request->input('injury_id');
