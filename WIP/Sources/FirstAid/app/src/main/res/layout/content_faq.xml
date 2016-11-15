@@ -3,12 +3,8 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <Button
+    <ListView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/button_qa"
-        android:text="@string/qa_button"
-        android:background="@color/colorPrimary"
-        android:textColor="@color/colorWhite"
-        android:theme="@style/PrimaryButton"/>
+        android:layout_height="match_parent"
+        android:id="@+id/list_faq" />
 </LinearLayout>

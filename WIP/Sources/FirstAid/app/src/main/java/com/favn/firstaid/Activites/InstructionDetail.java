@@ -1,21 +1,17 @@
 package com.favn.firstaid.Activites;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.media.MediaPlayer;
+import android.net.Uri;
 import android.os.Bundle;
-
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-
 import android.view.MenuItem;
-
 import android.view.View;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.FrameLayout;
-import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -36,8 +32,6 @@ public class InstructionDetail extends AppCompatActivity {
     private int playingAudioId;
     private MediaPlayer mMediaPlayer = null;
     private int listSize;
-    private Animation beat;
-    private List<View> v1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,35 +62,54 @@ public class InstructionDetail extends AppCompatActivity {
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        FrameLayout footerLayout = (FrameLayout) getLayoutInflater().inflate(R.layout.instruction_detail_footer, null);
-        btnFaq = (Button) footerLayout.findViewById(R.id.button_faq);
-        btnFaq.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(InstructionDetail.this, FaqActivity.class);
-                intent.putExtra("id", injuryId);
-                startActivity(intent);
-            }
-        });
+        if(!isEmegency) {
+            FrameLayout footerLayout = (FrameLayout) getLayoutInflater().inflate(R.layout.instruction_detail_footer, null);
+            btnFaq = (Button) footerLayout.findViewById(R.id.button_faq);
+            btnFaq.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(InstructionDetail.this, FaqActivity.class);
+                    intent.putExtra("id", injuryId);
+                    startActivity(intent);
+                }
+            });
 
-        listView.addFooterView(footerLayout);
+            listView.addFooterView(footerLayout);
+        }
 
         final int[] audio = {R.raw.audio_1, R.raw.audio_2, R.raw.audio_3};
-        beat = AnimationUtils.loadAnimation(this, R.anim.heartbeat);
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int pos, long id) {
                 final TextView stepAnimation = (TextView) view.findViewById(R.id.text_step_number);
+//                final View colorLine = (View) view.findViewById(R.id.color_line);
+
                 if (playingAudioId == audio[pos] && mMediaPlayer.isPlaying()) {
                     mMediaPlayer.stop();
-                    stepAnimation.clearAnimation();
+//                    colorLine.setVisibility(View.INVISIBLE);
                 } else {
-                    playAudio(audio[pos], stepAnimation);
+                    playAudio(audio[pos]);
+
                 }
-//                v1 = null;
-//                v1.add(stepAnimation);
+
+                for (int i = 0; i < listView.getChildCount(); i++) {
+                    if (pos == i) {
+                        listView.getChildAt(i).setBackground(getResources().getDrawable(R.drawable.list_item_color));
+                    } else {
+                        listView.getChildAt(i).setBackgroundColor(Color.TRANSPARENT);
+                    }
+                }
+
+                Button call = (Button) findViewById(R.id.button_call);
+                call.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent callIntent = new Intent(Intent.ACTION_CALL);
+                        callIntent.setData(Uri.parse("tel:115"));
+                    }
+                });
             }
         });
     }
@@ -109,7 +122,7 @@ public class InstructionDetail extends AppCompatActivity {
         }
     }
 
-    private void playAudio(int audioId, TextView stepAnim) {
+    private void playAudio(int audioId) {
         playingAudioId = audioId;
 
         // stop the previous playing audio
@@ -117,20 +130,10 @@ public class InstructionDetail extends AppCompatActivity {
             mMediaPlayer.stop();
             mMediaPlayer.release();
             mMediaPlayer = null;
-//            for(View v: v1) {
-//                v.clearAnimation();
-//            }
         }
         mMediaPlayer = MediaPlayer.create(this, audioId);
         mMediaPlayer.start();
-        stepAnim.startAnimation(beat);
-
-    }
-
-    private void checkAnimation(View view){
-        TextView step = (TextView) view.findViewById(R.id.text_step_number);
-        for (int i = 0; i < listSize; i++) {
-        }
+//        colorLine.setVisibility(View.VISIBLE);
     }
 
     @Override

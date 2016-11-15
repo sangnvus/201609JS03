@@ -9,6 +9,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.graphics.PointF;
 import android.util.Log;
 
+import com.favn.firstaid.Models.Faq;
 import com.favn.firstaid.Models.HealthFacility;
 import com.favn.firstaid.Models.Injury;
 import com.favn.firstaid.Models.Instruction;
@@ -241,5 +242,27 @@ public class DatabaseOpenHelper extends SQLiteOpenHelper {
         cursor.close();
         closeDatabase();
         return healthFacilities;
+    }
+
+    // Get Faq
+    public List<Faq> getListFaq(int id) {
+        Faq faq = null;
+        List<Faq> faqList = new ArrayList<>();
+        openDatabase();
+        Cursor cursor = mDatabase.rawQuery("SELECT * FROM " + TABLE_NAME_FAQS + " WHERE " +
+                "injury_id == " + id, null);
+        cursor.moveToFirst();
+        while (!cursor.isAfterLast()) {
+            int injuryId = cursor.getInt(1);
+            String question = cursor.getString(2);
+            String answer = cursor.getString(3);
+            faq = new Faq(injuryId, question, answer);
+            faqList.add(faq);
+            cursor.moveToNext();
+        }
+        cursor.close();
+        closeDatabase();
+        Log.d("abc", faqList.size()+"");
+        return faqList;
     }
 }

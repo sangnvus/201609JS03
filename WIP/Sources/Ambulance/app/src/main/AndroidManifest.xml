@@ -10,7 +10,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:screenOrientation="landscape">
-        <activity android:name=".Activities.MainActivity">
+        <activity android:name=".Activities.MainActivity"
+            android:windowSoftInputMode="stateVisible|adjustResize">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -18,7 +19,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".Activities.Infor" />
-        <activity android:name=".Activities.Quest"></activity>
+        <activity android:name=".Activities.Quest"/>
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyAcYh4HrrRlHTYxkD0ZGgKEOD3CaK_JERE" />

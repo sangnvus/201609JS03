@@ -4,6 +4,7 @@ import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -48,6 +49,7 @@ public class InstructionAdapter extends BaseAdapter {
         View v = View.inflate(mContext, R.layout.item_instruction, null);
         TextView tvStep = (TextView) v.findViewById(R.id.text_step_number);
         TextView tvInstruction = (TextView) v.findViewById(R.id.text_instruction_content);
+        Button call = (Button) v.findViewById(R.id.button_call);
 
         ImageView imgImage = (ImageView) v.findViewById(R.id.image_instruction);
 
@@ -63,6 +65,12 @@ public class InstructionAdapter extends BaseAdapter {
         if(!isEmegency){
             TextView tvExplanation = (TextView) v.findViewById(R.id.text_instruction_explaination);
             tvExplanation.setText(instruction.getExplanation());
+        }
+
+        if(instruction.isMakeCall() == true){
+            call.setVisibility(View.VISIBLE);
+        } else {
+            call.setVisibility(View.GONE);
         }
 
         imgImage.setImageResource(imagePath);

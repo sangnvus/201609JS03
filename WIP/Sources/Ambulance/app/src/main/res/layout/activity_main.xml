@@ -29,7 +29,7 @@
             android:gravity="center"
             android:layout_weight="0.17"
             android:padding="15dp"
-            android:background="@color/cast_expanded_controller_background_color"
+            android:background="@color/cast_expanded_controller_text_color"
             android:alpha="0.7">
 
             <ImageView
