@@ -3,7 +3,6 @@ package com.favn.firstaid.Activites;
 import android.content.Intent;
 import android.graphics.Color;
 import android.media.MediaPlayer;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -102,14 +101,7 @@ public class InstructionDetail extends AppCompatActivity {
                     }
                 }
 
-                Button call = (Button) findViewById(R.id.button_call);
-                call.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Intent callIntent = new Intent(Intent.ACTION_CALL);
-                        callIntent.setData(Uri.parse("tel:115"));
-                    }
-                });
+
             }
         });
     }

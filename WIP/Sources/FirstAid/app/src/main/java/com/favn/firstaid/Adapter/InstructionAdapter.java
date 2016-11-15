@@ -1,6 +1,8 @@
 package com.favn.firstaid.Adapter;
 
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -50,6 +52,7 @@ public class InstructionAdapter extends BaseAdapter {
         TextView tvStep = (TextView) v.findViewById(R.id.text_step_number);
         TextView tvInstruction = (TextView) v.findViewById(R.id.text_instruction_content);
         Button call = (Button) v.findViewById(R.id.button_call);
+        View line = (View) v.findViewById(R.id.line);
 
         ImageView imgImage = (ImageView) v.findViewById(R.id.image_instruction);
 
@@ -57,8 +60,8 @@ public class InstructionAdapter extends BaseAdapter {
         int imagePath = v.getResources().getIdentifier("com.favn.firstaid:drawable/" +
                 instruction.getImage(), null, null);
 
-//        InputStream is = getClass().getResourceAsStream("com.favn.firstaid:drawable/" +
-//                mInstructionList.get(position).getAudio());
+        int audio = v.getResources().getIdentifier("com.favn.firstaid:raw/" +
+                instruction.getAudio(), null, null);
 
         tvStep.setText(instruction.getStep() + "");
         tvInstruction.setText(instruction.getContent());
@@ -68,8 +71,18 @@ public class InstructionAdapter extends BaseAdapter {
         }
 
         if(instruction.isMakeCall() == true){
+            line.setVisibility(View.VISIBLE);
             call.setVisibility(View.VISIBLE);
+            Button call115 = (Button) v.findViewById(R.id.button_call);
+            call115.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent callIntent = new Intent(Intent.ACTION_CALL);
+                    callIntent.setData(Uri.parse("tel:115"));
+                }
+            });
         } else {
+            line.setVisibility(View.GONE);
             call.setVisibility(View.GONE);
         }
 
