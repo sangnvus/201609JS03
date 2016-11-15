@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+      xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/direction"
+        android:icon="@drawable/ic_direction"
+        app:showAsAction="ifRoom|withText"
+        android:title="@string/navigate"/>
+
+    <item
+        android:id="@+id/report_problem"
+        android:icon="@drawable/ic_report_problem"
+        app:showAsAction="ifRoom|withText"
+        android:title="@string/report_problem"
+        />
+
+    <item
+        android:id="@+id/finish_task"
+        android:icon="@drawable/ic_finish_task"
+        app:showAsAction="ifRoom|withText"
+        android:title="@string/finish_task"
+        />
+</menu>

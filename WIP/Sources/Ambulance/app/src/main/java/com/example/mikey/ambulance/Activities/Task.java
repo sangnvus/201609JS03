@@ -9,14 +9,16 @@ import android.content.IntentFilter;
 import android.content.IntentSender;
 import android.content.pm.PackageManager;
 import android.location.Location;
+import android.net.Uri;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.view.View;
-import android.widget.Button;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.example.mikey.ambulance.LocationUtil.LocationChangeListener;
@@ -36,7 +38,7 @@ import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.Polyline;
 
-public class Task extends AppCompatActivity implements OnMapReadyCallback, LocationChangeListener, View.OnClickListener {
+public class Task extends AppCompatActivity implements OnMapReadyCallback, LocationChangeListener {
     private GoogleMap mGoogleMap;
     private Location mCurrentLocation;
     private Marker destinationMarkers;
@@ -48,10 +50,6 @@ public class Task extends AppCompatActivity implements OnMapReadyCallback, Locat
     IntentFilter intentFilter;
     protected static final int REQUEST_CHECK_SETTINGS = 0x1;
 
-    private Button btnNavigate;
-    private Button btnPickedUp;
-    private Button btnFinishTask;
-    private Button btnCancelTask;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,13 +80,31 @@ public class Task extends AppCompatActivity implements OnMapReadyCallback, Locat
     }
 
     private void createUI() {
-        btnNavigate = (Button) findViewById(R.id.button_navigate);
-        btnPickedUp = (Button) findViewById(R.id.button_report_problem);
-        btnFinishTask = (Button) findViewById(R.id.button_finish_task);
 
-        btnNavigate.setOnClickListener(this);
-        btnPickedUp.setOnClickListener(this);
-        btnFinishTask.setOnClickListener(this);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.items, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        super.onOptionsItemSelected(item);
+
+        switch (item.getItemId()) {
+            case R.id.direction:
+                break;
+            case R.id.report_problem:
+                reportProblem();
+                break;
+            case R.id.finish_task:
+                break;
+        }
+        return true;
     }
 
     @Override
@@ -215,16 +231,22 @@ public class Task extends AppCompatActivity implements OnMapReadyCallback, Locat
                 .show();
     }
 
+    private void reportProblem() {
+        Intent callIntent = new Intent(Intent.ACTION_CALL);
+        callIntent.setData(Uri.parse("tel:115"));
 
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.button_navigate:
-                break;
-            case R.id.button_report_problem:
-                break;
-            case R.id.button_finish_task:
-                break;
+        try {
+            startActivity(callIntent);
+        } catch (android.content.ActivityNotFoundException ex) {
         }
+    }
+
+    // TODO notify finish task to server
+    private void finishTask() {
+
+    }
+
+    private void getDirection() {
+
     }
 }
