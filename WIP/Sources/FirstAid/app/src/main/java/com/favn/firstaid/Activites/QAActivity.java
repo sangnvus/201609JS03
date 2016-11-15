@@ -52,7 +52,7 @@ public class QAActivity extends AppCompatActivity {
 
     // Init elements, controls and variables
     private void initControl() {
-        urlAddress = "http://10.20.19.69:8080/Captons_Project/Source/WIP/Sources/FAVN_web/public/question";
+        urlAddress = "http://104.199.149.193/question";
 
         // Init dbHelper object
         dbHelper = new DatabaseOpenHelper(this);
