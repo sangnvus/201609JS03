@@ -1,21 +1,23 @@
 package com.favn.firstaid.Models;
 
-import android.content.Context;
-import android.os.AsyncTask;
-import android.widget.Toast;
-
 /**
  * Created by Mikey on 11/1/2016.
  */
 
 public class Faq {
+    private int injuryId;
     private String question;
     private String answer;
 
-    public Faq(String question, String answer) {
+    public Faq(int injuryId, String question, String answer) {
+        this.injuryId = injuryId;
         this.question = question;
         this.answer = answer;
     }
+
+    public int getInjuryId() {return injuryId;}
+
+    public void setInjuryId(int injuryId) {this.injuryId = injuryId;}
 
     public String getQuestion() {
         return question;

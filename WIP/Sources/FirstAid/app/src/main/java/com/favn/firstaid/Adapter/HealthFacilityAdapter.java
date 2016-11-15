@@ -1,8 +1,6 @@
 package com.favn.firstaid.Adapter;
 
 import android.content.Context;
-import android.content.Intent;
-import android.net.Uri;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -57,7 +55,7 @@ public class HealthFacilityAdapter extends BaseAdapter implements Filterable{
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(int position, final View convertView, ViewGroup parent) {
         View v = View.inflate(mContext, R.layout.item_hospital, null);
         final HealthFacility healthFacility = mHealthFacilityList.get(position);
 
@@ -69,7 +67,8 @@ public class HealthFacilityAdapter extends BaseAdapter implements Filterable{
         String address = (healthFacility.getAddress() != null) ? healthFacility.getAddress() : healthFacility.getVicinity();
         tvHealthFacilityAddress.setText(address);
 
-        if(healthFacility.getPhone() != null) {
+        final String phoneNumber = healthFacility.getPhone();
+        if(phoneNumber != null) {
             LinearLayout llHealthFacilityCalling = (LinearLayout) v.findViewById(R.id
                     .layout_health_facility_calling);
             llHealthFacilityCalling.setVisibility(View.VISIBLE);
@@ -78,8 +77,11 @@ public class HealthFacilityAdapter extends BaseAdapter implements Filterable{
             btnCall.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent callIntent = new Intent(Intent.ACTION_CALL);
-                    callIntent.setData(Uri.parse("tel:" + healthFacility.getPhone()));
+//                    Intent callIntent = new Intent(Intent.ACTION_CALL);
+//                    callIntent.setData(Uri.parse("tel:" + phoneNumber));
+                    Toast.makeText(v.getContext(), "Có chạy không ?", Toast.LENGTH_LONG).show();
+//                    Intent intent = new Intent(v.getContext(), BannerDetail.class);
+//                    startActivity(intent);
                 }
             });
         }

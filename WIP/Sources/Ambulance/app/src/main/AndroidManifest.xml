@@ -12,15 +12,21 @@
         android:screenOrientation="landscape"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+
+        <!--android:windowSoftInputMode="stateVisible|adjustResize"-->
+
         <activity android:name="com.favn.ambulance.Activities.Task">
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
+
         <activity android:name="com.favn.ambulance.Activities.Information"/>
         <!--<activity android:name=".Activities.Task"></activity>-->
+
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyAcYh4HrrRlHTYxkD0ZGgKEOD3CaK_JERE"/>

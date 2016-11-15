@@ -9,23 +9,23 @@
 
     <ImageView
         android:id="@+id/image_injury_item"
-        android:layout_width="@dimen/image_size_40"
-        android:layout_height="@dimen/image_size_40"
+        android:layout_width="@dimen/injury_image_size"
+        android:layout_height="@dimen/injury_image_size"
         android:layout_marginLeft="@dimen/activity_horizontal_margin"
         android:layout_alignParentLeft="true"
-        android:layout_marginBottom="8dp"
-        android:layout_marginRight="8dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginBottom="@dimen/layout_margin"
+        android:layout_marginRight="@dimen/layout_margin"
+        android:layout_marginTop="@dimen/layout_margin"
         app:srcCompat="@mipmap/ic_launcher"/>
 
     <TextView
         android:id="@+id/text_injury_item"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginBottom="@dimen/layout_margin"
+        android:layout_marginLeft="@dimen/layout_margin"
+        android:layout_marginRight="@dimen/layout_margin"
+        android:layout_marginTop="@dimen/layout_margin"
         android:text=""
-        android:textSize="18dp"/>
+        android:textSize="@dimen/injury_text_size"/>
 </LinearLayout>
