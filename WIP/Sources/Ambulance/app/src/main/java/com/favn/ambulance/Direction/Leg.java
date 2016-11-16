@@ -1,6 +1,5 @@
-package com.favn.ambulance.Direction;
+package com.favn.ambulance.direction;
 
-import com.favn.ambulance.Direction.Distance;
 import com.google.android.gms.maps.model.LatLng;
 
 import java.util.List;

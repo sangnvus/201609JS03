@@ -1,6 +1,4 @@
-package com.favn.ambulance.Direction;
-
-import java.util.List;
+package com.favn.ambulance.direction;
 
 /**
  * Created by Hung Gia on 10/15/2016.

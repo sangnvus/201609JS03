@@ -1,4 +1,4 @@
-package com.favn.firstaid.Fragments;
+package com.favn.firstaid.fragments;
 
 
 import android.animation.Animator;
@@ -17,10 +17,10 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
-import com.favn.firstaid.Activites.InstructionDetail;
-import com.favn.firstaid.Activites.MapsActivity;
-import com.favn.firstaid.Adapter.InjuryAdapter;
-import com.favn.firstaid.Database.DatabaseOpenHelper;
+import com.favn.firstaid.activites.InstructionDetail;
+import com.favn.firstaid.activites.MapsActivity;
+import com.favn.firstaid.adapter.InjuryAdapter;
+import com.favn.firstaid.database.DatabaseOpenHelper;
 import com.favn.firstaid.Models.Injury;
 import com.favn.firstaid.R;
 

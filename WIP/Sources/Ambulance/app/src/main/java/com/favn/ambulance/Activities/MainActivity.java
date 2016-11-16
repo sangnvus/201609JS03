@@ -1,6 +1,5 @@
-package com.favn.ambulance.Activities;
+package com.favn.ambulance.activities;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -8,7 +7,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 
-import com.favn.ambulance.Models.Commons.UserSender;
+import com.favn.ambulance.models.Commons.UserSender;
 import com.favn.mikey.ambulance.R;
 
 public class MainActivity extends AppCompatActivity {

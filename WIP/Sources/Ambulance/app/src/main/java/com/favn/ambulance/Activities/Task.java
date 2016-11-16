@@ -1,4 +1,4 @@
-package com.favn.ambulance.Activities;
+package com.favn.ambulance.activities;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
@@ -28,14 +28,14 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.favn.ambulance.Direction.DirectionFinder;
-import com.favn.ambulance.Direction.DirectionFinderListener;
-import com.favn.ambulance.Direction.Leg;
-import com.favn.ambulance.NetworkUtil.NetworkStatus;
-import com.favn.ambulance.LocationUtil.LocationChangeListener;
-import com.favn.ambulance.LocationUtil.LocationFinder;
-import com.favn.ambulance.LocationUtil.LocationStatus;
-import com.favn.ambulance.Models.Commons.Constants;
+import com.favn.ambulance.direction.DirectionFinder;
+import com.favn.ambulance.direction.DirectionFinderListener;
+import com.favn.ambulance.direction.Leg;
+import com.favn.ambulance.networkUtil.NetworkStatus;
+import com.favn.ambulance.locationUtil.LocationChangeListener;
+import com.favn.ambulance.locationUtil.LocationFinder;
+import com.favn.ambulance.locationUtil.LocationStatus;
+import com.favn.ambulance.models.Commons.Constants;
 import com.favn.mikey.ambulance.R;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
@@ -53,7 +53,6 @@ import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 
 import java.io.UnsupportedEncodingException;
-import java.util.List;
 
 public class Task extends AppCompatActivity implements OnMapReadyCallback,
         LocationChangeListener, DirectionFinderListener, View.OnClickListener {

@@ -1,4 +1,4 @@
-package com.favn.firstaid.LocationUtil;
+package com.favn.firstaid.locationUtil;
 
 import android.Manifest;
 import android.content.Context;

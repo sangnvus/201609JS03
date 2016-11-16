@@ -1,4 +1,4 @@
-package com.favn.firstaid.Database;
+package com.favn.firstaid.database;
 
 import android.content.ContentValues;
 import android.content.Context;

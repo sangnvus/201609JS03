@@ -1,4 +1,4 @@
-package com.favn.firstaid.Adapter;
+package com.favn.firstaid.adapter;
 
 import android.content.Context;
 import android.view.View;

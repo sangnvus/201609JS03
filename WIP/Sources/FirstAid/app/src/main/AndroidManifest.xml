@@ -36,7 +36,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".Activites.MainActivity"
+            android:name=".activites.MainActivity"
             android:label="abc"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
@@ -70,23 +70,23 @@
             android:value="AIzaSyDT6ArSqhIvCaLHl95uQkTe6hTpgQEhB_k" />
 
         <activity
-            android:name=".Activites.MapsActivity"
+            android:name=".activites.MapsActivity"
             android:label="@string/title_activity_maps" />
         <activity
-            android:name=".Activites.InstructionDetail"
+            android:name=".activites.InstructionDetail"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".Activites.QAActivity"
+            android:name=".activites.QAActivity"
             android:label="Ý kiến - Hỏi đáp" />
         <activity
-            android:name=".Activites.NotificationActivity"
+            android:name=".activites.NotificationActivity"
             android:label="Thông báo" />
         <activity
-            android:name=".Activites.FaqActivity"
+            android:name=".activites.FaqActivity"
             android:label="Câu hỏi thường gặp" />
 
         <activity
-            android:name=".Activites.BannerDetail"
+            android:name=".activites.BannerDetail"
             android:label="Các khóa học sơ cứu" />
 
         <service

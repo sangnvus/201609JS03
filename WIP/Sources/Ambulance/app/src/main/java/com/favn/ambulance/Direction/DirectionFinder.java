@@ -1,9 +1,9 @@
-package com.favn.ambulance.Direction;
+package com.favn.ambulance.direction;
 
 import android.os.AsyncTask;
 import android.util.Log;
 
-import com.favn.ambulance.Models.Commons.Constants;
+import com.favn.ambulance.models.Commons.Constants;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.Gson;
 

@@ -4,7 +4,7 @@
     android:id="@+id/activity_faq"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.favn.firstaid.Activites.FaqActivity">
+    tools:context="com.favn.firstaid.activites.FaqActivity">
 
     <include
         android:layout_width="wrap_content"

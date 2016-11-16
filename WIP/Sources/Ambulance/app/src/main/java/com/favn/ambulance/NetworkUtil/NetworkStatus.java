@@ -1,4 +1,4 @@
-package com.favn.ambulance.NetworkUtil;
+package com.favn.ambulance.networkUtil;
 
 import android.content.Context;
 import android.net.ConnectivityManager;

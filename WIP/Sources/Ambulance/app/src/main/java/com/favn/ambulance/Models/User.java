@@ -1,4 +1,4 @@
-package com.favn.ambulance.Models;
+package com.favn.ambulance.models;
 
 import org.json.JSONException;
 import org.json.JSONObject;

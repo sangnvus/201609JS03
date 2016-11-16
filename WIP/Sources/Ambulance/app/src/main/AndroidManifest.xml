@@ -13,7 +13,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         
-        <activity android:name="com.favn.ambulance.Activities.MainActivity">
+        <activity android:name="com.favn.ambulance.activities.Task">
 
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
@@ -22,8 +22,8 @@
             </intent-filter>
         </activity>
 
-        <activity android:name="com.favn.ambulance.Activities.Information"/>
-        <activity android:name="com.favn.ambulance.Activities.Task"></activity>
+        <activity android:name="com.favn.ambulance.activities.Information"/>
+        <!--<activity android:name="com.favn.ambulance.activities.Task"></activity>-->
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"

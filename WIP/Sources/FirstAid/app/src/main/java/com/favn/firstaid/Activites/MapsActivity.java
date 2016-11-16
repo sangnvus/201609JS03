@@ -1,4 +1,4 @@
-package com.favn.firstaid.Activites;
+package com.favn.firstaid.activites;
 
 import android.Manifest;
 import android.app.Activity;
@@ -31,7 +31,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -42,8 +41,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
-import com.favn.firstaid.Adapter.HealthFacilityAdapter;
-import com.favn.firstaid.Database.DatabaseOpenHelper;
+import com.favn.firstaid.adapter.HealthFacilityAdapter;
+import com.favn.firstaid.database.DatabaseOpenHelper;
 import com.favn.firstaid.Models.Commons.Constants;
 import com.favn.firstaid.Models.Commons.NetworkStatus;
 import com.favn.firstaid.Models.Direction.DirectionFinder;
