@@ -1,5 +1,6 @@
 package com.favn.firstaid.Activites;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.MenuItem;
@@ -35,6 +36,7 @@ public class QAActivity extends AppCompatActivity {
     private DatabaseOpenHelper dbHelper;
     private List<Injury> mInjuryList;
     private String urlAddress;
+    private int injId = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,12 +49,14 @@ public class QAActivity extends AppCompatActivity {
         initControl();
         setControlDefaultStatus();
 
-
+        Intent intent = getIntent();
+        final int injuryId = intent.getExtras().getInt("id");
+        injId = injuryId;
     }
 
     // Init elements, controls and variables
     private void initControl() {
-        urlAddress = "http://10.20.19.69:8080/Captons_Project/Source/WIP/Sources/FAVN_web/public/question";
+        urlAddress = "http://104.199.149.193/question";
 
         // Init dbHelper object
         dbHelper = new DatabaseOpenHelper(this);
@@ -73,6 +77,11 @@ public class QAActivity extends AppCompatActivity {
         mInjuryList = dbHelper.getListInjury();
         injuryAdapter = new InjuryAdapter(this, mInjuryList, SPINNER_INJURY);
         spnListInjury.setAdapter(injuryAdapter);
+
+        //setName of spinner by injuryId
+        if(injId != 0) {
+            spnListInjury.getItemAtPosition(injId);
+        }
 
         // Set on checked listen radio injury
         rdInjury.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {

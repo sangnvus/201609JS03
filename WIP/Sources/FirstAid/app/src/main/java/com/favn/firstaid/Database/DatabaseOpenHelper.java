@@ -9,6 +9,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.graphics.PointF;
 import android.util.Log;
 
+import com.favn.firstaid.Models.Faq;
 import com.favn.firstaid.Models.HealthFacility;
 import com.favn.firstaid.Models.Injury;
 import com.favn.firstaid.Models.Instruction;
@@ -175,7 +176,6 @@ public class DatabaseOpenHelper extends SQLiteOpenHelper {
     // END CRUD INJURY FUNCTIONS
 
 
-
     // Get Instructions
     public List<Instruction> getListInstruction(int id) {
         Instruction instruction = null;
@@ -203,8 +203,6 @@ public class DatabaseOpenHelper extends SQLiteOpenHelper {
     }
 
 
-
-
     // Get Health Facility
     public List<HealthFacility> getListHealthFacility(PointF[] points) {
         HealthFacility healthFacility = null;
@@ -216,7 +214,7 @@ public class DatabaseOpenHelper extends SQLiteOpenHelper {
                 + "longitude < " + String.valueOf(points[1].y) + " AND "
                 + "longitude > " + String.valueOf(points[3].y);
         Cursor cursor = mDatabase.rawQuery("SELECT * FROM " + TABLE_NAME_HEALTH_FACILITIES +
-                        " " +WHERE_CLAUSE,
+                        " " + WHERE_CLAUSE,
                 null);
 
         cursor.moveToFirst();
@@ -242,4 +240,27 @@ public class DatabaseOpenHelper extends SQLiteOpenHelper {
         closeDatabase();
         return healthFacilities;
     }
+
+    /**
+     *  Start CRUD FAQs
+     */
+
+    // Get Faqs list
+    public List<Faq> getListFaq(int id) {
+        Faq instruction = null;
+        List<Faq> faqList = new ArrayList<>();
+        openDatabase();
+        Cursor cursor = mDatabase.rawQuery("SELECT * FROM " + TABLE_NAME_FAQS + " WHERE " +
+                "injury_id == " + id, null);
+        cursor.moveToFirst();
+        while (!cursor.isAfterLast()) {
+            faqList.add(instruction);
+            cursor.moveToNext();
+        }
+        cursor.close();
+        closeDatabase();
+        return faqList;
+    }
+    // End CRUD FAQs
+
 }

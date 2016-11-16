@@ -30,6 +30,7 @@ import java.util.List;
  */
 public class MoreFragment extends Fragment {
 
+    private int InjId = 0;
     public MoreFragment() {
         // Required empty public constructor
     }
@@ -115,6 +116,7 @@ public class MoreFragment extends Fragment {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 if (position == 0) {
                     Intent intent = new Intent(getActivity(), QAActivity.class);
+                    intent.putExtra("id", InjId);
                     startActivity(intent);
                 }
                 else if (position == 1) {

@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ListView;
 
@@ -59,7 +60,8 @@ public class LearningFragment extends Fragment implements AdapterView.OnItemClic
         setHasOptionsMenu(true);
         container.removeAllViews();
 
-        ImageView banner = (ImageView) rootView.findViewById(R.id.image_banner);
+        FrameLayout headerLayout = (FrameLayout) inflater.inflate(R.layout.banner, null);
+        ImageView banner = (ImageView) headerLayout.findViewById(R.id.image_banner);
         banner.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -67,6 +69,8 @@ public class LearningFragment extends Fragment implements AdapterView.OnItemClic
                 startActivity(intent);
             }
         });
+
+        listView.addHeaderView(headerLayout);
 
         // Inflate the layout for this fragment
         return rootView;
@@ -76,9 +80,11 @@ public class LearningFragment extends Fragment implements AdapterView.OnItemClic
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         Injury injury = (Injury) listView.getItemAtPosition(position);
         int injuryId = injury.getId();
+        String injuryName = injury.getInjuryName();
 
         Intent intent = new Intent(getActivity(), InstructionDetail.class);
         intent.putExtra("id", injuryId);
+        intent.putExtra("name", injuryName);
         intent.putExtra("typeOfAction", FROM_LEARNING);
         startActivity(intent);
     }

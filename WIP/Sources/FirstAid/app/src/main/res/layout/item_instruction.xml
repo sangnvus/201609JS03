@@ -10,64 +10,86 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <View style="@style/ColorLine"
-            android:id="@+id/color_line" />
-
         <LinearLayout
+            android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
-            android:layout_marginTop="10dp">
-
-            <TextView
-                android:id="@+id/text_step_number"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginRight="10dp"
-                android:layout_marginTop="10dp"
-                android:text="Step"
-                android:gravity="center"
-                android:textColor="@color/colorPrimary"
-                android:textStyle="bold"
-                android:textSize="24sp" />
+            android:layout_height="wrap_content">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:orientation="horizontal"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="10dp">
 
                 <TextView
-                    android:id="@+id/text_instruction_content"
+                    android:id="@+id/text_step_number"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginTop="10dp"
+                    android:text="Step"
+                    android:gravity="center"
+                    android:textColor="@color/colorPrimary"
+                    android:textStyle="bold"
+                    android:textSize="30sp" />
+
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="TextView" />
+                    android:orientation="vertical">
 
-                <TextView
-                    android:id="@+id/text_instruction_explaination"
+                    <TextView
+                        android:id="@+id/text_instruction_content"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="TextView" />
+
+                    <TextView
+                        android:id="@+id/text_instruction_explaination"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
+
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:layout_marginRight="10dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="8dp">
+
+                <View
+                    android:id="@+id/line"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="1dp"
+                    android:background="@color/colorSeparate"
+                    android:layout_marginBottom="5dp" />
 
+                <Button
+                    android:text="Gọi 115"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/button_call"
+                    android:clickable="true"
+                    android:background="@drawable/button_selector"
+                    android:visibility="visible"
+                    style="@style/Widget.AppCompat.Button"
+                    android:textColor="@color/cast_expanded_controller_text_color" />
+
+                <ImageView
+                    android:id="@+id/image_instruction"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:srcCompat="@mipmap/ic_launcher"
+                    android:layout_marginBottom="8dp"
+                    android:layout_marginTop="8dp" />
             </LinearLayout>
         </LinearLayout>
-    </LinearLayout>
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:layout_marginRight="10dp"
-        android:layout_marginLeft="10dp"
-        android:layout_marginTop="8dp">
-
-        <ImageView
-            android:id="@+id/image_instruction"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:srcCompat="@mipmap/ic_launcher"
-            android:layout_marginBottom="8dp"
-            android:layout_marginTop="8dp" />
     </LinearLayout>
 
 </LinearLayout>

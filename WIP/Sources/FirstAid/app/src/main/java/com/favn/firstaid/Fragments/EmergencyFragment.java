@@ -80,6 +80,7 @@ public class EmergencyFragment extends Fragment implements AdapterView.OnItemCli
             }
         }, 3000);
 
+
         return rootView;
     }
 
