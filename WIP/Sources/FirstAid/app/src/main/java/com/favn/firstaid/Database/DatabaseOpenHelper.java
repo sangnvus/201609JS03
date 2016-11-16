@@ -241,7 +241,6 @@ public class DatabaseOpenHelper extends SQLiteOpenHelper {
         return healthFacilities;
     }
 
-<<<<<<< HEAD
     /**
      *  Start CRUD FAQs
      */
@@ -249,39 +248,19 @@ public class DatabaseOpenHelper extends SQLiteOpenHelper {
     // Get Faqs list
     public List<Faq> getListFaq(int id) {
         Faq instruction = null;
-=======
-    // Get Faq
-    public List<Faq> getListFaq(int id) {
-        Faq faq = null;
->>>>>>> 97be98bf82509c52becc56f1c344887066204eee
         List<Faq> faqList = new ArrayList<>();
         openDatabase();
         Cursor cursor = mDatabase.rawQuery("SELECT * FROM " + TABLE_NAME_FAQS + " WHERE " +
                 "injury_id == " + id, null);
         cursor.moveToFirst();
         while (!cursor.isAfterLast()) {
-<<<<<<< HEAD
-
-
             faqList.add(instruction);
-=======
-            int injuryId = cursor.getInt(1);
-            String question = cursor.getString(2);
-            String answer = cursor.getString(3);
-            faq = new Faq(injuryId, question, answer);
-            faqList.add(faq);
->>>>>>> 97be98bf82509c52becc56f1c344887066204eee
             cursor.moveToNext();
         }
         cursor.close();
         closeDatabase();
-<<<<<<< HEAD
         return faqList;
     }
     // End CRUD FAQs
-=======
-        Log.d("abc", faqList.size()+"");
-        return faqList;
-    }
->>>>>>> 97be98bf82509c52becc56f1c344887066204eee
+
 }
