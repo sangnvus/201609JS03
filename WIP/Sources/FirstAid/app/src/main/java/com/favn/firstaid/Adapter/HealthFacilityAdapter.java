@@ -1,8 +1,11 @@
 package com.favn.firstaid.Adapter;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.support.v4.app.ActivityCompat;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -23,7 +26,7 @@ import java.util.List;
  * Created by Hung Gia on 10/21/2016.
  */
 
-public class HealthFacilityAdapter extends BaseAdapter implements Filterable{
+public class HealthFacilityAdapter extends BaseAdapter implements Filterable {
     private Context mContext;
     private List<HealthFacility> mHealthFacilityList;
     private HealthFacilityFilter healthFacilityFilter;
@@ -61,7 +64,7 @@ public class HealthFacilityAdapter extends BaseAdapter implements Filterable{
         View v = View.inflate(mContext, R.layout.item_hospital, null);
         final HealthFacility healthFacility = mHealthFacilityList.get(position);
 
-        TextView tvHealthFacilityName  = (TextView)v.findViewById(R.id.text_health_facility_name);
+        TextView tvHealthFacilityName = (TextView) v.findViewById(R.id.text_health_facility_name);
         tvHealthFacilityName.setText(healthFacility.getName());
 
         TextView tvHealthFacilityAddress = (TextView) v.findViewById(R.id.text_health_facility_address);
@@ -69,7 +72,7 @@ public class HealthFacilityAdapter extends BaseAdapter implements Filterable{
         String address = (healthFacility.getAddress() != null) ? healthFacility.getAddress() : healthFacility.getVicinity();
         tvHealthFacilityAddress.setText(address);
 
-        if(healthFacility.getPhone() != null) {
+        if (healthFacility.getPhone() != null) {
             LinearLayout llHealthFacilityCalling = (LinearLayout) v.findViewById(R.id
                     .layout_health_facility_calling);
             llHealthFacilityCalling.setVisibility(View.VISIBLE);
@@ -80,6 +83,18 @@ public class HealthFacilityAdapter extends BaseAdapter implements Filterable{
                 public void onClick(View v) {
                     Intent callIntent = new Intent(Intent.ACTION_CALL);
                     callIntent.setData(Uri.parse("tel:" + healthFacility.getPhone()));
+                    if (ActivityCompat.checkSelfPermission(mContext, Manifest.permission.CALL_PHONE) !=
+                            PackageManager.PERMISSION_GRANTED) {
+                        // TODO: Consider calling
+                        //    ActivityCompat#requestPermissions
+                        // here to request the missing permissions, and then overriding
+                        //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                        //                                          int[] grantResults)
+                        // to handle the case where the user grants the permission. See the documentation
+                        // for ActivityCompat#requestPermissions for more details.
+                        return;
+                    }
+                    mContext.startActivity(callIntent);
                 }
             });
         }

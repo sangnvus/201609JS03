@@ -1,5 +1,7 @@
 package com.favn.ambulance.Activities;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.app.Dialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -15,12 +17,20 @@ import android.provider.Settings;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.CardView;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.favn.ambulance.Direction.DirectionFinder;
+import com.favn.ambulance.Direction.DirectionFinderListener;
+import com.favn.ambulance.Direction.Leg;
 import com.favn.ambulance.NetworkUtil.NetworkStatus;
 import com.favn.ambulance.LocationUtil.LocationChangeListener;
 import com.favn.ambulance.LocationUtil.LocationFinder;
@@ -30,17 +40,27 @@ import com.favn.mikey.ambulance.R;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.common.api.Status;
+import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
+import com.google.android.gms.maps.model.PolylineOptions;
 
-public class Task extends AppCompatActivity implements OnMapReadyCallback, LocationChangeListener {
+import java.io.UnsupportedEncodingException;
+import java.util.List;
+
+public class Task extends AppCompatActivity implements OnMapReadyCallback,
+        LocationChangeListener, DirectionFinderListener, View.OnClickListener {
     private GoogleMap mGoogleMap;
     private Location mCurrentLocation;
+    private DirectionFinder directionFinder;
+    private LatLng destinationLanLng;
     private Marker destinationMarkers;
     private Polyline polylinePaths;
 
@@ -50,6 +70,12 @@ public class Task extends AppCompatActivity implements OnMapReadyCallback, Locat
     IntentFilter intentFilter;
     protected static final int REQUEST_CHECK_SETTINGS = 0x1;
 
+    private CardView cvDirection;
+    private LinearLayout llLoadingStatus;
+    private LinearLayout llDirectionResult;
+    private Button btnClearDirection;
+    private TextView tvDistance;
+    private TextView tvDuration;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,10 +103,21 @@ public class Task extends AppCompatActivity implements OnMapReadyCallback, Locat
         intentFilter = new IntentFilter();
         intentFilter.addAction(Constants.INTENT_FILTER_PROVIDERS_CHANGED);
         intentFilter.addAction(Constants.INTENT_FILTER_CONNECTIVITY_CHANGE);
+
+        // showing caller location
+        destinationLanLng = new LatLng(21.011371, 105.525721
+        );
+
     }
 
     private void createUI() {
-
+        cvDirection = (CardView) findViewById(R.id.cardview_direction);
+        llLoadingStatus = (LinearLayout) findViewById(R.id.layout_loading_status);
+        llDirectionResult = (LinearLayout) findViewById(R.id.layout_direction_result);
+        btnClearDirection = (Button) findViewById(R.id.button_clear_direction);
+        btnClearDirection.setOnClickListener(this);
+        tvDistance = (TextView) findViewById(R.id.textview_distance);
+        tvDuration = (TextView) findViewById(R.id.textview_duration);
     }
 
     @Override
@@ -97,6 +134,7 @@ public class Task extends AppCompatActivity implements OnMapReadyCallback, Locat
 
         switch (item.getItemId()) {
             case R.id.direction:
+                sendDirectionRequest();
                 break;
             case R.id.report_problem:
                 reportProblem();
@@ -166,6 +204,9 @@ public class Task extends AppCompatActivity implements OnMapReadyCallback, Locat
         LatLngBounds VIETNAM = new LatLngBounds(Constants.SOUTHWEST, Constants.NORTHEAST);
         mGoogleMap.setLatLngBoundsForCameraTarget(VIETNAM);
         mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(VIETNAM.getCenter(), Constants.ZOOM_LEVEL_5));
+
+        createMarker(destinationLanLng, "caller address");
+        zoomDestinationLocation();
     }
 
     // Broadcast for Connectivity status
@@ -215,6 +256,13 @@ public class Task extends AppCompatActivity implements OnMapReadyCallback, Locat
         Log.d("location", location + "");
     }
 
+    private void buildNetworkSetting() {
+        isNetworkEnable = NetworkStatus.checkNetworkEnable(this);
+        if (!isNetworkEnable) {
+            createNetworkSetting();
+        }
+    }
+
     private void createNetworkSetting() {
         new AlertDialog.Builder(this)
                 .setTitle("Kết nối Internet")
@@ -229,6 +277,36 @@ public class Task extends AppCompatActivity implements OnMapReadyCallback, Locat
                 })
                 .create()
                 .show();
+    }
+
+    // Direction
+
+    private void createMarker(LatLng latLng, String healthFacilityName) {
+
+        MarkerOptions markerOptions = new MarkerOptions()
+                .title(healthFacilityName)
+                .position(latLng);
+
+        destinationMarkers = mGoogleMap.addMarker(markerOptions);
+        destinationMarkers.showInfoWindow();
+    }
+
+    private void goToLocationZoom(LatLng latLng, float zoom) {
+        CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, zoom);
+        mGoogleMap.animateCamera(cameraUpdate);
+    }
+
+    private void zoomCurrentLocation() {
+        if (mCurrentLocation != null) {
+            goToLocationZoom(new LatLng(mCurrentLocation.getLatitude(), mCurrentLocation
+                    .getLongitude()), Constants.ZOOM_LEVEL_15);
+        }
+    }
+
+    private void zoomDestinationLocation() {
+        if (destinationLanLng != null) {
+            goToLocationZoom(destinationLanLng, Constants.ZOOM_LEVEL_15);
+        }
     }
 
     private void reportProblem() {
@@ -246,7 +324,92 @@ public class Task extends AppCompatActivity implements OnMapReadyCallback, Locat
 
     }
 
-    private void getDirection() {
-
+    private void sendDirectionRequest() {
+        buildNetworkSetting();
+        if(isNetworkEnable) {
+            if (mCurrentLocation != null && destinationLanLng != null) {
+                try {
+                    directionFinder = new DirectionFinder(this, mCurrentLocation.getLatitude() + "," +
+                            mCurrentLocation
+                                    .getLongitude(), destinationLanLng.latitude + "," + destinationLanLng
+                            .longitude);
+                    directionFinder.execute();
+                } catch (UnsupportedEncodingException e) {
+                    e.printStackTrace();
+                }
+            }
+            manageDirectionUI(true);
+            llLoadingStatus.setVisibility(View.VISIBLE);
+            llDirectionResult.setVisibility(View.GONE);
+        }
     }
+
+    @Override
+    public void onDirectionFinderSuccess(Leg leg) {
+        PolylineOptions polylineOptions = new PolylineOptions().
+                geodesic(true)
+                .color(getResources().getColor(R.color.colorGpsFixed))
+                .width(10);
+
+        for (int i = 0; i < leg.getListLatLng().size(); i++)
+            polylineOptions.add(leg.getListLatLng().get(i));
+
+        polylinePaths = mGoogleMap.addPolyline(polylineOptions);
+        updateDirectionUI(leg.getDistance().getText(), leg.getDuration().getText());
+    }
+
+    private void manageDirectionUI(boolean isShow) {
+        final View view = findViewById(R.id.cardview_direction);
+        if (isShow) {
+            view.setVisibility(View.VISIBLE);
+            view.animate()
+                    .translationY(-8)
+                    .alpha(1f)
+                    .setDuration(200)
+                    .setListener(new AnimatorListenerAdapter() {
+                        @Override
+                        public void onAnimationEnd(Animator animation) {
+                            super.onAnimationEnd(animation);
+                        }
+                    });
+        } else {
+            view.animate()
+                    .translationY(8)
+                    .alpha(0.0f)
+                    .setDuration(200)
+                    .setListener(new AnimatorListenerAdapter() {
+                        @Override
+                        public void onAnimationEnd(Animator animation) {
+                            super.onAnimationEnd(animation);
+                            view.setVisibility(View.INVISIBLE);
+                        }
+                    });
+        }
+    }
+
+    private void updateDirectionUI(String distance, String duration) {
+        llLoadingStatus.setVisibility(View.GONE);
+        llDirectionResult.setVisibility(View.VISIBLE);
+        tvDistance.setText(distance);
+        tvDuration.setText(duration);
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.button_clear_direction:
+                clearDirection();
+                break;
+        }
+    }
+
+    private void clearDirection() {
+        Toast.makeText(this, "click", Toast.LENGTH_SHORT).show();
+        directionFinder.stop();
+        manageDirectionUI(false);
+        if (polylinePaths != null) {
+            polylinePaths.remove();
+        }
+    }
+
 }

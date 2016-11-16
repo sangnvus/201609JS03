@@ -1,4 +1,4 @@
-package com.favn.ambulance.Models.Direction;
+package com.favn.ambulance.Direction;
 
 import android.os.AsyncTask;
 import android.util.Log;
@@ -20,11 +20,12 @@ import java.util.List;
  */
 
 public class DirectionFinder {
-
     private DirectionFinderListener listener;
     private String origin;
     private String destination;
     List<LatLng> listLatLng;
+    Leg leg;
+    DownloadRawData downloadRawData;
 
     public DirectionFinder(DirectionFinderListener listener, String origin, String destination) {
         this.listener = listener;
@@ -33,17 +34,19 @@ public class DirectionFinder {
     }
 
     public void execute() throws UnsupportedEncodingException {
-        //listener.onDirectionFinderStart();
-        new DownloadRawData().execute(createUrl());
+        downloadRawData = new DownloadRawData();
+        downloadRawData.execute(createUrl());
+    }
+
+    public void stop() {
+        downloadRawData.cancel(true);
     }
 
     private String createUrl() throws UnsupportedEncodingException {
-        //String urlOrigin = URLEncoder.encode(origin, "utf-8");
-        //String urlDestination = URLEncoder.encode(destination, "utf-8");
         Log.d("destination", destination + "");
         String url = "";
         url = Constants.DIRECTION_URL_API + "origin=" + origin + "&destination=" +
-                destination + "&key=" + Constants.API_KEY;
+                destination + "&language=vi&key=" + Constants.API_KEY;
 
         Log.d("destination", url);
         return url;
@@ -59,6 +62,12 @@ public class DirectionFinder {
                 Direction results = new Gson().fromJson(reader, Direction.class);
 
                 listLatLng = decodePolyLine(results.getRoutes()[0].getOverviewPolyline().getPoints());
+                leg = new Leg(results.getRoutes()[0].getLegs()[0].getDistance(),
+                        results.getRoutes()[0].getLegs()[0].getDuration(),
+                        results.getRoutes()[0].getLegs()[0].getEnd_address(),
+                        results.getRoutes()[0].getLegs()[0].getEnd_location(),
+                        results.getRoutes()[0].getLegs()[0].getStart_location(),
+                        listLatLng);
 
             } catch (MalformedURLException e) {
                 // TODO Auto-generated catch block
@@ -77,17 +86,11 @@ public class DirectionFinder {
         @Override
         protected void onPostExecute(String res) {
             try {
-                listener.onDirectionFinderSuccess(listLatLng);
+                listener.onDirectionFinderSuccess(leg);
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
-    }
-
-    private void getDirection(Direction direction) {
-//        listener.onDirectionFinderSuccess(direction.routes,
-//                decodePolyLine(direction.getRoutes()[0].getOverviewPolyline().getPoints()));
-        Log.d("Polyline", direction.getRoutes()[0].getOverviewPolyline().getPoints());
     }
 
     private List<LatLng> decodePolyLine(final String poly) {
@@ -125,20 +128,5 @@ public class DirectionFinder {
         }
 
         return decoded;
-    }
-
-    private Direction getNearestHospital(List<Direction> hospitals) {
-        Direction nearestHospital = hospitals.get(0);
-        for (int i = 0; i < hospitals.size(); i++) {
-            if (nearestHospital.getRoutes()[0].getLegs()[0].getDistance().getValue() >
-                    hospitals.get(i).getRoutes()[0].getLegs()[0].getDistance().getValue()) {
-                nearestHospital = hospitals.get(i);
-            }
-        }
-        Log.d("DIRECTION nearest", nearestHospital.getRoutes()[0].getLegs()[0].getDistance().getText());
-        // Log.d("Polyline", nearestHospital.getRoutes()[0].getOverviewPolyline().getPoints());
-
-
-        return nearestHospital;
     }
 }

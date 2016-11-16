@@ -1,4 +1,8 @@
-package com.favn.ambulance.Models.Direction;
+package com.favn.ambulance.Direction;
+
+import com.google.android.gms.maps.model.LatLng;
+
+import java.util.List;
 
 /**
  * Created by Hung Gia on 10/19/2016.

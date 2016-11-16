@@ -1,4 +1,4 @@
-package com.favn.ambulance.Models.Direction;
+package com.favn.ambulance.Direction;
 
 /**
  * Created by Hung Gia on 10/19/2016.
