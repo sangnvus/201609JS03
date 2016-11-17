@@ -1,4 +1,4 @@
-package com.favn.firstaid.Fragments;
+package com.favn.firstaid.fragments;
 
 
 import android.app.Activity;
@@ -17,9 +17,9 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.favn.firstaid.Activites.BannerDetail;
-import com.favn.firstaid.Activites.NotificationActivity;
-import com.favn.firstaid.Activites.QAActivity;
+import com.favn.firstaid.activites.BannerDetail;
+import com.favn.firstaid.activites.NotificationActivity;
+import com.favn.firstaid.activites.QAActivity;
 import com.favn.firstaid.R;
 
 import java.util.ArrayList;

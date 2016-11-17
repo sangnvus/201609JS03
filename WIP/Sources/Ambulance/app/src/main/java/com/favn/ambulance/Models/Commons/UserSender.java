@@ -1,11 +1,14 @@
-package com.favn.firstaid.models.Commons;
+package com.favn.ambulance.models.Commons;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.os.AsyncTask;
+import android.util.Log;
 import android.widget.Toast;
 
-import com.favn.firstaid.models.Question;
+import com.favn.ambulance.activities.Information;
+import com.favn.ambulance.models.User;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -15,29 +18,16 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 
-
 /**
- * Created by MeHaDake on 11/5/2016.
+ * Created by MeHaDake on 11/16/2016.
  */
 
-public class QuestionSender extends AsyncTask<Void, Void, String> {
+public class UserSender extends AsyncTask<Void, Void, String>{
     Context context;
     String urlAddress;
-    String injury_id;
-    String asker;
-    String asker_email;
-    String title;
-    String content;
+    String username;
+    String password;
     ProgressDialog pd;
-
-    public QuestionSender() {
-        String urlAddress = "";
-        String injury_id = "";
-        String asker = "";
-        String asker_email = "";
-        String title = "";
-        String content = "";
-    }
 
     public Context getContext() {
         return context;
@@ -55,52 +45,36 @@ public class QuestionSender extends AsyncTask<Void, Void, String> {
         this.urlAddress = urlAddress;
     }
 
-    public String getInjury_id() {
-        return injury_id;
+    public String getUsername() {
+        return username;
     }
 
-    public void setInjury_id(String injury_id) {
-        this.injury_id = injury_id;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
-    public String getAsker() {
-        return asker;
+    public String getPassword() {
+        return password;
     }
 
-    public void setAsker(String asker) {
-        this.asker = asker;
+    public void setPassword(String password) {
+        this.password = password;
     }
 
-    public String getAsker_email() {
-        return asker_email;
+    public ProgressDialog getPd() {
+        return pd;
     }
 
-    public void setAsker_email(String asker_email) {
-        this.asker_email = asker_email;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public String getContent() {
-        return content;
-    }
-
-    public void setContent(String content) {
-        this.content = content;
+    public void setPd(ProgressDialog pd) {
+        this.pd = pd;
     }
 
     @Override
     protected void onPreExecute() {
         super.onPreExecute();
         pd = new ProgressDialog(context);
-        pd.setTitle("Gửi");
-        pd.setMessage("Đang gửi câu hỏi...");
+        pd.setTitle("Đăng nhập");
+        pd.setMessage("Đăng nhập...");
         pd.show();
     }
 
@@ -114,9 +88,11 @@ public class QuestionSender extends AsyncTask<Void, Void, String> {
         pd.dismiss();
 
         if(s != null){
-            Toast.makeText(context, "Gửi câu hỏi thành công", Toast.LENGTH_LONG).show();
+            Intent intent = new Intent(context, Information.class);
+            context.startActivity(intent);
+            Log.w("ok", "ok");
         } else {
-            Toast.makeText(context, "Chửa gửi được !", Toast.LENGTH_LONG).show();
+            Toast.makeText(context, "Đăng nhập thất bại !", Toast.LENGTH_LONG).show();
         }
     }
 
@@ -132,7 +108,7 @@ public class QuestionSender extends AsyncTask<Void, Void, String> {
 
             // Write
             BufferedWriter bw =  new BufferedWriter(new OutputStreamWriter(os, "UTF-8"));
-            bw.write(new Question(injury_id, asker, asker_email, title, content).packData());
+            bw.write(new User(username, password).packData());
 
             // Release res
             bw.flush();
@@ -166,5 +142,6 @@ public class QuestionSender extends AsyncTask<Void, Void, String> {
 
         return null;
     }
+
 
 }

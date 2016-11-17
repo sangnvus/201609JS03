@@ -1,4 +1,4 @@
-package com.favn.firstaid.Adapter;
+package com.favn.firstaid.adapter;
 
 import android.Manifest;
 import android.content.Context;
@@ -15,8 +15,8 @@ import android.widget.Filterable;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.favn.firstaid.Models.HealthFacility;
-import com.favn.firstaid.Models.HealthFacilityFilter;
+import com.favn.firstaid.models.HealthFacility;
+import com.favn.firstaid.models.HealthFacilityFilter;
 import com.favn.firstaid.R;
 
 import java.util.List;
@@ -59,7 +59,7 @@ public class HealthFacilityAdapter extends BaseAdapter implements Filterable {
     }
 
     @Override
-    public View getView(int position, final View convertView, ViewGroup parent) {
+    public View getView(int position, View convertView, ViewGroup parent) {
         View v = View.inflate(mContext, R.layout.item_hospital, null);
         final HealthFacility healthFacility = mHealthFacilityList.get(position);
 
@@ -82,6 +82,7 @@ public class HealthFacilityAdapter extends BaseAdapter implements Filterable {
                 @Override
                 public void onClick(View v) {
                     Intent callIntent = new Intent(Intent.ACTION_CALL);
+
                     callIntent.setData(Uri.parse("tel:" + phoneNumber));
                     if (ActivityCompat.checkSelfPermission(mContext, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
                         // TODO: Consider calling

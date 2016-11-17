@@ -4,6 +4,6 @@
     <!--action buttons name-->
     <string name="navigate">chỉ đường</string>
     <string name="report_problem">báo sự cố</string>
-    <string name="finish_task">hoàn thành nhiệm vụ</string>
+    <string name="finish_task">hoàn thành</string>
 
 </resources>

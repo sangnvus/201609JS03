@@ -1,4 +1,4 @@
-package com.favn.ambulance.LocationUtil;
+package com.favn.ambulance.locationUtil;
 
 import android.content.Context;
 import android.location.LocationManager;

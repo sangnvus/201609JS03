@@ -1,4 +1,4 @@
-package com.favn.firstaid.Activites;
+package com.favn.firstaid.activites;
 
 import android.content.Intent;
 import android.graphics.Color;
@@ -14,11 +14,12 @@ import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ListView;
 
-import com.favn.firstaid.Adapter.InstructionAdapter;
-import com.favn.firstaid.Adapter.LearningInstructionAdapter;
-import com.favn.firstaid.Database.DatabaseOpenHelper;
-import com.favn.firstaid.Models.Instruction;
-import com.favn.firstaid.Models.LearningInstruction;
+import com.favn.firstaid.adapter.LearningInstructionAdapter;
+import com.favn.firstaid.adapter.InstructionAdapter;
+import com.favn.firstaid.database.DatabaseOpenHelper;
+
+import com.favn.firstaid.models.Instruction;
+import com.favn.firstaid.models.LearningInstruction;
 import com.favn.firstaid.R;
 
 import java.util.List;

@@ -1,4 +1,4 @@
-package com.favn.ambulance.Activities;
+package com.favn.ambulance.activities;
 
 import android.app.NotificationManager;
 import android.app.PendingIntent;

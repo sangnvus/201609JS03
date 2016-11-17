@@ -12,10 +12,8 @@
         android:screenOrientation="landscape"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-
-        <!--android:windowSoftInputMode="stateVisible|adjustResize"-->
-
-        <activity android:name="com.favn.ambulance.Activities.Task">
+        
+        <activity android:name="com.favn.ambulance.activities.Task">
 
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
@@ -24,8 +22,8 @@
             </intent-filter>
         </activity>
 
-        <activity android:name="com.favn.ambulance.Activities.Information"/>
-        <!--<activity android:name=".Activities.Task"></activity>-->
+        <activity android:name="com.favn.ambulance.activities.Information"/>
+        <!--<activity android:name="com.favn.ambulance.activities.Task"></activity>-->
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"

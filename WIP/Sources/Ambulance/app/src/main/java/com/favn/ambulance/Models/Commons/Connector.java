@@ -1,4 +1,4 @@
-package com.favn.firstaid.models.Commons;
+package com.favn.ambulance.models.Commons;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
@@ -6,7 +6,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 /**
- * Created by MeHaDake on 11/5/2016.
+ * Created by MeHaDake on 11/16/2016.
  */
 
 public class Connector {
