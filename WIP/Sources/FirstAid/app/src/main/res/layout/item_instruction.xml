@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical">
@@ -49,7 +50,12 @@
                     <TextView
                         android:id="@+id/text_instruction_explaination"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content" />
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginRight="10dp"
+                        android:layout_marginTop="5dp"
+                        android:textSize="13sp"
+                        android:textStyle="italic" />
 
                 </LinearLayout>
             </LinearLayout>
@@ -60,7 +66,9 @@
                 android:orientation="vertical"
                 android:layout_marginRight="10dp"
                 android:layout_marginLeft="10dp"
-                android:layout_marginTop="8dp">
+                android:layout_marginTop="8dp"
+                android:id="@+id/instruction_call"
+                android:visibility="gone">
 
                 <View
                     android:id="@+id/line"
@@ -76,18 +84,19 @@
                     android:id="@+id/button_call"
                     android:clickable="true"
                     android:background="@drawable/button_selector"
-                    android:visibility="visible"
                     style="@style/Widget.AppCompat.Button"
-                    android:textColor="@color/cast_expanded_controller_text_color" />
+                    android:textColor="@color/cast_expanded_controller_text_color"
+                    android:enabled="false" />
 
-                <ImageView
-                    android:id="@+id/image_instruction"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    app:srcCompat="@mipmap/ic_launcher"
-                    android:layout_marginBottom="8dp"
-                    android:layout_marginTop="8dp" />
             </LinearLayout>
+
+            <ImageView
+                android:id="@+id/image_instruction"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:srcCompat="@mipmap/ic_launcher"
+                android:layout_marginBottom="8dp"
+                android:layout_marginTop="8dp" />
         </LinearLayout>
 
     </LinearLayout>

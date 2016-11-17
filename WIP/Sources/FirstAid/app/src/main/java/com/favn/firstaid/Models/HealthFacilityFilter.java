@@ -1,4 +1,4 @@
-package com.favn.firstaid.Models;
+package com.favn.firstaid.models;
 
 import android.widget.Filter;
 

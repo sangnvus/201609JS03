@@ -1,4 +1,4 @@
-package com.favn.firstaid.Models.DistanceMatrix;
+package com.favn.firstaid.models.DistanceMatrix;
 
 /**
  * Created by Hung Gia on 10/26/2016.

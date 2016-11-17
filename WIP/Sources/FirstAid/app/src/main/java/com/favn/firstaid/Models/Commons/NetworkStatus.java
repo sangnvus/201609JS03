@@ -1,4 +1,4 @@
-package com.favn.firstaid.Models.Commons;
+package com.favn.firstaid.models.Commons;
 
 import android.content.Context;
 import android.net.ConnectivityManager;

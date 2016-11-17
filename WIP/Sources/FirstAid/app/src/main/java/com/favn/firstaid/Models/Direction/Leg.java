@@ -1,7 +1,7 @@
-package com.favn.firstaid.Models.Direction;
+package com.favn.firstaid.models.Direction;
 
 
-import com.favn.firstaid.Models.Commons.Distance;
+import com.favn.firstaid.models.Commons.Distance;
 
 /**
  * Created by Hung Gia on 10/19/2016.

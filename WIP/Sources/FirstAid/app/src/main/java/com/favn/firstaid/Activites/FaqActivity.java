@@ -11,7 +11,7 @@ import android.widget.ListView;
 
 import com.favn.firstaid.adapter.FaqAdapter;
 import com.favn.firstaid.database.DatabaseOpenHelper;
-import com.favn.firstaid.Models.Faq;
+import com.favn.firstaid.models.Faq;
 import com.favn.firstaid.R;
 
 import java.util.List;

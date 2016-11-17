@@ -9,10 +9,11 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.graphics.PointF;
 import android.util.Log;
 
-import com.favn.firstaid.Models.Faq;
-import com.favn.firstaid.Models.HealthFacility;
-import com.favn.firstaid.Models.Injury;
-import com.favn.firstaid.Models.Instruction;
+import com.favn.firstaid.models.Faq;
+import com.favn.firstaid.models.HealthFacility;
+import com.favn.firstaid.models.Injury;
+import com.favn.firstaid.models.Instruction;
+import com.favn.firstaid.models.LearningInstruction;
 
 import java.io.FileOutputStream;
 import java.io.InputStream;
@@ -26,9 +27,10 @@ import java.util.List;
 
 public class DatabaseOpenHelper extends SQLiteOpenHelper {
     public static String DB_PATH = "/data/data/com.favn.firstaid/databases/";
-    public static String DB_NAME = "favn_ver4.db";
+    public static String DB_NAME = "favn_ver4.1.db";
     public static String TABLE_NAME_INJURIES = "injuries";
     public static String TABLE_NAME_INSTRUCTIONS = "instructions";
+    public static String TABLE_NAME_LEARNING_INSTRUCTIONS = "learning_instructions";
     public static String TABLE_NAME_HEALTH_FACILITIES = "health_facilities";
     public static String TABLE_NAME_FAQS = "faqs";
     public static String TABLE_NAME_NOTIFICATIONS = "notifications";
@@ -202,6 +204,29 @@ public class DatabaseOpenHelper extends SQLiteOpenHelper {
         return instructionList;
     }
 
+    // Get learning Instructions
+    public List<LearningInstruction> getListLearingInstruction(int id) {
+        LearningInstruction learningInstruction = null;
+        List<LearningInstruction> learningInstructionList = new ArrayList<>();
+        openDatabase();
+        Cursor cursor = mDatabase.rawQuery("SELECT * FROM " + TABLE_NAME_LEARNING_INSTRUCTIONS + " WHERE " +
+                "injury_id == " + id, null);
+        cursor.moveToFirst();
+        while (!cursor.isAfterLast()) {
+            int injuryId = cursor.getInt(1);
+            int step = cursor.getInt(2);
+            String content = cursor.getString(3);
+            String explanation = cursor.getString(4);
+            String image = cursor.getString(5);
+            String audio = cursor.getString(6);
+            learningInstruction = new LearningInstruction(injuryId, step, content, explanation, image, audio);
+            learningInstructionList.add(learningInstruction);
+            cursor.moveToNext();
+        }
+        cursor.close();
+        closeDatabase();
+        return learningInstructionList;
+    }
 
     // Get Health Facility
     public List<HealthFacility> getListHealthFacility(PointF[] points) {

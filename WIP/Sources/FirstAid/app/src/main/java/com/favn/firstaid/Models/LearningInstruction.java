@@ -1,23 +1,21 @@
 package com.favn.firstaid.models;
 
 /**
- * Created by Hung Gia on 10/7/2016.
+ * Created by Mikey on 11/16/2016.
  */
 
-public class Instruction {
+public class LearningInstruction {
     private int injuryId;
     private int step;
     private String content;
-    private boolean isMakeCall;
     private String explanation;
     private String image;
     private String audio;
 
-    public Instruction(int injuryId, int step, String content, boolean isMakeCall, String explanation, String image, String audio) {
+    public LearningInstruction(int injuryId, int step, String content, String explanation, String image, String audio) {
         this.injuryId = injuryId;
         this.step = step;
         this.content = content;
-        this.isMakeCall = isMakeCall;
         this.explanation = explanation;
         this.image = image;
         this.audio = audio;
@@ -47,13 +45,6 @@ public class Instruction {
         this.content = content;
     }
 
-    public boolean isMakeCall() {
-        return isMakeCall;
-    }
-
-    public void setMakeCall(boolean makeCall) {
-        isMakeCall = makeCall;
-    }
 
     public String getExplanation() {
         return explanation;
