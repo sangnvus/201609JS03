@@ -50,6 +50,8 @@ public class Constants {
     // Intent filter
     public static final String INTENT_FILTER_PROVIDERS_CHANGED = "android.location" +
             ".PROVIDERS_CHANGED";
+    public static final String INTENT_FILTER_CONNECTIVITY_CHANGE = "android.net.conn" +
+            ".CONNECTIVITY_CHANGE";
 
     // Location text
     public static final String LOCATION_VI_TRI = "Vị trí";
@@ -66,5 +68,14 @@ public class Constants {
     // Numeric
     public static final double EARTH_RADIUS = 6371000; // m
     public static final double SEARCH_RADIUS = 20000;  // m
+
+    // Number 115
+    public static final String CALL_115 = "tel:115";
+
+    // Text for notify, warning for sendind information functionality
+    public static final String WARNING_CONNECTIVITY = "| Không có kết nối";
+    public static final String ENABLE_CONNECTIVITY = "| Có thể gửi thông tin";
+    public static final String ERROR_SENDING_INFORMATION = "| Không gửi được thông tin";
+    public static final String SUCCESS_SENDING_INFORMATION = "| Đã gửi thành công";
 
 }

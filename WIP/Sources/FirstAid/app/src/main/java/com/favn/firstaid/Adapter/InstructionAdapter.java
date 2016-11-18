@@ -1,11 +1,15 @@
 package com.favn.firstaid.adapter;
 
 import android.Manifest;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.PackageManager;
+import android.location.LocationManager;
 import android.net.Uri;
 import android.support.v4.app.ActivityCompat;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -13,7 +17,13 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.favn.firstaid.activites.InstructionDetail;
+import com.favn.firstaid.locationUtil.LocationFinder;
+import com.favn.firstaid.locationUtil.LocationStatus;
+import com.favn.firstaid.models.Commons.Constants;
+import com.favn.firstaid.models.Commons.NetworkStatus;
 import com.favn.firstaid.models.Instruction;
 import com.favn.firstaid.R;
 
@@ -26,12 +36,22 @@ import java.util.List;
 public class InstructionAdapter extends BaseAdapter {
     private Context mContext;
     private List<Instruction> mInstructionList;
-    private boolean isEmegency;
+    private boolean isEmergency;
+    private boolean isSendInformation;
 
-    public InstructionAdapter(Context mContext, List<Instruction> mInjuryList, boolean isEmegency) {
-        this.mContext = mContext;
+    public interface Implementable{
+        void passData(int position);
+    }
+
+    Implementable implementable;
+
+    public InstructionAdapter(Context Context, List<Instruction> mInjuryList, boolean
+            isEmergency, boolean isSendInformation) {
+        this.mContext = Context;
         this.mInstructionList = mInjuryList;
-        this.isEmegency = isEmegency;
+        this.isEmergency = isEmergency;
+        this.isSendInformation = isSendInformation;
+
     }
 
     @Override
@@ -67,7 +87,7 @@ public class InstructionAdapter extends BaseAdapter {
 
         tvStep.setText(instruction.getStep() + "");
         tvInstruction.setText(instruction.getContent());
-        if (!isEmegency) {
+        if (!isEmergency) {
             TextView tvExplanation = (TextView) v.findViewById(R.id.text_instruction_explaination);
             tvExplanation.setText(instruction.getExplanation());
         }
@@ -75,6 +95,10 @@ public class InstructionAdapter extends BaseAdapter {
         if (instruction.isMakeCall() == true) {
             LinearLayout callLayout = (LinearLayout) v.findViewById(R.id.instruction_call);
             callLayout.setVisibility(View.VISIBLE);
+            implementable = new InstructionDetail();
+            if(position >= 0) {
+            implementable.passData(position);
+            }
 
             Button call115 = (Button) v.findViewById(R.id.button_call);
             call115.setOnClickListener(new View.OnClickListener() {
@@ -93,14 +117,22 @@ public class InstructionAdapter extends BaseAdapter {
                         return;
                     }
                     mContext.startActivity(callIntent);
+                    // Get location
+//                    if (isSendInformation) {
+//                        InstructionDetail instructionDetail = new InstructionDetail();
+//                        LocationFinder locationFinder = new LocationFinder(mContext, instructionDetail);
+//                        locationFinder.buildLocationFinder();
+//                        locationFinder.connectGoogleApiClient();
+//                    }
+
                 }
             });
         }
 
         imgImage.setImageResource(imagePath);
 
-//        Intent intent = new Intent(InstructionAdapter.this, InstructionDetail.class);
 
         return v;
     }
+
 }

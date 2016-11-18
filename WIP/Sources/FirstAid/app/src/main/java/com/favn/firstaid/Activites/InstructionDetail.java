@@ -1,30 +1,46 @@
 package com.favn.firstaid.activites;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.content.IntentSender;
 import android.graphics.Color;
+import android.location.Location;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.Settings;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.favn.firstaid.adapter.LearningInstructionAdapter;
 import com.favn.firstaid.adapter.InstructionAdapter;
 import com.favn.firstaid.database.DatabaseOpenHelper;
 
+import com.favn.firstaid.locationUtil.LocationChangeListener;
+import com.favn.firstaid.locationUtil.LocationStatus;
+import com.favn.firstaid.models.Commons.Constants;
+import com.favn.firstaid.models.Commons.NetworkStatus;
 import com.favn.firstaid.models.Instruction;
 import com.favn.firstaid.models.LearningInstruction;
 import com.favn.firstaid.R;
+import com.google.android.gms.common.api.Status;
 
 import java.util.List;
 
-public class InstructionDetail extends AppCompatActivity {
+public class InstructionDetail extends AppCompatActivity implements LocationChangeListener,
+        InstructionAdapter.Implementable {
     private InstructionAdapter instructionAdapter;
     private LearningInstructionAdapter LearningInstructionAdapter;
     private DatabaseOpenHelper dbHelper;
@@ -32,10 +48,15 @@ public class InstructionDetail extends AppCompatActivity {
     private List<Instruction> mInstructionList;
     private List<LearningInstruction> mLearningInstructionList;
     private Button btnFaq;
-    private boolean isEmegency;
+    private boolean isEmergency;
     private int playingAudioId;
     private MediaPlayer mMediaPlayer = null;
-    private int listSize;
+    private boolean isAllowedSendInformation;
+    private IntentFilter intentFilter;
+    private boolean isLocationEnable;
+    private boolean isNetworkEnable;
+    private TextView tvNotifySendFunctionality;
+    private int callButtonPosition;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,20 +65,28 @@ public class InstructionDetail extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+
         Intent intent = getIntent();
         final int injuryId = intent.getExtras().getInt("id");
         String name = intent.getExtras().getString("name");
         int typeOfAction = intent.getExtras().getInt("typeOfAction");
         getSupportActionBar().setTitle(name);
 
-        isEmegency = (typeOfAction == 1) ? true : false;
+        isEmergency = (typeOfAction == 1) ? true : false;
         listView = (ListView) findViewById(R.id.listview_instruction);
         dbHelper = new DatabaseOpenHelper(this);
+        isLocationEnable = false;
+        isNetworkEnable = false;
 
-        if(isEmegency) {
+        //TODO Get value isAllowSendInformation from SharePreference
+        isAllowedSendInformation = true;
+
+
+        if (isEmergency) {
             mInstructionList = dbHelper.getListInstruction(injuryId);
-            instructionAdapter = new InstructionAdapter(this, mInstructionList, isEmegency);
+            instructionAdapter = new InstructionAdapter(this, mInstructionList, isEmergency, isAllowedSendInformation);
             listView.setAdapter(instructionAdapter);
+
         } else {
             mLearningInstructionList = dbHelper.getListLearingInstruction(injuryId);
             LearningInstructionAdapter = new LearningInstructionAdapter(this, mLearningInstructionList);
@@ -91,7 +120,8 @@ public class InstructionDetail extends AppCompatActivity {
                     @Override
                     public void onClick(View v) {
                         Intent callIntent = new Intent(Intent.ACTION_CALL);
-                        callIntent.setData(Uri.parse("tel:115"));
+                        callIntent.setData(Uri.parse(Constants.CALL_115));
+
                     }
                 });
 
@@ -114,15 +144,74 @@ public class InstructionDetail extends AppCompatActivity {
 
             }
         });
+
+
+        intentFilter = new IntentFilter();
+        intentFilter.addAction(Constants.INTENT_FILTER_PROVIDERS_CHANGED);
+        intentFilter.addAction(Constants.INTENT_FILTER_CONNECTIVITY_CHANGE);
+
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        if(mMediaPlayer!=null) {
+        if (mMediaPlayer != null) {
             mMediaPlayer.stop();
         }
+        unregisterReceiver(connectivityBroadcastReceiver);
     }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        registerReceiver(connectivityBroadcastReceiver, intentFilter);
+    }
+
+    // Broadcast for Connectivity status
+    BroadcastReceiver connectivityBroadcastReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            // Only work when click on off button
+            if (intent.getAction().matches(Constants.INTENT_FILTER_PROVIDERS_CHANGED)) {
+                isLocationEnable = LocationStatus.checkLocationProvider(context);
+
+            } else if (intent.getAction().matches(Constants.INTENT_FILTER_CONNECTIVITY_CHANGE)) {
+                isNetworkEnable = NetworkStatus.checkNetworkEnable(context);
+                if (!isNetworkEnable) {
+                }
+                // Check location enable in connectivity change
+                isLocationEnable = LocationStatus.checkLocationProvider(context);
+            }
+
+            if (callButtonPosition >= 0) {
+                Log.d("passData", "code in broadcast");
+                View view = listView.getChildAt(1);
+                if (view != null) {
+                    tvNotifySendFunctionality = (TextView) view.findViewById(R.id
+                            .textview_notify_send_information);
+                    Log.d("passData", "view not null");
+
+
+                    if (tvNotifySendFunctionality != null) {
+                        if (isNetworkEnable && isLocationEnable) {
+                            tvNotifySendFunctionality.setText(Constants.ENABLE_CONNECTIVITY);
+                            tvNotifySendFunctionality.setTextColor(getResources().getColor(R.color
+                                    .colorNavigate));
+                            Log.d("passData", "connectivity available");
+
+                        } else {
+                            tvNotifySendFunctionality.setText(Constants.WARNING_CONNECTIVITY);
+                            tvNotifySendFunctionality.setTextColor(getResources().getColor(R.color
+                                    .colorPrimary));
+                            Log.d("passData", "connectivity unavailable");
+
+                        }
+                    }
+                }
+
+            }
+        }
+    };
 
     private void playAudio(int audioId) {
         playingAudioId = audioId;
@@ -148,5 +237,20 @@ public class InstructionDetail extends AppCompatActivity {
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+
+    @Override
+    public void createLocationSettingDialog(Status status) {
+    }
+
+    @Override
+    public void locationChangeSuccess(Location location) {
+        Log.d("location_test", location + "");
+    }
+
+    @Override
+    public void passData(int position) {
+        callButtonPosition = position;
     }
 }
