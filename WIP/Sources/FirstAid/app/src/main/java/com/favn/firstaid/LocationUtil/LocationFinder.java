@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
@@ -38,7 +39,7 @@ public class LocationFinder implements GoogleApiClient.ConnectionCallbacks,
 
     protected LocationSettingsRequest mLocationSettingsRequest;
 
-    public static final long UPDATE_INTERVAL_IN_MILLISECONDS = 10000;
+    public static final long UPDATE_INTERVAL_IN_MILLISECONDS = 1000;
     public static final long FASTEST_UPDATE_INTERVAL_IN_MILLISECONDS =
             UPDATE_INTERVAL_IN_MILLISECONDS / 2;
     public static final int UPDATE_SMALLEST_DISPLACEMENT = 1000;
@@ -85,10 +86,11 @@ public class LocationFinder implements GoogleApiClient.ConnectionCallbacks,
             // for ActivityCompat#requestPermissions for more details.
             return;
         }
-        mCurrentLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
-        if (mCurrentLocation != null) {
-            locationChangeListener.locationChangeSuccess(mCurrentLocation);
-        }
+       // mCurrentLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
+
+        startLocationUpdates();
+        Log.d("onLocationChanged", "connect - location");
+
     }
 
     @Override
@@ -105,8 +107,10 @@ public class LocationFinder implements GoogleApiClient.ConnectionCallbacks,
         mLocationRequest = new LocationRequest();
         mLocationRequest.setInterval(UPDATE_INTERVAL_IN_MILLISECONDS);
         mLocationRequest.setFastestInterval(FASTEST_UPDATE_INTERVAL_IN_MILLISECONDS);
-        mLocationRequest.setSmallestDisplacement(UPDATE_SMALLEST_DISPLACEMENT);
+        //mLocationRequest.setSmallestDisplacement(UPDATE_SMALLEST_DISPLACEMENT);
         mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+        Log.d("onLocationChanged", "create - location");
+
     }
 
     public void startLocationUpdates() {
@@ -122,7 +126,8 @@ public class LocationFinder implements GoogleApiClient.ConnectionCallbacks,
             // for ActivityCompat#requestPermissions for more details.
             return;
         }
-        Log.d("gps", "start to update");
+        Log.d("onLocationChanged", "start - location");
+
         LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient,
                 mLocationRequest, this);
     }
@@ -131,10 +136,20 @@ public class LocationFinder implements GoogleApiClient.ConnectionCallbacks,
     public void onLocationChanged(Location location) {
         if (location == null) {
             Toast.makeText(mContext, "can't get current location", Toast.LENGTH_SHORT).show();
+            Toast.makeText(mContext, mCurrentLocation + "", Toast.LENGTH_SHORT).show();
         } else {
             mCurrentLocation = location;
             locationChangeListener.locationChangeSuccess(mCurrentLocation);
+            Toast.makeText(mContext, mCurrentLocation + "", Toast.LENGTH_SHORT).show();
+            Log.d("onLocationChanged", "location");
+
         }
+    }
+
+    public void stopLocationUpdates() {
+        LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
+        Log.d("onLocationChanged", "stop");
+
     }
 
     protected void buildLocationSettingsRequest() {

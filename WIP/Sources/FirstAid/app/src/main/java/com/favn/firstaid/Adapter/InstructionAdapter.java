@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.support.v4.app.ActivityCompat;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -15,6 +16,9 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.favn.firstaid.activites.InstructionDetail;
+import com.favn.firstaid.locationUtil.LocationFinder;
+import com.favn.firstaid.locationUtil.LocationStatus;
+import com.favn.firstaid.models.Commons.NetworkStatus;
 import com.favn.firstaid.models.Instruction;
 import com.favn.firstaid.R;
 
@@ -29,12 +33,8 @@ public class InstructionAdapter extends BaseAdapter {
     private List<Instruction> mInstructionList;
     private boolean isEmergency;
     private boolean isSendInformation;
+    LocationFinder locationFinder;
 
-    public interface Implementable{
-        void passData(int position);
-    }
-
-    Implementable implementable;
 
     public InstructionAdapter(Context Context, List<Instruction> mInjuryList, boolean
             isEmergency, boolean isSendInformation) {
@@ -42,7 +42,6 @@ public class InstructionAdapter extends BaseAdapter {
         this.mInstructionList = mInjuryList;
         this.isEmergency = isEmergency;
         this.isSendInformation = isSendInformation;
-
     }
 
     @Override
@@ -86,10 +85,6 @@ public class InstructionAdapter extends BaseAdapter {
         if (instruction.isMakeCall() == true) {
             LinearLayout callLayout = (LinearLayout) v.findViewById(R.id.instruction_call);
             callLayout.setVisibility(View.VISIBLE);
-            implementable = new InstructionDetail();
-            if(position >= 0) {
-            implementable.passData(position);
-            }
 
             Button call115 = (Button) v.findViewById(R.id.button_call);
             call115.setOnClickListener(new View.OnClickListener() {
@@ -107,14 +102,14 @@ public class InstructionAdapter extends BaseAdapter {
                         // for ActivityCompat#requestPermissions for more details.
                         return;
                     }
-                    mContext.startActivity(callIntent);
-                    // Get location
-//                    if (isSendInformation) {
-//                        InstructionDetail instructionDetail = new InstructionDetail();
-//                        LocationFinder locationFinder = new LocationFinder(mContext, instructionDetail);
-//                        locationFinder.buildLocationFinder();
-//                        locationFinder.connectGoogleApiClient();
-//                    }
+                   // mContext.startActivity(callIntent);
+                   // Get location
+                    if (isSendInformation) {
+                        InstructionDetail instructionDetail = new InstructionDetail();
+                        locationFinder = new LocationFinder(mContext, instructionDetail);
+                        locationFinder.buildLocationFinder();
+                        locationFinder.connectGoogleApiClient();
+                    }
 
                 }
             });
@@ -124,6 +119,11 @@ public class InstructionAdapter extends BaseAdapter {
 
 
         return v;
+    }
+
+    public void stopLocationUpdate() {
+        locationFinder.stopLocationUpdates();
+        locationFinder.disconnectGoogleApiClient();
     }
 
 }
