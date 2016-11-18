@@ -1,4 +1,4 @@
-package com.favn.firstaid.models.Commons;
+package com.favn.firstaid.Models.Commons;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;

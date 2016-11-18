@@ -1,4 +1,4 @@
-package com.favn.firstaid.models;
+package com.favn.firstaid.Models;
 
 /**
  * Created by Mikey on 11/16/2016.

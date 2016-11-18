@@ -1,4 +1,4 @@
-package com.favn.firstaid.database;
+package com.favn.firstaid.Database;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -9,11 +9,11 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.graphics.PointF;
 import android.util.Log;
 
-import com.favn.firstaid.models.Faq;
-import com.favn.firstaid.models.HealthFacility;
-import com.favn.firstaid.models.Injury;
-import com.favn.firstaid.models.Instruction;
-import com.favn.firstaid.models.LearningInstruction;
+import com.favn.firstaid.Models.Faq;
+import com.favn.firstaid.Models.HealthFacility;
+import com.favn.firstaid.Models.Injury;
+import com.favn.firstaid.Models.Instruction;
+import com.favn.firstaid.Models.LearningInstruction;
 
 import java.io.FileOutputStream;
 import java.io.InputStream;

@@ -1,4 +1,4 @@
-package com.favn.firstaid.adapter;
+package com.favn.firstaid.Adapter;
 
 import android.Manifest;
 import android.content.Context;
@@ -15,8 +15,8 @@ import android.widget.Filterable;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.favn.firstaid.models.HealthFacility;
-import com.favn.firstaid.models.HealthFacilityFilter;
+import com.favn.firstaid.Models.HealthFacility;
+import com.favn.firstaid.Models.HealthFacilityFilter;
 import com.favn.firstaid.R;
 
 import java.util.List;

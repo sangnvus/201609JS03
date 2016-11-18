@@ -1,4 +1,4 @@
-package com.favn.firstaid.models;
+package com.favn.firstaid.Models;
 
 import org.json.JSONException;
 import org.json.JSONObject;

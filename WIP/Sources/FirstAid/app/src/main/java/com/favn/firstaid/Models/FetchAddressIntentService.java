@@ -1,4 +1,4 @@
-package com.favn.firstaid.models;
+package com.favn.firstaid.Models;
 
 import android.app.IntentService;
 import android.content.Intent;
@@ -9,7 +9,7 @@ import android.os.Bundle;
 import android.os.ResultReceiver;
 import android.text.TextUtils;
 
-import com.favn.firstaid.models.Commons.Constants;
+import com.favn.firstaid.Models.Commons.Constants;
 
 import java.io.IOException;
 import java.util.ArrayList;

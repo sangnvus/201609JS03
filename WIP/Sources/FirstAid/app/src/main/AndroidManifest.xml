@@ -36,7 +36,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".activites.MainActivity"
+            android:name=".Activites.MainActivity"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
@@ -70,27 +70,27 @@
             android:value="AIzaSyDT6ArSqhIvCaLHl95uQkTe6hTpgQEhB_k" />
 
         <activity
-            android:name=".activites.MapsActivity"
+            android:name=".Activites.MapsActivity"
             android:label="@string/title_activity_maps" />
         <activity
-            android:name=".activites.InstructionDetail"
+            android:name=".Activites.InstructionDetail"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".activites.QAActivity"
+            android:name=".Activites.QAActivity"
             android:label="Ý kiến - Hỏi đáp" />
         <activity
-            android:name=".activites.NotificationActivity"
+            android:name=".Activites.NotificationActivity"
             android:label="Thông báo" />
         <activity
-            android:name=".activites.FaqActivity"
+            android:name=".Activites.FaqActivity"
             android:label="Câu hỏi thường gặp" />
 
         <activity
-            android:name=".activites.BannerDetail"
+            android:name=".Activites.BannerDetail"
             android:label="Các khóa học sơ cứu" />
 
         <service
-            android:name=".models.FetchAddressIntentService"
+            android:name=".Models.FetchAddressIntentService"
             android:exported="false" />
         <!-- <receiver -->
         <!-- android:name="com.favn.firstaid.Models.Common.NetworkChangeReceiver" -->

@@ -1,4 +1,4 @@
-package com.favn.firstaid.models.Commons;
+package com.favn.firstaid.Models.Commons;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;

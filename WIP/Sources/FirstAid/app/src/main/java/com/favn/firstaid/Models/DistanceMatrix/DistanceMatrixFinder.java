@@ -1,10 +1,10 @@
-package com.favn.firstaid.models.DistanceMatrix;
+package com.favn.firstaid.Models.DistanceMatrix;
 
 import android.os.AsyncTask;
 import android.util.Log;
 
-import com.favn.firstaid.models.Commons.Constants;
-import com.favn.firstaid.models.HealthFacility;
+import com.favn.firstaid.Models.Commons.Constants;
+import com.favn.firstaid.Models.HealthFacility;
 import com.google.gson.Gson;
 
 import java.io.IOException;

@@ -1,18 +1,14 @@
-package com.favn.firstaid.activites;
+package com.favn.firstaid.Activites;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.IntentSender;
 import android.graphics.Color;
 import android.location.Location;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.Settings;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -24,16 +20,16 @@ import android.widget.FrameLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.favn.firstaid.adapter.LearningInstructionAdapter;
-import com.favn.firstaid.adapter.InstructionAdapter;
-import com.favn.firstaid.database.DatabaseOpenHelper;
+import com.favn.firstaid.Adapter.LearningInstructionAdapter;
+import com.favn.firstaid.Adapter.InstructionAdapter;
+import com.favn.firstaid.Database.DatabaseOpenHelper;
 
-import com.favn.firstaid.locationUtil.LocationChangeListener;
-import com.favn.firstaid.locationUtil.LocationStatus;
-import com.favn.firstaid.models.Commons.Constants;
-import com.favn.firstaid.models.Commons.NetworkStatus;
-import com.favn.firstaid.models.Instruction;
-import com.favn.firstaid.models.LearningInstruction;
+import com.favn.firstaid.LocationUtil.LocationChangeListener;
+import com.favn.firstaid.LocationUtil.LocationStatus;
+import com.favn.firstaid.Models.Commons.Constants;
+import com.favn.firstaid.Models.Commons.NetworkStatus;
+import com.favn.firstaid.Models.Instruction;
+import com.favn.firstaid.Models.LearningInstruction;
 import com.favn.firstaid.R;
 import com.google.android.gms.common.api.Status;
 

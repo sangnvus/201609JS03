@@ -1,15 +1,11 @@
-package com.favn.firstaid.adapter;
+package com.favn.firstaid.Adapter;
 
 import android.Manifest;
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.pm.PackageManager;
-import android.location.LocationManager;
 import android.net.Uri;
 import android.support.v4.app.ActivityCompat;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -17,14 +13,9 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.favn.firstaid.activites.InstructionDetail;
-import com.favn.firstaid.locationUtil.LocationFinder;
-import com.favn.firstaid.locationUtil.LocationStatus;
-import com.favn.firstaid.models.Commons.Constants;
-import com.favn.firstaid.models.Commons.NetworkStatus;
-import com.favn.firstaid.models.Instruction;
+import com.favn.firstaid.Activites.InstructionDetail;
+import com.favn.firstaid.Models.Instruction;
 import com.favn.firstaid.R;
 
 import java.util.List;

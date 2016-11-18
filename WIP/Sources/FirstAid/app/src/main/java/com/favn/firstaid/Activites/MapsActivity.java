@@ -1,4 +1,4 @@
-package com.favn.firstaid.activites;
+package com.favn.firstaid.Activites;
 
 import android.Manifest;
 import android.app.Activity;
@@ -41,16 +41,16 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
-import com.favn.firstaid.adapter.HealthFacilityAdapter;
-import com.favn.firstaid.database.DatabaseOpenHelper;
-import com.favn.firstaid.models.Commons.Constants;
-import com.favn.firstaid.models.Commons.NetworkStatus;
-import com.favn.firstaid.models.Direction.DirectionFinder;
-import com.favn.firstaid.models.Direction.DirectionFinderListener;
-import com.favn.firstaid.models.DistanceMatrix.DistanceMatrixFinder;
-import com.favn.firstaid.models.DistanceMatrix.DistanceMatrixFinderListener;
-import com.favn.firstaid.models.FetchAddressIntentService;
-import com.favn.firstaid.models.HealthFacility;
+import com.favn.firstaid.Adapter.HealthFacilityAdapter;
+import com.favn.firstaid.Database.DatabaseOpenHelper;
+import com.favn.firstaid.Models.Commons.Constants;
+import com.favn.firstaid.Models.Commons.NetworkStatus;
+import com.favn.firstaid.Models.Direction.DirectionFinder;
+import com.favn.firstaid.Models.Direction.DirectionFinderListener;
+import com.favn.firstaid.Models.DistanceMatrix.DistanceMatrixFinder;
+import com.favn.firstaid.Models.DistanceMatrix.DistanceMatrixFinderListener;
+import com.favn.firstaid.Models.FetchAddressIntentService;
+import com.favn.firstaid.Models.HealthFacility;
 import com.favn.firstaid.R;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;

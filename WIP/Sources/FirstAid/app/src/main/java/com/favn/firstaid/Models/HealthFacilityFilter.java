@@ -1,8 +1,8 @@
-package com.favn.firstaid.models;
+package com.favn.firstaid.Models;
 
 import android.widget.Filter;
 
-import com.favn.firstaid.adapter.HealthFacilityAdapter;
+import com.favn.firstaid.Adapter.HealthFacilityAdapter;
 
 import java.util.ArrayList;
 import java.util.List;

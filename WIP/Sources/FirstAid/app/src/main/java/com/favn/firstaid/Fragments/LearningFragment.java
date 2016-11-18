@@ -1,4 +1,4 @@
-package com.favn.firstaid.fragments;
+package com.favn.firstaid.Fragments;
 
 
 import android.content.Intent;
@@ -12,16 +12,16 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ListView;
 
-import com.favn.firstaid.activites.BannerDetail;
-import com.favn.firstaid.activites.InstructionDetail;
-import com.favn.firstaid.adapter.InjuryAdapter;
-import com.favn.firstaid.database.DatabaseOpenHelper;
-import com.favn.firstaid.models.Injury;
+import com.favn.firstaid.Activites.BannerDetail;
+import com.favn.firstaid.Activites.InstructionDetail;
+import com.favn.firstaid.Adapter.InjuryAdapter;
+import com.favn.firstaid.Database.DatabaseOpenHelper;
+import com.favn.firstaid.Models.Injury;
 import com.favn.firstaid.R;
 
 import java.util.List;
 
-import static com.favn.firstaid.models.Commons.Constants.LISTVIEW_EMERGENCY;
+import static com.favn.firstaid.Models.Commons.Constants.LISTVIEW_EMERGENCY;
 
 
 /**

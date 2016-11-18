@@ -1,4 +1,4 @@
-package com.favn.firstaid.fragments;
+package com.favn.firstaid.Fragments;
 
 
 import android.os.Bundle;
