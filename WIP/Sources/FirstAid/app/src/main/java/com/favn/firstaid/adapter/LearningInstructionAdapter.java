@@ -1,4 +1,4 @@
-package com.favn.firstaid.Adapter;
+package com.favn.firstaid.adapter;
 
 import android.content.Context;
 import android.view.View;
@@ -8,7 +8,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.favn.firstaid.Models.LearningInstruction;
+import com.favn.firstaid.models.LearningInstruction;
 import com.favn.firstaid.R;
 
 import java.util.List;
