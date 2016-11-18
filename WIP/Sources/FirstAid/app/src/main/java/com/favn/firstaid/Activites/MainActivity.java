@@ -1,4 +1,4 @@
-package com.favn.firstaid.Activites;
+package com.favn.firstaid.activites;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -11,11 +11,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
-import com.favn.firstaid.Fragments.AboutFragment;
-import com.favn.firstaid.Fragments.EmergencyFragment;
-import com.favn.firstaid.Fragments.MoreFragment;
-import com.favn.firstaid.Fragments.LearningFragment;
-import com.favn.firstaid.Fragments.SettingFragment;
+import com.favn.firstaid.fragments.AboutFragment;
+import com.favn.firstaid.fragments.EmergencyFragment;
+import com.favn.firstaid.fragments.MoreFragment;
+import com.favn.firstaid.fragments.LearningFragment;
+import com.favn.firstaid.fragments.SettingFragment;
 import com.favn.firstaid.R;
 
 public class MainActivity extends AppCompatActivity

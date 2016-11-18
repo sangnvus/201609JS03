@@ -1,8 +1,9 @@
-package com.favn.firstaid.Activites;
+package com.favn.firstaid.activites;
 
 import android.content.Intent;
 import android.graphics.Color;
 import android.media.MediaPlayer;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -12,20 +13,24 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ListView;
-import android.widget.TextView;
 
-import com.favn.firstaid.Adapter.InstructionAdapter;
-import com.favn.firstaid.Database.DatabaseOpenHelper;
-import com.favn.firstaid.Models.Instruction;
+import com.favn.firstaid.adapter.LearningInstructionAdapter;
+import com.favn.firstaid.adapter.InstructionAdapter;
+import com.favn.firstaid.database.DatabaseOpenHelper;
+
+import com.favn.firstaid.models.Instruction;
+import com.favn.firstaid.models.LearningInstruction;
 import com.favn.firstaid.R;
 
 import java.util.List;
 
 public class InstructionDetail extends AppCompatActivity {
     private InstructionAdapter instructionAdapter;
+    private LearningInstructionAdapter LearningInstructionAdapter;
     private DatabaseOpenHelper dbHelper;
     private ListView listView;
     private List<Instruction> mInstructionList;
+    private List<LearningInstruction> mLearningInstructionList;
     private Button btnFaq;
     private boolean isEmegency;
     private int playingAudioId;
@@ -46,22 +51,18 @@ public class InstructionDetail extends AppCompatActivity {
         getSupportActionBar().setTitle(name);
 
         isEmegency = (typeOfAction == 1) ? true : false;
-
         listView = (ListView) findViewById(R.id.listview_instruction);
         dbHelper = new DatabaseOpenHelper(this);
 
-        dbHelper.createDatabase();
-        dbHelper.openDatabase();
+        if(isEmegency) {
+            mInstructionList = dbHelper.getListInstruction(injuryId);
+            instructionAdapter = new InstructionAdapter(this, mInstructionList, isEmegency);
+            listView.setAdapter(instructionAdapter);
+        } else {
+            mLearningInstructionList = dbHelper.getListLearingInstruction(injuryId);
+            LearningInstructionAdapter = new LearningInstructionAdapter(this, mLearningInstructionList);
+            listView.setAdapter(LearningInstructionAdapter);
 
-        mInstructionList = dbHelper.getListInstruction(injuryId);
-        instructionAdapter = new InstructionAdapter(this, mInstructionList, isEmegency);
-        listView.setAdapter(instructionAdapter);
-        listSize = mInstructionList.size();
-
-        getSupportActionBar().setHomeButtonEnabled(true);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
-        if(!isEmegency) {
             FrameLayout footerLayout = (FrameLayout) getLayoutInflater().inflate(R.layout.instruction_detail_footer, null);
             btnFaq = (Button) footerLayout.findViewById(R.id.button_faq);
             btnFaq.setOnClickListener(new View.OnClickListener() {
@@ -75,6 +76,9 @@ public class InstructionDetail extends AppCompatActivity {
 
             listView.addFooterView(footerLayout);
         }
+        getSupportActionBar().setHomeButtonEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
 
         final int[] audio = {R.raw.audio_1, R.raw.audio_2, R.raw.audio_3};
 
@@ -82,8 +86,14 @@ public class InstructionDetail extends AppCompatActivity {
 
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int pos, long id) {
-                final TextView stepAnimation = (TextView) view.findViewById(R.id.text_step_number);
-//                final View colorLine = (View) view.findViewById(R.id.color_line);
+                Button call115 = (Button) view.findViewById(R.id.button_call);
+                call115.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent callIntent = new Intent(Intent.ACTION_CALL);
+                        callIntent.setData(Uri.parse("tel:115"));
+                    }
+                });
 
                 if (playingAudioId == audio[pos] && mMediaPlayer.isPlaying()) {
                     mMediaPlayer.stop();

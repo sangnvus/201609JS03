@@ -1,11 +1,11 @@
-package com.favn.firstaid.Models.Commons;
+package com.favn.firstaid.models.Commons;
 
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.widget.Toast;
 
-import com.favn.firstaid.Models.Question;
+import com.favn.firstaid.models.Question;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -14,6 +14,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
+
 
 /**
  * Created by MeHaDake on 11/5/2016.

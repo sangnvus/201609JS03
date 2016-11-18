@@ -1,17 +1,14 @@
-package com.favn.ambulance.Models.Commons;
+package com.favn.ambulance.models.Commons;
 
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
-import android.support.v4.app.ActivityCompat;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.favn.ambulance.Activities.Information;
-import com.favn.ambulance.Activities.MainActivity;
-import com.favn.ambulance.Activities.Task;
-import com.favn.ambulance.Models.User;
+import com.favn.ambulance.activities.Information;
+import com.favn.ambulance.models.User;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;

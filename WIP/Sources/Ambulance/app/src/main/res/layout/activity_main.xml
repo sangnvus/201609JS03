@@ -14,12 +14,9 @@
         android:layout_height="match_parent"
         android:scaleType="centerCrop"/>
 
-    <LinearLayout
-        android:orientation="vertical"
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:weightSum="1"
-        android:layout_alignParentTop="true"
         android:gravity="center">
 
         <LinearLayout
@@ -28,9 +25,7 @@
             android:layout_height="wrap_content"
             android:gravity="center"
             android:layout_weight="0.17"
-            android:padding="15dp"
-            android:background="@color/cast_expanded_controller_text_color"
-            android:alpha="0.7">
+            android:padding="15dp">
 
             <ImageView
                 android:layout_width="match_parent"
@@ -49,7 +44,7 @@
                 android:layout_height="40dp"
                 android:layout_marginTop="10dp"
                 android:hint="Tên đăng nhập"
-                android:textColorHint="@color/common_google_signin_btn_text_light_default" />
+                android:textColorHint="@color/colorSeparate" />
 
             <EditText
                 android:layout_width="250dp"
@@ -60,7 +55,7 @@
                 android:background="@color/colorEditText"
                 android:layout_marginTop="10dp"
                 android:hint="Mật khẩu"
-                android:textColorHint="@color/common_google_signin_btn_text_light_default" />
+                android:textColorHint="@color/colorSeparate" />
 
             <Button
                 android:text="Đăng nhập"
@@ -70,9 +65,10 @@
                 android:background="@android:color/holo_red_light"
                 android:textColor="@android:color/background_light"
                 android:layout_marginTop="10dp"
-                android:layout_width="180dp"
-                android:alpha="1"/>
+                android:alpha="1"
+                android:layout_width="250dp" />
         </LinearLayout>
-    </LinearLayout>
+
+    </RelativeLayout>
 
 </RelativeLayout>

@@ -1,4 +1,4 @@
-package com.favn.firstaid.Models.Direction;
+package com.favn.firstaid.models.Direction;
 
 /**
  * Created by Hung Gia on 10/15/2016.

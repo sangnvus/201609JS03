@@ -1,8 +1,4 @@
-package com.favn.firstaid.Models.Direction;
-
-import com.google.android.gms.maps.model.LatLng;
-
-import java.util.List;
+package com.favn.firstaid.models.Direction;
 
 /**
  * Created by Hung Gia on 10/19/2016.
