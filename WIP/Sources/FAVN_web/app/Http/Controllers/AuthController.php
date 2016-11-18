@@ -34,9 +34,6 @@ class AuthController extends Controller
 		$username = $request->username;
 		$password = $request->password;
 
-		echo $username.'<br>';
-		echo $password;
-
 	 	if (Auth::attempt(['username' => $username, 'password' => $password])){
 	 		echo Auth::user()->name;
 			$role_id = Auth::user()->role_id;

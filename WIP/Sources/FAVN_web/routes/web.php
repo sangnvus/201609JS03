@@ -11,6 +11,9 @@
 |
 */
 
+// Call ambulance login handle controller
+Route::resource('ambulancelogin', 'AmbulanceAuthController@login');
+
 
 // For test
 Route::get('getpass', function(){
