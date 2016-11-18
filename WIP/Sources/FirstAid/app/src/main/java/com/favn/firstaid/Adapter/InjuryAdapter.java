@@ -1,4 +1,4 @@
-package com.favn.firstaid.Adapter;
+package com.favn.firstaid.adapter;
 
 import android.content.Context;
 import android.view.View;
@@ -7,12 +7,12 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.favn.firstaid.Models.Injury;
+import com.favn.firstaid.models.Injury;
 import com.favn.firstaid.R;
 
 import java.util.List;
 
-import static com.favn.firstaid.Models.Commons.Constants.LISTVIEW_EMERGENCY;
+import static com.favn.firstaid.models.Commons.Constants.LISTVIEW_EMERGENCY;
 
 /**
  * Created by Hung Gia on 10/6/2016.

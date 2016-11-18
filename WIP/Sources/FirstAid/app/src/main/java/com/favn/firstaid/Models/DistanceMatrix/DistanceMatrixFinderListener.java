@@ -1,6 +1,6 @@
-package com.favn.firstaid.Models.DistanceMatrix;
+package com.favn.firstaid.models.DistanceMatrix;
 
-import com.favn.firstaid.Models.HealthFacility;
+import com.favn.firstaid.models.HealthFacility;
 
 import java.util.List;
 

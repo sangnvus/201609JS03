@@ -1,4 +1,4 @@
-package com.favn.firstaid.Activites;
+package com.favn.firstaid.activites;
 
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
@@ -11,15 +11,15 @@ import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.Spinner;
 
-import com.favn.firstaid.Adapter.InjuryAdapter;
-import com.favn.firstaid.Database.DatabaseOpenHelper;
-import com.favn.firstaid.Models.Commons.QuestionSender;
-import com.favn.firstaid.Models.Injury;
+import com.favn.firstaid.adapter.InjuryAdapter;
+import com.favn.firstaid.database.DatabaseOpenHelper;
+import com.favn.firstaid.models.Commons.QuestionSender;
+import com.favn.firstaid.models.Injury;
 import com.favn.firstaid.R;
 
 import java.util.List;
 
-import static com.favn.firstaid.Models.Commons.Constants.SPINNER_INJURY;
+import static com.favn.firstaid.models.Commons.Constants.SPINNER_INJURY;
 
 public class QAActivity extends AppCompatActivity {
 

@@ -1,4 +1,4 @@
-package com.favn.firstaid.Activites;
+package com.favn.firstaid.activites;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -20,16 +20,16 @@ import android.widget.FrameLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.favn.firstaid.Adapter.LearningInstructionAdapter;
-import com.favn.firstaid.Adapter.InstructionAdapter;
-import com.favn.firstaid.Database.DatabaseOpenHelper;
+import com.favn.firstaid.adapter.LearningInstructionAdapter;
+import com.favn.firstaid.adapter.InstructionAdapter;
+import com.favn.firstaid.database.DatabaseOpenHelper;
 
-import com.favn.firstaid.LocationUtil.LocationChangeListener;
-import com.favn.firstaid.LocationUtil.LocationStatus;
-import com.favn.firstaid.Models.Commons.Constants;
-import com.favn.firstaid.Models.Commons.NetworkStatus;
-import com.favn.firstaid.Models.Instruction;
-import com.favn.firstaid.Models.LearningInstruction;
+import com.favn.firstaid.locationUtil.LocationChangeListener;
+import com.favn.firstaid.locationUtil.LocationStatus;
+import com.favn.firstaid.models.Commons.Constants;
+import com.favn.firstaid.models.Commons.NetworkStatus;
+import com.favn.firstaid.models.Instruction;
+import com.favn.firstaid.models.LearningInstruction;
 import com.favn.firstaid.R;
 import com.google.android.gms.common.api.Status;
 

@@ -1,4 +1,4 @@
-package com.favn.firstaid.Activites;
+package com.favn.firstaid.activites;
 
 import android.content.DialogInterface;
 import android.support.v7.app.AlertDialog;

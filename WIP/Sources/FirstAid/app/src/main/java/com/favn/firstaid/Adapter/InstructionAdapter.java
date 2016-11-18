@@ -1,4 +1,4 @@
-package com.favn.firstaid.Adapter;
+package com.favn.firstaid.adapter;
 
 import android.Manifest;
 import android.content.Context;
@@ -14,8 +14,8 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.favn.firstaid.Activites.InstructionDetail;
-import com.favn.firstaid.Models.Instruction;
+import com.favn.firstaid.activites.InstructionDetail;
+import com.favn.firstaid.models.Instruction;
 import com.favn.firstaid.R;
 
 import java.util.List;

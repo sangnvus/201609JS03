@@ -1,4 +1,4 @@
-package com.favn.firstaid.Models.Direction;
+package com.favn.firstaid.models.Direction;
 
 import com.google.android.gms.maps.model.LatLng;
 

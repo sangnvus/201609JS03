@@ -4,7 +4,7 @@
     android:id="@+id/activity_banner_detail"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.favn.firstaid.Activites.BannerDetail">
+    tools:context="com.favn.firstaid.activites.BannerDetail">
 
     <LinearLayout
         android:orientation="vertical"

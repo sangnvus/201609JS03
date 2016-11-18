@@ -1,4 +1,4 @@
-package com.favn.firstaid.Activites;
+package com.favn.firstaid.activites;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -9,9 +9,9 @@ import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ListView;
 
-import com.favn.firstaid.Adapter.FaqAdapter;
-import com.favn.firstaid.Database.DatabaseOpenHelper;
-import com.favn.firstaid.Models.Faq;
+import com.favn.firstaid.adapter.FaqAdapter;
+import com.favn.firstaid.database.DatabaseOpenHelper;
+import com.favn.firstaid.models.Faq;
 import com.favn.firstaid.R;
 
 import java.util.List;

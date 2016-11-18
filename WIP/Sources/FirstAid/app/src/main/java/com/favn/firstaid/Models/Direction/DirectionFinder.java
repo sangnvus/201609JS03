@@ -1,9 +1,9 @@
-package com.favn.firstaid.Models.Direction;
+package com.favn.firstaid.models.Direction;
 
 import android.os.AsyncTask;
 import android.util.Log;
 
-import com.favn.firstaid.Models.Commons.Constants;
+import com.favn.firstaid.models.Commons.Constants;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.Gson;
 
