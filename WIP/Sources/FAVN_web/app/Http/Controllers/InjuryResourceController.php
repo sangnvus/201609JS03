@@ -18,7 +18,7 @@ class InjuryResourceController extends Controller
     public function index()
     {
         // init question model
-        $injury = INJURY::all();
+        $injury = Injury::all();
         return Response($injury, 201);
     }
 
