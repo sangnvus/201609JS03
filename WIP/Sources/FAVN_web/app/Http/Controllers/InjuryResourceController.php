@@ -19,7 +19,7 @@ class InjuryResourceController extends Controller
     {
         // init question model
         $injury = Injury::all();
-        return Response($injury, 201);
+        return Response(['injuries' => $injury], 201);
     }
 
     /**
