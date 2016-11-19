@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 
 use App\Http\Requests;
 
-use App\INJURY;
+use App\Injury;
 
 class InjuryResourceController extends Controller
 {
