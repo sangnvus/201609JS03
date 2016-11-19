@@ -11,6 +11,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
+import com.favn.firstaid.database.DownloadTask;
 import com.favn.firstaid.fragments.AboutFragment;
 import com.favn.firstaid.fragments.EmergencyFragment;
 import com.favn.firstaid.fragments.MoreFragment;
@@ -43,6 +44,11 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
         navigationView.getMenu().getItem(0).setChecked(true);
+
+        // Test get injury
+        DownloadTask downloadTask = new DownloadTask();
+        downloadTask.execute("http://favn.rtsvietnam.com/injury");
+
     }
 
     @Override

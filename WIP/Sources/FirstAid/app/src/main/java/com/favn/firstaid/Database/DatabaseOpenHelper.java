@@ -136,8 +136,8 @@ public class DatabaseOpenHelper extends SQLiteOpenHelper {
         ContentValues values = new ContentValues();
 
         values.put("id", injury.getId());
-        values.put("injury_name", injury.getInjuryName());
-        values.put("symptom", injury.getInjurySymptom());
+        values.put("injury_name", injury.getInjury_name());
+        values.put("symptom", injury.getSymptom());
         values.put("priority", injury.getPriority());
         values.put("image", injury.getImage());
         values.put("updated_at", injury.getUpdated_at());
@@ -152,8 +152,8 @@ public class DatabaseOpenHelper extends SQLiteOpenHelper {
         ContentValues values = new ContentValues();
 
         values.put("id", injury.getId());
-        values.put("injury_name", injury.getInjuryName());
-        values.put("symptom", injury.getInjurySymptom());
+        values.put("injury_name", injury.getInjury_name());
+        values.put("symptom", injury.getSymptom());
         values.put("priority", injury.getPriority());
         values.put("image", injury.getImage());
         values.put("updated_at", injury.getUpdated_at());

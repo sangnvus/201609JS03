@@ -6,8 +6,8 @@ package com.favn.firstaid.models;
 
 public class Injury {
     private int id;
-    private String injuryName;
-    private String injurySymptom;
+    private String injury_name;
+    private String symptom;
 
     // START ADD ATTRIBUTES - Kienmt : 11/08/2016
     private String priority;
@@ -20,10 +20,20 @@ public class Injury {
     public Injury() {
     }
 
-    public Injury(int id, String injuryName, String injurySymptom) {
+    public Injury(int id, String injury_name, String symptom) {
         this.id = id;
-        this.injuryName = injuryName;
-        this.injurySymptom = injurySymptom;
+        this.injury_name = injury_name;
+        this.symptom = symptom;
+    }
+
+    public Injury(int id, String injury_name, String symptom, String priority, String image, String updated_at, String created_at) {
+        this.id = id;
+        this.injury_name = injury_name;
+        this.symptom = symptom;
+        this.priority = priority;
+        this.image = image;
+        this.updated_at = updated_at;
+        this.created_at = created_at;
     }
 
     public int getId() {
@@ -34,20 +44,20 @@ public class Injury {
         this.id = id;
     }
 
-    public String getInjuryName() {
-        return injuryName;
+    public String getInjury_name() {
+        return injury_name;
     }
 
-    public void setInjuryName(String injuryName) {
-        this.injuryName = injuryName;
+    public void setInjury_name(String injury_name) {
+        this.injury_name = injury_name;
     }
 
-    public String getInjurySymptom() {
-        return injurySymptom;
+    public String getSymptom() {
+        return symptom;
     }
 
-    public void setInjurySymptom(String injurySymptom) {
-        this.injurySymptom = injurySymptom;
+    public void setSymptom(String symptom) {
+        this.symptom = symptom;
     }
 
     public String getPriority() {

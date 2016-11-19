@@ -33,7 +33,7 @@
     <string name="history_clear">Xóa lịch sử</string>
 
 
-    <!--demo item injury-->
+    <!--demo item injuries-->
     <string-array name="injury_arrays">
         <item>Khác</item>
         <item>Khó thở</item>

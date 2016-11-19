@@ -86,6 +86,7 @@ public class InstructionDetail extends AppCompatActivity implements LocationChan
             instructionAdapter = new InstructionAdapter(this, mInstructionList, isEmergency, isAllowedSendInformation);
             listView.setAdapter(instructionAdapter);
             createBroadcast();
+            updateNotifyStatus();
 
         } else {
             mLearningInstructionList = dbHelper.getListLearingInstruction(injuryId);
@@ -149,7 +150,7 @@ public class InstructionDetail extends AppCompatActivity implements LocationChan
         intentFilter = new IntentFilter();
         intentFilter.addAction(Constants.INTENT_FILTER_PROVIDERS_CHANGED);
         intentFilter.addAction(Constants.INTENT_FILTER_CONNECTIVITY_CHANGE);
-        updateNotifyStatus();
+
 
     }
 
@@ -159,13 +160,18 @@ public class InstructionDetail extends AppCompatActivity implements LocationChan
         if (mMediaPlayer != null) {
             mMediaPlayer.stop();
         }
-        unregisterReceiver(connectivityBroadcastReceiver);
+        if (connectivityBroadcastReceiver != null) {
+            unregisterReceiver(connectivityBroadcastReceiver);
+        }
+
     }
 
     @Override
     protected void onResume() {
         super.onResume();
+        if(connectivityBroadcastReceiver != null) {
         registerReceiver(connectivityBroadcastReceiver, intentFilter);
+        }
     }
 
     private void createBroadcast() {
