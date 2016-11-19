@@ -9,6 +9,7 @@ import android.location.Location;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -19,6 +20,7 @@ import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.favn.firstaid.adapter.LearningInstructionAdapter;
 import com.favn.firstaid.adapter.InstructionAdapter;
@@ -35,8 +37,7 @@ import com.google.android.gms.common.api.Status;
 
 import java.util.List;
 
-public class InstructionDetail extends AppCompatActivity implements LocationChangeListener,
-        InstructionAdapter.Implementable {
+public class InstructionDetail extends AppCompatActivity implements LocationChangeListener {
     private InstructionAdapter instructionAdapter;
     private LearningInstructionAdapter LearningInstructionAdapter;
     private DatabaseOpenHelper dbHelper;
@@ -52,7 +53,8 @@ public class InstructionDetail extends AppCompatActivity implements LocationChan
     private boolean isLocationEnable;
     private boolean isNetworkEnable;
     private TextView tvNotifySendFunctionality;
-    private int callButtonPosition;
+    private Location mCurrentLocation;
+    BroadcastReceiver connectivityBroadcastReceiver;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,6 +70,7 @@ public class InstructionDetail extends AppCompatActivity implements LocationChan
         int typeOfAction = intent.getExtras().getInt("typeOfAction");
         getSupportActionBar().setTitle(name);
 
+
         isEmergency = (typeOfAction == 1) ? true : false;
         listView = (ListView) findViewById(R.id.listview_instruction);
         dbHelper = new DatabaseOpenHelper(this);
@@ -82,6 +85,7 @@ public class InstructionDetail extends AppCompatActivity implements LocationChan
             mInstructionList = dbHelper.getListInstruction(injuryId);
             instructionAdapter = new InstructionAdapter(this, mInstructionList, isEmergency, isAllowedSendInformation);
             listView.setAdapter(instructionAdapter);
+            createBroadcast();
 
         } else {
             mLearningInstructionList = dbHelper.getListLearingInstruction(injuryId);
@@ -145,6 +149,7 @@ public class InstructionDetail extends AppCompatActivity implements LocationChan
         intentFilter = new IntentFilter();
         intentFilter.addAction(Constants.INTENT_FILTER_PROVIDERS_CHANGED);
         intentFilter.addAction(Constants.INTENT_FILTER_CONNECTIVITY_CHANGE);
+        updateNotifyStatus();
 
     }
 
@@ -163,51 +168,55 @@ public class InstructionDetail extends AppCompatActivity implements LocationChan
         registerReceiver(connectivityBroadcastReceiver, intentFilter);
     }
 
-    // Broadcast for Connectivity status
-    BroadcastReceiver connectivityBroadcastReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            // Only work when click on off button
-            if (intent.getAction().matches(Constants.INTENT_FILTER_PROVIDERS_CHANGED)) {
-                isLocationEnable = LocationStatus.checkLocationProvider(context);
+    private void createBroadcast() {
+        // Broadcast for Connectivity status
+        connectivityBroadcastReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                // Only work when click on off button
+                if (intent.getAction().matches(Constants.INTENT_FILTER_PROVIDERS_CHANGED)) {
+                    isLocationEnable = LocationStatus.checkLocationProvider(context);
 
-            } else if (intent.getAction().matches(Constants.INTENT_FILTER_CONNECTIVITY_CHANGE)) {
-                isNetworkEnable = NetworkStatus.checkNetworkEnable(context);
-                if (!isNetworkEnable) {
-                }
-                // Check location enable in connectivity change
-                isLocationEnable = LocationStatus.checkLocationProvider(context);
-            }
-
-            if (callButtonPosition >= 0) {
-                Log.d("passData", "code in broadcast");
-                View view = listView.getChildAt(1);
-                if (view != null) {
-                    tvNotifySendFunctionality = (TextView) view.findViewById(R.id
-                            .textview_notify_send_information);
-                    Log.d("passData", "view not null");
-
-
-                    if (tvNotifySendFunctionality != null) {
-                        if (isNetworkEnable && isLocationEnable) {
-                            tvNotifySendFunctionality.setText(Constants.ENABLE_CONNECTIVITY);
-                            tvNotifySendFunctionality.setTextColor(getResources().getColor(R.color
-                                    .colorNavigate));
-                            Log.d("passData", "connectivity available");
-
-                        } else {
-                            tvNotifySendFunctionality.setText(Constants.WARNING_CONNECTIVITY);
-                            tvNotifySendFunctionality.setTextColor(getResources().getColor(R.color
-                                    .colorPrimary));
-                            Log.d("passData", "connectivity unavailable");
-
-                        }
+                } else if (intent.getAction().matches(Constants.INTENT_FILTER_CONNECTIVITY_CHANGE)) {
+                    isNetworkEnable = NetworkStatus.checkNetworkEnable(context);
+                    if (!isNetworkEnable) {
                     }
+                    // Check location enable in connectivity change
+                    isLocationEnable = LocationStatus.checkLocationProvider(context);
                 }
+                updateNotifyStatus();
+            }
+        };
 
+    }
+
+    private void updateNotifyStatus() {
+        int callButtonPosition = -1;
+        for (int i = 0; i < mInstructionList.size(); i++) {
+            if (mInstructionList.get(i).isMakeCall()) {
+                callButtonPosition = i;
             }
         }
-    };
+
+        View view = listView.getChildAt(callButtonPosition);
+        if (view != null) {
+            tvNotifySendFunctionality = (TextView) view.findViewById(R.id
+                    .textview_notify_send_information);
+
+            if (tvNotifySendFunctionality != null) {
+                if (isNetworkEnable && isLocationEnable) {
+                    tvNotifySendFunctionality.setText(Constants.ENABLE_CONNECTIVITY);
+                    tvNotifySendFunctionality.setTextColor(getResources().getColor(R.color
+                            .colorNavigate));
+                } else {
+                    tvNotifySendFunctionality.setText(Constants.WARNING_CONNECTIVITY);
+                    tvNotifySendFunctionality.setTextColor(getResources().getColor(R.color
+                            .colorPrimary));
+
+                }
+            }
+        }
+    }
 
     private void playAudio(int audioId) {
         playingAudioId = audioId;
@@ -235,18 +244,18 @@ public class InstructionDetail extends AppCompatActivity implements LocationChan
         }
     }
 
-
     @Override
     public void createLocationSettingDialog(Status status) {
     }
 
     @Override
     public void locationChangeSuccess(Location location) {
+
         Log.d("location_test", location + "");
+        mCurrentLocation = location;
+
+        //TODO send information to server
     }
 
-    @Override
-    public void passData(int position) {
-        callButtonPosition = position;
-    }
+
 }

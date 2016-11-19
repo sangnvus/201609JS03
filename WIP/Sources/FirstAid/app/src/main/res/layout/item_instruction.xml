@@ -91,8 +91,7 @@
                 <TextView
                     android:id="@+id/textview_notify_send_information"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="*this is text"/>
+                    android:layout_height="wrap_content"/>
 
             </LinearLayout>
 

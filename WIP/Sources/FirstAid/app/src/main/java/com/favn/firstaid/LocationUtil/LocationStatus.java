@@ -16,7 +16,7 @@ public class LocationStatus {
                     .GPS_PROVIDER);
             boolean isNetworkProviderEnabled = locationManager.isProviderEnabled(LocationManager
                     .NETWORK_PROVIDER);
-            Toast.makeText(context, "GPS Enabled: " + isGpsProviderEnabled + " Network Location Enabled: " + isNetworkProviderEnabled, Toast.LENGTH_LONG).show();
+//            Toast.makeText(context, "GPS Enabled: " + isGpsProviderEnabled + " Network Location Enabled: " + isNetworkProviderEnabled, Toast.LENGTH_LONG).show();
 
             if (isGpsProviderEnabled == false && isNetworkProviderEnabled == false) {
                 return false;
