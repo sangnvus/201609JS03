@@ -46,6 +46,12 @@
                                 </select>
                             </div>
                         </div>
+                        <div class="col-md-2">
+                            <div>
+                                <label>Hình ảnh</label>
+                                <input type="file" name="injury_image">
+                            </div>
+                        </div>
                     </div>
 
                     <div class="row">

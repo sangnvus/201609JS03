@@ -50,6 +50,18 @@ class InjuryController extends Controller
 		$injury = new Injury;
 
 		// Assign injury value
+		if($request->hasFile('injury_image')) {
+			$image_original = $request->file('injury_image');
+			$image_name = $image_original->getClientOriginalName();
+			$image_name = str_random(4).'_'.$image_name;
+
+			while (file_exists('upload/injury/images/'.$image_name)) {
+				$image_name = str_random(4).'_'.$image_name;
+			}
+
+			$image_original->move('upload/injury/images', $image_name);
+			$injury->image = $image_name;
+		}
 		$injury->injury_name = $request->injury_name;
 		$injury->symptom = $request->symptom;
 		$injury->priority = $request->priority;
@@ -242,6 +254,19 @@ class InjuryController extends Controller
 		$this->validateInjuryInstructionForEdit($request, $injury);
 
 		// Assign injury value
+		if($request->hasFile('injury_image')) {
+			$image_original = $request->file('injury_image');
+			$image_name = $image_original->getClientOriginalName();
+			$image_name = str_random(4).'_'.$image_name;
+
+			while (file_exists('upload/injury/images/'.$image_name)) {
+				$image_name = str_random(4).'_'.$image_name;
+			}
+
+			$image_original->move('upload/injury/images', $image_name);
+			$injury->image = $image_name;
+
+		}
 		$injury->injury_name = $request->injury_name;
 		$injury->symptom = $request->symptom;
 		$injury->priority = $request->priority;
