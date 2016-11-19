@@ -102,7 +102,7 @@ public class InstructionAdapter extends BaseAdapter {
                         // for ActivityCompat#requestPermissions for more details.
                         return;
                     }
-                   // mContext.startActivity(callIntent);
+                    mContext.startActivity(callIntent);
                    // Get location
                     if (isSendInformation) {
                         InstructionDetail instructionDetail = new InstructionDetail();
@@ -121,9 +121,5 @@ public class InstructionAdapter extends BaseAdapter {
         return v;
     }
 
-    public void stopLocationUpdate() {
-        locationFinder.stopLocationUpdates();
-        locationFinder.disconnectGoogleApiClient();
-    }
 
 }

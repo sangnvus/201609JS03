@@ -86,10 +86,12 @@ public class LocationFinder implements GoogleApiClient.ConnectionCallbacks,
             // for ActivityCompat#requestPermissions for more details.
             return;
         }
-       // mCurrentLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
-
-        startLocationUpdates();
-        Log.d("onLocationChanged", "connect - location");
+        mCurrentLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
+        if (mCurrentLocation != null) {
+            locationChangeListener.locationChangeSuccess(mCurrentLocation);
+        } else {
+            startLocationUpdates();
+        }
 
     }
 
@@ -109,8 +111,6 @@ public class LocationFinder implements GoogleApiClient.ConnectionCallbacks,
         mLocationRequest.setFastestInterval(FASTEST_UPDATE_INTERVAL_IN_MILLISECONDS);
         //mLocationRequest.setSmallestDisplacement(UPDATE_SMALLEST_DISPLACEMENT);
         mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-        Log.d("onLocationChanged", "create - location");
-
     }
 
     public void startLocationUpdates() {
@@ -126,7 +126,6 @@ public class LocationFinder implements GoogleApiClient.ConnectionCallbacks,
             // for ActivityCompat#requestPermissions for more details.
             return;
         }
-        Log.d("onLocationChanged", "start - location");
 
         LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient,
                 mLocationRequest, this);
@@ -141,15 +140,9 @@ public class LocationFinder implements GoogleApiClient.ConnectionCallbacks,
             mCurrentLocation = location;
             locationChangeListener.locationChangeSuccess(mCurrentLocation);
             Toast.makeText(mContext, mCurrentLocation + "", Toast.LENGTH_SHORT).show();
-            Log.d("onLocationChanged", "location");
-
+            // Stop Location update
+            LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
         }
-    }
-
-    public void stopLocationUpdates() {
-        LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
-        Log.d("onLocationChanged", "stop");
-
     }
 
     protected void buildLocationSettingsRequest() {

@@ -54,6 +54,7 @@ public class InstructionDetail extends AppCompatActivity implements LocationChan
     private boolean isNetworkEnable;
     private TextView tvNotifySendFunctionality;
     private Location mCurrentLocation;
+    BroadcastReceiver connectivityBroadcastReceiver;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,6 +85,7 @@ public class InstructionDetail extends AppCompatActivity implements LocationChan
             mInstructionList = dbHelper.getListInstruction(injuryId);
             instructionAdapter = new InstructionAdapter(this, mInstructionList, isEmergency, isAllowedSendInformation);
             listView.setAdapter(instructionAdapter);
+            createBroadcast();
 
         } else {
             mLearningInstructionList = dbHelper.getListLearingInstruction(injuryId);
@@ -149,14 +151,6 @@ public class InstructionDetail extends AppCompatActivity implements LocationChan
         intentFilter.addAction(Constants.INTENT_FILTER_CONNECTIVITY_CHANGE);
         updateNotifyStatus();
 
-//        new Handler().postDelayed(new Runnable() {
-//            @Override
-//            public void run() {
-//                stopLocationUpdate();
-//                Log.d("onLocationChanged", "stop");
-//            }
-//        }, 20000);
-
     }
 
     @Override
@@ -174,24 +168,27 @@ public class InstructionDetail extends AppCompatActivity implements LocationChan
         registerReceiver(connectivityBroadcastReceiver, intentFilter);
     }
 
-    // Broadcast for Connectivity status
-    BroadcastReceiver connectivityBroadcastReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            // Only work when click on off button
-            if (intent.getAction().matches(Constants.INTENT_FILTER_PROVIDERS_CHANGED)) {
-                isLocationEnable = LocationStatus.checkLocationProvider(context);
+    private void createBroadcast() {
+        // Broadcast for Connectivity status
+        connectivityBroadcastReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                // Only work when click on off button
+                if (intent.getAction().matches(Constants.INTENT_FILTER_PROVIDERS_CHANGED)) {
+                    isLocationEnable = LocationStatus.checkLocationProvider(context);
 
-            } else if (intent.getAction().matches(Constants.INTENT_FILTER_CONNECTIVITY_CHANGE)) {
-                isNetworkEnable = NetworkStatus.checkNetworkEnable(context);
-                if (!isNetworkEnable) {
+                } else if (intent.getAction().matches(Constants.INTENT_FILTER_CONNECTIVITY_CHANGE)) {
+                    isNetworkEnable = NetworkStatus.checkNetworkEnable(context);
+                    if (!isNetworkEnable) {
+                    }
+                    // Check location enable in connectivity change
+                    isLocationEnable = LocationStatus.checkLocationProvider(context);
                 }
-                // Check location enable in connectivity change
-                isLocationEnable = LocationStatus.checkLocationProvider(context);
+                updateNotifyStatus();
             }
-            updateNotifyStatus();
-        }
-    };
+        };
+
+    }
 
     private void updateNotifyStatus() {
         int callButtonPosition = -1;
@@ -247,7 +244,6 @@ public class InstructionDetail extends AppCompatActivity implements LocationChan
         }
     }
 
-
     @Override
     public void createLocationSettingDialog(Status status) {
     }
@@ -258,16 +254,8 @@ public class InstructionDetail extends AppCompatActivity implements LocationChan
         Log.d("location_test", location + "");
         mCurrentLocation = location;
 
-
-        // Send data to Server
-
-        // Stop location update
-
-
+        //TODO send information to server
     }
 
-    private void stopLocationUpdate() {
-        instructionAdapter.stopLocationUpdate();
-    }
 
 }
