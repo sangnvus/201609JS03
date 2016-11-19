@@ -37,7 +37,7 @@
                                         <div class="col-md-2">
                                             <div class="form-group">
                                                 <label>Tên người dùng</label>
-                                                <input type="text" class="form-control" placeholder="Tên người dùng..." name="name" value="{{ $user->username }}">
+                                                <input type="text" class="form-control" placeholder="Tên người dùng..." name="name" value="{{ $user->name }}">
                                             </div>
                                         </div>
                                         <div class="col-md-2">
@@ -83,11 +83,20 @@
                                         <div class="col-md-2">
                                             <div class="form-group">
                                                 <label>Đội</label>
-                                                <input value="{{ $user->team }}" id="team" type="text" class="form-control" placeholder="Đội..." name="team"
-                                                	@if($user->role_id == 1 || $user->role_id == 2)
-																	disabled
-													@endif
-                                                >
+                                                @if($user->ambulance != null)
+                                                    <input value="{{ $user->ambulance->team }}" id="team" type="text" class="form-control" placeholder="Đội..." name="team"
+                                                        @if($user->role_id == 1 || $user->role_id == 2)
+                                                                        disabled
+                                                        @endif
+                                                    >
+                                                @else
+                                                    <input value="" id="team" type="text" class="form-control" placeholder="Đội..." name="team"
+                                                        @if($user->role_id == 1 || $user->role_id == 2)
+                                                                        disabled
+                                                        @endif
+                                                    >
+                                                @endif
+                                                
                                             </div>
                                         </div>
                                         
