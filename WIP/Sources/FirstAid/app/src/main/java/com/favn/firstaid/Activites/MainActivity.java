@@ -46,8 +46,8 @@ public class MainActivity extends AppCompatActivity
         navigationView.getMenu().getItem(0).setChecked(true);
 
         // Test get injury
-        DownloadTask downloadTask = new DownloadTask();
-        downloadTask.execute("http://favn.rtsvietnam.com/injury");
+//        DownloadTask downloadTask = new DownloadTask();
+//        downloadTask.execute("http://favn.rtsvietnam.com/injury");
 
     }
 

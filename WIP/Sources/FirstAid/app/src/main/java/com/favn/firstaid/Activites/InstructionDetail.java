@@ -2,14 +2,18 @@ package com.favn.firstaid.activites;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.IntentSender;
 import android.graphics.Color;
 import android.location.Location;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.provider.Settings;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -27,9 +31,11 @@ import com.favn.firstaid.adapter.InstructionAdapter;
 import com.favn.firstaid.database.DatabaseOpenHelper;
 
 import com.favn.firstaid.locationUtil.LocationChangeListener;
+import com.favn.firstaid.locationUtil.LocationFinder;
 import com.favn.firstaid.locationUtil.LocationStatus;
 import com.favn.firstaid.models.Commons.Constants;
 import com.favn.firstaid.models.Commons.NetworkStatus;
+import com.favn.firstaid.models.Commons.SOSCalling;
 import com.favn.firstaid.models.Instruction;
 import com.favn.firstaid.models.LearningInstruction;
 import com.favn.firstaid.R;
@@ -37,7 +43,8 @@ import com.google.android.gms.common.api.Status;
 
 import java.util.List;
 
-public class InstructionDetail extends AppCompatActivity implements LocationChangeListener {
+public class InstructionDetail extends AppCompatActivity implements LocationChangeListener,
+        InstructionAdapter.InformationSending {
     private InstructionAdapter instructionAdapter;
     private LearningInstructionAdapter LearningInstructionAdapter;
     private DatabaseOpenHelper dbHelper;
@@ -52,9 +59,11 @@ public class InstructionDetail extends AppCompatActivity implements LocationChan
     private IntentFilter intentFilter;
     private boolean isLocationEnable;
     private boolean isNetworkEnable;
-    private TextView tvNotifySendFunctionality;
     private Location mCurrentLocation;
     BroadcastReceiver connectivityBroadcastReceiver;
+    private LocationFinder locationFinder;
+    protected static final int REQUEST_CHECK_SETTINGS = 0x1;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,11 +92,12 @@ public class InstructionDetail extends AppCompatActivity implements LocationChan
 
         if (isEmergency) {
             mInstructionList = dbHelper.getListInstruction(injuryId);
-            instructionAdapter = new InstructionAdapter(this, mInstructionList, isEmergency, isAllowedSendInformation);
+            instructionAdapter = new InstructionAdapter(this, this, mInstructionList, isEmergency);
             listView.setAdapter(instructionAdapter);
-            createBroadcast();
-            updateNotifyStatus();
-
+            locationFinder = new LocationFinder(this, this);
+            if(isAllowedSendInformation) {
+               // createBroadcast();
+            }
         } else {
             mLearningInstructionList = dbHelper.getListLearingInstruction(injuryId);
             LearningInstructionAdapter = new LearningInstructionAdapter(this, mLearningInstructionList);
@@ -116,15 +126,6 @@ public class InstructionDetail extends AppCompatActivity implements LocationChan
 
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int pos, long id) {
-                Button call115 = (Button) view.findViewById(R.id.button_call);
-                call115.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Intent callIntent = new Intent(Intent.ACTION_CALL);
-                        callIntent.setData(Uri.parse(Constants.CALL_115));
-
-                    }
-                });
 
                 if (playingAudioId == audio[pos] && mMediaPlayer.isPlaying()) {
                     mMediaPlayer.stop();
@@ -160,69 +161,20 @@ public class InstructionDetail extends AppCompatActivity implements LocationChan
         if (mMediaPlayer != null) {
             mMediaPlayer.stop();
         }
-        if (connectivityBroadcastReceiver != null) {
-            unregisterReceiver(connectivityBroadcastReceiver);
-        }
+//        if (connectivityBroadcastReceiver != null) {
+//            unregisterReceiver(connectivityBroadcastReceiver);
+//        }
 
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        if(connectivityBroadcastReceiver != null) {
-        registerReceiver(connectivityBroadcastReceiver, intentFilter);
-        }
+//        if (connectivityBroadcastReceiver != null) {
+//            registerReceiver(connectivityBroadcastReceiver, intentFilter);
+//        }
     }
 
-    private void createBroadcast() {
-        // Broadcast for Connectivity status
-        connectivityBroadcastReceiver = new BroadcastReceiver() {
-            @Override
-            public void onReceive(Context context, Intent intent) {
-                // Only work when click on off button
-                if (intent.getAction().matches(Constants.INTENT_FILTER_PROVIDERS_CHANGED)) {
-                    isLocationEnable = LocationStatus.checkLocationProvider(context);
-
-                } else if (intent.getAction().matches(Constants.INTENT_FILTER_CONNECTIVITY_CHANGE)) {
-                    isNetworkEnable = NetworkStatus.checkNetworkEnable(context);
-                    if (!isNetworkEnable) {
-                    }
-                    // Check location enable in connectivity change
-                    isLocationEnable = LocationStatus.checkLocationProvider(context);
-                }
-                updateNotifyStatus();
-            }
-        };
-
-    }
-
-    private void updateNotifyStatus() {
-        int callButtonPosition = -1;
-        for (int i = 0; i < mInstructionList.size(); i++) {
-            if (mInstructionList.get(i).isMakeCall()) {
-                callButtonPosition = i;
-            }
-        }
-
-        View view = listView.getChildAt(callButtonPosition);
-        if (view != null) {
-            tvNotifySendFunctionality = (TextView) view.findViewById(R.id
-                    .textview_notify_send_information);
-
-            if (tvNotifySendFunctionality != null) {
-                if (isNetworkEnable && isLocationEnable) {
-                    tvNotifySendFunctionality.setText(Constants.ENABLE_CONNECTIVITY);
-                    tvNotifySendFunctionality.setTextColor(getResources().getColor(R.color
-                            .colorNavigate));
-                } else {
-                    tvNotifySendFunctionality.setText(Constants.WARNING_CONNECTIVITY);
-                    tvNotifySendFunctionality.setTextColor(getResources().getColor(R.color
-                            .colorPrimary));
-
-                }
-            }
-        }
-    }
 
     private void playAudio(int audioId) {
         playingAudioId = audioId;
@@ -252,6 +204,11 @@ public class InstructionDetail extends AppCompatActivity implements LocationChan
 
     @Override
     public void createLocationSettingDialog(Status status) {
+        try {
+            status.startResolutionForResult(InstructionDetail.this, REQUEST_CHECK_SETTINGS);
+        } catch (IntentSender.SendIntentException e) {
+            //PendingIntent unable to execute request.
+        }
     }
 
     @Override
@@ -263,5 +220,78 @@ public class InstructionDetail extends AppCompatActivity implements LocationChan
         //TODO send information to server
     }
 
+
+    @Override
+    public void requestInformationSending() {
+        if (isAllowedSendInformation) {
+            createDialog();
+        } else {
+            SOSCalling.makeSOSCall(this);
+        }
+
+    }
+
+    private void createBroadcast() {
+        // Broadcast for Connectivity status
+        connectivityBroadcastReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                // Only work when click on off button
+                if (intent.getAction().matches(Constants.INTENT_FILTER_PROVIDERS_CHANGED)) {
+                    isLocationEnable = LocationStatus.checkLocationProvider(context);
+
+                } else if (intent.getAction().matches(Constants.INTENT_FILTER_CONNECTIVITY_CHANGE)) {
+                    isNetworkEnable = NetworkStatus.checkNetworkEnable(context);
+                    if (!isNetworkEnable) {
+                        createNetworkSetting();
+                    }
+                    // Check location enable in connectivity change
+                    isLocationEnable = LocationStatus.checkLocationProvider(context);
+                }
+                Log.d("location_test", "broadcast");
+
+
+            }
+        };
+
+    }
+
+    private void createDialog() {
+        new AlertDialog.Builder(this)
+                .setTitle("Gửi vị trí")
+                .setMessage("Chức năng gửi vị trí cần internet và gps")
+                .setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        // Start call 115
+                        SOSCalling.makeSOSCall(getBaseContext());
+                    }
+                })
+                .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                            locationFinder.buildLocationFinder();
+                            locationFinder.connectGoogleApiClient();
+                    }
+                })
+                .create()
+                .show();
+    }
+
+    private void createNetworkSetting() {
+        new AlertDialog.Builder(this)
+                .setTitle("Kết nối Internet")
+                .setMessage("Vào cài đặt Internet")
+                .setNegativeButton(android.R.string.cancel, null) // dismisses by default
+                .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Intent intent = new Intent(Settings.ACTION_WIRELESS_SETTINGS);
+                        startActivity(intent);
+                    }
+                })
+                .create()
+                .show();
+    }
 
 }

@@ -88,11 +88,6 @@
                     android:text="Gọi 115"
                     android:textColor="@color/cast_expanded_controller_text_color"/>
 
-                <TextView
-                    android:id="@+id/textview_notify_send_information"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
-
             </LinearLayout>
 
             <ImageView
