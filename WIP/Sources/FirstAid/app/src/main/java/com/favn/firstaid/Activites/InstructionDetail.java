@@ -96,7 +96,10 @@ public class InstructionDetail extends AppCompatActivity implements LocationChan
             listView.setAdapter(instructionAdapter);
             locationFinder = new LocationFinder(this, this);
             if(isAllowedSendInformation) {
-               // createBroadcast();
+                createBroadcast();
+                intentFilter = new IntentFilter();
+                intentFilter.addAction(Constants.INTENT_FILTER_PROVIDERS_CHANGED);
+                intentFilter.addAction(Constants.INTENT_FILTER_CONNECTIVITY_CHANGE);
             }
         } else {
             mLearningInstructionList = dbHelper.getListLearingInstruction(injuryId);
@@ -148,9 +151,6 @@ public class InstructionDetail extends AppCompatActivity implements LocationChan
         });
 
 
-        intentFilter = new IntentFilter();
-        intentFilter.addAction(Constants.INTENT_FILTER_PROVIDERS_CHANGED);
-        intentFilter.addAction(Constants.INTENT_FILTER_CONNECTIVITY_CHANGE);
 
 
     }
@@ -161,18 +161,18 @@ public class InstructionDetail extends AppCompatActivity implements LocationChan
         if (mMediaPlayer != null) {
             mMediaPlayer.stop();
         }
-//        if (connectivityBroadcastReceiver != null) {
-//            unregisterReceiver(connectivityBroadcastReceiver);
-//        }
+        if (connectivityBroadcastReceiver != null) {
+            unregisterReceiver(connectivityBroadcastReceiver);
+        }
 
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-//        if (connectivityBroadcastReceiver != null) {
-//            registerReceiver(connectivityBroadcastReceiver, intentFilter);
-//        }
+        if (connectivityBroadcastReceiver != null) {
+            registerReceiver(connectivityBroadcastReceiver, intentFilter);
+        }
     }
 
 
@@ -242,18 +242,12 @@ public class InstructionDetail extends AppCompatActivity implements LocationChan
 
                 } else if (intent.getAction().matches(Constants.INTENT_FILTER_CONNECTIVITY_CHANGE)) {
                     isNetworkEnable = NetworkStatus.checkNetworkEnable(context);
-                    if (!isNetworkEnable) {
-                        createNetworkSetting();
-                    }
                     // Check location enable in connectivity change
                     isLocationEnable = LocationStatus.checkLocationProvider(context);
                 }
-                Log.d("location_test", "broadcast");
-
 
             }
         };
-
     }
 
     private void createDialog() {
@@ -270,8 +264,12 @@ public class InstructionDetail extends AppCompatActivity implements LocationChan
                 .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                            locationFinder.buildLocationFinder();
-                            locationFinder.connectGoogleApiClient();
+                        locationFinder.buildLocationFinder();
+                        locationFinder.connectGoogleApiClient();
+                        if(!NetworkStatus.checkNetworkEnable(getBaseContext())) {
+                            createNetworkSetting();
+                        }
+
                     }
                 })
                 .create()
