@@ -15,12 +15,10 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.favn.firstaid.R;
 import com.favn.firstaid.activites.InstructionDetail;
 import com.favn.firstaid.locationUtil.LocationFinder;
-import com.favn.firstaid.locationUtil.LocationStatus;
-import com.favn.firstaid.models.Commons.NetworkStatus;
 import com.favn.firstaid.models.Instruction;
-import com.favn.firstaid.R;
 
 import java.util.List;
 
@@ -109,6 +107,7 @@ public class InstructionAdapter extends BaseAdapter {
                         locationFinder = new LocationFinder(mContext, instructionDetail);
                         locationFinder.buildLocationFinder();
                         locationFinder.connectGoogleApiClient();
+                        Log.d("location", String.valueOf(locationFinder));
                     }
 
                 }
