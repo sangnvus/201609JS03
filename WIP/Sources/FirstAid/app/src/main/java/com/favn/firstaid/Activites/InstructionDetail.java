@@ -9,23 +9,20 @@ import android.content.IntentSender;
 import android.graphics.Color;
 import android.location.Location;
 import android.media.MediaPlayer;
-import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
 import android.provider.Settings;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.telecom.Call;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.favn.firstaid.adapter.LearningInstructionAdapter;
 import com.favn.firstaid.adapter.InstructionAdapter;
@@ -63,10 +60,13 @@ public class InstructionDetail extends AppCompatActivity implements LocationChan
     private IntentFilter intentFilter;
     private boolean isLocationEnable;
     private boolean isNetworkEnable;
-    private Location mCurrentLocation;
     BroadcastReceiver connectivityBroadcastReceiver;
     private LocationFinder locationFinder;
     protected static final int REQUEST_CHECK_SETTINGS = 0x1;
+    private boolean isCalled;
+
+    private LinearLayout llSendingStatus;
+    private TextView tvSendingInformationStatus;
 
     // Declare firebase database reference - KienMT : 11/21/2016
     DatabaseReference mDb;
@@ -108,11 +108,12 @@ public class InstructionDetail extends AppCompatActivity implements LocationChan
             instructionAdapter = new InstructionAdapter(this, this, mInstructionList, isEmergency);
             listView.setAdapter(instructionAdapter);
             locationFinder = new LocationFinder(this, this);
-            if(isAllowedSendInformation) {
+            if (isAllowedSendInformation) {
                 createBroadcast();
                 intentFilter = new IntentFilter();
                 intentFilter.addAction(Constants.INTENT_FILTER_PROVIDERS_CHANGED);
                 intentFilter.addAction(Constants.INTENT_FILTER_CONNECTIVITY_CHANGE);
+                isCalled = false;
             }
         } else {
             mLearningInstructionList = dbHelper.getListLearingInstruction(injuryId);
@@ -162,8 +163,6 @@ public class InstructionDetail extends AppCompatActivity implements LocationChan
 
             }
         });
-
-
 
 
     }
@@ -228,7 +227,6 @@ public class InstructionDetail extends AppCompatActivity implements LocationChan
     public void locationChangeSuccess(Location location) {
 
         Log.d("location_test", location + "");
-        mCurrentLocation = location;
 
         //TODO send information to server
         // Init caller
@@ -268,6 +266,9 @@ public class InstructionDetail extends AppCompatActivity implements LocationChan
                     // Check location enable in connectivity change
                     isLocationEnable = LocationStatus.checkLocationProvider(context);
                 }
+                if (isCalled) {
+                    updateSendingInformationUI();
+                }
 
             }
         };
@@ -289,10 +290,12 @@ public class InstructionDetail extends AppCompatActivity implements LocationChan
                     public void onClick(DialogInterface dialog, int which) {
                         locationFinder.buildLocationFinder();
                         locationFinder.connectGoogleApiClient();
-                        if(!NetworkStatus.checkNetworkEnable(getBaseContext())) {
+                        if (!NetworkStatus.checkNetworkEnable(getBaseContext())) {
                             createNetworkSetting();
                         }
-
+                        isCalled = true;
+                        createSendingInformationUI(true);
+                        updateSendingInformationUI();
                     }
                 })
                 .create()
@@ -313,6 +316,25 @@ public class InstructionDetail extends AppCompatActivity implements LocationChan
                 })
                 .create()
                 .show();
+    }
+
+    private void createSendingInformationUI(boolean isShow) {
+        llSendingStatus = (LinearLayout) findViewById(R.id.include_sending_status);
+        tvSendingInformationStatus = (TextView) findViewById(R.id
+                .textview_sending_information_status);
+        if (isShow) {
+            llSendingStatus.setVisibility(View.VISIBLE);
+        } else {
+            llSendingStatus.setVisibility(View.GONE);
+        }
+    }
+
+    private void updateSendingInformationUI() {
+        if(isLocationEnable && isNetworkEnable) {
+            tvSendingInformationStatus.setText("Có thể gửi thông tin");
+        } else {
+            tvSendingInformationStatus.setText("Không thể gửi thông tin");
+        }
     }
 
 }

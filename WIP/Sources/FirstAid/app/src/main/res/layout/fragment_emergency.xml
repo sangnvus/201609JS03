@@ -16,6 +16,11 @@
             android:id="@+id/include_advice"
             layout="@layout/layout_advice"/>
 
+        <include
+            android:id="@+id/include_sending_status"
+            layout="@layout/layout_sending_status"
+            android:visibility="gone"/>
+
         <ListView
             android:id="@+id/listView"
             android:layout_width="match_parent"

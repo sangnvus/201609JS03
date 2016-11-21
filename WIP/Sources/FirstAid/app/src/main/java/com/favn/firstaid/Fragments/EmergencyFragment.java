@@ -3,11 +3,20 @@ package com.favn.firstaid.fragments;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.content.IntentSender;
+import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.provider.Settings;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -15,14 +24,26 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.favn.firstaid.activites.InstructionDetail;
 import com.favn.firstaid.activites.MapsActivity;
 import com.favn.firstaid.adapter.InjuryAdapter;
 import com.favn.firstaid.database.DatabaseOpenHelper;
+import com.favn.firstaid.locationUtil.LocationChangeListener;
+import com.favn.firstaid.locationUtil.LocationFinder;
+import com.favn.firstaid.locationUtil.LocationStatus;
+import com.favn.firstaid.models.Caller;
+import com.favn.firstaid.models.Commons.Constants;
+import com.favn.firstaid.models.Commons.NetworkStatus;
+import com.favn.firstaid.models.Commons.SOSCalling;
 import com.favn.firstaid.models.Injury;
 import com.favn.firstaid.R;
+import com.google.android.gms.common.api.Status;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.List;
 
@@ -32,12 +53,27 @@ import static com.favn.firstaid.models.Commons.Constants.LISTVIEW_EMERGENCY;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class EmergencyFragment extends Fragment implements AdapterView.OnItemClickListener {
+public class EmergencyFragment extends Fragment implements AdapterView.OnItemClickListener, LocationChangeListener {
     private InjuryAdapter adapter;
     private DatabaseOpenHelper dbHelper;
     private ListView listView;
     private List<Injury> mInjuryList;
     public static final int FROM_EMERGENCY = 1;
+
+    // Sending information functionality
+    private boolean isAllowedSendInformation;
+    private IntentFilter intentFilter;
+    private boolean isLocationEnable;
+    private boolean isNetworkEnable;
+    BroadcastReceiver connectivityBroadcastReceiver;
+    private LocationFinder locationFinder;
+    protected static final int REQUEST_CHECK_SETTINGS = 0x1;
+    private boolean isCalled;
+    DatabaseReference mDb;
+
+    private LinearLayout llSendingStatus;
+    private TextView tvSendingInformationStatus;
+
 
     public EmergencyFragment() {
         // Required empty public constructor
@@ -60,6 +96,21 @@ public class EmergencyFragment extends Fragment implements AdapterView.OnItemCli
         setHasOptionsMenu(true);
         container.removeAllViews();
 
+        // Sending information setup
+        isLocationEnable = false;
+        isNetworkEnable = false;
+
+        //TODO Get value isAllowSendInformation from SharePreference
+        isAllowedSendInformation = true;
+        if (isAllowedSendInformation) {
+            locationFinder = new LocationFinder(getContext(), EmergencyFragment.this);
+
+            createBroadcast();
+            intentFilter = new IntentFilter();
+            intentFilter.addAction(Constants.INTENT_FILTER_PROVIDERS_CHANGED);
+            intentFilter.addAction(Constants.INTENT_FILTER_CONNECTIVITY_CHANGE);
+            isCalled = false;
+        }
 
         // Hide advice layout
         new Handler().postDelayed(new Runnable() {
@@ -69,7 +120,7 @@ public class EmergencyFragment extends Fragment implements AdapterView.OnItemCli
                 view.animate()
                         .translationY(-view.getHeight())
                         .alpha(0.0f)
-                        .setDuration(500)
+                        .setDuration(200)
                         .setListener(new AnimatorListenerAdapter() {
                             @Override
                             public void onAnimationEnd(Animator animation) {
@@ -78,10 +129,26 @@ public class EmergencyFragment extends Fragment implements AdapterView.OnItemCli
                             }
                         });
             }
-        }, 3000);
+        }, 2000);
 
 
         return rootView;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (connectivityBroadcastReceiver != null) {
+            getContext().registerReceiver(connectivityBroadcastReceiver, intentFilter);
+        }
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        if (connectivityBroadcastReceiver != null) {
+            getContext().unregisterReceiver(connectivityBroadcastReceiver);
+        }
     }
 
     @Override
@@ -100,7 +167,7 @@ public class EmergencyFragment extends Fragment implements AdapterView.OnItemCli
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.main, menu);
-        super.onCreateOptionsMenu(menu,inflater);
+        super.onCreateOptionsMenu(menu, inflater);
     }
 
     @Override
@@ -109,13 +176,10 @@ public class EmergencyFragment extends Fragment implements AdapterView.OnItemCli
         int id = item.getItemId();
 
         if (id == R.id.action_sos_calling) {
-            Intent callIntent = new Intent(Intent.ACTION_CALL);
-            callIntent.setData(Uri.parse("tel:115"));
-
-            try{
-                startActivity(callIntent);
-            }
-            catch (android.content.ActivityNotFoundException ex){
+            if (isAllowedSendInformation) {
+                createDialog();
+            } else {
+                SOSCalling.makeSOSCall(getContext());
             }
         }
         if (id == R.id.action_direction) {
@@ -129,5 +193,112 @@ public class EmergencyFragment extends Fragment implements AdapterView.OnItemCli
         return super.onOptionsItemSelected(item);
     }
 
+    private void createBroadcast() {
+        // Broadcast for Connectivity status
+        connectivityBroadcastReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                // Only work when click on off button
+                if (intent.getAction().matches(Constants.INTENT_FILTER_PROVIDERS_CHANGED)) {
+                    isLocationEnable = LocationStatus.checkLocationProvider(context);
 
+                } else if (intent.getAction().matches(Constants.INTENT_FILTER_CONNECTIVITY_CHANGE)) {
+                    isNetworkEnable = NetworkStatus.checkNetworkEnable(context);
+                    // Check location enable in connectivity change
+                    isLocationEnable = LocationStatus.checkLocationProvider(context);
+                }
+                if (isCalled) {
+                    updateSendingInformationUI();
+                }
+            }
+        };
+    }
+
+    private void createDialog() {
+        new AlertDialog.Builder(getContext())
+                .setTitle("Gửi vị trí")
+                .setMessage("Chức năng gửi vị trí cần internet và gps")
+                .setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        // Start call 115
+                        SOSCalling.makeSOSCall(getContext());
+                    }
+                })
+                .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        locationFinder.buildLocationFinder();
+                        locationFinder.connectGoogleApiClient();
+                        if (!NetworkStatus.checkNetworkEnable(getContext())) {
+                            createNetworkSetting();
+                        }
+                        isCalled = true;
+                        createSendingInformationUI(true);
+                        updateSendingInformationUI();
+                    }
+                })
+                .create()
+                .show();
+    }
+
+    private void createNetworkSetting() {
+        new AlertDialog.Builder(getContext())
+                .setTitle("Kết nối Internet")
+                .setMessage("Vào cài đặt Internet")
+                .setNegativeButton(android.R.string.cancel, null) // dismisses by default
+                .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Intent intent = new Intent(Settings.ACTION_WIRELESS_SETTINGS);
+                        startActivity(intent);
+                    }
+                })
+                .create()
+                .show();
+    }
+
+    private void createSendingInformationUI(boolean isShow) {
+        llSendingStatus = (LinearLayout) getView().findViewById(R.id.include_sending_status);
+        tvSendingInformationStatus = (TextView) getView().findViewById(R.id
+                .textview_sending_information_status);
+        if (isShow) {
+            llSendingStatus.setVisibility(View.VISIBLE);
+        } else {
+            llSendingStatus.setVisibility(View.GONE);
+        }
+    }
+
+    private void updateSendingInformationUI() {
+        if(isLocationEnable && isNetworkEnable) {
+            tvSendingInformationStatus.setText("Có thể gửi thông tin");
+        } else {
+            tvSendingInformationStatus.setText("Không thể gửi thông tin");
+        }
+    }
+
+    @Override
+    public void createLocationSettingDialog(Status status) {
+        try {
+            status.startResolutionForResult(getActivity(), REQUEST_CHECK_SETTINGS);
+        } catch (IntentSender.SendIntentException e) {
+            //PendingIntent unable to execute request.
+        }
+    }
+
+    @Override
+    public void locationChangeSuccess(Location location) {
+        Log.d("location_test", location + "");
+
+        //TODO send information to server
+        // Init caller
+        Caller caller = new Caller();
+        caller.setPhone("01694639816");
+        caller.setInjuryId(0);
+        caller.setLatitude(location.getLatitude());
+        caller.setLongitude(location.getLongitude());
+
+        mDb = FirebaseDatabase.getInstance().getReference();
+        mDb.child("callers").push().setValue(caller);
+    }
 }
