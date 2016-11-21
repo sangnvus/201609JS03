@@ -32,20 +32,6 @@
 
     <string name="history_clear">Xóa lịch sử</string>
 
-
-    <!--demo item injuries-->
-    <string-array name="injury_arrays">
-        <item>Khác</item>
-        <item>Khó thở</item>
-        <item>Sốc điện</item>
-        <item>Đuối nước</item>
-        <item>Gãy tay</item>
-        <item>Chảy máu</item>
-        <item>Gãy cổ</item>
-        <item>Đau tim</item>
-        <item>Thượng mã phong</item>
-    </string-array>
-
     <!--demo item notification-->
     <string-array name="item_notification">
         <item>15:05 12/10/2016  Cập nhật phiên bản 1.1</item>
@@ -54,15 +40,16 @@
         <item>17:17 20/10/2016  Cập nhật phiên bản 2.1</item>
     </string-array>
 
-
-    <string name="information">Nội dung được sử dụng trong phần mềm là những
+    <!--about screen-->
+    <string name="app_information">Nội dung được sử dụng trong phần mềm là những
         thông tin chính xác được xác thực từ tổ chức y tế uy tín.</string>
+    <string name="us_information">
+    Đàm Huy Hùng\nMai Trung Kiên\nNguyễn Duy Anh\nNguyễn Phúc An\nNguyễn Tiến Dũng\n
+    </string>
 
     <!-- Buttons string value -->
     <string name="faq_button">Câu hỏi thường gặp</string>
     <string name="qa_button">Đặt câu hỏi cho chúng tôi</string>
     <string name="textview_locating">Đang tìm vị trí</string>
 
-    <!--share on facebook-->
-    <string name="facebook_app_id">1439009406128646</string>
 </resources>
