@@ -16,6 +16,7 @@ import android.provider.Settings;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.telecom.Call;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -33,6 +34,7 @@ import com.favn.firstaid.database.DatabaseOpenHelper;
 import com.favn.firstaid.locationUtil.LocationChangeListener;
 import com.favn.firstaid.locationUtil.LocationFinder;
 import com.favn.firstaid.locationUtil.LocationStatus;
+import com.favn.firstaid.models.Caller;
 import com.favn.firstaid.models.Commons.Constants;
 import com.favn.firstaid.models.Commons.NetworkStatus;
 import com.favn.firstaid.models.Commons.SOSCalling;
@@ -40,6 +42,8 @@ import com.favn.firstaid.models.Instruction;
 import com.favn.firstaid.models.LearningInstruction;
 import com.favn.firstaid.R;
 import com.google.android.gms.common.api.Status;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.List;
 
@@ -64,6 +68,11 @@ public class InstructionDetail extends AppCompatActivity implements LocationChan
     private LocationFinder locationFinder;
     protected static final int REQUEST_CHECK_SETTINGS = 0x1;
 
+    // Declare firebase database reference - KienMT : 11/21/2016
+    DatabaseReference mDb;
+    // Move injuryId to class level
+    private int injuryId;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,7 +83,11 @@ public class InstructionDetail extends AppCompatActivity implements LocationChan
 
 
         Intent intent = getIntent();
-        final int injuryId = intent.getExtras().getInt("id");
+
+        // START EDIT : Declare injuryID in class level -> others function can access
+        // final int injuryId = intent.getExtras().getInt("id");
+        injuryId = intent.getExtras().getInt("id");
+
         String name = intent.getExtras().getString("name");
         int typeOfAction = intent.getExtras().getInt("typeOfAction");
         getSupportActionBar().setTitle(name);
@@ -218,6 +231,16 @@ public class InstructionDetail extends AppCompatActivity implements LocationChan
         mCurrentLocation = location;
 
         //TODO send information to server
+        // Init caller
+        Caller caller = new Caller();
+        caller.setPhone("01694639816");
+        caller.setInjuryId(injuryId);
+        caller.setLatitude(location.getLatitude());
+        caller.setLongitude(location.getLongitude());
+
+        mDb = FirebaseDatabase.getInstance().getReference();
+        mDb.child("callers").push().setValue(caller);
+
     }
 
 
