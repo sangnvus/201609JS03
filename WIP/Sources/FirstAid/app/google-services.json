@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "702762710809",
+    "firebase_url": "https://favn-e63df.firebaseio.com",
+    "project_id": "favn-e63df",
+    "storage_bucket": "favn-e63df.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:702762710809:android:8b5aa1977438879d",
+        "android_client_info": {
+          "package_name": "com.favn.firstaid"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "702762710809-qjer2b2chrtfpf017as6hb2s9kru6jop.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA8Vz2fAKDw31fqTz9oHstvFdzJ2xqujOk"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
