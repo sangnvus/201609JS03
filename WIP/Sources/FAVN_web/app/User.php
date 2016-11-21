@@ -31,4 +31,9 @@ class User extends Authenticatable
     public function center(){
         return $this->belongsTo('App\Center');
     }
+
+    public function ambulance(){
+        return $this->hasOne('App\Ambulance');
+    }
+
 }

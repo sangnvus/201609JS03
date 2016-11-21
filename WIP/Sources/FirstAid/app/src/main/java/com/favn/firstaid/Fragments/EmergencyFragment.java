@@ -88,7 +88,7 @@ public class EmergencyFragment extends Fragment implements AdapterView.OnItemCli
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         Injury injury = (Injury) listView.getItemAtPosition(position);
         int injuryId = injury.getId();
-        String injuryName = injury.getInjuryName();
+        String injuryName = injury.getInjury_name();
 
         Intent intent = new Intent(getActivity(), InstructionDetail.class);
         intent.putExtra("id", injuryId);

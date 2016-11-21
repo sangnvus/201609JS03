@@ -15,10 +15,12 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.favn.firstaid.R;
 import com.favn.firstaid.activites.InstructionDetail;
 import com.favn.firstaid.locationUtil.LocationFinder;
+import com.favn.firstaid.locationUtil.LocationStatus;
+import com.favn.firstaid.models.Commons.NetworkStatus;
 import com.favn.firstaid.models.Instruction;
+import com.favn.firstaid.R;
 
 import java.util.List;
 
@@ -30,16 +32,18 @@ public class InstructionAdapter extends BaseAdapter {
     private Context mContext;
     private List<Instruction> mInstructionList;
     private boolean isEmergency;
-    private boolean isSendInformation;
-    LocationFinder locationFinder;
+    private InformationSending informationSending;
 
+    public interface InformationSending {
+        void requestInformationSending();
+    }
 
-    public InstructionAdapter(Context Context, List<Instruction> mInjuryList, boolean
-            isEmergency, boolean isSendInformation) {
+    public InstructionAdapter(Context Context, InformationSending informationSending, List<Instruction>
+            mInjuryList, boolean isEmergency) {
         this.mContext = Context;
         this.mInstructionList = mInjuryList;
         this.isEmergency = isEmergency;
-        this.isSendInformation = isSendInformation;
+        this.informationSending = informationSending;
     }
 
     @Override
@@ -88,28 +92,7 @@ public class InstructionAdapter extends BaseAdapter {
             call115.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent callIntent = new Intent(Intent.ACTION_CALL);
-                    callIntent.setData(Uri.parse("tel:115"));
-                    if (ActivityCompat.checkSelfPermission(mContext, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
-                        // TODO: Consider calling
-                        //    ActivityCompat#requestPermissions
-                        // here to request the missing permissions, and then overriding
-                        //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-                        //                                          int[] grantResults)
-                        // to handle the case where the user grants the permission. See the documentation
-                        // for ActivityCompat#requestPermissions for more details.
-                        return;
-                    }
-                    mContext.startActivity(callIntent);
-                   // Get location
-                    if (isSendInformation) {
-                        InstructionDetail instructionDetail = new InstructionDetail();
-                        locationFinder = new LocationFinder(mContext, instructionDetail);
-                        locationFinder.buildLocationFinder();
-                        locationFinder.connectGoogleApiClient();
-                        Log.d("location", String.valueOf(locationFinder));
-                    }
-
+                    informationSending.requestInformationSending();
                 }
             });
         }

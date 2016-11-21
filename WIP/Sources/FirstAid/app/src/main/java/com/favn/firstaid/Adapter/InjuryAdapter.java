@@ -49,7 +49,7 @@ public class InjuryAdapter extends BaseAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
 //        View v = View.inflate(mContext, R.layout.item_injury, null);
 //        TextView txtView = (TextView)v.findViewById(R.id.text_injury_item);
-//        txtView.setText(mInjuryList.get(position).getInjuryName());
+//        txtView.setText(mInjuryList.get(position).getInjury_name());
 //        return v;
 
         // Edit - Check control type to return view - by Kienmt 11/04/2016
@@ -57,18 +57,18 @@ public class InjuryAdapter extends BaseAdapter {
             View v = View.inflate(mContext, R.layout.item_injury, null);
             TextView txtView = (TextView)v.findViewById(R.id.text_injury_item);
             ImageView icon = (ImageView) v.findViewById(R.id.image_injury_item);
-            txtView.setText(mInjuryList.get(position).getInjuryName());
-            icon_src = mInjuryList.get(position).getInjurySymptom();
+            txtView.setText(mInjuryList.get(position).getInjury_name());
+            icon_src = mInjuryList.get(position).getSymptom();
 
             int imagePath = v.getResources().getIdentifier("com.favn.firstaid:drawable/" +
-                    mInjuryList.get(position).getInjurySymptom(), null, null);
+                    mInjuryList.get(position).getSymptom(), null, null);
             icon.setImageResource(imagePath);
 
             return v;
         } else {
             View v = View.inflate(mContext, R.layout.spinner_layout, null);
             TextView txtInjuryName = (TextView) v.findViewById(R.id.text_injury_name);
-            txtInjuryName.setText(mInjuryList.get(position).getInjuryName());
+            txtInjuryName.setText(mInjuryList.get(position).getInjury_name());
             return v;
         }
     }

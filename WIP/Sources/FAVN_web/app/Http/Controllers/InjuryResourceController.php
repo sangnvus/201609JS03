@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 
 use App\Http\Requests;
 
-use App\INJURY;
+use App\Injury;
 
 class InjuryResourceController extends Controller
 {
@@ -18,8 +18,8 @@ class InjuryResourceController extends Controller
     public function index()
     {
         // init question model
-        $injury = INJURY::all();
-        return Response($injury, 201);
+        $injury = Injury::all();
+        return Response(['injuries' => $injury], 201);
     }
 
     /**

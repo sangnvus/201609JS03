@@ -31,9 +31,20 @@ dependencies {
     })
     compile 'com.android.support:appcompat-v7:24.2.1'
     compile 'com.android.support:design:24.2.1'
-    compile 'com.google.android.gms:play-services:9.6.1'
+
+    // START EDIT : change lib (cause firebase database needd gms play service 9.8.0)
+    //compile 'com.google.android.gms:play-services:9.6.1'
+    compile 'com.google.android.gms:play-services:9.8.0'
+    // END EDII
+
     testCompile 'junit:junit:4.12'
     compile 'com.google.code.gson:gson:2.2.4'
 
     compile 'com.android.support.constraint:constraint-layout:1.0.0-alpha9'
+
+    // Add firebase-database lib - KienMT : 11/18/2016
+    compile 'com.google.firebase:firebase-database:9.8.0'
 }
+
+// Apply plugin google messaging service - Kienmt : 11/18/2016
+apply plugin: 'com.google.gms.google-services'

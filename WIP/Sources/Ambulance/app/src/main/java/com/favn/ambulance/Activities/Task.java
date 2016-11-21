@@ -104,8 +104,7 @@ public class Task extends AppCompatActivity implements OnMapReadyCallback,
         intentFilter.addAction(Constants.INTENT_FILTER_CONNECTIVITY_CHANGE);
 
         // showing caller location
-        destinationLanLng = new LatLng(21.011371, 105.525721
-        );
+        destinationLanLng = new LatLng(21.011371, 105.525721);
 
     }
 
@@ -215,7 +214,6 @@ public class Task extends AppCompatActivity implements OnMapReadyCallback,
             // Only work when click on off button
             if (intent.getAction().matches(Constants.INTENT_FILTER_PROVIDERS_CHANGED)) {
                 isLocationEnable = LocationStatus.checkLocationProvider(context);
-                Log.d("location", isLocationEnable + "gps");
 
             } else if (intent.getAction().matches(Constants.INTENT_FILTER_CONNECTIVITY_CHANGE)) {
                 isNetworkEnable = NetworkStatus.checkNetworkEnable(context);
@@ -224,11 +222,9 @@ public class Task extends AppCompatActivity implements OnMapReadyCallback,
                 }
                 // Check location enable in connectivity change
                 isLocationEnable = LocationStatus.checkLocationProvider(context);
-                Log.d("location", isLocationEnable + "connectivity");
             }
 
             locationFinder.connectGoogleApiClient();
-            Log.d("location", isLocationEnable + "");
         }
     };
 
@@ -325,7 +321,7 @@ public class Task extends AppCompatActivity implements OnMapReadyCallback,
 
     private void sendDirectionRequest() {
         buildNetworkSetting();
-        if(isNetworkEnable) {
+        if (isNetworkEnable) {
             if (mCurrentLocation != null && destinationLanLng != null) {
                 try {
                     directionFinder = new DirectionFinder(this, mCurrentLocation.getLatitude() + "," +
