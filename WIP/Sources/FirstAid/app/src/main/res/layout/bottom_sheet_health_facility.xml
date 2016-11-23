@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/bottom_sheet"
     android:layout_width="match_parent"
     android:layout_height="600dp"
     android:background="@color/colorWhite"
-    android:clipToPadding="true"
     app:behavior_peekHeight="@dimen/layout_height_64"
+    app:behavior_hideable="true"
     app:layout_behavior="android.support.design.widget.BottomSheetBehavior">
 
     <LinearLayout
@@ -146,11 +146,14 @@
                 android:text="Đang tải dữ liệu"/>
         </LinearLayout>
 
-        <ListView
-            android:id="@+id/listview_hospital"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
+            <ListView
+                android:id="@+id/listview_hospital"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+
+
     </LinearLayout>
 
 
-</LinearLayout>
+</FrameLayout>
