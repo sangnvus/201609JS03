@@ -1,12 +1,6 @@
 package com.favn.firstaid.adapter;
 
-import android.Manifest;
 import android.content.Context;
-import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.net.Uri;
-import android.support.v4.app.ActivityCompat;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -15,12 +9,8 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.favn.firstaid.activites.InstructionDetail;
-import com.favn.firstaid.locationUtil.LocationFinder;
-import com.favn.firstaid.locationUtil.LocationStatus;
-import com.favn.firstaid.models.Commons.NetworkStatus;
-import com.favn.firstaid.models.Instruction;
 import com.favn.firstaid.R;
+import com.favn.firstaid.models.Instruction;
 
 import java.util.List;
 
@@ -67,6 +57,8 @@ public class InstructionAdapter extends BaseAdapter {
         View v = View.inflate(mContext, R.layout.item_instruction, null);
         TextView tvStep = (TextView) v.findViewById(R.id.text_step_number);
         TextView tvInstruction = (TextView) v.findViewById(R.id.text_instruction_content);
+        TextView tvExplanation = (TextView) v.findViewById(R.id.text_instruction_explaination);
+        tvExplanation.setVisibility(View.GONE);
 
         ImageView imgImage = (ImageView) v.findViewById(R.id.image_instruction);
 
@@ -79,10 +71,6 @@ public class InstructionAdapter extends BaseAdapter {
 
         tvStep.setText(instruction.getStep() + "");
         tvInstruction.setText(instruction.getContent());
-        if (!isEmergency) {
-            TextView tvExplanation = (TextView) v.findViewById(R.id.text_instruction_explaination);
-            tvExplanation.setText(instruction.getExplanation());
-        }
 
         if (instruction.isMakeCall() == true) {
             LinearLayout callLayout = (LinearLayout) v.findViewById(R.id.instruction_call);

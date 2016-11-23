@@ -272,14 +272,18 @@ public class DatabaseOpenHelper extends SQLiteOpenHelper {
 
     // Get Faqs list
     public List<Faq> getListFaq(int id) {
-        Faq instruction = null;
+        Faq faq = null;
         List<Faq> faqList = new ArrayList<>();
         openDatabase();
         Cursor cursor = mDatabase.rawQuery("SELECT * FROM " + TABLE_NAME_FAQS + " WHERE " +
                 "injury_id == " + id, null);
         cursor.moveToFirst();
         while (!cursor.isAfterLast()) {
-            faqList.add(instruction);
+            int injuryId = cursor.getInt(1);
+            String question = cursor.getString(2);
+            String answer = cursor.getString(3);
+            faq = new Faq(injuryId, question, answer);
+            faqList.add(faq);
             cursor.moveToNext();
         }
         cursor.close();
