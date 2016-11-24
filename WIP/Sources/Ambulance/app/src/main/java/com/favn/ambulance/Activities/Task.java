@@ -45,6 +45,7 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
@@ -131,6 +132,12 @@ public class Task extends AppCompatActivity implements OnMapReadyCallback,
         super.onOptionsItemSelected(item);
 
         switch (item.getItemId()) {
+            case R.id.caller_location:
+                zoomDestinationLocation();
+                break;
+            case R.id.my_location:
+                zoomCurrentLocation();
+                break;
             case R.id.direction:
                 sendDirectionRequest();
                 break;
@@ -280,7 +287,8 @@ public class Task extends AppCompatActivity implements OnMapReadyCallback,
 
         MarkerOptions markerOptions = new MarkerOptions()
                 .title(healthFacilityName)
-                .position(latLng);
+                .position(latLng)
+                .icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_marker_caller));
 
         destinationMarkers = mGoogleMap.addMarker(markerOptions);
         destinationMarkers.showInfoWindow();
