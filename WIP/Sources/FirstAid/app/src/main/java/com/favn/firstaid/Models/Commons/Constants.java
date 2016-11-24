@@ -73,9 +73,10 @@ public class Constants {
     public static final String CALL_115 = "tel:115";
 
     // Text for notify, warning for sendind information functionality
-    public static final String WARNING_CONNECTIVITY = "| Không có kết nối";
-    public static final String ENABLE_CONNECTIVITY = "| Có thể gửi thông tin";
-    public static final String ERROR_SENDING_INFORMATION = "| Không gửi được thông tin";
-    public static final String SUCCESS_SENDING_INFORMATION = "| Đã gửi thành công";
+    public static final String INFO_WARNING_CONNECTIVITY = "| Không có kết nối";
+    public static final String INFO_ENABLE_CONNECTIVITY = "| Có thể gửi thông tin";
+    public static final String INFO_SENDING_INFORMATION = "| Đang gửi thông tin";
+    public static final String INFO_ERROR_SENDING_INFORMATION = "| Không gửi được thông tin";
+    public static final String INFO_SUCCESS_SENDING_INFORMATION = "| Đã gửi thành công";
 
 }

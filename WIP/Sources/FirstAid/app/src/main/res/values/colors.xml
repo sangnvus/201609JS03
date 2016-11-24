@@ -16,4 +16,11 @@
     <color name="colorGpsFixed">#2196F3</color>
     <color name="colorAdvice">#5fba7d</color>
     <color name="colorNavigate">#4CAF50</color>
+
+    <!--status color-->
+    <color name="colorProcessing">#FF5722</color>
+    <color name="colorWarning">#e53935</color>
+    <color name="colorSuccess">#5fba7d</color>
+
+
 </resources>

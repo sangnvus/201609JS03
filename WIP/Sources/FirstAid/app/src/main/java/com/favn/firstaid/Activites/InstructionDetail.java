@@ -31,23 +31,21 @@ import com.favn.firstaid.database.DatabaseOpenHelper;
 import com.favn.firstaid.locationUtil.LocationChangeListener;
 import com.favn.firstaid.locationUtil.LocationFinder;
 import com.favn.firstaid.locationUtil.LocationStatus;
-import com.favn.firstaid.models.Caller;
 import com.favn.firstaid.models.Commons.CallerInfoSender;
 import com.favn.firstaid.models.Commons.Constants;
 import com.favn.firstaid.models.Commons.NetworkStatus;
-import com.favn.firstaid.models.Commons.QuestionSender;
 import com.favn.firstaid.models.Commons.SOSCalling;
+import com.favn.firstaid.models.Commons.InformationSenderListener;
 import com.favn.firstaid.models.Instruction;
 import com.favn.firstaid.models.LearningInstruction;
 import com.favn.firstaid.R;
 import com.google.android.gms.common.api.Status;
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.List;
 
 public class InstructionDetail extends AppCompatActivity implements LocationChangeListener,
-        InstructionAdapter.InformationSending {
+        InstructionAdapter.InformationSending, InformationSenderListener {
     private InstructionAdapter instructionAdapter;
     private LearningInstructionAdapter LearningInstructionAdapter;
     private DatabaseOpenHelper dbHelper;
@@ -266,6 +264,7 @@ public class InstructionDetail extends AppCompatActivity implements LocationChan
         ciSender.setLatitude(location.getLatitude());
         ciSender.setLongitude(location.getLongitude());
         ciSender.setStatus("waiting");
+        ciSender.setInformationSenderListener(InstructionDetail.this);
 
         ciSender.execute();
     }
@@ -307,14 +306,14 @@ public class InstructionDetail extends AppCompatActivity implements LocationChan
         new AlertDialog.Builder(this)
                 .setTitle("Gửi vị trí")
                 .setMessage("Chức năng gửi vị trí cần internet và gps")
-                .setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+                .setNegativeButton("GỌI", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         // Start call 115
                         SOSCalling.makeSOSCall(getBaseContext());
                     }
                 })
-                .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                .setPositiveButton("CÀI ĐẶT", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         locationFinder.buildLocationFinder();
@@ -348,22 +347,43 @@ public class InstructionDetail extends AppCompatActivity implements LocationChan
     }
 
     private void createSendingInformationUI(boolean isShow) {
-        llSendingStatus = (LinearLayout) findViewById(R.id.include_sending_status);
-        tvSendingInformationStatus = (TextView) findViewById(R.id
-                .textview_sending_information_status);
+        llSendingStatus = (LinearLayout) findViewById(R.id.layout_sending_status);
+
         if (isShow) {
             llSendingStatus.setVisibility(View.VISIBLE);
+            tvSendingInformationStatus = (TextView) findViewById(R.id
+                    .textview_sending_information_status);
         } else {
             llSendingStatus.setVisibility(View.GONE);
         }
     }
 
     private void updateSendingInformationUI() {
-        if(isLocationEnable && isNetworkEnable) {
-            tvSendingInformationStatus.setText("Có thể gửi thông tin");
+        if (isLocationEnable && isNetworkEnable) {
+            tvSendingInformationStatus.setText(Constants.INFO_ENABLE_CONNECTIVITY);
+            llSendingStatus.setBackgroundColor(getResources().getColor(R.color.colorSuccess));
         } else {
-            tvSendingInformationStatus.setText("Không thể gửi thông tin");
+            tvSendingInformationStatus.setText(Constants.INFO_WARNING_CONNECTIVITY);
+            llSendingStatus.setBackgroundColor(getResources().getColor(R.color.colorWarning));
+
         }
     }
 
+    @Override
+    public void sendInformationListener(String sendingStatus) {
+        switch (sendingStatus) {
+            case Constants.INFO_SENDING_INFORMATION:
+                tvSendingInformationStatus.setText(Constants.INFO_SENDING_INFORMATION);
+                llSendingStatus.setBackgroundColor(getResources().getColor(R.color.colorProcessing));
+                break;
+            case Constants.INFO_SUCCESS_SENDING_INFORMATION:
+                tvSendingInformationStatus.setText(Constants.INFO_SUCCESS_SENDING_INFORMATION);
+                llSendingStatus.setBackgroundColor(getResources().getColor(R.color.colorSuccess));
+                break;
+            case Constants.INFO_ERROR_SENDING_INFORMATION:
+                tvSendingInformationStatus.setText(Constants.INFO_ERROR_SENDING_INFORMATION);
+                llSendingStatus.setBackgroundColor(getResources().getColor(R.color.colorWarning));
+                break;
+        }
+    }
 }

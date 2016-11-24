@@ -31,6 +31,8 @@ public class CallerInfoSender extends AsyncTask<Void, Void, String>{
     double longitude;
     String status;
     ProgressDialog pd;
+    InformationSenderListener informationSenderListener;
+
 
     public Context getContext() {
         return context;
@@ -96,13 +98,18 @@ public class CallerInfoSender extends AsyncTask<Void, Void, String>{
         this.pd = pd;
     }
 
+    public InformationSenderListener getInformationSenderListener() {
+        return informationSenderListener;
+    }
+
+    public void setInformationSenderListener(InformationSenderListener informationSenderListener) {
+        this.informationSenderListener = informationSenderListener;
+    }
+
     @Override
     protected void onPreExecute() {
         super.onPreExecute();
-        pd = new ProgressDialog(context);
-        pd.setTitle("Gửi");
-        pd.setMessage("Đang gửi thông tin tới 115");
-        pd.show();
+        informationSenderListener.sendInformationListener(Constants.INFO_SENDING_INFORMATION);
     }
 
     @Override
@@ -112,12 +119,10 @@ public class CallerInfoSender extends AsyncTask<Void, Void, String>{
 
     @Override
     protected void onPostExecute(String s) {
-        pd.dismiss();
-
         if(s != null){
-            Toast.makeText(context, "Gửi thành công", Toast.LENGTH_LONG).show();
+            informationSenderListener.sendInformationListener(Constants.INFO_SUCCESS_SENDING_INFORMATION);
         } else {
-            Toast.makeText(context, "Chửa gửi được !", Toast.LENGTH_LONG).show();
+            informationSenderListener.sendInformationListener(Constants.INFO_ERROR_SENDING_INFORMATION);
         }
     }
 
