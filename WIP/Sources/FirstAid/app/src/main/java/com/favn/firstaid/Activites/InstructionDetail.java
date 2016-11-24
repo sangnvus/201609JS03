@@ -32,8 +32,10 @@ import com.favn.firstaid.locationUtil.LocationChangeListener;
 import com.favn.firstaid.locationUtil.LocationFinder;
 import com.favn.firstaid.locationUtil.LocationStatus;
 import com.favn.firstaid.models.Caller;
+import com.favn.firstaid.models.Commons.CallerInfoSender;
 import com.favn.firstaid.models.Commons.Constants;
 import com.favn.firstaid.models.Commons.NetworkStatus;
+import com.favn.firstaid.models.Commons.QuestionSender;
 import com.favn.firstaid.models.Commons.SOSCalling;
 import com.favn.firstaid.models.Instruction;
 import com.favn.firstaid.models.LearningInstruction;
@@ -65,6 +67,9 @@ public class InstructionDetail extends AppCompatActivity implements LocationChan
     protected static final int REQUEST_CHECK_SETTINGS = 0x1;
     private boolean isCalled;
 
+    // Web service url, get caller info from app - KienMT : 11/24/2016
+    private String urlAddress;
+
     private LinearLayout llSendingStatus;
     private TextView tvSendingInformationStatus;
 
@@ -87,6 +92,9 @@ public class InstructionDetail extends AppCompatActivity implements LocationChan
         // START EDIT : Declare injuryID in class level -> others function can access
         // final int injuryId = intent.getExtras().getInt("id");
         injuryId = intent.getExtras().getInt("id");
+
+        // Assign url address value (web service url) - Kienmt : 11/24/2016
+        urlAddress = "http://104.199.149.193/caller";
 
         String name = intent.getExtras().getString("name");
         int typeOfAction = intent.getExtras().getInt("typeOfAction");
@@ -229,16 +237,37 @@ public class InstructionDetail extends AppCompatActivity implements LocationChan
         Log.d("location_test", location + "");
 
         //TODO send information to server
+
+        sendCallerInfoToServer(location);
+
+        // START SEND TO FIREBAE
         // Init caller
-        Caller caller = new Caller();
-        caller.setPhone("01694639816");
-        caller.setInjuryId(injuryId);
-        caller.setLatitude(location.getLatitude());
-        caller.setLongitude(location.getLongitude());
+        // Caller caller = new Caller();
+        // caller.setPhone("01694639816");
+        // caller.setInjuryId(injuryId);
+        // caller.setLatitude(location.getLatitude());
+        // caller.setLongitude(location.getLongitude());
+        // caller.setStatus("waiting");
+        // mDb = FirebaseDatabase.getInstance().getReference();
+        // mDb.child("callers").push().setValue(caller);
+        // END SEND TO FIREBASE
 
-        mDb = FirebaseDatabase.getInstance().getReference();
-        mDb.child("callers").push().setValue(caller);
+    }
 
+    // Send caller infor to db server - KienMT : 11/24/2016
+    private void sendCallerInfoToServer(Location location) {
+        CallerInfoSender ciSender = new CallerInfoSender();
+
+        // Assign values
+        ciSender.setContext(InstructionDetail.this);
+        ciSender.setUrlAddress(urlAddress);
+        ciSender.setPhone("01694639816");
+        ciSender.setInjuryId(injuryId);
+        ciSender.setLatitude(location.getLatitude());
+        ciSender.setLongitude(location.getLongitude());
+        ciSender.setStatus("waiting");
+
+        ciSender.execute();
     }
 
 

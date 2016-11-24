@@ -6,9 +6,9 @@ use Illuminate\Http\Request;
 
 use App\Http\Requests;
 
-use App\Question;
+use App\Caller;
 
-class QuestionResourceController extends Controller
+class CallerResourceController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -18,8 +18,6 @@ class QuestionResourceController extends Controller
     public function index()
     {
         //
-        //$QUESTION = QUESTION::all();
-        //return Response($QUESTION, 201);
     }
 
     /**
@@ -40,25 +38,28 @@ class QuestionResourceController extends Controller
      */
     public function store(Request $request)
     {
-        // Declare object question
-        $question = new Question;
+        // Declare object caller
+        $caller = new Caller;
 
         // Assign value from request
-        $injury_id = $request->input('injury_id');
+        $caller->phone = $request->input('phone');
+        $caller->latitude = $request->input('latitude');
+        $caller->longitude = $request->input('longitude');
+
+        $injury_id = $request->input('injuryId');
         if(!IsNullOrEmptyString($injury_id)) {
-                    $question->injury_id = $injury_id;
+                    $caller->injury_id = $injury_id;
         }
-        $question->asker = $request->input('asker');
-        $question->asker_email = $request->input('asker_email');
-        $question->title = $request->input('title');
-        $question->content = $request->input('content');
+
+        $symptom = $request->input('symptom');
+        if(!IsNullOrEmptyString($symptom)) {
+                    $caller->symptom = $symptom;
+        }
 
         // Save to db
-        $question->save();
+        $caller->save();
 
-        echo 'Gửi câu hỏi thành công';
-
-
+        echo 'Gửi thông tin thành công';
     }
 
     /**

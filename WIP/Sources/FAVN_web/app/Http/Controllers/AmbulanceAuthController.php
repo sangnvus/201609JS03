@@ -17,7 +17,7 @@ class AmbulanceAuthController extends Controller
 		$password = $request->password;
 
 	 	if (Auth::attempt(['username' => $username, 'password' => $password])){
-	 		if(Auth::user()->role_id == 3) {
+	 		if(Auth::user()->role_id == 4) {
 	 			echo 'done';
 	 		}
 		}
