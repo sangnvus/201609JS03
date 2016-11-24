@@ -1,23 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
       xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/caller_location"
+        android:icon="@drawable/ic_caller_location"
+        android:title="Vị trí người gọi"
+        app:showAsAction="always"/>
+
+    <item
+        android:id="@+id/my_location"
+        android:icon="@drawable/ic_my_location"
+        android:title="Vị trí hiện tại"
+        app:showAsAction="always"/>
     <item
         android:id="@+id/direction"
         android:icon="@drawable/ic_direction"
-        app:showAsAction="ifRoom|withText"
-        android:title="@string/navigate"/>
+        android:title="@string/navigate"
+        app:showAsAction="ifRoom|withText"/>
 
     <item
         android:id="@+id/report_problem"
         android:icon="@drawable/ic_report_problem"
-        app:showAsAction="ifRoom|withText"
         android:title="@string/report_problem"
+        app:showAsAction="ifRoom|withText"
         />
 
     <item
         android:id="@+id/finish_task"
         android:icon="@drawable/ic_finish_task"
-        app:showAsAction="ifRoom|withText"
         android:title="@string/finish_task"
+        app:showAsAction="ifRoom|withText"
         />
 </menu>
