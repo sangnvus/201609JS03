@@ -35,7 +35,6 @@ class AuthController extends Controller
 		$password = $request->password;
 
 	 	if (Auth::attempt(['username' => $username, 'password' => $password])){
-	 		echo Auth::user()->name;
 			$role_id = Auth::user()->role_id;
 			switch ($role_id) {
 				case 1: // Admin
