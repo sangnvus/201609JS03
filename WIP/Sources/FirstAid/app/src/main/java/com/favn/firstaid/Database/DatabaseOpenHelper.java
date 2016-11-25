@@ -114,9 +114,7 @@ public class DatabaseOpenHelper extends SQLiteOpenHelper {
         Injury injury = null;
         List<Injury> injuryListList = new ArrayList<>();
         openDatabase();
-        Cursor cursor = mDatabase.rawQuery("SELECT * FROM " + TABLE_NAME_INJURIES
-                + " ORDER BY injury_name"
-                , null);
+        Cursor cursor = mDatabase.rawQuery("SELECT * FROM " + TABLE_NAME_INJURIES, null);
         cursor.moveToFirst();
         while (!cursor.isAfterLast()) {
             int id = cursor.getInt(0);
