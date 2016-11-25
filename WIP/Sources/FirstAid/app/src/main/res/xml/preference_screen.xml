@@ -18,7 +18,8 @@
             android:singleLine="true"
             android:title="@string/sending_phone_number"
             android:key="et_phone_number"
-            android:summary="@string/summary_switch_sending_phone_number" />
+            android:summary="@string/summary_switch_sending_phone_number"
+            android:dependency="switch_sending_information"/>
     </PreferenceCategory>
 
 

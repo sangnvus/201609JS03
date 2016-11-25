@@ -16,6 +16,7 @@ import com.favn.firstaid.activites.BannerDetail;
 import com.favn.firstaid.activites.InstructionDetail;
 import com.favn.firstaid.adapter.InjuryAdapter;
 import com.favn.firstaid.database.DatabaseOpenHelper;
+import com.favn.firstaid.models.Commons.Sort;
 import com.favn.firstaid.models.Injury;
 import com.favn.firstaid.R;
 
@@ -59,6 +60,8 @@ public class LearningFragment extends Fragment implements AdapterView.OnItemClic
         listView.setOnItemClickListener(this);
         setHasOptionsMenu(true);
         container.removeAllViews();
+
+        Sort.sortByName(mInjuryList);
 
         FrameLayout headerLayout = (FrameLayout) inflater.inflate(R.layout.banner, null);
         ImageView banner = (ImageView) headerLayout.findViewById(R.id.image_banner);

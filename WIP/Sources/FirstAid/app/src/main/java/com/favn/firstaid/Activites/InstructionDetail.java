@@ -24,10 +24,10 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.favn.firstaid.adapter.LearningInstructionAdapter;
+import com.favn.firstaid.R;
 import com.favn.firstaid.adapter.InstructionAdapter;
+import com.favn.firstaid.adapter.LearningInstructionAdapter;
 import com.favn.firstaid.database.DatabaseOpenHelper;
-
 import com.favn.firstaid.locationUtil.LocationChangeListener;
 import com.favn.firstaid.locationUtil.LocationFinder;
 import com.favn.firstaid.locationUtil.LocationStatus;
@@ -37,7 +37,6 @@ import com.favn.firstaid.models.Commons.NetworkStatus;
 import com.favn.firstaid.models.Commons.SOSCalling;
 import com.favn.firstaid.models.Instruction;
 import com.favn.firstaid.models.LearningInstruction;
-import com.favn.firstaid.R;
 import com.google.android.gms.common.api.Status;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -72,7 +71,7 @@ public class InstructionDetail extends AppCompatActivity implements LocationChan
     DatabaseReference mDb;
     // Move injuryId to class level
     private int injuryId;
-
+    private String phoneNo = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,6 +86,8 @@ public class InstructionDetail extends AppCompatActivity implements LocationChan
         // START EDIT : Declare injuryID in class level -> others function can access
         // final int injuryId = intent.getExtras().getInt("id");
         injuryId = intent.getExtras().getInt("id");
+        //get phone number on setting
+        phoneNo = intent.getExtras().getString("phoneNo");
 
         String name = intent.getExtras().getString("name");
         int typeOfAction = intent.getExtras().getInt("typeOfAction");
@@ -115,6 +116,33 @@ public class InstructionDetail extends AppCompatActivity implements LocationChan
                 intentFilter.addAction(Constants.INTENT_FILTER_CONNECTIVITY_CHANGE);
                 isCalled = false;
             }
+
+            final int[] audio = {R.raw.audio_1, R.raw.audio_2, R.raw.audio_3};
+
+            listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int pos, long id) {
+
+                    if (playingAudioId == audio[pos] && mMediaPlayer.isPlaying()) {
+                        mMediaPlayer.stop();
+                    } else {
+                        playAudio(audio[pos]);
+
+                    }
+
+                    for (int i = 0; i < listView.getChildCount(); i++) {
+                        if (pos == i) {
+                            listView.getChildAt(i).setBackground(getResources().getDrawable(R.drawable.list_item_color));
+                        } else {
+                            listView.getChildAt(i).setBackgroundColor(Color.TRANSPARENT);
+                        }
+                    }
+
+
+                }
+            });
+
         } else {
             mLearningInstructionList = dbHelper.getListLearingInstruction(injuryId);
             LearningInstructionAdapter = new LearningInstructionAdapter(this, mLearningInstructionList);
@@ -135,35 +163,6 @@ public class InstructionDetail extends AppCompatActivity implements LocationChan
         }
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
-
-        final int[] audio = {R.raw.audio_1, R.raw.audio_2, R.raw.audio_3};
-
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int pos, long id) {
-
-                if (playingAudioId == audio[pos] && mMediaPlayer.isPlaying()) {
-                    mMediaPlayer.stop();
-//                    colorLine.setVisibility(View.INVISIBLE);
-                } else {
-                    playAudio(audio[pos]);
-
-                }
-
-                for (int i = 0; i < listView.getChildCount(); i++) {
-                    if (pos == i) {
-                        listView.getChildAt(i).setBackground(getResources().getDrawable(R.drawable.list_item_color));
-                    } else {
-                        listView.getChildAt(i).setBackgroundColor(Color.TRANSPARENT);
-                    }
-                }
-
-
-            }
-        });
-
 
     }
 
@@ -231,14 +230,13 @@ public class InstructionDetail extends AppCompatActivity implements LocationChan
         //TODO send information to server
         // Init caller
         Caller caller = new Caller();
-        caller.setPhone("01694639816");
+        caller.setPhone(phoneNo);
         caller.setInjuryId(injuryId);
         caller.setLatitude(location.getLatitude());
         caller.setLongitude(location.getLongitude());
 
         mDb = FirebaseDatabase.getInstance().getReference();
         mDb.child("callers").push().setValue(caller);
-
     }
 
 
