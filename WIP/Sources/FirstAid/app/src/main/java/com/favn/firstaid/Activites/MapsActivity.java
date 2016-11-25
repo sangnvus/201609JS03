@@ -31,6 +31,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -71,6 +72,8 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.Circle;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
@@ -221,7 +224,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         // Action zoom to current location
         llCurrentLocation.setOnClickListener(this);
 
-        LinearLayout BottomSheet = (LinearLayout) findViewById(R.id.bottom_sheet);
+        FrameLayout BottomSheet = (FrameLayout) findViewById(R.id.bottom_sheet);
         mBottomSheetBehavior = BottomSheetBehavior.from(BottomSheet);
         mBottomSheetBehavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
             @Override
@@ -424,6 +427,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             if (isNetworkEnable) {
                 startAddressIntentService();
             }
+
         }
     }
 
@@ -766,7 +770,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         MarkerOptions markerOptions = new MarkerOptions()
                 .title(healthFacilityName)
-                .position(latLng);
+                .position(latLng)
+                .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_marker_health_facility));
 
         destinationMarkers = mGoogleMap.addMarker(markerOptions);
         destinationMarkers.showInfoWindow();

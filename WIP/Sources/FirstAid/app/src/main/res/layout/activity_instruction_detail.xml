@@ -30,7 +30,7 @@
         <include layout="@layout/content_instruction_detail"
             android:layout_weight="91.19"
             android:layout_width="match_parent"
-            android:layout_height="0dp"/>
+            android:layout_height="match_parent"/>
 
     </LinearLayout>
 

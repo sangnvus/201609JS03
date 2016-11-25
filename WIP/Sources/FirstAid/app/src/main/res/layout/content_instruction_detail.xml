@@ -10,10 +10,7 @@
               tools:context="com.favn.firstaid.activites.InstructionDetail"
               tools:showIn="@layout/activity_instruction_detail">
 
-    <include
-        android:id="@+id/include_sending_status"
-        layout="@layout/layout_sending_status"
-        android:visibility="gone"/>
+    <include layout="@layout/layout_sending_status"/>
 
     <ListView
         android:id="@+id/listview_instruction"

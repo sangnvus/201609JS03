@@ -24,27 +24,28 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.favn.firstaid.R;
-import com.favn.firstaid.adapter.InstructionAdapter;
 import com.favn.firstaid.adapter.LearningInstructionAdapter;
+import com.favn.firstaid.adapter.InstructionAdapter;
 import com.favn.firstaid.database.DatabaseOpenHelper;
+
 import com.favn.firstaid.locationUtil.LocationChangeListener;
 import com.favn.firstaid.locationUtil.LocationFinder;
 import com.favn.firstaid.locationUtil.LocationStatus;
-import com.favn.firstaid.models.Caller;
+import com.favn.firstaid.models.Commons.CallerInfoSender;
 import com.favn.firstaid.models.Commons.Constants;
 import com.favn.firstaid.models.Commons.NetworkStatus;
 import com.favn.firstaid.models.Commons.SOSCalling;
+import com.favn.firstaid.models.Commons.InformationSenderListener;
 import com.favn.firstaid.models.Instruction;
 import com.favn.firstaid.models.LearningInstruction;
+import com.favn.firstaid.R;
 import com.google.android.gms.common.api.Status;
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.List;
 
 public class InstructionDetail extends AppCompatActivity implements LocationChangeListener,
-        InstructionAdapter.InformationSending {
+        InstructionAdapter.InformationSending, InformationSenderListener {
     private InstructionAdapter instructionAdapter;
     private LearningInstructionAdapter LearningInstructionAdapter;
     private DatabaseOpenHelper dbHelper;
@@ -64,6 +65,9 @@ public class InstructionDetail extends AppCompatActivity implements LocationChan
     protected static final int REQUEST_CHECK_SETTINGS = 0x1;
     private boolean isCalled;
 
+    // Web service url, get caller info from app - KienMT : 11/24/2016
+    private String urlAddress;
+
     private LinearLayout llSendingStatus;
     private TextView tvSendingInformationStatus;
 
@@ -71,7 +75,7 @@ public class InstructionDetail extends AppCompatActivity implements LocationChan
     DatabaseReference mDb;
     // Move injuryId to class level
     private int injuryId;
-    private String phoneNo = null;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,8 +90,9 @@ public class InstructionDetail extends AppCompatActivity implements LocationChan
         // START EDIT : Declare injuryID in class level -> others function can access
         // final int injuryId = intent.getExtras().getInt("id");
         injuryId = intent.getExtras().getInt("id");
-        //get phone number on setting
-        phoneNo = intent.getExtras().getString("phoneNo");
+
+        // Assign url address value (web service url) - Kienmt : 11/24/2016
+        urlAddress = "http://104.199.149.193/caller";
 
         String name = intent.getExtras().getString("name");
         int typeOfAction = intent.getExtras().getInt("typeOfAction");
@@ -116,33 +121,6 @@ public class InstructionDetail extends AppCompatActivity implements LocationChan
                 intentFilter.addAction(Constants.INTENT_FILTER_CONNECTIVITY_CHANGE);
                 isCalled = false;
             }
-
-            final int[] audio = {R.raw.audio_1, R.raw.audio_2, R.raw.audio_3};
-
-            listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-
-                @Override
-                public void onItemClick(AdapterView<?> parent, View view, int pos, long id) {
-
-                    if (playingAudioId == audio[pos] && mMediaPlayer.isPlaying()) {
-                        mMediaPlayer.stop();
-                    } else {
-                        playAudio(audio[pos]);
-
-                    }
-
-                    for (int i = 0; i < listView.getChildCount(); i++) {
-                        if (pos == i) {
-                            listView.getChildAt(i).setBackground(getResources().getDrawable(R.drawable.list_item_color));
-                        } else {
-                            listView.getChildAt(i).setBackgroundColor(Color.TRANSPARENT);
-                        }
-                    }
-
-
-                }
-            });
-
         } else {
             mLearningInstructionList = dbHelper.getListLearingInstruction(injuryId);
             LearningInstructionAdapter = new LearningInstructionAdapter(this, mLearningInstructionList);
@@ -163,6 +141,35 @@ public class InstructionDetail extends AppCompatActivity implements LocationChan
         }
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+
+        final int[] audio = {R.raw.audio_1, R.raw.audio_2, R.raw.audio_3};
+
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int pos, long id) {
+
+                if (playingAudioId == audio[pos] && mMediaPlayer.isPlaying()) {
+                    mMediaPlayer.stop();
+//                    colorLine.setVisibility(View.INVISIBLE);
+                } else {
+                    playAudio(audio[pos]);
+
+                }
+
+                for (int i = 0; i < listView.getChildCount(); i++) {
+                    if (pos == i) {
+                        listView.getChildAt(i).setBackground(getResources().getDrawable(R.drawable.list_item_color));
+                    } else {
+                        listView.getChildAt(i).setBackgroundColor(Color.TRANSPARENT);
+                    }
+                }
+
+
+            }
+        });
+
 
     }
 
@@ -228,15 +235,38 @@ public class InstructionDetail extends AppCompatActivity implements LocationChan
         Log.d("location_test", location + "");
 
         //TODO send information to server
-        // Init caller
-        Caller caller = new Caller();
-        caller.setPhone(phoneNo);
-        caller.setInjuryId(injuryId);
-        caller.setLatitude(location.getLatitude());
-        caller.setLongitude(location.getLongitude());
 
-        mDb = FirebaseDatabase.getInstance().getReference();
-        mDb.child("callers").push().setValue(caller);
+        sendCallerInfoToServer(location);
+
+        // START SEND TO FIREBAE
+        // Init caller
+        // Caller caller = new Caller();
+        // caller.setPhone("01694639816");
+        // caller.setInjuryId(injuryId);
+        // caller.setLatitude(location.getLatitude());
+        // caller.setLongitude(location.getLongitude());
+        // caller.setStatus("waiting");
+        // mDb = FirebaseDatabase.getInstance().getReference();
+        // mDb.child("callers").push().setValue(caller);
+        // END SEND TO FIREBASE
+
+    }
+
+    // Send caller infor to db server - KienMT : 11/24/2016
+    private void sendCallerInfoToServer(Location location) {
+        CallerInfoSender ciSender = new CallerInfoSender();
+
+        // Assign values
+        ciSender.setContext(InstructionDetail.this);
+        ciSender.setUrlAddress(urlAddress);
+        ciSender.setPhone("01694639816");
+        ciSender.setInjuryId(injuryId);
+        ciSender.setLatitude(location.getLatitude());
+        ciSender.setLongitude(location.getLongitude());
+        ciSender.setStatus("waiting");
+        ciSender.setInformationSenderListener(InstructionDetail.this);
+
+        ciSender.execute();
     }
 
 
@@ -276,14 +306,14 @@ public class InstructionDetail extends AppCompatActivity implements LocationChan
         new AlertDialog.Builder(this)
                 .setTitle("Gửi vị trí")
                 .setMessage("Chức năng gửi vị trí cần internet và gps")
-                .setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+                .setNegativeButton("GỌI", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         // Start call 115
                         SOSCalling.makeSOSCall(getBaseContext());
                     }
                 })
-                .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                .setPositiveButton("CÀI ĐẶT", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         locationFinder.buildLocationFinder();
@@ -317,22 +347,43 @@ public class InstructionDetail extends AppCompatActivity implements LocationChan
     }
 
     private void createSendingInformationUI(boolean isShow) {
-        llSendingStatus = (LinearLayout) findViewById(R.id.include_sending_status);
-        tvSendingInformationStatus = (TextView) findViewById(R.id
-                .textview_sending_information_status);
+        llSendingStatus = (LinearLayout) findViewById(R.id.layout_sending_status);
+
         if (isShow) {
             llSendingStatus.setVisibility(View.VISIBLE);
+            tvSendingInformationStatus = (TextView) findViewById(R.id
+                    .textview_sending_information_status);
         } else {
             llSendingStatus.setVisibility(View.GONE);
         }
     }
 
     private void updateSendingInformationUI() {
-        if(isLocationEnable && isNetworkEnable) {
-            tvSendingInformationStatus.setText("Có thể gửi thông tin");
+        if (isLocationEnable && isNetworkEnable) {
+            tvSendingInformationStatus.setText(Constants.INFO_ENABLE_CONNECTIVITY);
+            llSendingStatus.setBackgroundColor(getResources().getColor(R.color.colorSuccess));
         } else {
-            tvSendingInformationStatus.setText("Không thể gửi thông tin");
+            tvSendingInformationStatus.setText(Constants.INFO_WARNING_CONNECTIVITY);
+            llSendingStatus.setBackgroundColor(getResources().getColor(R.color.colorWarning));
+
         }
     }
 
+    @Override
+    public void sendInformationListener(String sendingStatus) {
+        switch (sendingStatus) {
+            case Constants.INFO_SENDING_INFORMATION:
+                tvSendingInformationStatus.setText(Constants.INFO_SENDING_INFORMATION);
+                llSendingStatus.setBackgroundColor(getResources().getColor(R.color.colorProcessing));
+                break;
+            case Constants.INFO_SUCCESS_SENDING_INFORMATION:
+                tvSendingInformationStatus.setText(Constants.INFO_SUCCESS_SENDING_INFORMATION);
+                llSendingStatus.setBackgroundColor(getResources().getColor(R.color.colorSuccess));
+                break;
+            case Constants.INFO_ERROR_SENDING_INFORMATION:
+                tvSendingInformationStatus.setText(Constants.INFO_ERROR_SENDING_INFORMATION);
+                llSendingStatus.setBackgroundColor(getResources().getColor(R.color.colorWarning));
+                break;
+        }
+    }
 }

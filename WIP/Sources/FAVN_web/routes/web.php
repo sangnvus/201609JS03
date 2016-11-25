@@ -30,6 +30,8 @@ Route::resource('question', 'QuestionResourceController');
 
 Route::resource('injury', 'InjuryResourceController');
 
+Route::resource('caller', 'CallerResourceController');
+
 // Call controler show login view
 Route::get('login', 'AuthController@showLoginView');
 
