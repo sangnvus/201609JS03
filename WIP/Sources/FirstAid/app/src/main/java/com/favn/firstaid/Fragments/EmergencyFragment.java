@@ -3,6 +3,7 @@ package com.favn.firstaid.fragments;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
+import android.app.SearchManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -15,7 +16,9 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.provider.Settings;
 import android.support.v4.app.Fragment;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.SearchView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -47,6 +50,7 @@ import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.List;
 
+import static android.content.Context.SEARCH_SERVICE;
 import static com.favn.firstaid.models.Commons.Constants.LISTVIEW_EMERGENCY;
 
 
@@ -168,6 +172,10 @@ public class EmergencyFragment extends Fragment implements AdapterView.OnItemCli
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.main, menu);
         super.onCreateOptionsMenu(menu, inflater);
+        final SearchView searchView = (SearchView) MenuItemCompat.getActionView(menu.findItem(R.id.action_search));
+        SearchManager searchManager = (SearchManager) getActivity().getSystemService(SEARCH_SERVICE);
+        searchView.setSearchableInfo(searchManager.getSearchableInfo(getActivity()
+                .getComponentName()));
     }
 
     @Override

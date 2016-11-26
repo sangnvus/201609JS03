@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_infor"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.favn.ambulance.activities.WaitingScreen">
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:src="@drawable/bg_2"
+        android:id="@+id/bg_login"
+        android:layout_height="match_parent"
+        android:scaleType="centerCrop"/>
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:background="@drawable/background_waiting_screen">
+
+
+
+        <TextView
+            android:text="CHƯA CÓ NHIỆM VỤ"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@android:color/background_light"
+            android:background="@android:color/holo_red_light"
+            android:textAlignment="center"
+            android:textSize="32sp"
+            android:id="@+id/tv_notification" />
+
+    </LinearLayout>
+</RelativeLayout>

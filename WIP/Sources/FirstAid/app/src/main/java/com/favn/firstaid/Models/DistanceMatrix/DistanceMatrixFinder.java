@@ -2,6 +2,7 @@ package com.favn.firstaid.models.DistanceMatrix;
 
 import android.os.AsyncTask;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.favn.firstaid.models.Commons.Constants;
 import com.favn.firstaid.models.HealthFacility;
@@ -65,18 +66,21 @@ public class DistanceMatrixFinder {
                 URL url = new URL(link);
                 InputStreamReader reader = new InputStreamReader(url.openStream(), "UTF-8");
                 DistanceMatrix results = new Gson().fromJson(reader, DistanceMatrix.class);
-
-                for (int i = 0; i < results.getRows()[0].getElements().length; i++) {
-                    HealthFacility healthFacility = new HealthFacility(
-                            destinations[i].getName(),
-                            destinations[i].getType(),
-                            destinations[i].getAddress(),
-                            destinations[i].getVicinity(),
-                            destinations[i].getPhone(),
-                            destinations[i].getLatitude(),
-                            destinations[i].getLongitude(),
-                            results.getRows()[0].getElements()[i].getDistance());
-                    healthFacilityList.add(healthFacility);
+                if (results.getRows().length > 0) {
+                    for (int i = 0; i < results.getRows()[0].getElements().length; i++) {
+                        HealthFacility healthFacility = new HealthFacility(
+                                destinations[i].getName(),
+                                destinations[i].getType(),
+                                destinations[i].getAddress(),
+                                destinations[i].getVicinity(),
+                                destinations[i].getPhone(),
+                                destinations[i].getLatitude(),
+                                destinations[i].getLongitude(),
+                                results.getRows()[0].getElements()[i].getDistance());
+                        healthFacilityList.add(healthFacility);
+                    }
+                } else {
+                    return null;
                 }
             } catch (MalformedURLException e) {
                 // TODO Auto-generated catch block
@@ -94,16 +98,20 @@ public class DistanceMatrixFinder {
 
         @Override
         protected void onPostExecute(String res) {
-            try {
-                Collections.sort(healthFacilityList, new Comparator<HealthFacility>() {
-                    public int compare(HealthFacility h1, HealthFacility h2) {
-                        return h1.getDistance().getValue() - h2.getDistance().getValue();
-                    }
-                });
-                listener.onDistanceMatrixFinderSuccess(healthFacilityList);
-            } catch (Exception e) {
-                e.printStackTrace();
+            if(healthFacilityList.size() > 0) {
+                Log.d("test_code", "code here");
+                try {
+                    Collections.sort(healthFacilityList, new Comparator<HealthFacility>() {
+                        public int compare(HealthFacility h1, HealthFacility h2) {
+                            return h1.getDistance().getValue() - h2.getDistance().getValue();
+                        }
+                    });
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
+            listener.onDistanceMatrixFinderSuccess(healthFacilityList);
         }
     }
 }
