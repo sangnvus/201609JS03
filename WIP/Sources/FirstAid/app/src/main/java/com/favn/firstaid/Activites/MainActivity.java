@@ -1,9 +1,9 @@
 package com.favn.firstaid.activites;
 
 import android.os.Bundle;
+import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -13,13 +13,12 @@ import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
-import com.favn.firstaid.database.DownloadTask;
+import com.favn.firstaid.R;
 import com.favn.firstaid.fragments.AboutFragment;
 import com.favn.firstaid.fragments.EmergencyFragment;
-import com.favn.firstaid.fragments.MoreFragment;
 import com.favn.firstaid.fragments.LearningFragment;
+import com.favn.firstaid.fragments.MoreFragment;
 import com.favn.firstaid.fragments.SettingFragment;
-import com.favn.firstaid.R;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -76,10 +75,10 @@ public class MainActivity extends AppCompatActivity
             fragmentClass = EmergencyFragment.class;
         } else if (id == R.id.nav_learning) {
             fragmentClass = LearningFragment.class;
-        } else if (id == R.id.nav_setting) {
-            fragmentClass = SettingFragment.class;
         } else if (id == R.id.nav_more) {
             fragmentClass = MoreFragment.class;
+        } else if (id == R.id.nav_setting) {
+            fragmentClass = SettingFragment.class;
         } else if (id == R.id.nav_infor) {
             fragmentClass = AboutFragment.class;
         }

@@ -11,7 +11,6 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.IntentSender;
 import android.location.Location;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.Settings;
@@ -31,6 +30,7 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.favn.firstaid.R;
 import com.favn.firstaid.activites.InstructionDetail;
 import com.favn.firstaid.activites.MapsActivity;
 import com.favn.firstaid.adapter.InjuryAdapter;
@@ -42,8 +42,8 @@ import com.favn.firstaid.models.Caller;
 import com.favn.firstaid.models.Commons.Constants;
 import com.favn.firstaid.models.Commons.NetworkStatus;
 import com.favn.firstaid.models.Commons.SOSCalling;
+import com.favn.firstaid.models.Commons.Sort;
 import com.favn.firstaid.models.Injury;
-import com.favn.firstaid.R;
 import com.google.android.gms.common.api.Status;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -63,6 +63,7 @@ public class EmergencyFragment extends Fragment implements AdapterView.OnItemCli
     private ListView listView;
     private List<Injury> mInjuryList;
     public static final int FROM_EMERGENCY = 1;
+    private Injury injury;
 
     // Sending information functionality
     private boolean isAllowedSendInformation;
@@ -78,6 +79,7 @@ public class EmergencyFragment extends Fragment implements AdapterView.OnItemCli
     private LinearLayout llSendingStatus;
     private TextView tvSendingInformationStatus;
 
+    private String phoneNo = null;
 
     public EmergencyFragment() {
         // Required empty public constructor
@@ -88,6 +90,7 @@ public class EmergencyFragment extends Fragment implements AdapterView.OnItemCli
                              Bundle savedInstanceState) {
 
         final ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.fragment_emergency, container, false);
+
         listView = (ListView) rootView.findViewById(R.id.listView);
         dbHelper = new DatabaseOpenHelper(getActivity());
         dbHelper.createDatabase();
@@ -99,6 +102,8 @@ public class EmergencyFragment extends Fragment implements AdapterView.OnItemCli
         listView.setOnItemClickListener(this);
         setHasOptionsMenu(true);
         container.removeAllViews();
+
+        Sort.sortByName(mInjuryList);
 
         // Sending information setup
         isLocationEnable = false;
@@ -135,6 +140,8 @@ public class EmergencyFragment extends Fragment implements AdapterView.OnItemCli
             }
         }, 2000);
 
+        //get phone number on setting
+//        phoneNo = getActivity().getIntent().getExtras().getString("phoneNo");
 
         return rootView;
     }
@@ -301,7 +308,7 @@ public class EmergencyFragment extends Fragment implements AdapterView.OnItemCli
         //TODO send information to server
         // Init caller
         Caller caller = new Caller();
-        caller.setPhone("01694639816");
+        caller.setPhone(phoneNo);
         caller.setInjuryId(0);
         caller.setLatitude(location.getLatitude());
         caller.setLongitude(location.getLongitude());
