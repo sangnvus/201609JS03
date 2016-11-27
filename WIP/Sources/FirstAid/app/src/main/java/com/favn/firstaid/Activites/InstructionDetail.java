@@ -308,6 +308,7 @@ public class InstructionDetail extends AppCompatActivity implements LocationChan
                 }
             }
         };
+        
         if (isLocationEnable && isNetworkEnable) {
             SOSCalling.makeSOSCall(this);
         }
