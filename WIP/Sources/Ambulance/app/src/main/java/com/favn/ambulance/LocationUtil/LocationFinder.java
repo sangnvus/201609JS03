@@ -38,10 +38,10 @@ public class LocationFinder implements GoogleApiClient.ConnectionCallbacks,
 
     protected LocationSettingsRequest mLocationSettingsRequest;
 
-    public static final long UPDATE_INTERVAL_IN_MILLISECONDS = 10000;
+    public static final long UPDATE_INTERVAL_IN_MILLISECONDS = 1000;
     public static final long FASTEST_UPDATE_INTERVAL_IN_MILLISECONDS =
             UPDATE_INTERVAL_IN_MILLISECONDS / 2;
-    public static final int UPDATE_SMALLEST_DISPLACEMENT = 1000;
+    public static final int UPDATE_SMALLEST_DISPLACEMENT = 0;
 
     public LocationFinder(Context mContext, LocationChangeListener locationChangeListener) {
         this.mContext = mContext;
@@ -85,12 +85,8 @@ public class LocationFinder implements GoogleApiClient.ConnectionCallbacks,
             // for ActivityCompat#requestPermissions for more details.
             return;
         }
-        mCurrentLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
-        if (mCurrentLocation != null) {
-            locationChangeListener.locationChangeSuccess(mCurrentLocation);
-        } else {
+
             startLocationUpdates();
-        }
 
     }
 

@@ -44,6 +44,10 @@ dependencies {
 
     // Add firebase-database lib - KienMT : 11/18/2016
     compile 'com.google.firebase:firebase-database:9.8.0'
+
+    //MaterialSearchView
+    compile 'com.miguelcatalan:materialsearchview:1.4.0'
+
 }
 
 // Apply plugin google messaging service - Kienmt : 11/18/2016

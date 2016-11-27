@@ -2,21 +2,43 @@ package com.favn.ambulance.activities;
 
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.content.IntentSender;
+import android.location.Location;
+import android.provider.Settings;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.NotificationCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.favn.ambulance.locationUtil.LocationChangeListener;
+import com.favn.ambulance.locationUtil.LocationFinder;
+import com.favn.ambulance.locationUtil.LocationStatus;
+import com.favn.ambulance.models.Commons.Constants;
+import com.favn.ambulance.networkUtil.NetworkStatus;
 import com.favn.mikey.ambulance.R;
+import com.google.android.gms.common.api.Status;
 
-public class WaitingScreen extends AppCompatActivity {
+public class WaitingScreen extends AppCompatActivity implements LocationChangeListener {
 
     NotificationCompat.Builder notification;
-    private  static final int id = 45612;
+    private static final int id = 45612;
+
+    private Location mCurrentLocation;
+    private LocationFinder locationFinder;
+    private boolean isLocationEnable;
+    private boolean isNetworkEnable;
+    IntentFilter intentFilter;
+    protected static final int REQUEST_CHECK_SETTINGS = 0x1;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -24,6 +46,11 @@ public class WaitingScreen extends AppCompatActivity {
 
         notification = new NotificationCompat.Builder(this);
         notification.setAutoCancel(true);
+
+        createLocationFinder();
+        intentFilter = new IntentFilter();
+        intentFilter.addAction(Constants.INTENT_FILTER_PROVIDERS_CHANGED);
+        intentFilter.addAction(Constants.INTENT_FILTER_CONNECTIVITY_CHANGE);
     }
 
     @Override
@@ -63,8 +90,71 @@ public class WaitingScreen extends AppCompatActivity {
         return true;
     }
 
+    // Broadcast for Connectivity status
+    BroadcastReceiver connectivityBroadcastReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            // Only work when click on off button
+            if (intent.getAction().matches(Constants.INTENT_FILTER_PROVIDERS_CHANGED)) {
+                isLocationEnable = LocationStatus.checkLocationProvider(context);
+
+            } else if (intent.getAction().matches(Constants.INTENT_FILTER_CONNECTIVITY_CHANGE)) {
+                isNetworkEnable = NetworkStatus.checkNetworkEnable(context);
+                if (!isNetworkEnable) {
+                    createNetworkSetting();
+                }
+                // Check location enable in connectivity change
+                isLocationEnable = LocationStatus.checkLocationProvider(context);
+            }
+
+            locationFinder.connectGoogleApiClient();
+        }
+    };
+
+    public void createLocationFinder() {
+        locationFinder = new LocationFinder(this, this);
+        locationFinder.buildLocationFinder();
+        locationFinder.connectGoogleApiClient();
+    }
 
 
+    @Override
+    public void createLocationSettingDialog(Status status) {
+        try {
+            status.startResolutionForResult(WaitingScreen.this, REQUEST_CHECK_SETTINGS);
+        } catch (IntentSender.SendIntentException e) {
+            //PendingIntent unable to execute request.
+        }
+    }
+
+    @Override
+    public void locationChangeSuccess(Location location) {
+        mCurrentLocation = location;
+        Log.d("location_test", location + "");
+    }
+
+    private void buildNetworkSetting() {
+        isNetworkEnable = NetworkStatus.checkNetworkEnable(this);
+        if (!isNetworkEnable) {
+            createNetworkSetting();
+        }
+    }
+
+    private void createNetworkSetting() {
+        new AlertDialog.Builder(this)
+                .setTitle("Kết nối Internet")
+                .setMessage("Vào cài đặt Internet")
+                .setNegativeButton(android.R.string.cancel, null) // dismisses by default
+                .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Intent intent = new Intent(Settings.ACTION_WIRELESS_SETTINGS);
+                        startActivity(intent);
+                    }
+                })
+                .create()
+                .show();
+    }
 }
 
 
