@@ -8,11 +8,11 @@
     tools:context="com.favn.ambulance.activities.MainActivity">
 
     <ImageView
-        android:layout_width="match_parent"
-        android:src="@drawable/bg_login"
-        android:id="@+id/bg_login"
-        android:layout_height="match_parent"
-        android:scaleType="centerCrop"/>
+    android:layout_width="match_parent"
+    android:src="@drawable/bg_2"
+    android:id="@+id/bg_login"
+    android:layout_height="match_parent"
+    android:scaleType="centerCrop"/>
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -27,45 +27,45 @@
             android:layout_weight="0.17" >
 
             <ImageView
-                android:layout_width="match_parent"
-                android:src="@drawable/login"
                 android:id="@+id/logo_login"
+                android:layout_width="match_parent"
                 android:layout_height="150dp"
-                android:alpha="1"/>
+                android:alpha="1"
+                android:src="@drawable/login"/>
 
             <EditText
-                android:inputType="textPersonName"
-                android:text=""
-                android:ems="10"
                 android:id="@+id/editext_name"
                 android:background="@color/colorWhite"
                 android:layout_width="250dp"
                 android:layout_height="40dp"
                 android:layout_marginTop="10dp"
                 android:hint=" Tên đăng nhập"
-                android:textColorHint="@color/colorSeparate" />
+                android:textColorHint="@color/colorSeparate"
+                android:ems="10"
+                android:inputType="textPersonName"
+                android:text="" />
 
             <EditText
+                android:id="@+id/editext_pass"
                 android:layout_width="250dp"
                 android:layout_height="40dp"
                 android:inputType="textPassword"
                 android:ems="10"
-                android:id="@+id/editext_pass"
                 android:background="@color/colorWhite"
                 android:layout_marginTop="10dp"
                 android:hint=" Mật khẩu"
                 android:textColorHint="@color/colorSeparate" />
 
             <Button
-                android:text="Đăng nhập"
-                android:layout_height="40dp"
                 android:id="@+id/button_login"
                 style="@style/Widget.AppCompat.Button"
-                android:background="@android:color/holo_red_light"
-                android:textColor="@android:color/background_light"
+                android:layout_width="250dp"
+                android:layout_height="40dp"
                 android:layout_marginTop="10dp"
                 android:alpha="1"
-                android:layout_width="250dp" />
+                android:background="@android:color/holo_red_light"
+                android:text="Đăng nhập"
+                android:textColor="@android:color/background_light"/>
         </LinearLayout>
 
     </RelativeLayout>

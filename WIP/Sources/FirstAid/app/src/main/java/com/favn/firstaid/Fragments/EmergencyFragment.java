@@ -3,6 +3,7 @@ package com.favn.firstaid.fragments;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
+import android.app.SearchManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -14,7 +15,9 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.provider.Settings;
 import android.support.v4.app.Fragment;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.SearchView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -47,6 +50,7 @@ import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.List;
 
+import static android.content.Context.SEARCH_SERVICE;
 import static com.favn.firstaid.models.Commons.Constants.LISTVIEW_EMERGENCY;
 
 
@@ -86,10 +90,6 @@ public class EmergencyFragment extends Fragment implements AdapterView.OnItemCli
                              Bundle savedInstanceState) {
 
         final ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.fragment_emergency, container, false);
-
-//        Toolbar toolbar = (Toolbar) rootView.findViewById(R.id.toolbar);
-
-//        MaterialSearchView searchView = (MaterialSearchView) rootView.findViewById(R.id.search_view);
 
         listView = (ListView) rootView.findViewById(R.id.listView);
         dbHelper = new DatabaseOpenHelper(getActivity());
@@ -178,47 +178,11 @@ public class EmergencyFragment extends Fragment implements AdapterView.OnItemCli
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.main, menu);
-
-//        MenuItem item = menu.findItem(R.id.action_search);
-//        SearchView sv = new SearchView(((MainActivity) getActivity()).getSupportActionBar().getThemedContext());
-//        sv.setQueryHint("Tìm kiếm...");
-//        sv.setBackgroundColor(Color.WHITE);
-//
-//        MenuItemCompat.setShowAsAction(item, MenuItemCompat.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW | MenuItemCompat.SHOW_AS_ACTION_IF_ROOM);
-//        MenuItemCompat.setActionView(item, sv);
-//        sv.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-//            @Override
-//            public boolean onQueryTextSubmit(String query) {
-//                return false;
-//            }
-//
-//            @Override
-//            public boolean onQueryTextChange(String newText) {
-//                if(newText != null && !newText.isEmpty()){
-//                    List<String> listFound = new ArrayList<String>();
-//                    List<String> listFind = new ArrayList<String>();
-//                    for(int i=0; i<=mInjuryList.size(); i++){
-//                        Injury sinjury = (Injury) listView.getItemAtPosition(i);
-//                        String sinjuryName = sinjury.getInjury_name();
-//                        listFind.add(sinjuryName);
-//
-//                    }
-//
-//                    for(String sItem: listFind){
-//                        if(sItem.contains(newText))
-//                        listFound.add(sItem);
-//                    }
-//
-//                    ArrayAdapter adapter = new ArrayAdapter(getActivity(), android.R.layout.simple_list_item_1, listFound);
-//                    listView.setAdapter(adapter);
-//                }
-//                else {
-//                    adapter = new InjuryAdapter(getActivity(), mInjuryList, LISTVIEW_EMERGENCY);
-//                    listView.setAdapter(adapter);
-//                }
-//                return true;
-//            }
-//        });
+        super.onCreateOptionsMenu(menu, inflater);
+        final SearchView searchView = (SearchView) MenuItemCompat.getActionView(menu.findItem(R.id.action_search));
+        SearchManager searchManager = (SearchManager) getActivity().getSystemService(SEARCH_SERVICE);
+        searchView.setSearchableInfo(searchManager.getSearchableInfo(getActivity()
+                .getComponentName()));
     }
 
     @Override
@@ -237,6 +201,7 @@ public class EmergencyFragment extends Fragment implements AdapterView.OnItemCli
             startActivity(new Intent(getActivity(), MapsActivity.class));
         }
         if (id == R.id.action_search) {
+
             return true;
         }
 

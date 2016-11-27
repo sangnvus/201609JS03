@@ -24,7 +24,7 @@
             </intent-filter>
         </activity>
 
-        <activity android:name="com.favn.ambulance.activities.Information"/>
+        <activity android:name="com.favn.ambulance.activities.WaitingScreen"/>
         <activity android:name="com.favn.ambulance.activities.Task"></activity>
 
         <meta-data

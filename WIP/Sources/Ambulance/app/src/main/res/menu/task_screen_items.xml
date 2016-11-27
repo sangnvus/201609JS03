@@ -1,18 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
       xmlns:app="http://schemas.android.com/apk/res-auto">
+    <group>
+        <item
+            android:id="@+id/caller_location"
+            android:icon="@drawable/ic_caller_location"
+            android:title="Vị trí người gọi"
+            app:showAsAction="always"/>
 
-    <item
-        android:id="@+id/caller_location"
-        android:icon="@drawable/ic_caller_location"
-        android:title="Vị trí người gọi"
-        app:showAsAction="always"/>
-
-    <item
-        android:id="@+id/my_location"
-        android:icon="@drawable/ic_my_location"
-        android:title="Vị trí hiện tại"
-        app:showAsAction="always"/>
+        <item
+            android:id="@+id/my_location"
+            android:icon="@drawable/ic_my_location"
+            android:title="Vị trí hiện tại"
+            app:showAsAction="always"/>
+    </group>
     <item
         android:id="@+id/direction"
         android:icon="@drawable/ic_direction"

@@ -7,7 +7,7 @@ import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.favn.ambulance.activities.Information;
+import com.favn.ambulance.activities.WaitingScreen;
 import com.favn.ambulance.models.User;
 
 import java.io.BufferedReader;
@@ -88,7 +88,7 @@ public class UserSender extends AsyncTask<Void, Void, String>{
         pd.dismiss();
 
         if(s != null){
-            Intent intent = new Intent(context, Information.class);
+            Intent intent = new Intent(context, WaitingScreen.class);
             context.startActivity(intent);
             Log.w("ok", "ok");
         } else {

@@ -29,4 +29,8 @@ public class Constants {
     // Zoom level for map camera
     public static int ZOOM_LEVEL_5 = 5;
     public static int ZOOM_LEVEL_15 = 15;
+
+    // Warning text
+    public static String REQUIRED_ENTER_USERNAME = "Chưa nhập tên đăng nhập";
+    public static String REQUIRED_ENTER_PASSWORD = "Chưa nhập mật khẩu";
 }

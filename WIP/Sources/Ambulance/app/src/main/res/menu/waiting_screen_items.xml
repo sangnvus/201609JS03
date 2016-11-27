@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+      xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/overflow"
+        android:orderInCategory="100"
+        app:showAsAction="always"
+        android:icon="@drawable/ic_more_vert"
+        android:title="">
+        <menu>
+            <item
+                android:id="@+id/sign_out"
+                android:icon="@drawable/ic_log_out"
+                android:title="Đăng xuất"
+                />
+
+            <item
+                android:id="@+id/application_info"
+                android:icon="@drawable/ic_about"
+                android:title="Thông tin phần mềm"
+                />
+        </menu>
+    </item>
+</menu>

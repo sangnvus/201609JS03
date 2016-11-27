@@ -122,7 +122,7 @@ public class Task extends AppCompatActivity implements OnMapReadyCallback,
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.items, menu);
+        inflater.inflate(R.menu.task_screen_items, menu);
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -407,7 +407,6 @@ public class Task extends AppCompatActivity implements OnMapReadyCallback,
     }
 
     private void clearDirection() {
-        Toast.makeText(this, "click", Toast.LENGTH_SHORT).show();
         directionFinder.stop();
         manageDirectionUI(false);
         if (polylinePaths != null) {
