@@ -49,6 +49,7 @@ import com.favn.firstaid.models.Injury;
 import com.google.android.gms.common.api.Status;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.miguelcatalan.materialsearchview.MaterialSearchView;
 
 import java.util.List;
 
@@ -85,6 +86,8 @@ public class EmergencyFragment extends Fragment implements AdapterView.OnItemCli
 
     // Web service url, get caller info from app - KienMT : 11/27/2016
     private String urlAddress;
+
+    MaterialSearchView searchView;
 
     public EmergencyFragment() {
         // Required empty public constructor
@@ -151,6 +154,10 @@ public class EmergencyFragment extends Fragment implements AdapterView.OnItemCli
         //get phone number on setting
 //        phoneNo = getActivity().getIntent().getExtras().getString("phoneNo");
 
+        searchView = (MaterialSearchView) getActivity().findViewById(R.id.search_view);
+
+
+
         return rootView;
     }
 
@@ -187,10 +194,15 @@ public class EmergencyFragment extends Fragment implements AdapterView.OnItemCli
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.main, menu);
         super.onCreateOptionsMenu(menu, inflater);
-        final SearchView searchView = (SearchView) MenuItemCompat.getActionView(menu.findItem(R.id.action_search));
-        SearchManager searchManager = (SearchManager) getActivity().getSystemService(SEARCH_SERVICE);
-        searchView.setSearchableInfo(searchManager.getSearchableInfo(getActivity()
-                .getComponentName()));
+//        final SearchView searchView = (SearchView) MenuItemCompat.getActionView(menu.findItem(R.id.action_search));
+//        SearchManager searchManager = (SearchManager) getActivity().getSystemService(SEARCH_SERVICE);
+//        searchView.setSearchableInfo(searchManager.getSearchableInfo(getActivity().getComponentName()));
+//        searchView.setMaxWidth(Integer.MAX_VALUE);
+
+        MenuItem item = menu.findItem(R.id.action_search);
+        searchView.setMenuItem(item);
+        searchView.closeSearch();
+
     }
 
     @Override
@@ -199,7 +211,7 @@ public class EmergencyFragment extends Fragment implements AdapterView.OnItemCli
         int id = item.getItemId();
 
         if (id == R.id.action_sos_calling) {
-            if (isAllowedSendInformation) {
+            if (isAllowedSendInformation && !isLocationEnable && !isNetworkEnable) {
                 createDialog();
             } else {
                 SOSCalling.makeSOSCall(getContext());
@@ -214,6 +226,12 @@ public class EmergencyFragment extends Fragment implements AdapterView.OnItemCli
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        searchView.closeSearch();
     }
 
     private void createBroadcast() {

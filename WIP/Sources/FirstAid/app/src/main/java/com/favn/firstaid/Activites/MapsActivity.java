@@ -120,23 +120,12 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private ToggleButton tbHospital;
     private ToggleButton tbMedicineCenter;
 
-
     protected LocationSettingsRequest mLocationSettingsRequest;
 
-    public static final long UPDATE_INTERVAL_IN_MILLISECONDS = 10000;
-    public static final long FASTEST_UPDATE_INTERVAL_IN_MILLISECONDS =
-            UPDATE_INTERVAL_IN_MILLISECONDS / 2;
-    public static final int UPDATE_SMALLEST_DISPLACEMENT = 1000;
     protected final static String LOCATION_KEY = "location-key";
     protected static final String LOCATION_ADDRESS_KEY = "location-address";
     protected static final int REQUEST_CHECK_SETTINGS = 0x1;
 
-    public static final String INTENT_FILTER_PROVIDERS_CHANGED = "android.location" +
-            ".PROVIDERS_CHANGED";
-    public static final String INTENT_FILTER_WIFI_STATE_CHANGED = "android.net.wifi" +
-            ".WIFI_STATE_CHANGED";
-    public static final String INTENT_FILTER_CONNECTIVITY_CHANGE = "android.net.conn" +
-            ".CONNECTIVITY_CHANGE";
 
     private static final int GPS_STATUS_NOT_FIXED = 1;
     private static final int GPS_STATUS_FIXED = 2;
@@ -151,7 +140,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private boolean isLocationEnable;
     private boolean isNetworkEnable;
     private boolean isAddressFound;
+    private boolean isLoadHealthFacility;
     private String filterHealthFacility;
+
 
     // Get database
     private HealthFacilityAdapter healthFacilityAdapterAdapter;
@@ -177,9 +168,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         buildLocationSettingsRequest();
 
         intentFilter = new IntentFilter();
-        intentFilter.addAction(INTENT_FILTER_PROVIDERS_CHANGED);
-        intentFilter.addAction(INTENT_FILTER_WIFI_STATE_CHANGED);
-        intentFilter.addAction(INTENT_FILTER_CONNECTIVITY_CHANGE);
+        intentFilter.addAction(Constants.INTENT_FILTER_PROVIDERS_CHANGED);
+        intentFilter.addAction(Constants.INTENT_FILTER_WIFI_STATE_CHANGED);
+        intentFilter.addAction(Constants.INTENT_FILTER_CONNECTIVITY_CHANGE);
 
         updateLocationUI();
         dbHelper = new DatabaseOpenHelper(this);
@@ -192,7 +183,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         tbHospital.setOnClickListener(ToggleAction);
         tbMedicineCenter = (ToggleButton) findViewById(R.id.toggle_medicine_center);
         tbMedicineCenter.setOnClickListener(ToggleAction);
-
+        filterHealthFacility = "";
+        isLoadHealthFacility = true;
     }
 
 
@@ -216,7 +208,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         btnNavigate = (Button) findViewById(R.id.button_navigate);
         btnClearDirection = (Button) findViewById(R.id.button_clear_direction);
         pbLoadingDirection = (ProgressBar) findViewById(R.id.progress_loading_direction);
-        filterHealthFacility = "";
+
 
         // Action zoom to current location
         llCurrentLocation.setOnClickListener(this);
@@ -228,9 +220,11 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             public void onStateChanged(@NonNull View bottomSheet, int newState) {
 
                 if (newState == BottomSheetBehavior.STATE_EXPANDED) {
-                    getHealthFacilityData();
-                    imgArrow.setImageResource(R.drawable.ic_arrow_down);
-                    warnHealthFacilityResult();
+                    if (isLoadHealthFacility) {
+                        getHealthFacilityData();
+                        imgArrow.setImageResource(R.drawable.ic_arrow_down);
+                        warnHealthFacilityResult();
+                    }
                 }
                 if (newState == BottomSheetBehavior.STATE_COLLAPSED) {
                     imgArrow.setImageResource(R.drawable.ic_arrow_up);
@@ -248,7 +242,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     BroadcastReceiver connectivityBroadcastReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            if (intent.getAction().matches(INTENT_FILTER_PROVIDERS_CHANGED)) {
+            if (intent.getAction().matches(Constants.INTENT_FILTER_PROVIDERS_CHANGED)) {
                 LocationManager locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
                 boolean isGpsProviderEnabled = locationManager.isProviderEnabled(LocationManager
                         .GPS_PROVIDER);
@@ -425,14 +419,16 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 startAddressIntentService();
             }
 
+            isLoadHealthFacility = true;
+
         }
     }
 
     protected void createLocationRequest() {
         mLocationRequest = new LocationRequest();
-        mLocationRequest.setInterval(UPDATE_INTERVAL_IN_MILLISECONDS);
-        mLocationRequest.setFastestInterval(FASTEST_UPDATE_INTERVAL_IN_MILLISECONDS);
-        mLocationRequest.setSmallestDisplacement(UPDATE_SMALLEST_DISPLACEMENT);
+        mLocationRequest.setInterval(Constants.UPDATE_INTERVAL_IN_MILLISECONDS);
+        mLocationRequest.setFastestInterval(Constants.FASTEST_UPDATE_INTERVAL_IN_MILLISECONDS);
+        mLocationRequest.setSmallestDisplacement(Constants.UPDATE_SMALLEST_DISPLACEMENT);
         mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
     }
 
@@ -607,6 +603,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
     private void getHealthFacilityData() {
+        Log.d("test_load_db", "load db");
         if (isLocationEnable && (mCurrentLocation != null)) {
             updateLoadingUI(true);
             healthFacilityList = dbHelper.getListHealthFacility(getPoints());
@@ -620,11 +617,12 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 }
             } else {
                 updateLoadingUI(false);
-                tvWarning.setText("Không tìm thấy bệnh viện trong bán kính 20 km");
+                tvWarning.setText(Constants.WARNING_NO_RESULT);
                 tvWarning.setVisibility(View.VISIBLE);
             }
 
         }
+        isLoadHealthFacility = false;
     }
 
     private void warnHealthFacilityResult() {
@@ -632,10 +630,10 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             tvWarning.setText(Constants.WARNING_NO_GPS);
             tvWarning.setVisibility(View.VISIBLE);
         } else if (!isNetworkEnable) {
-            tvWarning.setText(Constants.WARN_NO_NETWORK_RESULT);
+            tvWarning.setText(Constants.WARNING_NO_NETWORK_RESULT);
             tvWarning.setVisibility(View.VISIBLE);
         } else if (healthFacilityList.size() == 0) {
-            tvWarning.setText("Không có bệnh viện trong bán kính 20 km");
+            tvWarning.setText(Constants.WARNING_NO_RESULT);
             tvWarning.setVisibility(View.VISIBLE);
         } else {
             tvWarning.setVisibility(View.GONE);
@@ -644,7 +642,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     private PointF[] getPoints() {
         PointF[] points = new PointF[4];
-        PointF center = new PointF((float)mCurrentLocation.getLatitude(), (float)mCurrentLocation
+        PointF center = new PointF((float) mCurrentLocation.getLatitude(), (float) mCurrentLocation
                 .getLongitude());
 
         final double mult = 1.1; // mult = 1.1; is more reliable
@@ -821,7 +819,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 zoomDestinationLocation();
                 break;
             case R.id.button_navigate:
-                navigate();
+                showDirection();
                 break;
             case R.id.button_clear_direction:
                 clearDirection();
@@ -841,7 +839,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         }
     }
 
-    private void navigate() {
+    private void showDirection() {
         buildNetworkSetting();
         if (isNetworkEnable) {
             pbLoadingDirection.setVisibility(View.VISIBLE);

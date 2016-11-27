@@ -15,7 +15,7 @@ import com.favn.ambulance.models.Commons.UserSender;
 import com.favn.mikey.ambulance.R;
 
 public class MainActivity extends AppCompatActivity {
-    String urlAddress;
+    private String urlAddress;
     private ImageView bg;
     private EditText etUsername;
     private EditText etPass;
