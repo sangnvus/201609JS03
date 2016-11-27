@@ -6,19 +6,19 @@ use Illuminate\Http\Request;
 
 use App\Http\Requests;
 
-use App\Injury;
+use App\UpdateTable;
 
-class InjuryResourceController extends Controller
+class UpdateResourceController extends Controller
 {
-        /**
+    /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
     public function index()
     {
-        $injury = Injury::all();
-        return Response(['injuries' => $injury], 201);
+        $update_table = UpdateTable::all();
+        return Response(['update_table' => $update_table], 201);
     }
 
     /**

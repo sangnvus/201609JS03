@@ -32,6 +32,8 @@ Route::resource('injury', 'InjuryResourceController');
 
 Route::resource('caller', 'CallerResourceController');
 
+Route::resource('update', 'UpdateResourceController');
+
 // Call controler show login view
 Route::get('login', 'AuthController@showLoginView');
 
