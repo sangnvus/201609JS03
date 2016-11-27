@@ -5,23 +5,23 @@
         <item
             android:id="@+id/nav_emergency"
             android:icon="@drawable/ic_emergency"
-            android:title="Khẩn cấp" />
+            android:title="@string/emergency_fragment" />
         <item
             android:id="@+id/nav_learning"
             android:icon="@drawable/ic_learning"
-            android:title="Học" />
+            android:title="@string/learning_fragment" />
         <item
             android:id="@+id/nav_more"
             android:icon="@drawable/ic_history"
-            android:title="Thêm" />
+            android:title="@string/more_fragment" />
         <item
             android:id="@+id/nav_setting"
             android:icon="@drawable/ic_settings"
-            android:title="Cài đặt" />
+            android:title="@string/setting_fragment" />
         <item
             android:id="@+id/nav_infor"
             android:icon="@drawable/ic_about"
-            android:title="Thông tin phần mềm" />
+            android:title="@string/infor_fragment" />
     </group>
 
 </menu>

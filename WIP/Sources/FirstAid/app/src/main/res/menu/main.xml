@@ -19,7 +19,7 @@
         <item
             android:id="@+id/action_direction"
             android:orderInCategory="200"
-            android:title="@string/sos_calling"
+            android:title="map"
             android:icon="@drawable/ic_direction"
             app:showAsAction="always" />
     </group>

@@ -3,20 +3,49 @@
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
-
     <string name="action_settings">Settings</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Emergency</string>
-    <string name="learning_fragment">Learning</string>
-    <string name="testing_fragment">Testing</string>
-    <string name="qa_fragment">Q and A</string>
-    <string name="noti_fragment">Notification</string>
-    <string name="setting_fragment">Setting</string>
-    <string name="history_fragment">History</string>
-    <string name="infor_fragment">Information</string>
+    <!-- Title nav fragment -->
+    <string name="emergency_fragment">Khẩn cấp</string>
+    <string name="emergency_advice">Hãy nhớ rằng bạn cần phải có đủ sức khỏe thì mới có thể giúp đỡ người khác được!</string>
+
+    <string name="learning_fragment">Tìm hiểu</string>
+    <string name="more_fragment">Thêm</string>
+    <string name="setting_fragment">Cài đặt</string>
+    <string name="infor_fragment">Thông tin phần mềm</string>
+
+    <!--Activities-->
+        <!--Notification-->
+        <string name="notification_title">Thông báo</string>
+        <string name="notification_clear">Xóa thông báo</string>
+
+        <!--Qa-->
+        <string name="qa_title">Ý kiến - Hỏi đáp</string>
+        <string name="qa_text_name">Tên của bạn</string>
+        <string name="qa_text_email">Email</string>
+        <string name="qa_text_title">Tiêu đề</string>
+        <string name="qa_text_content">Nội dung</string>
+        <string name="qa_button_send">Gửi</string>
+
+        <!--Faq-->
+        <string name="faq_title">Câu hỏi thường gặp</string>
+
+        <!--banner-->
+        <string name="banner_title">Các khóa học sơ cứu</string>
+        <string name="banner_text_name">Khóa học: </string>
+        <string name="banner_text_address">Địa chỉ: </string>
+        <string name="banner_text_phone">SĐT liên hệ: </string>
+        <string name="banner_name">Các khóa học sơ cứu</string>
+
+        <!--map-->
+        <string name="map_title">Map</string>
+        <string name="textview_locating">Đang tìm vị trí</string>
+
+        <!--health facility-->
+        <string name="health_text_title">CƠ SỞ Y TẾ GẦN ĐÂY</string>
+
     <string name="sos_calling">SOS Calling</string>
-    <string name="title_activity_maps">Map</string>
+
     <string name="title_activity_instruction_detail">InstructionDetail</string>
 
     <!-- Setting screen string value -->
@@ -27,7 +56,7 @@
     <string name="summary_switch_sending_phone_number">Gửi số điện thoại của bạn khi gọi 115</string>
     <string name="sending_phone_number">Nhập số điện thoại</string>
 
-    <string name="notification_clear">Xóa thông báo</string>
+
 
 
     <string name="history_clear">Xóa lịch sử</string>
@@ -41,15 +70,16 @@
     </string-array>
 
     <!--about screen-->
-    <string name="app_information">Nội dung được sử dụng trong phần mềm là những
+    <string name="appli_about">Thông tin phần mềm</string>
+    <string name="appli_information">Nội dung được sử dụng trong phần mềm là những
         thông tin chính xác được xác thực từ tổ chức y tế uy tín.</string>
+    <string name="us_about">Nhóm phát triển</string>
     <string name="us_information">
-    Đàm Huy Hùng\nMai Trung Kiên\nNguyễn Duy Anh\nNguyễn Phúc An\nNguyễn Tiến Dũng\n
+    Đàm Huy Hùng\nMai Trung Kiên\nNguyễn Duy Anh\nNguyễn Phúc An\nNguyễn Tiến Dũng
     </string>
 
     <!-- Buttons string value -->
     <string name="faq_button">Câu hỏi thường gặp</string>
     <string name="qa_button">Đặt câu hỏi cho chúng tôi</string>
-    <string name="textview_locating">Đang tìm vị trí</string>
 
 </resources>

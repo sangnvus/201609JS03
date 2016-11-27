@@ -72,23 +72,23 @@
 
         <activity
             android:name=".activites.MapsActivity"
-            android:label="@string/title_activity_maps" />
+            android:label="@string/map_title" />
         <activity
             android:name=".activites.InstructionDetail"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".activites.QAActivity"
-            android:label="Ý kiến - Hỏi đáp" />
+            android:label="@string/qa_title" />
         <activity
             android:name=".activites.NotificationActivity"
-            android:label="Thông báo" />
+            android:label="@string/notification_title" />
         <activity
             android:name=".activites.FaqActivity"
-            android:label="Câu hỏi thường gặp" />
+            android:label="@string/faq_title" />
 
         <activity
             android:name=".activites.BannerDetail"
-            android:label="Các khóa học sơ cứu" />
+            android:label="@string/banner_title" />
 
         <service
             android:name=".models.FetchAddressIntentService"

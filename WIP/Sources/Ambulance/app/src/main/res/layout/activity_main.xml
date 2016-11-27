@@ -5,7 +5,7 @@
     android:id="@+id/activity_main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.favn.mikey.ambulance.com.favn.ambulance.Activities.MainActivity">
+    tools:context="com.favn.ambulance.activities.MainActivity">
 
     <ImageView
         android:layout_width="match_parent"
@@ -21,11 +21,10 @@
 
         <LinearLayout
             android:orientation="vertical"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:gravity="center"
-            android:layout_weight="0.17"
-            android:padding="15dp">
+            android:layout_weight="0.17" >
 
             <ImageView
                 android:layout_width="match_parent"
@@ -39,11 +38,11 @@
                 android:text=""
                 android:ems="10"
                 android:id="@+id/editext_name"
-                android:background="@color/colorEditText"
+                android:background="@color/colorWhite"
                 android:layout_width="250dp"
                 android:layout_height="40dp"
                 android:layout_marginTop="10dp"
-                android:hint="Tên đăng nhập"
+                android:hint=" Tên đăng nhập"
                 android:textColorHint="@color/colorSeparate" />
 
             <EditText
@@ -52,9 +51,9 @@
                 android:inputType="textPassword"
                 android:ems="10"
                 android:id="@+id/editext_pass"
-                android:background="@color/colorEditText"
+                android:background="@color/colorWhite"
                 android:layout_marginTop="10dp"
-                android:hint="Mật khẩu"
+                android:hint=" Mật khẩu"
                 android:textColorHint="@color/colorSeparate" />
 
             <Button

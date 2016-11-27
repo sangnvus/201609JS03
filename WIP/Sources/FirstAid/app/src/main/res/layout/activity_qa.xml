@@ -15,9 +15,9 @@
             android:layout_height="match_parent"
             android:gravity="center_horizontal"
             android:weightSum="1"
-            android:layout_marginTop="5dp"
-            android:layout_marginLeft="16dp"
-            android:layout_marginRight="16dp">
+            android:layout_marginTop="@dimen/margin_8"
+            android:layout_marginLeft="@dimen/margin_16"
+            android:layout_marginRight="@dimen/margin_16">
 
             <LinearLayout
                 android:orientation="vertical"
@@ -27,13 +27,13 @@
                 android:gravity="top"
                 android:background="#E0E0E0">
                 <TextView
-                    android:text="Tên của bạn"
+                    android:text="@string/qa_text_name"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:textSize="18sp"
-                    android:layout_marginLeft="20dp"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginBottom="10dp"/>
+                    android:layout_marginLeft="@dimen/margin_16"
+                    android:layout_marginTop="@dimen/margin_8"
+                    android:layout_marginBottom="@dimen/margin_8"/>
             </LinearLayout>
             <LinearLayout
                 android:orientation="vertical"
@@ -47,8 +47,8 @@
                     android:id="@+id/edittext_name"
                     android:layout_height="wrap_content"
                     android:textSize="18sp"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginBottom="10dp"
+                    android:layout_marginTop="@dimen/margin_8"
+                    android:layout_marginBottom="@dimen/margin_8"
                     android:hint="..."
                     android:maxLength="45" />
             </LinearLayout>
@@ -61,13 +61,13 @@
                 android:gravity="top"
                 android:background="#E0E0E0">
                 <TextView
-                    android:text="Email"
+                    android:text="@string/qa_text_email"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textSize="18sp"
-                    android:layout_marginLeft="20dp"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginBottom="10dp"/>
+                    android:layout_marginLeft="@dimen/margin_16"
+                    android:layout_marginTop="@dimen/margin_8"
+                    android:layout_marginBottom="@dimen/margin_8"/>
             </LinearLayout>
             <LinearLayout
                 android:orientation="vertical"
@@ -81,8 +81,8 @@
                     android:inputType="textEmailAddress"
                     android:id="@+id/edittext_email"
                     android:textSize="18sp"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginBottom="10dp"
+                    android:layout_marginTop="@dimen/margin_8"
+                    android:layout_marginBottom="@dimen/margin_8"
                     android:hint="..."
                     android:maxLength="255" />
             </LinearLayout>
@@ -95,13 +95,13 @@
                 android:gravity="top"
                 android:background="#E0E0E0">
                 <TextView
-                    android:text="Tiêu đề"
+                    android:text="@string/qa_text_title"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textSize="18sp"
-                    android:layout_marginLeft="20dp"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginBottom="10dp"/>
+                    android:layout_marginLeft="@dimen/margin_16"
+                    android:layout_marginTop="@dimen/margin_8"
+                    android:layout_marginBottom="@dimen/margin_8"/>
             </LinearLayout>
             <LinearLayout
                 android:orientation="horizontal"
@@ -123,15 +123,15 @@
                             android:layout_width="wrap_content"
                             android:layout_height="match_parent"
                             android:textSize="18sp"
-                            android:layout_marginTop="10dp"
-                            android:layout_marginBottom="10dp"
+                            android:layout_marginTop="@dimen/margin_8"
+                            android:layout_marginBottom="@dimen/margin_8"
                             android:id="@+id/radio_injury" />
                         <RadioButton
                             android:layout_width="wrap_content"
                             android:layout_height="match_parent"
                             android:textSize="18sp"
-                            android:layout_marginTop="20dp"
-                            android:layout_marginBottom="10dp"
+                            android:layout_marginTop="@dimen/margin_16"
+                            android:layout_marginBottom="@dimen/margin_8"
                             android:id="@+id/radio_title" />
                     </RadioGroup>
                 </LinearLayout>
@@ -145,16 +145,16 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:textSize="18sp"
-                        android:layout_marginTop="10dp"
-                        android:layout_marginBottom="10dp"
+                        android:layout_marginTop="@dimen/margin_8"
+                        android:layout_marginBottom="@dimen/margin_8"
                         android:id="@+id/spin_injury" />
                     <EditText
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:inputType="text"
                         android:textSize="18sp"
-                        android:layout_marginTop="10dp"
-                        android:layout_marginBottom="10dp"
+                        android:layout_marginTop="@dimen/margin_8"
+                        android:layout_marginBottom="@dimen/margin_8"
                         android:hint="Khác..."
                         android:id="@+id/edittext_title"
                         android:maxLength="255" />
@@ -169,13 +169,13 @@
                 android:gravity="top"
                 android:background="#E0E0E0">
                 <TextView
-                    android:text="Nội dung"
+                    android:text="@string/qa_text_content"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:textSize="18sp"
-                    android:layout_marginLeft="20dp"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginBottom="10dp"/>
+                    android:layout_marginLeft="@dimen/margin_16"
+                    android:layout_marginTop="@dimen/margin_8"
+                    android:layout_marginBottom="@dimen/margin_8"/>
             </LinearLayout>
             <LinearLayout
                 android:orientation="vertical"
@@ -188,8 +188,8 @@
                     android:inputType="textMultiLine"
                     android:layout_height="wrap_content"
                     android:textSize="18sp"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginBottom="10dp"
+                    android:layout_marginTop="@dimen/margin_8"
+                    android:layout_marginBottom="@dimen/margin_8"
                     android:hint="..."
                     android:lines="6"
                     android:id="@+id/edittext_content"
@@ -204,7 +204,7 @@
                 android:gravity="center">
 
                 <Button
-                    android:text="Gửi"
+                    android:text="@string/qa_button_send"
                     android:layout_width="121dp"
                     android:layout_height="wrap_content"
                     android:id="@+id/button_send"
@@ -212,7 +212,7 @@
                     android:background="@drawable/button_selector"
                     android:textSize="18sp"
                     android:textColor="@color/cast_libraries_material_featurehighlight_text_body_color"
-                    android:layout_marginBottom="20dp"/>
+                    android:layout_marginBottom="@dimen/margin_16"/>
             </LinearLayout>
         </LinearLayout>
 

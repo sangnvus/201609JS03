@@ -87,6 +87,10 @@ public class EmergencyFragment extends Fragment implements AdapterView.OnItemCli
 
         final ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.fragment_emergency, container, false);
 
+//        Toolbar toolbar = (Toolbar) rootView.findViewById(R.id.toolbar);
+
+//        MaterialSearchView searchView = (MaterialSearchView) rootView.findViewById(R.id.search_view);
+
         listView = (ListView) rootView.findViewById(R.id.listView);
         dbHelper = new DatabaseOpenHelper(getActivity());
         dbHelper.createDatabase();
@@ -174,7 +178,47 @@ public class EmergencyFragment extends Fragment implements AdapterView.OnItemCli
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.main, menu);
-        super.onCreateOptionsMenu(menu, inflater);
+
+//        MenuItem item = menu.findItem(R.id.action_search);
+//        SearchView sv = new SearchView(((MainActivity) getActivity()).getSupportActionBar().getThemedContext());
+//        sv.setQueryHint("Tìm kiếm...");
+//        sv.setBackgroundColor(Color.WHITE);
+//
+//        MenuItemCompat.setShowAsAction(item, MenuItemCompat.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW | MenuItemCompat.SHOW_AS_ACTION_IF_ROOM);
+//        MenuItemCompat.setActionView(item, sv);
+//        sv.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+//            @Override
+//            public boolean onQueryTextSubmit(String query) {
+//                return false;
+//            }
+//
+//            @Override
+//            public boolean onQueryTextChange(String newText) {
+//                if(newText != null && !newText.isEmpty()){
+//                    List<String> listFound = new ArrayList<String>();
+//                    List<String> listFind = new ArrayList<String>();
+//                    for(int i=0; i<=mInjuryList.size(); i++){
+//                        Injury sinjury = (Injury) listView.getItemAtPosition(i);
+//                        String sinjuryName = sinjury.getInjury_name();
+//                        listFind.add(sinjuryName);
+//
+//                    }
+//
+//                    for(String sItem: listFind){
+//                        if(sItem.contains(newText))
+//                        listFound.add(sItem);
+//                    }
+//
+//                    ArrayAdapter adapter = new ArrayAdapter(getActivity(), android.R.layout.simple_list_item_1, listFound);
+//                    listView.setAdapter(adapter);
+//                }
+//                else {
+//                    adapter = new InjuryAdapter(getActivity(), mInjuryList, LISTVIEW_EMERGENCY);
+//                    listView.setAdapter(adapter);
+//                }
+//                return true;
+//            }
+//        });
     }
 
     @Override
@@ -193,7 +237,6 @@ public class EmergencyFragment extends Fragment implements AdapterView.OnItemCli
             startActivity(new Intent(getActivity(), MapsActivity.class));
         }
         if (id == R.id.action_search) {
-
             return true;
         }
 
