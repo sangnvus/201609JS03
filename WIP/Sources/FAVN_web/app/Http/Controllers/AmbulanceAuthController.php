@@ -20,10 +20,10 @@ class AmbulanceAuthController extends Controller
 	 		if(Auth::user()->role_id == 4) {
 	 			return Response(['ambulance' => Auth::user()->ambulance]);
 	 		} else{
-	 			return 'false';
+	 			echo 'false';
 	 		}
 		} else {
-			return 'false';
+			echo 'false';
 		}
 	}
 
