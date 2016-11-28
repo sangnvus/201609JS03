@@ -18,13 +18,9 @@ class AmbulanceAuthController extends Controller
 
 	 	if (Auth::attempt(['username' => $username, 'password' => $password])){
 	 		if(Auth::user()->role_id == 4) {
-	 			return Response(['ambulance' => Auth::user()->ambulance]);
-	 		} else{
-	 			echo 'false';
-	 		}
-		} else {
-			echo 'false';
-		}
+	 			return Response(Auth::user()->ambulance);
+	 		} 
+		} 
 	}
 
 
