@@ -100,15 +100,13 @@
         minlenght : 1, 
         autoFocus : true,
         select : function(e, ui){
-            $('#phone').val(ui.item.phone);
-            $('#injury_id').val(ui.item.injury_id);
-            $('#symptom').val(ui.item.symptom);
-            $('#address').val('Tọa độ : ' + ui.item.latitude + ' | ' + ui.item.longitude);
-            $('#latitude').val(ui.item.latitude);
-            $('#longitude').val(ui.item.longitude);
+                iniCallerForm(ui.item);
+                initCallerMarkerAfterClearAll(ui.item, initAnCallerMarker);
         }
     });
-
 </script>
+
+<!-- handler dispatch -->
+<script src="assets/js/dispatch-handle.js" type="text/javascript"></script>
     
 </html>

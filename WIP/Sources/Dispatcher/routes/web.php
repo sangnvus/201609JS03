@@ -24,6 +24,11 @@ Route::get('getpass', function(){
 });
 
 
+// ----- Resouce
+Route::resource('ambulance', 'AmbulanceResourceController');
+// ----- Resouce
+
+
 
 // Call controler show login view
 Route::get('login', 'AuthController@showLoginView');
