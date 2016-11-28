@@ -4,27 +4,50 @@ var geocoder;
 var ambulanceInfoWindow;
 var markers = [];
 var emergencyCenterPos;
+
 var emergencyCenterIcon;
 var emergencyCenterTitle;
 var ambulanceList;
 
 
-
+var tmpPos1;
+var tmpPos2;
+var directionsService;
+var directionsDisplay;
 
 function initMap() {
 
-  initDefaultMap(); 
+  //initDefaultMap(); 
 
   // call init 115 center marker
-  iniAMarker(emergencyCenterPos, emergencyCenterIcon, emergencyCenterTitle);
+  //iniAMarker(emergencyCenterPos, emergencyCenterIcon, emergencyCenterTitle);
 
   // call init all ambulance marker after load list ambulance
-  initAmbulanceMarkerAfterLoad();
+  //initAmbulanceMarkerAfterLoad();
 
+  var directionsService = new google.maps.DirectionsService;
+        var directionsDisplay = new google.maps.DirectionsRenderer;
+        var map = new google.maps.Map(document.getElementById('map'), {
+          zoom: 7,
+          center: {lat: 41.85, lng: -87.65}
+        });
+        directionsDisplay.setMap(map);
+
+        
+          calculateAndDisplayRoute(directionsService, directionsDisplay);
+    
 }
 
 function initDefaultMap() {
+  // Init service
+  var directionsService = new google.maps.DirectionsService;
+  var directionsDisplay = new google.maps.DirectionsRenderer;
+  geocoder = new google.maps.Geocoder;
+
+  directionsDisplay.setMap(map);
+
   emergencyCenterPos = {lat: 21.0222965, lng: 105.8567074};
+  tmpPos = {lat: 21.0000, lng: 105.0000};
   emergencyCenterIcon = 'assets/img/markers/ic_marker_caller.png';
   emergencyCenterTitle = 'Trung tâm cấp cứu 115';
   map = new google.maps.Map(document.getElementById('map'), {
@@ -32,8 +55,35 @@ function initDefaultMap() {
     center: emergencyCenterPos,
     streetViewControl:false
   });
-  geocoder = new google.maps.Geocoder;
+  
+
+
+calculateAndDisplayRoute(directionsService, directionsDisplay);
+
+
+
+
 } 
+
+function calculateAndDisplayRoute(directionsService, directionsDisplay) {
+
+
+  tmpPos1 = new google.maps.LatLng(21.0231111, 105.855);
+  tmpPos2 = new google.maps.LatLng(21.024019, 105.8504);
+  directionsService.route({
+    origin: tmpPos1,
+    destination: tmpPos2,
+    travelMode: 'DRIVING'
+  }, function(response, status) {
+    if (status === 'OK') {
+      directionsDisplay.setDirections(response);
+    } else {
+      window.alert('Directions request failed due to ' + status);
+    }
+  });
+}
+
+
 
 //----- INIT A MARKER BY POST, ICON, TITLE
 function iniAMarker(pos, icon, title){

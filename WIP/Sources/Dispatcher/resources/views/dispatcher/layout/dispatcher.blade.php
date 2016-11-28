@@ -73,8 +73,8 @@
 <!--  Google Maps Plugin    -->
 <script type="text/javascript" src="assets/js/googlemap.js"></script>
 
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCXKxXg5C-3GiOZuWIhhLJyniiHna9IT04&callback=initMap"
-    async defer></script>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBcG5eSgX7ZSWWdvnnNUTz4tzNhYIK3uBs&callback=initMap"
+async defer></script>
 
 <!-- Light Bootstrap Table Core javascript and methods for Demo purpose -->
 <script src="assets/js/light-bootstrap-dashboard.js"></script>
@@ -110,3 +110,5 @@
 <script src="assets/js/dispatch-handle.js" type="text/javascript"></script>
     
 </html>
+
+
