@@ -8,6 +8,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.IntentSender;
+import android.content.SharedPreferences;
 import android.location.Location;
 import android.provider.Settings;
 import android.support.v7.app.AlertDialog;
@@ -23,7 +24,9 @@ import android.view.View;
 import com.favn.ambulance.locationUtil.LocationChangeListener;
 import com.favn.ambulance.locationUtil.LocationFinder;
 import com.favn.ambulance.locationUtil.LocationStatus;
+import com.favn.ambulance.models.Ambulance;
 import com.favn.ambulance.models.Commons.Constants;
+import com.favn.ambulance.models.Commons.SharedPreferencesData;
 import com.favn.ambulance.networkUtil.NetworkStatus;
 import com.favn.mikey.ambulance.R;
 import com.google.android.gms.common.api.Status;
@@ -39,6 +42,7 @@ public class WaitingScreen extends AppCompatActivity implements LocationChangeLi
     private boolean isNetworkEnable;
     IntentFilter intentFilter;
     protected static final int REQUEST_CHECK_SETTINGS = 0x1;
+    Ambulance ambulance;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -51,6 +55,12 @@ public class WaitingScreen extends AppCompatActivity implements LocationChangeLi
         intentFilter = new IntentFilter();
         intentFilter.addAction(Constants.INTENT_FILTER_PROVIDERS_CHANGED);
         intentFilter.addAction(Constants.INTENT_FILTER_CONNECTIVITY_CHANGE);
+
+        // Get ambulance info from SharedPreferences
+        ambulance = SharedPreferencesData.getAmbulanceData(Constants.SPREFS_AMBULANCE_INFO_KEY);
+
+        Log.d("ambulance_data", ambulance.getUser_id() + "");
+
     }
 
     @Override
@@ -71,8 +81,8 @@ public class WaitingScreen extends AppCompatActivity implements LocationChangeLi
                 notification.setSmallIcon(R.mipmap.ic_launcher);
                 notification.setTicker("ticker");
                 notification.setWhen(System.currentTimeMillis());
-                notification.setContentTitle("title");
-                notification.setContentText("abcdef");
+                notification.setContentTitle("Cấp cứu 115");
+                notification.setContentText("Có nhiệm vụ");
 
                 Intent intent = new Intent(this, Task.class);
                 PendingIntent pendingIntent = PendingIntent.getActivities(this, 0, new Intent[]{intent}, PendingIntent.FLAG_UPDATE_CURRENT);
@@ -131,6 +141,8 @@ public class WaitingScreen extends AppCompatActivity implements LocationChangeLi
     public void locationChangeSuccess(Location location) {
         mCurrentLocation = location;
         Log.d("location_test", location + "");
+
+        // Need to check if ambulance != null
     }
 
     private void buildNetworkSetting() {

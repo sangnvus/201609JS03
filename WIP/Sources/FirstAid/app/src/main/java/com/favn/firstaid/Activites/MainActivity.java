@@ -1,5 +1,6 @@
 package com.favn.firstaid.activites;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
@@ -11,17 +12,28 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 
 import com.favn.firstaid.R;
+import com.favn.firstaid.database.UpdateChecking;
 import com.favn.firstaid.fragments.AboutFragment;
 import com.favn.firstaid.fragments.EmergencyFragment;
 import com.favn.firstaid.fragments.LearningFragment;
 import com.favn.firstaid.fragments.MoreFragment;
 import com.favn.firstaid.fragments.SettingFragment;
+import com.favn.firstaid.models.Commons.NetworkStatus;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.concurrent.TimeUnit;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+    String timeSharedPreferences = "updated_time";
+    String updatedTimeKey = "updated_time";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,9 +58,32 @@ public class MainActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
         navigationView.getMenu().getItem(0).setChecked(true);
 
-        // Test get injury
-//        DownloadTask downloadTask = new DownloadTask();
-//        downloadTask.execute("http://favn.rtsvietnam.com/injury");
+        // Check for update content
+
+        //TODO consider set time for check update(days)
+//        SharedPreferences sharedpreferences = getSharedPreferences(timeSharedPreferences, this
+//                .MODE_PRIVATE);
+//
+//        String lastUpdateTime = sharedpreferences.getString(updatedTimeKey, "");
+        // if last update time null save current date then check for update
+//        if(lastUpdateTime.equals("")) {
+//            Date currentDate = new Date();
+//            SharedPreferences.Editor editor = sharedpreferences.edit();
+//            editor.putString(updatedTimeKey, currentDate.toString());
+//        }
+//
+//
+//        long diff = currentDate.getTime() - d.getTime();
+//        Log.d("time_test", currentDate + "");
+//        Log.d("time_test", TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS) + "");
+//
+//        SharedPreferences.Editor editor = sharedpreferences.edit();
+//        editor.putString(updatedTimeKey, currentDate.toString());
+        if (NetworkStatus.checkNetworkEnable(this)) {
+            UpdateChecking updateChecking = new UpdateChecking();
+            updateChecking.execute("http://favn.rtsvietnam.com/injury");
+
+        }
 
 
     }
