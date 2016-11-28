@@ -12,11 +12,11 @@ import java.util.Iterator;
  */
 
 public class Caller {
-    public String phone;
-    public int injuryId;
-    public double latitude;
-    public double longitude;
-    public String status;
+    private String phone;
+    private int injuryId;
+    private double latitude;
+    private double longitude;
+    private String status;
 
     // Use to get data from firebase
     public Caller() {

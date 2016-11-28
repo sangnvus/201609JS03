@@ -23,14 +23,14 @@ import java.net.HttpURLConnection;
  */
 
 public class CallerInfoSender extends AsyncTask<Void, Void, String>{
-    Context context;
-    String urlAddress;
-    String phone;
-    int injuryId;
-    double latitude;
-    double longitude;
-    String status;
-    ProgressDialog pd;
+    private Context context;
+    private String urlAddress;
+    private String phone;
+    private int injuryId;
+    private double latitude;
+    private double longitude;
+    private String status;
+    private ProgressDialog pd;
     InformationSenderListener informationSenderListener;
 
 
