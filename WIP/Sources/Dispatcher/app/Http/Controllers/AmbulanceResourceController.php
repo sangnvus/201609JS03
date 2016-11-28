@@ -6,19 +6,19 @@ use Illuminate\Http\Request;
 
 use App\Http\Requests;
 
-use App\Injury;
+use App\Ambulance;
 
-class InjuryResourceController extends Controller
+class AmbulanceResourceController extends Controller
 {
-        /**
+    /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
     public function index()
     {
-        $injury = Injury::all();
-        return Response(['injuries' => $injury], 201);
+        $ambulance = Ambulance::all();
+        return Response(['ambulance' => $ambulance], 201);
     }
 
     /**
