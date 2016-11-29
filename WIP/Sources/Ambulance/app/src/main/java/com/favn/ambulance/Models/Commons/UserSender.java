@@ -96,6 +96,8 @@ public class UserSender extends AsyncTask<Void, Void, String>{
         } else {
             Intent intent = new Intent(context, WaitingScreen.class);
             context.startActivity(intent);
+            SharedPreferencesData.saveData(context, Constants.SPREFS_NAME, Constants
+                    .SPREFS_AMBULANCE_INFO_KEY, s);
         }
     }
 

@@ -1,33 +1,39 @@
 package com.favn.ambulance.models;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
-import java.util.Iterator;
-
 /**
- * Created by KienMT on 11/28/2016.
+ * Created by Hung Gia on 11/28/2016.
  */
 
 public class Ambulance {
+    private int id;
     private int user_id;
     private String team;
     private double latitude;
     private double longitude;
     private String status;
+    private int isDeleted;
+    private String updated_at;
+    private String created_at;
 
-    // Use to get data from firebase
-    public Ambulance() {
-    }
-
-    public Ambulance(int user_id, String team, double latitude, double longitude, String status) {
+    public Ambulance(int id, int user_id, String team, double latitude, double longitude, String
+            status, int isDeleted, String updated_at, String created_at) {
+        this.id = id;
         this.user_id = user_id;
         this.team = team;
         this.latitude = latitude;
         this.longitude = longitude;
         this.status = status;
+        this.isDeleted = isDeleted ;
+        this.updated_at = updated_at;
+        this.created_at = created_at;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public int getUser_id() {
@@ -70,44 +76,27 @@ public class Ambulance {
         this.status = status;
     }
 
-    // Pack data to send to server
-    public String packData() {
-        JSONObject jo = new JSONObject();
-        StringBuffer sb = new StringBuffer();
+    public int isDeleted() {
+        return isDeleted;
+    }
 
-        try {
-            jo.put("user_id", user_id);
-            jo.put("team", team);
-            jo.put("latitude", latitude);
-            jo.put("longitude", longitude);
-            jo.put("status", status);
+    public void setDeleted(int deleted) {
+        isDeleted = deleted;
+    }
 
-            Boolean isFirstValue = true;
-            Iterator it = jo.keys();
+    public String getUpdated_at() {
+        return updated_at;
+    }
 
-            do {
-                String key = it.next().toString();
-                String value = jo.get(key).toString();
+    public void setUpdated_at(String updated_at) {
+        this.updated_at = updated_at;
+    }
 
-                if(isFirstValue) {
-                    isFirstValue = false;
-                } else {
-                    sb.append("&");
-                }
+    public String getCreated_at() {
+        return created_at;
+    }
 
-                sb.append(URLEncoder.encode(key, "UTF-8"));
-                sb.append("=");
-                sb.append(URLEncoder.encode(value, "UTF-8"));
-            } while (it.hasNext());
-
-            return sb.toString();
-
-        } catch (JSONException e) {
-            e.printStackTrace();
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
-
-        return null;
+    public void setCreated_at(String created_at) {
+        this.created_at = created_at;
     }
 }

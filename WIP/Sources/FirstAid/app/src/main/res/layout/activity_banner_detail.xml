@@ -17,9 +17,9 @@
         <ImageView
             android:layout_width="match_parent"
             android:src="@drawable/banner"
-            android:id="@+id/imageView2"
+            android:id="@+id/img_banner"
             android:layout_marginRight="0dp"
-            android:layout_height="70dp" />
+            android:layout_height="100dp" />
 
         <LinearLayout
             android:orientation="vertical"
@@ -29,21 +29,21 @@
             android:layout_marginRight="10dp">
 
             <TextView
-                android:text="Khóa học:"
+                android:text="@string/banner_text_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/text_name"
                 android:layout_weight="1" />
 
             <TextView
-                android:text="Địa chỉ:"
+                android:text="@string/banner_text_address"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/text_address"
                 android:layout_weight="1" />
 
             <TextView
-                android:text="SĐT liên hệ:"
+                android:text="@string/banner_text_phone"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/text_phone"

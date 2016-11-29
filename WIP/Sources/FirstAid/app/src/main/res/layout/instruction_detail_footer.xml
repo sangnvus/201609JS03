@@ -10,8 +10,8 @@
         android:clickable="true"
         android:background="@drawable/button_selector"
         android:textColor="@color/colorWhite"
-        android:layout_marginTop="@dimen/layout_margin"
-        android:layout_marginRight="@dimen/layout_margin"
-        android:layout_marginLeft="@dimen/layout_margin"
-        android:layout_marginBottom="@dimen/layout_margin" />
+        android:layout_marginTop="@dimen/margin_8"
+        android:layout_marginRight="@dimen/margin_8"
+        android:layout_marginLeft="@dimen/margin_8"
+        android:layout_marginBottom="@dimen/margin_8" />
 </FrameLayout>

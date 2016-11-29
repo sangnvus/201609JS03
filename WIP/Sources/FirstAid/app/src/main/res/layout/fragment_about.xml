@@ -15,25 +15,51 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/about_the_app"
-            android:layout_margin="10dp">
+            android:layout_margin="@dimen/margin_8">
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Thông tin phần mềm"
+                android:text="@string/appli_about"
                 android:id="@+id/text_app_title"
                 android:textStyle="bold"
                 android:textSize="18sp" />
 
             <TextView
-                android:text="@string/app_information"
+                android:text="@string/appli_information"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/text_app_information" />
         </LinearLayout>
 
         <View
-            android:id="@+id/line"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/colorSeparate" />
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/version"
+            android:layout_margin="@dimen/margin_8">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/version_title"
+                android:id="@+id/version_title"
+                android:textStyle="bold"
+                android:textSize="18sp" />
+
+            <TextView
+                android:text="@string/version_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/text_version" />
+        </LinearLayout>
+
+        <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:background="@color/colorSeparate" />
@@ -47,7 +73,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Nhóm phát triển"
+                android:text="@string/us_about"
                 android:id="@+id/text_us_title"
                 android:textStyle="bold"
                 android:textSize="18sp" />

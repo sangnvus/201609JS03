@@ -12,8 +12,16 @@
     <dimen name="corner_radius">2dp</dimen>
     <dimen name="stroke_width">2dp</dimen>
 
-    <dimen name="layout_margin">8dp</dimen>
+    <!--text margin-->
+    <dimen name="margin_8">8dp</dimen>
+    <dimen name="margin_16">16dp</dimen>
+    <dimen name="margin_24">24dp</dimen>
 
+    <!--button margin-->
+    <dimen name="button_margin_8">8dp</dimen>
+    <dimen name="button_margin_16">16dp</dimen>
+
+    <!--injury-->
     <dimen name="injury_image_size">24dp</dimen>
     <dimen name="injury_text_size">18dp</dimen>
 </resources>

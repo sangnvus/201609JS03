@@ -34,7 +34,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/activity_horizontal_margin"
-                android:text="CƠ SỞ Y TẾ GẦN ĐÂY"
+                android:text="@string/health_text_title"
                 android:textColor="@color/colorWhite"
                 android:textSize="18dp"/>
         </LinearLayout>
@@ -53,8 +53,8 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="8dp"
-                    android:layout_marginTop="8dp"
+                    android:layout_marginBottom="@dimen/margin_8"
+                    android:layout_marginTop="@dimen/margin_8"
                     android:orientation="horizontal">
 
                     <RadioGroup
@@ -67,7 +67,7 @@
                             android:id="@+id/toggle_all_health_facility"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginLeft="8dp"
+                            android:layout_marginLeft="@dimen/margin_8"
                             android:background="@drawable/toggle_selector"
                             android:checked="true"
                             android:textColor="@drawable/toggle_color_text"
@@ -78,7 +78,7 @@
                             android:id="@+id/toggle_hospital"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginLeft="8dp"
+                            android:layout_marginLeft="@dimen/margin_8"
                             android:background="@drawable/toggle_selector"
                             android:textColor="@drawable/toggle_color_text"
                             android:textOff="bệnh viện"
@@ -88,7 +88,7 @@
                             android:id="@+id/toggle_medicine_center"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginLeft="8dp"
+                            android:layout_marginLeft="@dimen/margin_8"
                             android:background="@drawable/toggle_selector"
                             android:textColor="@drawable/toggle_color_text"
                             android:textOff="trạm y tế"
@@ -111,8 +111,8 @@
                 android:id="@+id/textview_notify"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:layout_marginLeft="8dp"
+                android:layout_marginBottom="@dimen/margin_8"
+                android:layout_marginLeft="@dimen/margin_8"
                 android:text=""
                 android:textColor="@color/colorPrimary"/>
 

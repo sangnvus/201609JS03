@@ -31,6 +31,8 @@ import android.widget.Toast;
 import com.favn.ambulance.direction.DirectionFinder;
 import com.favn.ambulance.direction.DirectionFinderListener;
 import com.favn.ambulance.direction.Leg;
+import com.favn.ambulance.models.Ambulance;
+import com.favn.ambulance.models.Commons.SharedPreferencesData;
 import com.favn.ambulance.networkUtil.NetworkStatus;
 import com.favn.ambulance.locationUtil.LocationChangeListener;
 import com.favn.ambulance.locationUtil.LocationFinder;
@@ -76,6 +78,7 @@ public class Task extends AppCompatActivity implements OnMapReadyCallback,
     private Button btnClearDirection;
     private TextView tvDistance;
     private TextView tvDuration;
+    Ambulance ambulance;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -106,6 +109,11 @@ public class Task extends AppCompatActivity implements OnMapReadyCallback,
 
         // showing caller location
         destinationLanLng = new LatLng(21.011371, 105.525721);
+
+        // Get ambulance info from SharedPreferences
+        ambulance = SharedPreferencesData.getAmbulanceData(Constants.SPREFS_AMBULANCE_INFO_KEY);
+
+        Log.d("ambulance_data", ambulance.getUser_id() + "");
 
     }
 
@@ -256,6 +264,10 @@ public class Task extends AppCompatActivity implements OnMapReadyCallback,
     public void locationChangeSuccess(Location location) {
         mCurrentLocation = location;
         Log.d("location", location + "");
+
+        // Need to check if ambulance != null
+
+
     }
 
     private void buildNetworkSetting() {
@@ -414,4 +426,7 @@ public class Task extends AppCompatActivity implements OnMapReadyCallback,
         }
     }
 
+    @Override
+    public void onBackPressed() {
+    }
 }

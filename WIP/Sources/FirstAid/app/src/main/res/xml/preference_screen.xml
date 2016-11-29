@@ -1,6 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
+    <!--<Preference-->
+        <!--android:key="pref_name_color_picker"-->
+        <!--android:title="Colour"-->
+        <!--android:summary="Colour of the name"-->
+        <!--android:defaultValue="#FFFFFF"-->
+        <!--android:layout="@layout/custom_setting_layout" />-->
     <SwitchPreference
         android:key="switch_notification"
         android:summary="@string/summary_switch_notification"

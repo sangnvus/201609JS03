@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          package="com.favn.mikey.ambulance">
+    package="com.favn.mikey.ambulance">
 
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
@@ -12,25 +12,32 @@
         android:screenOrientation="landscape"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        
-        <activity android:name="com.favn.ambulance.activities.MainActivity"
-            android:windowSoftInputMode="stateVisible|adjustResize" >
-
+        <activity
+            android:name="com.favn.ambulance.activities.MainActivity"
+            android:screenOrientation="landscape"
+            android:windowSoftInputMode="stateVisible|adjustResize">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
+                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER"/>
+                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
-        <activity android:name="com.favn.ambulance.activities.WaitingScreen"/>
-        <activity android:name="com.favn.ambulance.activities.Task"></activity>
+        <activity
+            android:name="com.favn.ambulance.activities.WaitingScreen"
+            android:screenOrientation="landscape"
+            android:label="@string/app_name" />
+        <activity
+            android:name="com.favn.ambulance.activities.Task"
+            android:screenOrientation="landscape"
+            android:label="Nhiệm vụ" />
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyAcYh4HrrRlHTYxkD0ZGgKEOD3CaK_JERE"/>
+            android:value="AIzaSyAcYh4HrrRlHTYxkD0ZGgKEOD3CaK_JERE" />
 
-
+        <activity android:name="com.favn.ambulance.activities.InformationScreen"
+            android:screenOrientation="landscape"
+            android:label="Thông tin phần mềm" />
     </application>
 
 </manifest>

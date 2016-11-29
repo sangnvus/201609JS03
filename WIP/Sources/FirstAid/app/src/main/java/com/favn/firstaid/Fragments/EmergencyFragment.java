@@ -26,6 +26,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -51,10 +52,14 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.miguelcatalan.materialsearchview.MaterialSearchView;
 
+import java.nio.charset.Charset;
+import java.util.ArrayList;
 import java.util.List;
 
 import static android.content.Context.SEARCH_SERVICE;
 import static com.favn.firstaid.models.Commons.Constants.LISTVIEW_EMERGENCY;
+import static java.nio.charset.StandardCharsets.ISO_8859_1;
+import static java.nio.charset.StandardCharsets.UTF_8;
 
 
 /**
@@ -155,9 +160,61 @@ public class EmergencyFragment extends Fragment implements AdapterView.OnItemCli
 //        phoneNo = getActivity().getIntent().getExtras().getString("phoneNo");
 
         searchView = (MaterialSearchView) getActivity().findViewById(R.id.search_view);
+        searchView.setOnSearchViewListener(new MaterialSearchView.SearchViewListener() {
+
+            @Override
+            public void onSearchViewShown() {
+
+            }
+
+            @Override
+            public void onSearchViewClosed() {
+                // Listview return default list
+                adapter = new InjuryAdapter(getActivity(), mInjuryList, LISTVIEW_EMERGENCY);
+                listView.setAdapter(adapter);
+            }
+        });
 
 
 
+        searchView.setOnQueryTextListener(new MaterialSearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                String out = null;
+                try {
+                    out = new String(newText.getBytes("Windows-1258"), "UTF-8");
+                } catch (java.io.UnsupportedEncodingException e) {
+
+                }
+                if(newText != null && !newText.isEmpty()) {
+                    final List<Injury> injuriesResult = new ArrayList<>();
+                    for(Injury injury: mInjuryList) {
+                        Log.d("search_test", injury.getInjury_name() + "-" + out);
+                        if(injury.getInjury_name().toLowerCase().contains(newText.toLowerCase())) {
+                            injuriesResult.add(injury);
+
+                        }
+                    }
+
+                    InjuryAdapter adapter = new InjuryAdapter(getActivity(), injuriesResult,
+                            LISTVIEW_EMERGENCY);
+                    listView.setAdapter(adapter);
+
+                } else {
+                    InjuryAdapter adapter = new InjuryAdapter(getActivity(), mInjuryList, LISTVIEW_EMERGENCY);
+                    listView.setAdapter(adapter);
+                }
+                return true;
+            }
+        });
+
+        String str = "bỏng";
+        Log.d("search_test", str);
         return rootView;
     }
 
@@ -194,10 +251,6 @@ public class EmergencyFragment extends Fragment implements AdapterView.OnItemCli
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.main, menu);
         super.onCreateOptionsMenu(menu, inflater);
-//        final SearchView searchView = (SearchView) MenuItemCompat.getActionView(menu.findItem(R.id.action_search));
-//        SearchManager searchManager = (SearchManager) getActivity().getSystemService(SEARCH_SERVICE);
-//        searchView.setSearchableInfo(searchManager.getSearchableInfo(getActivity().getComponentName()));
-//        searchView.setMaxWidth(Integer.MAX_VALUE);
 
         MenuItem item = menu.findItem(R.id.action_search);
         searchView.setMenuItem(item);
