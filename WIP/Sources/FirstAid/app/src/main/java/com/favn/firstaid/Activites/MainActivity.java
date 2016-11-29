@@ -1,5 +1,7 @@
 package com.favn.firstaid.activites;
 
+import android.content.Context;
+import android.content.ContextWrapper;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
@@ -24,6 +26,7 @@ import com.favn.firstaid.fragments.MoreFragment;
 import com.favn.firstaid.fragments.SettingFragment;
 import com.favn.firstaid.models.Commons.NetworkStatus;
 
+import java.io.File;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -32,6 +35,9 @@ import java.util.concurrent.TimeUnit;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+    private String folderName = "images";
+    private String filePath = "FileStorage";
+    File myInternalFile;
     String timeSharedPreferences = "updated_time";
     String updatedTimeKey = "updated_time";
 
@@ -80,10 +86,11 @@ public class MainActivity extends AppCompatActivity
 //        SharedPreferences.Editor editor = sharedpreferences.edit();
 //        editor.putString(updatedTimeKey, currentDate.toString());
         if (NetworkStatus.checkNetworkEnable(this)) {
-            UpdateChecking updateChecking = new UpdateChecking();
-            updateChecking.execute("http://favn.rtsvietnam.com/injury");
+//            UpdateChecking updateChecking = new UpdateChecking();
+//            updateChecking.execute("http://favn.rtsvietnam.com/injury");
 
         }
+        createInternalFile();
 
 
     }
@@ -130,5 +137,11 @@ public class MainActivity extends AppCompatActivity
         setTitle(item.getTitle());
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    private void createInternalFile() {
+        ContextWrapper contextWrapper = new ContextWrapper(getApplicationContext());
+        File directory = contextWrapper.getDir(filePath, Context.MODE_PRIVATE);
+        myInternalFile = new File(directory , folderName);
     }
 }
