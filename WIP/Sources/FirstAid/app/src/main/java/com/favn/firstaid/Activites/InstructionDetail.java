@@ -273,7 +273,16 @@ public class InstructionDetail extends AppCompatActivity implements LocationChan
     @Override
     public void requestInformationSending() {
         if (isAllowedSendInformation) {
-            createDialog();
+            if (!isLocationEnable && !isNetworkEnable) {
+                createDialog();
+            } else {
+                locationFinder.buildLocationFinder();
+                locationFinder.connectGoogleApiClient();
+                isCalled = true;
+                createSendingInformationUI(true);
+                updateSendingInformationUI();
+                SOSCalling.makeSOSCall(this);
+            }
         } else {
             SOSCalling.makeSOSCall(this);
         }
@@ -297,9 +306,12 @@ public class InstructionDetail extends AppCompatActivity implements LocationChan
                 if (isCalled) {
                     updateSendingInformationUI();
                 }
-
             }
         };
+        
+        if (isLocationEnable && isNetworkEnable) {
+            SOSCalling.makeSOSCall(this);
+        }
     }
 
     private void createDialog() {

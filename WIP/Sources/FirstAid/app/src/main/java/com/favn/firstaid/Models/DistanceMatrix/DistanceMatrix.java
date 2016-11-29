@@ -6,7 +6,7 @@ package com.favn.firstaid.models.DistanceMatrix;
 
 public class DistanceMatrix {
     private String destination_addresses[];
-    private Rows rows[];
+    private Rows[] rows;
 
     public DistanceMatrix(String[] destination_addresses, Rows[] rows) {
         this.destination_addresses = destination_addresses;

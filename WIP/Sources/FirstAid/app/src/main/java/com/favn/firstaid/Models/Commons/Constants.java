@@ -42,6 +42,16 @@ public class Constants {
 
     public static final String LOCATION_DATA_EXTRA = PACKAGE_NAME + ".LOCATION_DATA_EXTRA";
 
+
+    public static final long UPDATE_INTERVAL_IN_MILLISECONDS = 10000;
+    public static final long FASTEST_UPDATE_INTERVAL_IN_MILLISECONDS =
+            UPDATE_INTERVAL_IN_MILLISECONDS / 2;
+    public static final int UPDATE_SMALLEST_DISPLACEMENT = 20;
+
+    /**
+     * End Location, Map, Direction
+     */
+
     // Add Constants for detect what control(listview, spinner,..) - added by Kienmt : 11/04/2016
     public static final int LISTVIEW_EMERGENCY = 1;
     public static final int SPINNER_INJURY = 2;
@@ -52,6 +62,9 @@ public class Constants {
             ".PROVIDERS_CHANGED";
     public static final String INTENT_FILTER_CONNECTIVITY_CHANGE = "android.net.conn" +
             ".CONNECTIVITY_CHANGE";
+    public static final String INTENT_FILTER_WIFI_STATE_CHANGED = "android.net.wifi" +
+            ".WIFI_STATE_CHANGED";
+
 
     // Location text
     public static final String LOCATION_VI_TRI = "Vị trí";
@@ -59,15 +72,17 @@ public class Constants {
 
     // Warning
     public static final String WARNING_NO_GPS = "| Không xác định được vị trí";
-    public static final String WARN_NO_NETWORK_RESULT = "| Bệnh viện trong bán kính 20 km";
+    public static final String WARNING_NO_NETWORK_RESULT = "| Bệnh viện trong bán kính 20 km";
+    public static final String WARNING_NO_RESULT = "| Không tìm thấy bệnh viện trong bán " +
+            "kính 20 km";
 
     // Filter Health Facility
     public static final String FILTER_HOSPITAL = "1";
     public static final String FILTER_MEDICINE_CENTER = "2";
 
-    // Numeric
-    public static final double EARTH_RADIUS = 6371000; // m
-    public static final double SEARCH_RADIUS = 20000;  // m
+    // Numeric in m unit
+    public static final double EARTH_RADIUS = 6371000;
+    public static final double SEARCH_RADIUS = 20000;
 
     // Number 115
     public static final String CALL_115 = "tel:115";
@@ -78,5 +93,6 @@ public class Constants {
     public static final String INFO_SENDING_INFORMATION = "| Đang gửi thông tin";
     public static final String INFO_ERROR_SENDING_INFORMATION = "| Không gửi được thông tin";
     public static final String INFO_SUCCESS_SENDING_INFORMATION = "| Đã gửi thành công";
+
 
 }

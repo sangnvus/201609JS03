@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.support.v4.app.ActivityCompat;
+import android.util.Log;
 
 /**
  * Created by Hung Gia on 11/20/2016.
@@ -28,6 +29,6 @@ public class SOSCalling {
             return;
         }
         context.startActivity(callIntent);
-
+        Log.d("call_test", "calling");
     }
 }

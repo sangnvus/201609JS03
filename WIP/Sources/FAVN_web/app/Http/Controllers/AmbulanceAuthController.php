@@ -8,6 +8,8 @@ use App\Http\Requests;
 
 use Illuminate\Support\Facades\Auth;
 
+use App\Ambulance;
+
 class AmbulanceAuthController extends Controller
 {
     // Handle login
@@ -18,8 +20,12 @@ class AmbulanceAuthController extends Controller
 
 	 	if (Auth::attempt(['username' => $username, 'password' => $password])){
 	 		if(Auth::user()->role_id == 4) {
-	 			echo 'done';
-	 		}
+	 			return Response(Auth::user()->ambulance);
+	 		} else {
+	 			return Response(['accessdenied']);
+	 		} 
+		} else {
+			return Response(['wrong']);
 		}
 	}
 

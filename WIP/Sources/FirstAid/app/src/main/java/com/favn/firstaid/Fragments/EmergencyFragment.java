@@ -39,7 +39,9 @@ import com.favn.firstaid.locationUtil.LocationChangeListener;
 import com.favn.firstaid.locationUtil.LocationFinder;
 import com.favn.firstaid.locationUtil.LocationStatus;
 import com.favn.firstaid.models.Caller;
+import com.favn.firstaid.models.Commons.CallerInfoSender;
 import com.favn.firstaid.models.Commons.Constants;
+import com.favn.firstaid.models.Commons.InformationSenderListener;
 import com.favn.firstaid.models.Commons.NetworkStatus;
 import com.favn.firstaid.models.Commons.SOSCalling;
 import com.favn.firstaid.models.Commons.Sort;
@@ -47,6 +49,7 @@ import com.favn.firstaid.models.Injury;
 import com.google.android.gms.common.api.Status;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.miguelcatalan.materialsearchview.MaterialSearchView;
 
 import java.util.List;
 
@@ -57,7 +60,7 @@ import static com.favn.firstaid.models.Commons.Constants.LISTVIEW_EMERGENCY;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class EmergencyFragment extends Fragment implements AdapterView.OnItemClickListener, LocationChangeListener {
+public class EmergencyFragment extends Fragment implements AdapterView.OnItemClickListener, LocationChangeListener, InformationSenderListener {
     private InjuryAdapter adapter;
     private DatabaseOpenHelper dbHelper;
     private ListView listView;
@@ -81,6 +84,11 @@ public class EmergencyFragment extends Fragment implements AdapterView.OnItemCli
 
     private String phoneNo = null;
 
+    // Web service url, get caller info from app - KienMT : 11/27/2016
+    private String urlAddress;
+
+    MaterialSearchView searchView;
+
     public EmergencyFragment() {
         // Required empty public constructor
     }
@@ -88,6 +96,9 @@ public class EmergencyFragment extends Fragment implements AdapterView.OnItemCli
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
+        // Assign url address value (web service url) - Kienmt : 11/27/2016
+        urlAddress = "http://localhost/capston/WIP/Sources/FAVN_web/public/caller";
 
         final ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.fragment_emergency, container, false);
 
@@ -143,6 +154,10 @@ public class EmergencyFragment extends Fragment implements AdapterView.OnItemCli
         //get phone number on setting
 //        phoneNo = getActivity().getIntent().getExtras().getString("phoneNo");
 
+        searchView = (MaterialSearchView) getActivity().findViewById(R.id.search_view);
+
+
+
         return rootView;
     }
 
@@ -179,10 +194,15 @@ public class EmergencyFragment extends Fragment implements AdapterView.OnItemCli
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.main, menu);
         super.onCreateOptionsMenu(menu, inflater);
-        final SearchView searchView = (SearchView) MenuItemCompat.getActionView(menu.findItem(R.id.action_search));
-        SearchManager searchManager = (SearchManager) getActivity().getSystemService(SEARCH_SERVICE);
-        searchView.setSearchableInfo(searchManager.getSearchableInfo(getActivity()
-                .getComponentName()));
+//        final SearchView searchView = (SearchView) MenuItemCompat.getActionView(menu.findItem(R.id.action_search));
+//        SearchManager searchManager = (SearchManager) getActivity().getSystemService(SEARCH_SERVICE);
+//        searchView.setSearchableInfo(searchManager.getSearchableInfo(getActivity().getComponentName()));
+//        searchView.setMaxWidth(Integer.MAX_VALUE);
+
+        MenuItem item = menu.findItem(R.id.action_search);
+        searchView.setMenuItem(item);
+        searchView.closeSearch();
+
     }
 
     @Override
@@ -191,7 +211,7 @@ public class EmergencyFragment extends Fragment implements AdapterView.OnItemCli
         int id = item.getItemId();
 
         if (id == R.id.action_sos_calling) {
-            if (isAllowedSendInformation) {
+            if (isAllowedSendInformation && !isLocationEnable && !isNetworkEnable) {
                 createDialog();
             } else {
                 SOSCalling.makeSOSCall(getContext());
@@ -206,6 +226,12 @@ public class EmergencyFragment extends Fragment implements AdapterView.OnItemCli
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        searchView.closeSearch();
     }
 
     private void createBroadcast() {
@@ -305,15 +331,53 @@ public class EmergencyFragment extends Fragment implements AdapterView.OnItemCli
     public void locationChangeSuccess(Location location) {
         Log.d("location_test", location + "");
 
-        //TODO send information to server
-        // Init caller
-        Caller caller = new Caller();
-        caller.setPhone(phoneNo);
-        caller.setInjuryId(0);
-        caller.setLatitude(location.getLatitude());
-        caller.setLongitude(location.getLongitude());
+        sendCallerInfoToServer(location);
 
-        mDb = FirebaseDatabase.getInstance().getReference();
-        mDb.child("callers").push().setValue(caller);
+        //TODO send information to firebase - START comment by KienMT :
+        // Init caller
+//        Caller caller = new Caller();
+//        caller.setPhone(phoneNo);
+//        caller.setInjuryId(0);
+//        caller.setLatitude(location.getLatitude());
+//        caller.setLongitude(location.getLongitude());
+//
+//        mDb = FirebaseDatabase.getInstance().getReference();
+//        mDb.child("callers").push().setValue(caller);
+
+
+    }
+
+    // Send caller infor to db server - KienMT : 11/27/2016
+    private void sendCallerInfoToServer(Location location) {
+        CallerInfoSender ciSender = new CallerInfoSender();
+
+        // Assign values
+        ciSender.setContext(getActivity());
+        ciSender.setUrlAddress(urlAddress);
+        ciSender.setPhone("5555");
+        ciSender.setLatitude(location.getLatitude());
+        ciSender.setLongitude(location.getLongitude());
+        ciSender.setStatus("waiting");
+        ciSender.setInformationSenderListener(EmergencyFragment.this);
+
+        ciSender.execute();
+    }
+
+    @Override
+    public void sendInformationListener(String sendingStatus) {
+        switch (sendingStatus) {
+            case Constants.INFO_SENDING_INFORMATION:
+                tvSendingInformationStatus.setText(Constants.INFO_SENDING_INFORMATION);
+                llSendingStatus.setBackgroundColor(getResources().getColor(R.color.colorProcessing));
+                break;
+            case Constants.INFO_SUCCESS_SENDING_INFORMATION:
+                tvSendingInformationStatus.setText(Constants.INFO_SUCCESS_SENDING_INFORMATION);
+                llSendingStatus.setBackgroundColor(getResources().getColor(R.color.colorSuccess));
+                break;
+            case Constants.INFO_ERROR_SENDING_INFORMATION:
+                tvSendingInformationStatus.setText(Constants.INFO_ERROR_SENDING_INFORMATION);
+                llSendingStatus.setBackgroundColor(getResources().getColor(R.color.colorWarning));
+                break;
+        }
     }
 }

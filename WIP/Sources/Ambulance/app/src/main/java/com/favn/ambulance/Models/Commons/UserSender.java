@@ -19,7 +19,7 @@ import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 
 /**
- * Created by MeHaDake on 11/16/2016.
+ * Created by KienMT on 11/16/2016.
  */
 
 public class UserSender extends AsyncTask<Void, Void, String>{
@@ -90,7 +90,10 @@ public class UserSender extends AsyncTask<Void, Void, String>{
         if(s != null){
             Intent intent = new Intent(context, WaitingScreen.class);
             context.startActivity(intent);
-            Log.w("ok", "ok");
+
+            SharedPreferencesData.saveData(context, Constants.SPREFS_NAME, Constants
+                    .SPREFS_AMBULANCE_INFO_KEY, s);
+
         } else {
             Toast.makeText(context, "Đăng nhập thất bại !", Toast.LENGTH_LONG).show();
         }

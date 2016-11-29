@@ -33,4 +33,8 @@ public class Constants {
     // Warning text
     public static String REQUIRED_ENTER_USERNAME = "Chưa nhập tên đăng nhập";
     public static String REQUIRED_ENTER_PASSWORD = "Chưa nhập mật khẩu";
+
+    // SharedPreferences
+    public static String SPREFS_NAME = "ambulance_sPrefs";
+    public static String SPREFS_AMBULANCE_INFO_KEY = "ambulance_sPrefs";
 }
