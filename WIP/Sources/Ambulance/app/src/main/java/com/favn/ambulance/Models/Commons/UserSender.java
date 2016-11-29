@@ -87,12 +87,15 @@ public class UserSender extends AsyncTask<Void, Void, String>{
     protected void onPostExecute(String s) {
         pd.dismiss();
 
-        if(s != null){
+        if(s == null){
+            Toast.makeText(context, "Lỗi kết nối !", Toast.LENGTH_LONG).show();
+        } else if(s.equals("[\"wrong\"]")){
+            Toast.makeText(context, "Sai tên đăng nhập hoặc mật khẩu !", Toast.LENGTH_LONG).show();
+        } else if(s.equals("[\"accessdenied\"]")) {
+            Toast.makeText(context, "Tài khoản không có quyền đăng nhập !", Toast.LENGTH_LONG).show();
+        } else {
             Intent intent = new Intent(context, WaitingScreen.class);
             context.startActivity(intent);
-
-        } else {
-            Toast.makeText(context, "Đăng nhập thất bại !", Toast.LENGTH_LONG).show();
         }
     }
 
