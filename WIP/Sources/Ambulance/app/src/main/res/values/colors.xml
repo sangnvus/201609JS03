@@ -2,10 +2,11 @@
 <resources>
     <color name="colorPrimary">#e53935</color>
     <color name="colorPrimaryDark">#303F9F</color>
-    <color name="colorAccent">#FF4081</color>
+    <color name="colorAccent">#e53935</color>
     <color name="colorEditText">#d8a3a3a3</color>
     <color name="color_status_bar">#C62828</color>
     <color name="colorWhite">#ffffff</color>
+    <color name="colorEffect">#ffc1c1</color>
 
     <color name="colorSeparate">#dfdfdf</color>
 

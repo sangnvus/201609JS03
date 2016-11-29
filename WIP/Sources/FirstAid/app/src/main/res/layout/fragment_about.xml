@@ -33,7 +33,33 @@
         </LinearLayout>
 
         <View
-            android:id="@+id/line"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/colorSeparate" />
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/version"
+            android:layout_margin="@dimen/margin_8">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/version_title"
+                android:id="@+id/version_title"
+                android:textStyle="bold"
+                android:textSize="18sp" />
+
+            <TextView
+                android:text="@string/version_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/text_version" />
+        </LinearLayout>
+
+        <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:background="@color/colorSeparate" />

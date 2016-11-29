@@ -414,4 +414,7 @@ public class Task extends AppCompatActivity implements OnMapReadyCallback,
         }
     }
 
+    @Override
+    public void onBackPressed() {
+    }
 }
