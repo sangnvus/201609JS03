@@ -8,18 +8,16 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.IntentSender;
-import android.content.SharedPreferences;
 import android.location.Location;
+import android.os.Bundle;
 import android.provider.Settings;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.app.NotificationCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
+import android.support.v7.app.NotificationCompat;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
 
 import com.favn.ambulance.locationUtil.LocationChangeListener;
 import com.favn.ambulance.locationUtil.LocationFinder;
@@ -59,7 +57,7 @@ public class WaitingScreen extends AppCompatActivity implements LocationChangeLi
         // Get ambulance info from SharedPreferences
         ambulance = SharedPreferencesData.getAmbulanceData(Constants.SPREFS_AMBULANCE_INFO_KEY);
 
-        Log.d("ambulance_data", ambulance.getUser_id() + "");
+//        Log.d("ambulance_data", ambulance.getUser_id() + "");
 
     }
 
@@ -94,12 +92,14 @@ public class WaitingScreen extends AppCompatActivity implements LocationChangeLi
                 break;
             case R.id.application_info:
                 //TODO move to about acivity
-                // like screen in FA
+                startActivity(new Intent(this, InformationScreen.class));
                 break;
         }
         return true;
     }
 
+    @Override
+    public void onBackPressed() {}
     // Broadcast for Connectivity status
     BroadcastReceiver connectivityBroadcastReceiver = new BroadcastReceiver() {
         @Override
@@ -166,6 +166,7 @@ public class WaitingScreen extends AppCompatActivity implements LocationChangeLi
                 })
                 .create()
                 .show();
+
     }
 }
 

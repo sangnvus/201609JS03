@@ -1,26 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
     <TextView
-        android:text="Câu hỏi"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
         android:id="@+id/text_question"
-        android:textSize="17dp"
-        android:textColor="@color/colorPrimary"
-        android:layout_marginTop="10dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
-        android:textStyle="bold" />
-
-    <TextView
-        android:text="Đáp án"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/margin_16"
+        android:layout_marginRight="@dimen/margin_16"
+        android:layout_marginTop="@dimen/margin_8"
+        android:alpha="0.87"
+        android:text="Câu hỏi"
+        android:textColor="@color/cast_expanded_controller_background_color" />
+
+    <TextView
         android:id="@+id/text_answer"
-        android:layout_marginRight="8dp"
-        android:layout_marginLeft="16dp"
-        android:visibility="visible" />
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/margin_16"
+        android:layout_marginRight="@dimen/margin_16"
+        android:layout_marginTop="@dimen/margin_8"
+        android:layout_marginBottom="@dimen/margin_8"
+        android:alpha="0.54"
+        android:text="Đáp án"
+        android:textColor="@color/cast_expanded_controller_background_color" />
 </LinearLayout>

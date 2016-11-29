@@ -62,8 +62,10 @@ public class LearningInstructionAdapter extends BaseAdapter {
 
         tvStep.setText(learningInstruction.getStep() + "");
         tvInstruction.setText(learningInstruction.getContent());
-        tvExplanation.setText(learningInstruction.getExplanation());
-
+        if(learningInstruction.getExplanation() != null) {
+            tvExplanation.setVisibility(View.VISIBLE);
+            tvExplanation.setText(learningInstruction.getExplanation());
+        }
         line.setVisibility(View.GONE);
         call.setVisibility(View.GONE);
 
