@@ -46,6 +46,7 @@ import com.favn.firstaid.models.Commons.InformationSenderListener;
 import com.favn.firstaid.models.Commons.NetworkStatus;
 import com.favn.firstaid.models.Commons.SOSCalling;
 import com.favn.firstaid.models.Commons.Sort;
+import com.favn.firstaid.models.Commons.StringUtils;
 import com.favn.firstaid.models.Injury;
 import com.google.android.gms.common.api.Status;
 import com.google.firebase.database.DatabaseReference;
@@ -53,8 +54,10 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.miguelcatalan.materialsearchview.MaterialSearchView;
 
 import java.nio.charset.Charset;
+import java.text.Normalizer;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Pattern;
 
 import static android.content.Context.SEARCH_SERVICE;
 import static com.favn.firstaid.models.Commons.Constants.LISTVIEW_EMERGENCY;
@@ -185,19 +188,15 @@ public class EmergencyFragment extends Fragment implements AdapterView.OnItemCli
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                String out = null;
-                try {
-                    out = new String(newText.getBytes("Windows-1258"), "UTF-8");
-                } catch (java.io.UnsupportedEncodingException e) {
 
-                }
                 if(newText != null && !newText.isEmpty()) {
                     final List<Injury> injuriesResult = new ArrayList<>();
                     for(Injury injury: mInjuryList) {
-                        Log.d("search_test", injury.getInjury_name() + "-" + out);
-                        if(injury.getInjury_name().toLowerCase().contains(newText.toLowerCase())) {
+                        String str = injury.getInjury_name().toLowerCase();
+                        String strUnAccent = StringUtils.unAccent(str);
+                        String searchStr = newText.toLowerCase();
+                        if(str.contains(searchStr) || strUnAccent.contains(searchStr)) {
                             injuriesResult.add(injury);
-
                         }
                     }
 
@@ -213,8 +212,6 @@ public class EmergencyFragment extends Fragment implements AdapterView.OnItemCli
             }
         });
 
-        String str = "bỏng";
-        Log.d("search_test", str);
         return rootView;
     }
 
@@ -433,4 +430,5 @@ public class EmergencyFragment extends Fragment implements AdapterView.OnItemCli
                 break;
         }
     }
+
 }
