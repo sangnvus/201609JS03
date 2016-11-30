@@ -3394,3 +3394,18 @@ body > .navbar-collapse[data-color="purple"]:after {
     -webkit-overflow-scrolling: touch;
   }
 }
+
+.successNoti {
+        background-color: #a1e82c;
+        color: #FFFFFF;
+        padding: 10px 15px;
+        font-size: 16px;
+        text-align: center;
+    }   
+
+.nav-content {
+    padding: 10px 15px;
+    font-size: 16px;
+    color: #757575;
+    text-align: center;
+}

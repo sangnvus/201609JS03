@@ -25,21 +25,11 @@
 					<select id="injury_id" class="form-control">
 						<option value="0">Khác</option>
 						@if(isset($injury))
-								@foreach($injury as $inj)
-									<option value="{{ $inj->id }}">{{ $inj->injury_name }}</option>
-								@endforeach
-							@endif
-					</select>
-					<!-- <div>
-						<input type="text" class="form-control" name="injury" list="injury" placeholder="Injury...">       
-					</div>
-					<datalist id="injury">
-						@if(isset($injury))
 							@foreach($injury as $inj)
-								<option>{{ $inj->injury_name }}</option>
+								<option value="{{ $inj->id }}">{{ $inj->injury_name }}</option>
 							@endforeach
 						@endif
-					</datalist> -->
+					</select>
 				</li>
 
 				<label style="padding-left: 10px;">Triệu chứng khác</label>
@@ -62,7 +52,7 @@
 
 				<li style="padding: 10px;">
 					<div style="align-content: center;">
-					<button style="background-color: green; color: white; float: right; width: 100px" type="submit" class="btn btn-default">Điều phối xe</button>
+					<button style="background-color: green; color: white; float: right; width: 100px" type="button" class="btn btn-default" onclick="onDispatchClick()">Điều phối xe</button>
 						<button style="background-color: red; color: white; float: right; width: 100px" type="reset" class="btn btn-default" onclick="onCancelDispatchClick()">Hủy</button>
 					</div>
 				</li>

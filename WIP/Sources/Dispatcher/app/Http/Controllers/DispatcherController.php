@@ -8,12 +8,15 @@ use App\Http\Requests;
 
 use App\Injury;
 
+use App\Ambulance;
+
 class DispatcherController extends Controller
 {
     //
 	function showDispatcherView() {
 		$injury = Injury::all();
-		return view('dispatcher.layout.dispatcher', ['injury' => $injury]);
+		$ambulances = Ambulance::all();
+		return view('dispatcher.layout.dispatcher', ['injury' => $injury, 'ambulances' => $ambulances]);
 	}
 
 }
