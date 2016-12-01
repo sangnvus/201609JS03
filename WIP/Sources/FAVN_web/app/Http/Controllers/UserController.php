@@ -203,7 +203,18 @@ class UserController extends Controller
 			$ambulance->save();
 		}
 
-		return redirect('admin/user/listuser')->with('noti', 'Đã thêm một người dùng mới.');
+		if($role == 4) {
+			// Return list ambulance to client and push to firebase
+			$ambulances = Ambulance::whereNull('isDeleted')
+						->orWhere('isDeleted', '<>', 1)
+						->get();
+			return redirect('admin/user/listuser')->with('noti', 'Đã thêm một người dùng mới.')
+													->with('ambulances', $ambulances);
+		} else {
+			return redirect('admin/user/listuser')->with('noti', 'Đã thêm một người dùng mới.');
+		}
+		
+		
 	}
 
 	// Delete user
@@ -218,7 +229,18 @@ class UserController extends Controller
 			$ambulance->save();
 		}
 		$user->save();
-		return redirect('admin/user/listuser')->with('noti', 'Xóa thành công người dùng '.$username);
+
+		$role = $user->role_id;
+		if($role == 4) {
+			// Return list ambulance to client and push to firebase
+			$ambulances = Ambulance::whereNull('isDeleted')
+						->orWhere('isDeleted', '<>', 1)
+						->get();
+			return redirect('admin/user/listuser')->with('noti', 'Xóa thành công người dùng '.$username)
+													->with('ambulances', $ambulances);
+		} else {
+			return redirect('admin/user/listuser')->with('noti', 'Xóa thành công người dùng '.$username);
+		}
 
 	}
 
