@@ -28,6 +28,10 @@ Route::get('getpass', function(){
 Route::resource('ambulance', 'AmbulanceResourceController');
 // ----- Resouce
 
+Route::post('ambulanceUpdate', 'AmbulanceController@update');
+
+
+Route::post('callerUpdate', 'CallerController@update');
 
 
 // Call controler show login view

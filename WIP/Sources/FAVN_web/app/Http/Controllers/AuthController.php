@@ -28,7 +28,8 @@ class AuthController extends Controller
 				'username.required' => 'Chưa nhập tên đăng nhập.',
 				'password.required' => 'Chưa nhập mật khẩu.',
 				'password.required' => 'Mật khẩu không được nhỏ hơn 3 kí tự.',
-				'password.max' => 'Mật khẩu không được lớn hơn 32 kí tự.'
+				'password.max' => 'Mật khẩu không được lớn hơn 32 kí tự.',
+				'password.min' => 'Mật khẩu không được nhỏ hơn 3 kí tự.'
 			]);
 
 		$username = $request->username;

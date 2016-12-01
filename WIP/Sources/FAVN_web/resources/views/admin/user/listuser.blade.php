@@ -1,6 +1,10 @@
 @extends('admin.layout.index')
 
 @section('content')
+     @if(session('ambulances'))
+           <input type="text" id="ambulances" name="ambulances" value="{{ session('ambulances') }}" hidden>
+     @endif
+
     <div class="content">
         <div class="container-fluid">
             <div class="row">
@@ -142,6 +146,15 @@
 @endsection
 
 @section('script')
+
+    <!-- Get list ambulance and update to firebase -->
+    @if(session('ambulances'))
+    <script type="text/javascript">
+        setAllAmbulanceToFirebase();
+    </script> 
+     @endif
+        
+
 
     <!-- JS function confirm box when delete user -->
     <script type="text/javascript">

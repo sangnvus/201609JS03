@@ -1,78 +1,45 @@
-// Declare all map variables, objects,..
-var map;
-var geocoder;
-var ambulanceInfoWindow;
-var markers = [];
-var emergencyCenterPos;
-
-var emergencyCenterIcon;
-var emergencyCenterTitle;
-var ambulanceList;
-
-
-var tmpPos1;
-var tmpPos2;
-var directionsService;
-var directionsDisplay;
-
+ 
 function initMap() {
-
-  //initDefaultMap(); 
+  initDefaultMap(); 
 
   // call init 115 center marker
-  //iniAMarker(emergencyCenterPos, emergencyCenterIcon, emergencyCenterTitle);
+  iniAMarker(emergencyCenterPos, emergencyCenterIcon, emergencyCenterTitle);
 
   // call init all ambulance marker after load list ambulance
-  //initAmbulanceMarkerAfterLoad();
+  initAmbulanceMarkerAfterLoad();
 
-  var directionsService = new google.maps.DirectionsService;
-        var directionsDisplay = new google.maps.DirectionsRenderer;
-        var map = new google.maps.Map(document.getElementById('map'), {
-          zoom: 7,
-          center: {lat: 41.85, lng: -87.65}
-        });
-        directionsDisplay.setMap(map);
-
-        
-          calculateAndDisplayRoute(directionsService, directionsDisplay);
-    
-}
+} 
 
 function initDefaultMap() {
   // Init service
-  var directionsService = new google.maps.DirectionsService;
-  var directionsDisplay = new google.maps.DirectionsRenderer;
+  directionsService = new google.maps.DirectionsService;
   geocoder = new google.maps.Geocoder;
-
-  directionsDisplay.setMap(map);
 
   emergencyCenterPos = {lat: 21.0222965, lng: 105.8567074};
   tmpPos = {lat: 21.0000, lng: 105.0000};
   emergencyCenterIcon = 'assets/img/markers/ic_marker_caller.png';
   emergencyCenterTitle = 'Trung tâm cấp cứu 115';
+
+  initNewMap();
+
+} 
+
+
+function initNewMap() {
   map = new google.maps.Map(document.getElementById('map'), {
     zoom: 17,
     center: emergencyCenterPos,
     streetViewControl:false
   });
-  
+  directionsDisplay = new google.maps.DirectionsRenderer({suppressMarkers: true});
+  directionsDisplay.setMap(map);
 
+}
 
-calculateAndDisplayRoute(directionsService, directionsDisplay);
-
-
-
-
-} 
-
-function calculateAndDisplayRoute(directionsService, directionsDisplay) {
-
-
-  tmpPos1 = new google.maps.LatLng(21.0231111, 105.855);
-  tmpPos2 = new google.maps.LatLng(21.024019, 105.8504);
+function calculateAndDisplayRoute(directionsService, directionsDisplay, origin, destination) {
   directionsService.route({
-    origin: tmpPos1,
-    destination: tmpPos2,
+    origin: origin,
+    destination: destination,
     travelMode: 'DRIVING'
   }, function(response, status) {
     if (status === 'OK') {
@@ -82,8 +49,6 @@ function calculateAndDisplayRoute(directionsService, directionsDisplay) {
     }
   });
 }
-
-
 
 //----- INIT A MARKER BY POST, ICON, TITLE
 function iniAMarker(pos, icon, title){
@@ -110,20 +75,10 @@ function iniAMarker(pos, icon, title){
   markers.push(marker);
 }
 
-// LOAD AMBULANCE LIST
-let getAmbulanceList = new Promise(function(resolve, reject) {
-   $.get('ambulance', function(data) {
-    ambulanceList = data.ambulance;
-
-    // markers affter load
-    resolve(ambulanceList);
-  });
-
-});
-
 // AFTER LOAD ALL AMBULANCE -> INIT MARKER
 function initAmbulanceMarkerAfterLoad(){
-  getAmbulanceList.then(initAmbulanceMarkers);
+  getListAmbulance();
+  initAmbulanceMarkers(ambulanceList);
 }
 
 function initAmbulanceMarkers(ambulanceList) {
@@ -143,11 +98,6 @@ function initAmbulanceMarkers(ambulanceList) {
   }
 }
 
-function initCallerMarkerAfterClearAll(caller, callback) {
-  clearAllMarkers();
-  callback(caller); // to tuong truyen o day la, do
-}
-
 function initAnCallerMarker(caller) {
   var pos = new google.maps.LatLng(caller.latitude, caller.longitude);
   var icon = 'assets/img/markers/ic_marker_caller.png';
@@ -155,7 +105,6 @@ function initAnCallerMarker(caller) {
   iniAMarker(pos, icon, title);
     map.panTo(pos);
 }
-
 
 function clearAllMarkers() {
   for (var i = 0; i < markers.length; i++) {
@@ -181,6 +130,7 @@ function geocodeLatLng(geocoder, map, locationString, callback) {
     callback(address);
   });
 }
+
 
 
 

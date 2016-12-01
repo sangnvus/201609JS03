@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
+
 use App\Caller;
 
 class CallerController extends Controller
@@ -16,9 +17,39 @@ class CallerController extends Controller
     	
     	$result = array();
     	foreach ($data as $key => $value) {
-    		$result[] = ['phone' => $value->phone, 'injury_id' => $value->injury_id, 'symptom' => $value->symptom, 'latitude' => $value->latitude, 'longitude' => $value->longitude, 'status' => $value->status, 'label' => $value->phone, 'value' => $value->phone];
+    		$result[] = ['id' => $value->id,
+            'phone' => $value->phone,
+            'injury_id' => $value->injury_id,
+            'symptom' => $value->symptom,
+            'latitude' => $value->latitude,
+            'longitude' => $value->longitude,
+            'status' => $value->status,
+            'dispatcher_user_id' => $value->dispatcher_user_id,
+            'ambulance_user_id' => $value->dispatcher_user_id,
+            'label' => $value->phone];
     	}
 
     	return response()->json($result);
+    }
+
+    public function update(Request $request)
+    {
+        $dataJson = json_decode($request->getContent(), true);
+
+        $caller = Caller::find($dataJson['id']);
+
+        // Assign value from request
+        $caller->injury_id = $dataJson['injury_id'];
+        $caller->symptom = $dataJson['symptom'];
+        $caller->latitude = $dataJson['latitude'];
+        $caller->longitude = $dataJson['longitude'];
+        $caller->status = $dataJson['status'];
+        $caller->ambulance_user_id =$dataJson['ambulance_user_id'];
+        
+        // Save to db
+        $caller->save();
+
+        echo "done";
+
     }
 }

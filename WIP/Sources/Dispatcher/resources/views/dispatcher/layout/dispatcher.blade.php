@@ -18,10 +18,9 @@
     <link href="assets/css/animate.min.css" rel="stylesheet"/>
 
     <!--  Light Bootstrap Table core CSS    -->
-    <link href="assets/css/dashboard.css" rel="stylesheet"/>
+    <link href="assets/css/dashboard.css" rel="stylesheet"/>    
 
-
-    <!--  CSS for google map -->
+    <!--  CSS for google map -->    
     <link href="assets/css/googlemap.css" rel="stylesheet" />
 
     <!--     Fonts and icons     -->
@@ -57,41 +56,30 @@
 
 </body>
 
-<!--   Core JS Files   -->
-<script src="assets/js/jquery-1.10.2.js" type="text/javascript"></script>
-<script src="assets/js/bootstrap.min.js" type="text/javascript"></script>
-
-<!--  Checkbox, Radio & Switch Plugins -->
-<script src="assets/js/bootstrap-checkbox-radio-switch.js"></script>
-
-<!--  Charts Plugin -->
-<script src="assets/js/chartist.min.js"></script>
-
-<!--  Notifications Plugin    -->
-<script src="assets/js/bootstrap-notify.js"></script>
-
-<!--  Google Maps Plugin    -->
-<script type="text/javascript" src="assets/js/googlemap.js"></script>
-
+<!-- API -->
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBcG5eSgX7ZSWWdvnnNUTz4tzNhYIK3uBs&callback=initMap"
-async defer></script>
-
-<!-- Light Bootstrap Table Core javascript and methods for Demo purpose -->
-<script src="assets/js/light-bootstrap-dashboard.js"></script>
-
-<!-- Add firebase api -->
+async defer></script> 
 <script src="https://www.gstatic.com/firebasejs/3.6.1/firebase.js"></script>
 
-<!-- Include firebase handle -->
-<script src="assets/js/firebasehandle.js"></script>
+<!--   Core JS Files   -->
+<script src="assets/js/customizes/jquery-1.10.2.js" type="text/javascript"></script>
+<script src="assets/js/customizes/bootstrap.min.js" type="text/javascript"></script>
+<script src="assets/js/customizes/bootstrap-checkbox-radio-switch.js"></script>
+<script src="assets/js/customizes/chartist.min.js"></script>
+<script src="assets/js/customizes/bootstrap-notify.js"></script>
+<script src="assets/js/customizes/light-bootstrap-dashboard.js"></script>
+<script src="assets/js/customizes/jquery-3.1.1.min.js" type="text/javascript"></script>
+<script src="assets/js/customizes/jquery-ui.min.js" type="text/javascript"></script>
 
-<!-- Include customize sidebar js -->
-<script src="assets/js/customize-sidebar.js"></script>
+<!-- include commons script -->
+<script src="assets/js/commons/models.js" type="text/javascript"></script>
+<script src="assets/js/commons/variables.js" type="text/javascript"></script>
 
-<script src="assets/js/jquery-3.1.1.min.js" type="text/javascript"></script>
-
-<!-- jquery UI lib -->
-<script src="assets/js/jquery-ui.min.js" type="text/javascript"></script>
+<!-- include function script -->
+<script src="assets/js/functions/dispatchHandle.js" type="text/javascript"></script>
+<script src="assets/js/functions/firebaseHandle.js" type="text/javascript"></script>
+<script src="assets/js/functions/googlemapHandle.js" type="text/javascript"></script>
+<script src="assets/js/functions/domControl.js" type="text/javascript"></script>
 
 <!-- autocomplete search phone number -->
 <script type="text/javascript">
@@ -100,15 +88,20 @@ async defer></script>
         minlenght : 1, 
         autoFocus : true,
         select : function(e, ui){
-                iniCallerForm(ui.item);
-                initCallerMarkerAfterClearAll(ui.item, initAnCallerMarker);
+                // Assign value for caller object
+                initNewMap();
+                var tmpObj = ui.item;
+                caller = ui.item;
+                tmpCallerPost = new google.maps.LatLng(caller.latitude, caller.longitude);
+                callerPos = [];
+                callerPos.push(tmpCallerPost);
+                iniCallerForm(caller);
+                clearAllMarkers();
+                initAnCallerMarker(caller);
         }
     });
 </script>
 
-<!-- handler dispatch -->
-<script src="assets/js/dispatch-handle.js" type="text/javascript"></script>
-    
 </html>
 
 

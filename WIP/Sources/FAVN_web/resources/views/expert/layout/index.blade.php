@@ -48,6 +48,8 @@
         <!-- end main panel -->
     </div>
 </body>
+<!-- API -->
+<script src="https://www.gstatic.com/firebasejs/3.6.2/firebase.js"></script>
 
 <!--   Core JS Files   -->
 <script src="assets/js/jquery-1.10.2.js" type="text/javascript"></script>

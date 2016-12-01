@@ -6,9 +6,9 @@ use Illuminate\Http\Request;
 
 use App\Http\Requests;
 
-use App\Ambulance;
+use App\Caller;
 
-class AmbulanceResourceController extends Controller
+class CallerResourceController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -17,8 +17,7 @@ class AmbulanceResourceController extends Controller
      */
     public function index()
     {
-        $ambulance = Ambulance::all();
-        return Response(['ambulance' => $ambulance], 201);
+        //
     }
 
     /**
@@ -39,22 +38,7 @@ class AmbulanceResourceController extends Controller
      */
     public function store(Request $request)
     {
-        $dataJson = json_decode($request->getContent(), true);
-
-        $ambulance = Ambulance::find($dataJson['id']);
-
-        // Assign value from request
-        $ambulance->team = $dataJson['team'];
-        $ambulance->latitude = $dataJson['latitude'];
-        $ambulance->longitude = $dataJson['longitude'];
-        $ambulance->status = $dataJson['status'];
-        $ambulance->caller_taking_id =$dataJson['caller_taking_id'];
-        
-        // Save to db
-        $ambulance->save();
-
-        echo "done";
-
+       
     }
 
     /**
@@ -88,7 +72,22 @@ class AmbulanceResourceController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+
+        $dataJson = json_decode($request->getContent(), true);
+
+        $caller = Caller::find($dataJson['id']);
+
+        // Assign value from request
+        $ambulance->team = $dataJson['team'];
+        $ambulance->latitude = $dataJson['latitude'];
+        $ambulance->longitude = $dataJson['longitude'];
+        $ambulance->status = $dataJson['status'];
+        $ambulance->caller_taking_id =$dataJson['caller_taking_id'];
+        
+        // Save to db
+        $ambulance->save();
+
+        echo "done";
     }
 
     /**
