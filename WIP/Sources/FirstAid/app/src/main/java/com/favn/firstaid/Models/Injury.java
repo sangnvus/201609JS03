@@ -20,10 +20,11 @@ public class Injury {
     public Injury() {
     }
 
-    public Injury(int id, String injury_name, String symptom) {
+    public Injury(int id, String injury_name, String symptom, String injuryImage) {
         this.id = id;
         this.injury_name = injury_name;
         this.symptom = symptom;
+        this.image = injuryImage;
     }
 
     public Injury(int id, String injury_name, String symptom, String priority, String image, String updated_at, String created_at) {

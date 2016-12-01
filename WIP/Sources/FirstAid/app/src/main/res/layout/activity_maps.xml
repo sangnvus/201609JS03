@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.design.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/map_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -12,8 +12,7 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginBottom="@dimen/layout_height_64">
+        android:layout_height="match_parent">
 
         <fragment xmlns:android="http://schemas.android.com/apk/res/android"
                   android:id="@+id/map"
@@ -26,7 +25,7 @@
             android:id="@+id/layout_location_information"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
+            android:layout_above="@+id/button_show_health_facility"
             android:orientation="vertical">
 
             <LinearLayout
@@ -159,12 +158,14 @@
                         android:layout_width="@dimen/image_size_40"
                         android:layout_height="@dimen/image_size_40"
                         android:background="@drawable/ic_navigate"/>
+
                     <Button
                         android:id="@+id/button_clear_direction"
                         android:layout_width="@dimen/image_size_40"
                         android:layout_height="@dimen/image_size_40"
                         android:background="@drawable/ic_clear"
                         android:visibility="gone"/>
+
                     <ProgressBar
                         android:id="@+id/progress_loading_direction"
                         android:layout_width="wrap_content"
@@ -173,11 +174,42 @@
                         android:visibility="gone"/>
                 </LinearLayout>
 
-
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_below="@+id/layout_health_facility_navigate"
+                    android:background="@color/colorSeparate"/>
             </RelativeLayout>
 
 
         </LinearLayout>
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/fab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="8dp"
+            android:clickable="true"
+            android:src="@drawable/ic_clear"
+            android:tint="@color/colorWhite"
+            android:visibility="gone"/>
+
+        <Button
+            android:id="@+id/button_show_health_facility"
+            style="@style/Widget.AppCompat.Button"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:layout_alignParentBottom="true"
+            android:layout_margin="@dimen/margin_8"
+            android:background="@drawable/button_selector"
+            android:clickable="true"
+            android:enabled="true"
+            android:focusable="false"
+            android:text="CƠ SỞ Y TẾ GẦN ĐÂY"
+            android:textColor="@color/cast_expanded_controller_text_color"/>
+
 
     </RelativeLayout>
 

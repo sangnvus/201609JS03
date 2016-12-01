@@ -85,8 +85,8 @@ public class EmergencyFragment extends Fragment implements AdapterView.OnItemCli
     private LocationFinder locationFinder;
     protected static final int REQUEST_CHECK_SETTINGS = 0x1;
     private boolean isCalled;
-    DatabaseReference mDb;
 
+    DatabaseReference mDb;
     private LinearLayout llSendingStatus;
     private TextView tvSendingInformationStatus;
 
@@ -114,9 +114,8 @@ public class EmergencyFragment extends Fragment implements AdapterView.OnItemCli
         dbHelper = new DatabaseOpenHelper(getActivity());
         dbHelper.createDatabase();
         dbHelper.openDatabase();
-
         mInjuryList = dbHelper.getListInjury();
-        adapter = new InjuryAdapter(getActivity(), mInjuryList, LISTVIEW_EMERGENCY);
+        adapter = new InjuryAdapter(getActivity(), mInjuryList, LISTVIEW_EMERGENCY, false);
         listView.setAdapter(adapter);
         listView.setOnItemClickListener(this);
         setHasOptionsMenu(true);
@@ -127,6 +126,7 @@ public class EmergencyFragment extends Fragment implements AdapterView.OnItemCli
         // Sending information setup
         isLocationEnable = false;
         isNetworkEnable = false;
+
 
         //TODO Get value isAllowSendInformation from SharePreference
         isAllowedSendInformation = true;
@@ -173,11 +173,10 @@ public class EmergencyFragment extends Fragment implements AdapterView.OnItemCli
             @Override
             public void onSearchViewClosed() {
                 // Listview return default list
-                adapter = new InjuryAdapter(getActivity(), mInjuryList, LISTVIEW_EMERGENCY);
+                adapter = new InjuryAdapter(getActivity(), mInjuryList, LISTVIEW_EMERGENCY, false);
                 listView.setAdapter(adapter);
             }
         });
-
 
 
         searchView.setOnQueryTextListener(new MaterialSearchView.OnQueryTextListener() {
@@ -189,23 +188,21 @@ public class EmergencyFragment extends Fragment implements AdapterView.OnItemCli
             @Override
             public boolean onQueryTextChange(String newText) {
 
-                if(newText != null && !newText.isEmpty()) {
+                if (newText != null && !newText.isEmpty()) {
                     final List<Injury> injuriesResult = new ArrayList<>();
-                    for(Injury injury: mInjuryList) {
-                        String str = injury.getInjury_name().toLowerCase();
-                        String strUnAccent = StringUtils.unAccent(str);
-                        String searchStr = newText.toLowerCase();
-                        if(str.contains(searchStr) || strUnAccent.contains(searchStr)) {
+                    for (Injury injury : mInjuryList) {
+                        if (searchInjury(injury.getInjury_name(), newText)) {
                             injuriesResult.add(injury);
                         }
                     }
 
                     InjuryAdapter adapter = new InjuryAdapter(getActivity(), injuriesResult,
-                            LISTVIEW_EMERGENCY);
+                            LISTVIEW_EMERGENCY, true);
                     listView.setAdapter(adapter);
 
                 } else {
-                    InjuryAdapter adapter = new InjuryAdapter(getActivity(), mInjuryList, LISTVIEW_EMERGENCY);
+                    InjuryAdapter adapter = new InjuryAdapter(getActivity(), mInjuryList,
+                            LISTVIEW_EMERGENCY, false);
                     listView.setAdapter(adapter);
                 }
                 return true;
@@ -221,6 +218,21 @@ public class EmergencyFragment extends Fragment implements AdapterView.OnItemCli
         if (connectivityBroadcastReceiver != null) {
             getContext().registerReceiver(connectivityBroadcastReceiver, intentFilter);
         }
+    }
+
+    private boolean searchInjury(String str, String searchStr) {
+        String str1 = str.toLowerCase();
+        String[] words = str1.split("\\W+");
+
+        String searchStr1 = searchStr.toLowerCase();
+
+        if (str1.contains(searchStr) || StringUtils.unAccent(str1).contains(StringUtils.unAccent
+                (searchStr))) {
+            return true;
+        }
+
+
+        return false;
     }
 
     @Override
@@ -361,7 +373,7 @@ public class EmergencyFragment extends Fragment implements AdapterView.OnItemCli
     }
 
     private void updateSendingInformationUI() {
-        if(isLocationEnable && isNetworkEnable) {
+        if (isLocationEnable && isNetworkEnable) {
             tvSendingInformationStatus.setText("Có thể gửi thông tin");
         } else {
             tvSendingInformationStatus.setText("Không thể gửi thông tin");

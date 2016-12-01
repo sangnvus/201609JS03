@@ -121,7 +121,7 @@ public class DatabaseOpenHelper extends SQLiteOpenHelper {
             String injuryName = cursor.getString(1);
             String injurySymptom = cursor.getString(2);
             String injuryImage = cursor.getString(4);
-            injury = new Injury(id, injuryName, injuryImage);
+            injury = new Injury(id, injuryName, injurySymptom, injuryImage);
             injuryListList.add(injury);
             cursor.moveToNext();
         }
