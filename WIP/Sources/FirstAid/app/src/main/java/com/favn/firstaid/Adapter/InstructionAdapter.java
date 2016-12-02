@@ -58,36 +58,35 @@ public class InstructionAdapter extends BaseAdapter {
         TextView tvStep = (TextView) v.findViewById(R.id.text_step_number);
         TextView tvInstruction = (TextView) v.findViewById(R.id.text_instruction_content);
         TextView tvExplanation = (TextView) v.findViewById(R.id.text_instruction_explaination);
-        tvExplanation.setVisibility(View.GONE);
-
         ImageView imgImage = (ImageView) v.findViewById(R.id.image_instruction);
-
-        //TODO check null for image property
         int imagePath = v.getResources().getIdentifier("com.favn.firstaid:drawable/" +
                 instruction.getImage(), null, null);
-
         int audio = v.getResources().getIdentifier("com.favn.firstaid:raw/" +
                 instruction.getAudio(), null, null);
 
         tvStep.setText(instruction.getStep() + "");
         tvInstruction.setText(instruction.getContent());
-
-        if (instruction.isMakeCall() == true) {
-            LinearLayout callLayout = (LinearLayout) v.findViewById(R.id.instruction_call);
-            callLayout.setVisibility(View.VISIBLE);
-
-            Button call115 = (Button) v.findViewById(R.id.button_call);
-            call115.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    informationSending.requestInformationSending();
-                }
-            });
-        }
-
         imgImage.setImageResource(imagePath);
 
+        if(isEmergency){
+            if (instruction.isMakeCall() == true) {
+                LinearLayout callLayout = (LinearLayout) v.findViewById(R.id.instruction_call);
+                callLayout.setVisibility(View.VISIBLE);
 
+                Button call115 = (Button) v.findViewById(R.id.button_call);
+                call115.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        informationSending.requestInformationSending();
+                    }
+                });
+            }
+        } else {
+            if(instruction.getExplanation() != null) {
+                tvExplanation.setVisibility(View.VISIBLE);
+                tvExplanation.setText(instruction.getExplanation());
+            }
+        }
         return v;
     }
 

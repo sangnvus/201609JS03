@@ -13,13 +13,16 @@
         android:layout_weight="1"
         android:layout_marginRight="0dp"
         android:layout_marginLeft="0dp"
-        android:layout_marginTop="0dp">>
+        android:layout_marginTop="0dp"><![CDATA[>
+
+        ]]>
+
         <ImageView
             android:layout_width="match_parent"
             android:src="@drawable/banner"
             android:id="@+id/img_banner"
             android:layout_marginRight="0dp"
-            android:layout_height="100dp" />
+            android:layout_height="70dp" />
 
         <LinearLayout
             android:orientation="vertical"
@@ -28,27 +31,115 @@
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp">
 
-            <TextView
-                android:text="@string/banner_text_name"
+            <LinearLayout
+                android:orientation="horizontal"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/text_name"
-                android:layout_weight="1" />
+                android:layout_height="match_parent"
+                android:layout_weight="1">
 
-            <TextView
-                android:text="@string/banner_text_address"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/text_address"
-                android:layout_weight="1" />
+                <TextView
+                    android:text="@string/banner_text_name"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/text_name"
+                    android:layout_width="80dp"
+                    android:textColor="@color/colorInActive"
+                    android:alpha="0.87" />
 
-            <TextView
-                android:text="@string/banner_text_phone"
+                <TextView
+                    android:text="@string/banner_content_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/content_name"
+                    android:layout_weight="1"
+                    android:layout_marginLeft="@dimen/margin_8"
+                    android:alpha="0.54"
+                    android:textColor="@color/colorInActive" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:orientation="horizontal"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/text_phone"
-                android:layout_weight="1" />
+                android:layout_height="match_parent"
+                android:layout_weight="1">
+
+                <TextView
+                    android:text="@string/banner_text_address"
+                    android:layout_width="80dp"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/text_address"
+                    android:alpha="0.87"
+                    android:textColor="@color/colorInActive"/>
+
+                <TextView
+                    android:text="@string/banner_content_address"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/content_address"
+                    android:layout_weight="1"
+                    android:layout_marginLeft="@dimen/margin_8"
+                    android:alpha="0.54"
+                    android:textColor="@color/colorInActive"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1">
+
+                <TextView
+                    android:text="@string/banner_text_phone"
+                    android:layout_width="80dp"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/text_phone"
+                    android:alpha="0.87"
+                    android:textColor="@color/colorInActive"/>
+
+                <TextView
+                    android:text="@string/banner_content_phone"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/content_phone"
+                    android:layout_weight="1"
+                    android:layout_marginLeft="@dimen/margin_8"
+                    android:alpha="0.54"
+                    android:textColor="@color/colorInActive"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1">
+
+                <TextView
+                    android:text="@string/banner_text_information"
+                    android:layout_width="80dp"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/text_information"
+                    android:alpha="0.87"
+                    android:textColor="@color/colorInActive"/>
+
+                <TextView
+                    android:text="@string/banner_content_information"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/content_information"
+                    android:layout_weight="1"
+                    android:layout_marginLeft="@dimen/margin_8"
+                    android:alpha="0.54"
+                    android:textColor="@color/colorInActive"/>
+            </LinearLayout>
+
         </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/colorSeparate"
+            android:layout_marginTop="@dimen/margin_8"
+            android:layout_marginBottom="@dimen/margin_8" />
 
     </LinearLayout>
 

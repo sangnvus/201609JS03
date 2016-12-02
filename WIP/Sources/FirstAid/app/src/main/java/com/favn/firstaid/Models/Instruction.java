@@ -13,12 +13,19 @@ public class Instruction {
     private String image;
     private String audio;
 
-    public Instruction(int injuryId, int step, String content, boolean isMakeCall, String explanation, String image, String audio) {
+    public Instruction(int injuryId, int step, String content, String explanation, String image) {
+        this.injuryId = injuryId;
+        this.step = step;
+        this.content = content;
+        this.explanation = explanation;
+        this.image = image;
+    }
+
+    public Instruction(int injuryId, int step, String content, boolean isMakeCall, String image, String audio) {
         this.injuryId = injuryId;
         this.step = step;
         this.content = content;
         this.isMakeCall = isMakeCall;
-        this.explanation = explanation;
         this.image = image;
         this.audio = audio;
     }
