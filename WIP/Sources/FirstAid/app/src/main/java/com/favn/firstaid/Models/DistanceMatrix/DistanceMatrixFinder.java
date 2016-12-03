@@ -5,6 +5,7 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.favn.firstaid.models.Commons.Constants;
+import com.favn.firstaid.models.Commons.Distance;
 import com.favn.firstaid.models.HealthFacility;
 import com.google.gson.Gson;
 
@@ -25,40 +26,36 @@ import java.util.List;
 public class DistanceMatrixFinder {
     private DistanceMatrixFinderListener listener;
     private String origin;
-    private HealthFacility destinations[];
-    private List<HealthFacility> healthFacilityList = new ArrayList<>();
+    private List<HealthFacility> healthFacilityList;
 
-    public DistanceMatrixFinder(DistanceMatrixFinderListener listener, String origin, HealthFacility[]
-            destinations) {
+    public DistanceMatrixFinder(DistanceMatrixFinderListener listener, String origin,
+                                List<HealthFacility> destinations) {
         this.listener = listener;
         this.origin = origin;
-        this.destinations = destinations;
+        this.healthFacilityList = destinations;
     }
 
     public void execute() {
-        //listener.onDirectionFinderStart();
         new DownloadRawData().execute(createUrl());
     }
 
     private String createUrl() {
         String url = "";
         String destinationLocation = "";
-        for (int i = 0; i < destinations.length; i++) {
-            destinationLocation += destinations[i].getLatLngText();
-            if (i < destinations.length - 1) {
+        for (int i = 0; i < healthFacilityList.size(); i++) {
+            destinationLocation += healthFacilityList.get(i).getLatLngText();
+            if (i < healthFacilityList.size() - 1) {
                 destinationLocation += "|";
             }
         }
-        //TODO consider to add mode: driving
         url = Constants.DISTANCE_URL_API + "origins=" + origin + "&destinations=" +
-                destinationLocation + "&key=" + Constants.API_KEY;
-        Log.d("url", url + "");
+                destinationLocation + "&language=vi&key=" + Constants.API_KEY;
         return url;
     }
 
-    private class DownloadRawData extends AsyncTask<String, Void, String> {
+    private class DownloadRawData extends AsyncTask<String, Void, Void> {
         @Override
-        protected String doInBackground(String... params) {
+        protected Void doInBackground(String... params) {
             String link = params[0];
 
             try {
@@ -68,16 +65,17 @@ public class DistanceMatrixFinder {
                 DistanceMatrix results = new Gson().fromJson(reader, DistanceMatrix.class);
                 if (results.getRows().length > 0) {
                     for (int i = 0; i < results.getRows()[0].getElements().length; i++) {
-                        HealthFacility healthFacility = new HealthFacility(
-                                destinations[i].getName(),
-                                destinations[i].getType(),
-                                destinations[i].getAddress(),
-                                destinations[i].getVicinity(),
-                                destinations[i].getPhone(),
-                                destinations[i].getLatitude(),
-                                destinations[i].getLongitude(),
-                                results.getRows()[0].getElements()[i].getDistance());
-                        healthFacilityList.add(healthFacility);
+                        String status = results.getRows()[0].getElements()[0].getStatus();
+
+                        if (status.equals("OK")) {
+                            healthFacilityList.get(i).setDistance(results.getRows()[0]
+                                    .getElements()[i]
+                                    .getDistance());
+                            healthFacilityList.get(i).setDuration(results.getRows()[0].getElements()[i].getDuration());
+                        }else{
+                            healthFacilityList.get(i).setDistance(new Distance("NO_RESULT"));
+                        }
+
                     }
                 } else {
                     return null;
@@ -97,20 +95,7 @@ public class DistanceMatrixFinder {
         }
 
         @Override
-        protected void onPostExecute(String res) {
-            if(healthFacilityList.size() > 0) {
-                Log.d("test_code", "code here");
-                try {
-                    Collections.sort(healthFacilityList, new Comparator<HealthFacility>() {
-                        public int compare(HealthFacility h1, HealthFacility h2) {
-                            return h1.getDistance().getValue() - h2.getDistance().getValue();
-                        }
-                    });
-
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
+        protected void onPostExecute(Void avoid) {
             listener.onDistanceMatrixFinderSuccess(healthFacilityList);
         }
     }

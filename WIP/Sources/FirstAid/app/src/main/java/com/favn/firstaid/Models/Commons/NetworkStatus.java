@@ -13,8 +13,7 @@ public class NetworkStatus {
 
     public static boolean checkNetworkEnable(Context context) {
         ConnectivityManager connectivityManager = (ConnectivityManager)context.getSystemService
-                (Context
-                .CONNECTIVITY_SERVICE);
+                (Context.CONNECTIVITY_SERVICE);
         NetworkInfo activeNetwork = connectivityManager.getActiveNetworkInfo();
         if (activeNetwork == null || activeNetwork.getType() == TYPE_NOT_CONNECTED) {
             return false;

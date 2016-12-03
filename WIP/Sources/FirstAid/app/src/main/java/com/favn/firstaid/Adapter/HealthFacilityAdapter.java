@@ -99,10 +99,17 @@ public class HealthFacilityAdapter extends BaseAdapter implements Filterable {
             });
         }
 
-        if (healthFacility.getDistance() != null) {
+        if (healthFacility.getDistance().getText() != null) {
             TextView tvItemHealthFacilityDistance = (TextView) v.findViewById(R.id.text_item_health_facility_distance);
-            tvItemHealthFacilityDistance.setText(mHealthFacilityList.get(position).getDistance().getText());
+
+            if (healthFacility.getDistance().getText().equals("NO_RESULT")) {
+                tvItemHealthFacilityDistance.setText("Không xác định được khoảng cách");
+            } else {
+                tvItemHealthFacilityDistance.setText(healthFacility.getDistance().getText() + " - " +
+                        healthFacility.getDuration().getText());
+            }
             tvItemHealthFacilityDistance.setVisibility(View.VISIBLE);
+
         }
         return v;
     }
