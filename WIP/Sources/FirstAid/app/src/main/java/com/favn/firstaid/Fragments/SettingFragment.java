@@ -33,7 +33,7 @@ public class SettingFragment extends Fragment {
 
     public static class MyPreferenceFragment extends PreferenceFragment implements SharedPreferences.OnSharedPreferenceChangeListener {
 
-        private String phoneNumber;
+        private String phoneNumber = null;
 
         @Override
         public void onCreate(final Bundle savedInstanceState) {
@@ -78,7 +78,10 @@ public class SettingFragment extends Fragment {
             if (pref instanceof EditTextPreference) {
                 EditTextPreference etPhoneNumber = (EditTextPreference) pref;
                 phoneNumber = etPhoneNumber.getText();
-//                pref.setSummary("Số điện thoại của bạn: " + phoneNumber);
+                pref.setSummary(R.string.summary_switch_sending_phone_number);
+                if(phoneNumber != null){
+                    pref.setSummary(phoneNumber);
+                }
             }
         }
     }

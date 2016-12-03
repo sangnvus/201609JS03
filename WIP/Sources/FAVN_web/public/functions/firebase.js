@@ -23,15 +23,22 @@ function writeUserData(userId, name, email, imageUrl) {
 
 function setAnAmbulanceToFirebase(ambulance) {
 	database = firebase.database();
-	firebase.database().ref('ambulances/' + ambulance.id).set({
-		id: ambulance.id,
-		user_id: ambulance.user_id,
-		team: ambulance.team,
-		latitude: ambulance.latitude,
-		longitude: ambulance.longitude,
-		status: ambulance.status,
-		caller_taking_id: ambulance.caller_taking_id
-	});
+
+	console.log(ambulance.isDeleted);
+
+	if(ambulance.isDeleted == 1) {
+		firebase.database().ref('ambulances/' + ambulance.id).set(null);
+	} else {
+		firebase.database().ref('ambulances/' + ambulance.id).set({
+			id: ambulance.id,
+			user_id: ambulance.user_id,
+			team: ambulance.team,
+			latitude: ambulance.latitude,
+			longitude: ambulance.longitude,
+			status: ambulance.status,
+			caller_taking_id: ambulance.caller_taking_id
+		});
+	}
 }
 
 function setAllAmbulanceToFirebase() {

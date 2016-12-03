@@ -33,8 +33,8 @@ public class MainActivity extends AppCompatActivity {
     // INITIATION SCREEN CONTROLS
     private void initControl() {
 
-        //urlAddress = "http://104.199.149.193/ambulancelogin";
-        urlAddress = "http://10.20.19.67/capston/WIP/Sources/FAVN_web/public/ambulancelogin";
+        urlAddress = "http://104.199.149.193/ambulancelogin";
+        //urlAddress = "http://10.20.19.67/capston/WIP/Sources/FAVN_web/public/ambulancelogin";
         bg = (ImageView) findViewById(R.id.bg_login);
         etUsername = (EditText) findViewById(R.id.editext_name);
         etPass = (EditText) findViewById(R.id.editext_pass);

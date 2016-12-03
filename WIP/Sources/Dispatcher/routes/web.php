@@ -33,6 +33,10 @@ Route::post('ambulanceUpdate', 'AmbulanceController@update');
 
 Route::post('callerUpdate', 'CallerController@update');
 
+Route::get('getCaller/{id}', 'CallerController@returnCallerById');
+
+
+
 
 // Call controler show login view
 Route::get('login', 'AuthController@showLoginView');

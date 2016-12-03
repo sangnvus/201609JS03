@@ -52,4 +52,10 @@ class CallerController extends Controller
         echo "done";
 
     }
+
+    public function returnCallerById($id) {
+        $caller = Caller::find($id);
+        return Response(['caller' => $caller], 201);
+    }
+
 }

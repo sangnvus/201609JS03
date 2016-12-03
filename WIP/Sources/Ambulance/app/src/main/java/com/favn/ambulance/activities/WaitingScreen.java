@@ -18,6 +18,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.favn.ambulance.locationUtil.LocationChangeListener;
 import com.favn.ambulance.locationUtil.LocationFinder;
@@ -59,6 +60,7 @@ public class WaitingScreen extends AppCompatActivity implements LocationChangeLi
 
 //        Log.d("ambulance_data", ambulance.getUser_id() + "");
 
+        createTaskDialog();
     }
 
     @Override
@@ -167,6 +169,34 @@ public class WaitingScreen extends AppCompatActivity implements LocationChangeLi
                 .create()
                 .show();
 
+    }
+
+    private void createTaskDialog(){
+        new AlertDialog.Builder(this)
+                .setTitle("Nhiệm vụ mới")
+                .setMessage("Ấn 'Nhận' để nhận nhiệm vụ hoặc ấn 'Hủy' để hủy nhiệm vụ.")
+                .setNegativeButton("Hủy", new DialogInterface.OnClickListener(){
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        cancelTask();
+                    }
+                })
+                .setPositiveButton("Nhận", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        accessTask();
+                    }
+                })
+                .create()
+                .show();
+    }
+
+    private void cancelTask(){
+        Toast.makeText(this, "Hủy rồi nhé !", Toast.LENGTH_LONG).show();
+    }
+
+    private void accessTask(){
+        Toast.makeText(this, "Đồng ý rồi này !", Toast.LENGTH_LONG).show();
     }
 }
 
