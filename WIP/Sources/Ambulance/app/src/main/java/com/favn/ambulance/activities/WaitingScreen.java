@@ -58,7 +58,7 @@ public class WaitingScreen extends AppCompatActivity implements LocationChangeLi
         // Get ambulance info from SharedPreferences
         ambulance = SharedPreferencesData.getAmbulanceData(Constants.SPREFS_AMBULANCE_INFO_KEY);
 
-//        Log.d("ambulance_data", ambulance.getUser_id() + "");
+        Log.d("ambulance_data", ambulance + "");
 
         createTaskDialog();
     }

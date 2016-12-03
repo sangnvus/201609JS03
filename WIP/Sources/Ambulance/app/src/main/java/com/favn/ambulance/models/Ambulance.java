@@ -11,21 +11,18 @@ public class Ambulance {
     private double latitude;
     private double longitude;
     private String status;
+    private String caller_taking_id;
     private int isDeleted;
     private String updated_at;
     private String created_at;
 
-    public Ambulance(int id, int user_id, String team, double latitude, double longitude, String
-            status, int isDeleted, String updated_at, String created_at) {
+    public Ambulance() {
+    }
+
+    public Ambulance(int id, int user_id, String team) {
         this.id = id;
         this.user_id = user_id;
         this.team = team;
-        this.latitude = latitude;
-        this.longitude = longitude;
-        this.status = status;
-        this.isDeleted = isDeleted ;
-        this.updated_at = updated_at;
-        this.created_at = created_at;
     }
 
     public int getId() {
@@ -76,12 +73,20 @@ public class Ambulance {
         this.status = status;
     }
 
-    public int isDeleted() {
+    public String getCaller_taking_id() {
+        return caller_taking_id;
+    }
+
+    public void setCaller_taking_id(String caller_taking_id) {
+        this.caller_taking_id = caller_taking_id;
+    }
+
+    public int getIsDeleted() {
         return isDeleted;
     }
 
-    public void setDeleted(int deleted) {
-        isDeleted = deleted;
+    public void setIsDeleted(int isDeleted) {
+        this.isDeleted = isDeleted;
     }
 
     public String getUpdated_at() {
@@ -99,4 +104,6 @@ public class Ambulance {
     public void setCreated_at(String created_at) {
         this.created_at = created_at;
     }
+
+
 }
