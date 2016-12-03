@@ -31,7 +31,6 @@
     <!-- jquery UI lib -->
     <link rel="stylesheet" type="text/css" href="assets/css/jquery-ui.min.css">
 
-
     <base href="{{ asset('') }}">
 
 
@@ -79,7 +78,9 @@ async defer></script>
 <script src="assets/js/functions/dispatchHandle.js" type="text/javascript"></script>
 <script src="assets/js/functions/firebaseHandle.js" type="text/javascript"></script>
 <script src="assets/js/functions/googlemapHandle.js" type="text/javascript"></script>
-<script src="assets/js/functions/domControl.js" type="text/javascript"></script>
+<script src="assets/js/functions/domControl.js" type="text/javascript"></script>    
+
+
 
 <!-- autocomplete search phone number -->
 <script type="text/javascript">

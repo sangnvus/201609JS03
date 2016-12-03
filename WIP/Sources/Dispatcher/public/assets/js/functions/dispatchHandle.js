@@ -1,9 +1,11 @@
 function onCancelDispatchClick() {
-	initNewMap();
-	clearAllMarkers();
-	initAmbulanceMarkerAfterLoad();
-	iniAMarker(emergencyCenterPos, emergencyCenterIcon, emergencyCenterTitle);
-	map.panTo(emergencyCenterPos);
+console.log(ambulanceList);
+
+	// initNewMap();
+	// clearAllMarkers();
+	// initAmbulanceMarkerAfterLoad();
+	// iniAMarker(emergencyCenterPos, emergencyCenterIcon, emergencyCenterTitle);
+	// map.panTo(emergencyCenterPos);
 }
 
 function iniCallerForm(caller) {
@@ -18,31 +20,6 @@ function iniCallerForm(caller) {
      
 }
 
-function onClickLiAmbulance(id) {
-	initNewMap();
-
-	// Get all value of this ambulance
-	var team = document.querySelector('#pAmbulanceTeam' + id).innerHTML;
-	var latitude = document.querySelector('#pAmbulanceLatitude' + id).innerHTML;
-	var longitude = document.querySelector('#pAmbulanceLongitude' + id).innerHTML;
-	var status = document.querySelector('#pAmbulanceStatus' + id).innerHTML;
-
-	// Clear all marker
-	clearAllMarkers();
-
-	// Create marker
-	var pos = new google.maps.LatLng(latitude, longitude);
-	var icon;
-	if(status == 'ready') {
-		icon = ambulanceReadyIconDir;
-	} else if(status == 'buzy') {
-		icon = ambulanceBuzyIconDir;
-	}
-	iniAMarker(pos, icon, 'ambulance');
-	map.panTo(pos);
-	map.setZoom(17);
-}
-
 function onDispatchClick() {
 
 	getListAmbulanceAndDispatch();	
@@ -50,8 +27,6 @@ function onDispatchClick() {
 }
 
 function getListAmbulanceAndDispatch() {
-
-	getListAmbulance();
 
 	createListAmbulancePos();
 
@@ -64,7 +39,7 @@ function getListAmbulanceAndDispatch() {
 		// Init ambulance marker
 		iniAMarker(origin, ambulanceBuzyIconDir, 'On the way');
 
-		calculateAndDisplayRoute(directionsService, directionsDisplay, origin, destination)
+		calculateAndDisplayRoute(directionsService, directionsDisplay, origin, destination);
 
 	});
 }
@@ -84,6 +59,7 @@ function handleDispatch(listAmbulancePos, callerPos, callback) {
       alert('Error was: ' + status);
     } else {   
        var tmpElementList = response.rows;
+       console.log(tmpElementList);
       for (var i = 0; i < tmpElementList.length; i++) {
         if(tmpElementList[i].elements[0].status == 'OK') {
           ambulanceList[i].distanceMatrix = tmpElementList[i].elements[0];
@@ -145,16 +121,17 @@ function updateAfterMatch() {
 }
 
 function getListAmbulance() {
-	$.ajax({
-		type:'GET',
-		url:'ambulance',
-		data:'_token = <?php echo csrf_token() ?>',
-		dataType: 'json',
-		async: false,
-		success:function(data){
-			ambulanceList = data.ambulance;
-		}
-	});
+	// $.ajax({
+	// 	type:'GET',
+	// 	url:'ambulance',
+	// 	data:'_token = <?php echo csrf_token() ?>',
+	// 	dataType: 'json',
+	// 	async: false,
+	// 	success:function(data){
+	// 		ambulanceList = data.ambulance;
+	// 		console.log(data);
+	// 	}
+	// });
 }
 
 function createListAmbulancePos() {
@@ -166,7 +143,7 @@ function createListAmbulancePos() {
 	}
 }
 
-function drawPath(argument) {
-	
-}
+
+
+
 

@@ -22,7 +22,7 @@
 			</ul>
 		</div>
 		<div>
-			<ul class="nav" id="listAmbulance">
+			<!-- <ul class="nav" id="listAmbulance">
 				@if(isset($ambulances))
 					@foreach($ambulances as $ambulance)
 						<li id="liAmbulance{{ $ambulance->id }}" class=" active">
@@ -35,7 +35,13 @@
 						</li>
 					@endforeach
 				@endif
-			</ul>
+			</ul> -->
+
+
+			<ul class="nav" id="listAmbulance"> 
+			
+			</ul> 
+
 			<!-- <ul class="nav" id="listWaiting"> -->
 				<!-- content go here -->
 			<!-- </ul> -->

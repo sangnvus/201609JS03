@@ -3396,7 +3396,8 @@ body > .navbar-collapse[data-color="purple"]:after {
 }
 
 .successNoti {
-        background-color: #a1e82c;
+        background-color: #4CAF50;
+        /*background-color: #a1e82c;*/
         color: #FFFFFF;
         padding: 10px 15px;
         font-size: 16px;

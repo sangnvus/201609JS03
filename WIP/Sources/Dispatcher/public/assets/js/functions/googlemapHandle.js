@@ -1,12 +1,13 @@
  
 function initMap() {
+
   initDefaultMap(); 
 
   // call init 115 center marker
-  iniAMarker(emergencyCenterPos, emergencyCenterIcon, emergencyCenterTitle);
+  iniAMarker(emergencyCenterPos, emergencyCenterIconDir, emergencyCenterTitle, 'emergencyCenter');
 
   // call init all ambulance marker after load list ambulance
-  initAmbulanceMarkerAfterLoad();
+  // initAmbulanceMarkerAfterLoad();
 
 } 
 
@@ -17,7 +18,6 @@ function initDefaultMap() {
 
   emergencyCenterPos = {lat: 21.0222965, lng: 105.8567074};
   tmpPos = {lat: 21.0000, lng: 105.0000};
-  emergencyCenterIcon = 'assets/img/markers/ic_marker_caller.png';
   emergencyCenterTitle = 'Trung tâm cấp cứu 115';
 
   initNewMap();
@@ -36,6 +36,11 @@ function initNewMap() {
 
 }
 
+function reInitAmbulanceMaker() {
+  clearAllAmbulanceMakers();
+  initAmbulanceMarkers(ambulanceList);
+}
+
 function calculateAndDisplayRoute(directionsService, directionsDisplay, origin, destination) {
   directionsService.route({
     origin: origin,
@@ -51,7 +56,7 @@ function calculateAndDisplayRoute(directionsService, directionsDisplay, origin, 
 }
 
 //----- INIT A MARKER BY POST, ICON, TITLE
-function iniAMarker(pos, icon, title){
+function iniAMarker(pos, icon, title, type){
   var marker = new google.maps.Marker({
     position: pos,
     map: map,
@@ -65,14 +70,21 @@ function iniAMarker(pos, icon, title){
   });
 
   marker.addListener('mouseover', function() {
-    infoWindow.open(map, marker);
+   infoWindow.open(map, marker);
   });
 
   marker.addListener('mouseout', function() {
-    infoWindow.close(map, marker);
+   infoWindow.close(map, marker);
   });
 
   markers.push(marker);
+
+  if (type == MAKER_TYPE_AMBULANCE) {
+    ambulanceMakers.push(marker);
+  } else if(type == MAKER_TYPE_CALLER) {
+    callerMaker = marker;
+  }
+
 }
 
 // AFTER LOAD ALL AMBULANCE -> INIT MARKER
@@ -93,7 +105,7 @@ function initAmbulanceMarkers(ambulanceList) {
     }
     var title = 'Xe cứu thương đội ' + ambulanceList[i].team;
 
-    iniAMarker(pos, icon, title);
+    iniAMarker(pos, icon, title, 'ambulance');
 
   }
 }
@@ -102,7 +114,7 @@ function initAnCallerMarker(caller) {
   var pos = new google.maps.LatLng(caller.latitude, caller.longitude);
   var icon = 'assets/img/markers/ic_marker_caller.png';
   var title = 'Người gọi : ' + caller.phone;
-  iniAMarker(pos, icon, title);
+  iniAMarker(pos, icon, title, 'caller');
     map.panTo(pos);
 }
 
@@ -111,6 +123,17 @@ function clearAllMarkers() {
     markers[i].setMap(null);
   }
    markers = [];
+}
+
+function clearAMaker(marker) {
+  marker.setMap(null);
+}
+
+function clearAllAmbulanceMakers() {
+  for (var i = 0; i < ambulanceMakers.length; i++) {
+    ambulanceMakers[i].setMap(null);
+  }
+   ambulanceMakers = [];
 }
 
 function geocodeLatLng(geocoder, map, locationString, callback) {
@@ -131,9 +154,67 @@ function geocodeLatLng(geocoder, map, locationString, callback) {
   });
 }
 
+function onClickLiAmbulance(ambulanceObject) {
 
+  //console.log(ambulanceObject);
+  getCallerInfoByID(ambulanceObject.caller_taking_id);
+  var ambulancePos = new google.maps.LatLng(ambulanceObject.latitude, ambulanceObject.longitude);
+  var callerPos = new google.maps.LatLng(takingCaller.latitude, takingCaller.longitude);
+  calculateAndDisplayRoute(directionsService, directionsDisplay, ambulancePos, callerPos);
 
+  // Init caller marker
+  iniAMarker(callerPos, callerIconDir, 'caller');
+  
+}
 
+// function onClickLiAmbulance(id) {
+//   initNewMap();
 
+//   // Get all value of this ambulance
+//   var team = document.querySelector('#pAmbulanceTeam' + id).innerHTML;
+//   var latitude = document.querySelector('#pAmbulanceLatitude' + id).innerHTML;
+//   var longitude = document.querySelector('#pAmbulanceLongitude' + id).innerHTML;
+//   var status = document.querySelector('#pAmbulanceStatus' + id).innerHTML;
 
+//   // Clear all marker
+//   clearAllMarkers();
+
+//   // Create marker
+//   var pos = new google.maps.LatLng(latitude, longitude);
+//   var icon;
+//   if(status == 'ready') {
+//     icon = ambulanceReadyIconDir;
+//   } else if(status == 'buzy') {
+//     icon = ambulanceBuzyIconDir;
+//   }
+//   iniAMarker(pos, icon, 'ambulance');
+//   map.panTo(pos);
+//   map.setZoom(17);
+// }
+
+function drawPath(ambulancePos, callerPos) {
+
+  // Init ambulance marker
+  iniAMarker(ambulancePos, ambulanceBuzyIconDir, 'On the way');
+
+  // Init caller marker
+  iniAMarker(callerPos, callerIconDir, 'caller');
+
+  calculateAndDisplayRoute(directionsService, directionsDisplay, ambulancePos, callerPos);
+}
+ 
+
+ function getCallerInfoByID(id) {
+  $.ajax({
+   type:'GET',
+   url:'getCaller/' + id,
+   data:'_token = <?php echo csrf_token() ?>',
+   dataType: 'json',
+   async: false,
+   success:function(data){
+     takingCaller = data.caller;
+     console.log(takingCaller);
+   }
+  });
+}
 
