@@ -24,21 +24,18 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.favn.firstaid.adapter.LearningInstructionAdapter;
+import com.favn.firstaid.R;
 import com.favn.firstaid.adapter.InstructionAdapter;
 import com.favn.firstaid.database.DatabaseOpenHelper;
-
 import com.favn.firstaid.locationUtil.LocationChangeListener;
 import com.favn.firstaid.locationUtil.LocationFinder;
 import com.favn.firstaid.locationUtil.LocationStatus;
 import com.favn.firstaid.models.Commons.CallerInfoSender;
 import com.favn.firstaid.models.Commons.Constants;
+import com.favn.firstaid.models.Commons.InformationSenderListener;
 import com.favn.firstaid.models.Commons.NetworkStatus;
 import com.favn.firstaid.models.Commons.SOSCalling;
-import com.favn.firstaid.models.Commons.InformationSenderListener;
 import com.favn.firstaid.models.Instruction;
-import com.favn.firstaid.models.LearningInstruction;
-import com.favn.firstaid.R;
 import com.google.android.gms.common.api.Status;
 import com.google.firebase.database.DatabaseReference;
 
@@ -47,11 +44,9 @@ import java.util.List;
 public class InstructionDetail extends AppCompatActivity implements LocationChangeListener,
         InstructionAdapter.InformationSending, InformationSenderListener {
     private InstructionAdapter instructionAdapter;
-    private LearningInstructionAdapter LearningInstructionAdapter;
     private DatabaseOpenHelper dbHelper;
     private ListView listView;
     private List<Instruction> mInstructionList;
-    private List<LearningInstruction> mLearningInstructionList;
     private Button btnFaq;
     private boolean isEmergency;
     private int playingAudioId;
@@ -110,7 +105,7 @@ public class InstructionDetail extends AppCompatActivity implements LocationChan
 
 
         if (isEmergency) {
-            mInstructionList = dbHelper.getListInstruction(injuryId);
+            mInstructionList = dbHelper.getListInstruction(injuryId, isEmergency);
             instructionAdapter = new InstructionAdapter(this, this, mInstructionList, isEmergency);
             listView.setAdapter(instructionAdapter);
             locationFinder = new LocationFinder(this, this);
@@ -121,10 +116,32 @@ public class InstructionDetail extends AppCompatActivity implements LocationChan
                 intentFilter.addAction(Constants.INTENT_FILTER_CONNECTIVITY_CHANGE);
                 isCalled = false;
             }
+
+            final int[] audio = {R.raw.audio_1, R.raw.audio_2, R.raw.audio_3};
+
+            listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int pos, long id) {
+
+                    if (playingAudioId == audio[pos] && mMediaPlayer.isPlaying()) {
+                        mMediaPlayer.stop();
+                    } else {
+                        playAudio(audio[pos]);
+                    }
+                    for (int i = 0; i < listView.getChildCount(); i++) {
+                        if (pos == i) {
+                            listView.getChildAt(i).setBackground(getResources().getDrawable(R.drawable.list_item_color));
+                        } else {
+                            listView.getChildAt(i).setBackgroundColor(Color.TRANSPARENT);
+                        }
+                    }
+                }
+            });
         } else {
-            mLearningInstructionList = dbHelper.getListLearingInstruction(injuryId);
-            LearningInstructionAdapter = new LearningInstructionAdapter(this, mLearningInstructionList);
-            listView.setAdapter(LearningInstructionAdapter);
+            mInstructionList = dbHelper.getListInstruction(injuryId, isEmergency);
+            instructionAdapter = new InstructionAdapter(this, this, mInstructionList, isEmergency);
+            listView.setAdapter(instructionAdapter);
 
             FrameLayout footerLayout = (FrameLayout) getLayoutInflater().inflate(R.layout.instruction_detail_footer, null);
             btnFaq = (Button) footerLayout.findViewById(R.id.button_faq);
@@ -141,36 +158,6 @@ public class InstructionDetail extends AppCompatActivity implements LocationChan
         }
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
-
-        final int[] audio = {R.raw.audio_1, R.raw.audio_2, R.raw.audio_3};
-
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int pos, long id) {
-
-                if (playingAudioId == audio[pos] && mMediaPlayer.isPlaying()) {
-                    mMediaPlayer.stop();
-//                    colorLine.setVisibility(View.INVISIBLE);
-                } else {
-                    playAudio(audio[pos]);
-
-                }
-
-                for (int i = 0; i < listView.getChildCount(); i++) {
-                    if (pos == i) {
-                        listView.getChildAt(i).setBackground(getResources().getDrawable(R.drawable.list_item_color));
-                    } else {
-                        listView.getChildAt(i).setBackgroundColor(Color.TRANSPARENT);
-                    }
-                }
-
-
-            }
-        });
-
-
     }
 
     @Override

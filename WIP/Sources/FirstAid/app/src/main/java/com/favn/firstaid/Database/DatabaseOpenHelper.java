@@ -13,7 +13,6 @@ import com.favn.firstaid.models.Faq;
 import com.favn.firstaid.models.HealthFacility;
 import com.favn.firstaid.models.Injury;
 import com.favn.firstaid.models.Instruction;
-import com.favn.firstaid.models.LearningInstruction;
 
 import java.io.FileOutputStream;
 import java.io.InputStream;
@@ -37,6 +36,7 @@ public class DatabaseOpenHelper extends SQLiteOpenHelper {
     private static int DB_VERSION = 1;
     private SQLiteDatabase mDatabase;
     private Context mContext;
+    private String tableName;
 
     public DatabaseOpenHelper(Context context) {
         super(context, DB_NAME, null, DB_VERSION);
@@ -179,53 +179,43 @@ public class DatabaseOpenHelper extends SQLiteOpenHelper {
 
 
     // Get Instructions
-    public List<Instruction> getListInstruction(int id) {
+    public List<Instruction> getListInstruction(int id, boolean emergency) {
         Instruction instruction = null;
         List<Instruction> instructionList = new ArrayList<>();
         openDatabase();
-        Cursor cursor = mDatabase.rawQuery("SELECT * FROM " + TABLE_NAME_INSTRUCTIONS + " WHERE " +
+
+        if(emergency){
+            tableName = TABLE_NAME_INSTRUCTIONS;
+        }else {
+            tableName = TABLE_NAME_LEARNING_INSTRUCTIONS;
+        }
+
+        Cursor cursor = mDatabase.rawQuery("SELECT * FROM " + tableName + " WHERE " +
                 "injury_id == " + id, null);
         cursor.moveToFirst();
         while (!cursor.isAfterLast()) {
             int injuryId = cursor.getInt(1);
             int step = cursor.getInt(2);
             String content = cursor.getString(3);
-            boolean isMakeCall = cursor.getInt(4) == 1;
-            String explanation = cursor.getString(5);
-            String image = cursor.getString(6);
-            String audio = cursor.getString(7);
-            instruction = new Instruction(injuryId, step, content, isMakeCall, explanation, image,
-                    audio);
-            instructionList.add(instruction);
+            String image = cursor.getString(5);
+            String audio = cursor.getString(6);
+
+
+            if(emergency){
+                boolean isMakeCall = cursor.getInt(4) == 1;
+                instruction = new Instruction(injuryId, step, content, isMakeCall, image, audio);
+                instructionList.add(instruction);
+            } else {
+                String explanation = cursor.getString(4);
+                instruction = new Instruction(injuryId, step, content, explanation, image);
+                instructionList.add(instruction);
+            }
+
             cursor.moveToNext();
         }
         cursor.close();
         closeDatabase();
         return instructionList;
-    }
-
-    // Get learning Instructions
-    public List<LearningInstruction> getListLearingInstruction(int id) {
-        LearningInstruction learningInstruction = null;
-        List<LearningInstruction> learningInstructionList = new ArrayList<>();
-        openDatabase();
-        Cursor cursor = mDatabase.rawQuery("SELECT * FROM " + TABLE_NAME_LEARNING_INSTRUCTIONS + " WHERE " +
-                "injury_id == " + id, null);
-        cursor.moveToFirst();
-        while (!cursor.isAfterLast()) {
-            int injuryId = cursor.getInt(1);
-            int step = cursor.getInt(2);
-            String content = cursor.getString(3);
-            String explanation = cursor.getString(4);
-            String image = cursor.getString(5);
-            String audio = cursor.getString(6);
-            learningInstruction = new LearningInstruction(injuryId, step, content, explanation, image, audio);
-            learningInstructionList.add(learningInstruction);
-            cursor.moveToNext();
-        }
-        cursor.close();
-        closeDatabase();
-        return learningInstructionList;
     }
 
     // Get Health Facility

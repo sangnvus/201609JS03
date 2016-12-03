@@ -2,36 +2,27 @@ package com.favn.firstaid.activites;
 
 import android.content.Context;
 import android.content.ContextWrapper;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.GravityCompat;
-import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.MenuItem;
 
 import com.favn.firstaid.R;
-import com.favn.firstaid.database.UpdateChecking;
 import com.favn.firstaid.fragments.AboutFragment;
 import com.favn.firstaid.fragments.EmergencyFragment;
 import com.favn.firstaid.fragments.LearningFragment;
 import com.favn.firstaid.fragments.MoreFragment;
+import com.favn.firstaid.fragments.NotificationFragment;
 import com.favn.firstaid.fragments.SettingFragment;
 import com.favn.firstaid.models.Commons.NetworkStatus;
 
 import java.io.File;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.concurrent.TimeUnit;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -49,6 +40,7 @@ public class MainActivity extends AppCompatActivity
         //Initial Emergency Fragment
         FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction().replace(R.id.fragment_container, new EmergencyFragment()).commit();
+        setTitle("Khẩn cấp");
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -115,14 +107,22 @@ public class MainActivity extends AppCompatActivity
         Class fragmentClass = null;
         if (id == R.id.nav_emergency) {
             fragmentClass = EmergencyFragment.class;
+            setTitle("Khẩn cấp");
         } else if (id == R.id.nav_learning) {
             fragmentClass = LearningFragment.class;
+            setTitle("Tìm hiểu");
         } else if (id == R.id.nav_more) {
             fragmentClass = MoreFragment.class;
+            setTitle("Thêm");
+        } else if (id == R.id.nav_notification) {
+            fragmentClass = NotificationFragment.class;
+            setTitle("Thông báo");
         } else if (id == R.id.nav_setting) {
             fragmentClass = SettingFragment.class;
+            setTitle("Cài đặt");
         } else if (id == R.id.nav_infor) {
             fragmentClass = AboutFragment.class;
+            setTitle("Thông tin phần mềm");
         }
 
         try {

@@ -15,34 +15,39 @@
     <string name="infor_fragment">Thông tin phần mềm</string>
 
     <!--Activities-->
-        <!--Notification-->
-        <string name="notification_title">Thông báo</string>
-        <string name="notification_clear">Xóa thông báo</string>
+    <!--Notification-->
+    <string name="notification_title">Thông báo</string>
+    <string name="notification_clear">Xóa thông báo</string>
 
-        <!--Qa-->
-        <string name="qa_title">Ý kiến - Hỏi đáp</string>
-        <string name="qa_text_name">Tên của bạn</string>
-        <string name="qa_text_email">Email</string>
-        <string name="qa_text_title">Tiêu đề</string>
-        <string name="qa_text_content">Nội dung</string>
-        <string name="qa_button_send">Gửi</string>
+    <!--Qa-->
+    <string name="qa_title">Ý kiến - Hỏi đáp</string>
+    <string name="qa_text_name">Tên của bạn</string>
+    <string name="qa_text_email">Email</string>
+    <string name="qa_text_title"> Tiêu đề</string>
+    <string name="qa_text_content">Nội dung</string>
+    <string name="qa_button_send">Gửi</string>
 
-        <!--Faq-->
-        <string name="faq_title">Câu hỏi thường gặp</string>
+    <!--Faq-->
+    <string name="faq_title">Câu hỏi thường gặp</string>
 
-        <!--banner-->
-        <string name="banner_title">Khóa học sơ cấp cứu</string>
-        <string name="banner_text_name">Khóa học: </string>
-        <string name="banner_text_address">Địa chỉ: </string>
-        <string name="banner_text_phone">SĐT liên hệ: </string>
-        <string name="banner_name">Khóa học sơ cấp cứu</string>
+    <!--banner-->
+    <string name="banner_title">Khóa học sơ cấp cứu</string>
+    <string name="banner_text_name">Khóa học: </string>
+    <string name="banner_content_name">ĐÀO TẠO KỸ THUẬT SƠ CẤP CỨU BAN ĐẦU</string>
+    <string name="banner_text_address">Địa chỉ: </string>
+    <string name="banner_content_address">11 Phan Chu Trinh - Hoàn Kiếm - Hà Nội</string>
+    <string name="banner_text_phone">SĐT liên hệ: </string>
+    <string name="banner_content_phone">04.38262952</string>
+    <string name="banner_text_information">Giới thiệu: </string>
+    <string name="banner_content_information">Với đội ngũ Bác sĩ, điều dưỡng chuyên làm nhiệm vụ cấp cứu ban đầu cho người bệnh, chúng tôi thường xuyên tổ chức các khóa tập huấn, đào tạo về kỹ thuật sơ cấp cứu ban đầu cho các cá nhân, tổ chức, cơ quan, nhà máy, xí nghiệp .....</string>
+    <string name="banner_name">Khóa học sơ cấp cứu</string>
 
-        <!--map-->
-        <string name="map_title">Chỉ đường</string>
-        <string name="textview_locating">Đang tìm vị trí</string>
+    <!--map-->
+    <string name="map_title">Chỉ đường</string>
+    <string name="textview_locating">Đang tìm vị trí</string>
 
-        <!--health facility-->
-        <string name="health_text_title">CƠ SỞ Y TẾ GẦN ĐÂY</string>
+    <!--health facility-->
+    <string name="health_text_title">CƠ SỞ Y TẾ GẦN ĐÂY</string>
 
     <string name="sos_calling">SOS Calling</string>
 
@@ -55,8 +60,6 @@
     <string name="summary_switch_sending_information">Gửi vị trí, số điện thoại và tính huống của bạn khi gọi 115</string>
     <string name="summary_switch_sending_phone_number">Gửi số điện thoại của bạn khi gọi 115</string>
     <string name="sending_phone_number">Nhập số điện thoại</string>
-
-
 
 
     <string name="history_clear">Xóa lịch sử</string>
@@ -83,5 +86,8 @@
     <!-- Buttons string value -->
     <string name="faq_button">Câu hỏi thường gặp</string>
     <string name="qa_button">Đặt câu hỏi cho chúng tôi</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 </resources>
