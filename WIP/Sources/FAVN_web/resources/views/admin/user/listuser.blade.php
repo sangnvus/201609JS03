@@ -162,7 +162,7 @@
         function callDelete(id){
             bootbox.confirm({ 
                 size: "small",
-                message: "Bạn có muốn xóa chấn thương này ?", 
+                message: "Bạn có muốn xóa người dùng này ?", 
                 callback: function(result){
                     if (result) {
                         window.location = 'admin/user/deleteuser/' + id;
