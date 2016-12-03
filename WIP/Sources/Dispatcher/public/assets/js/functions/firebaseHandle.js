@@ -13,10 +13,7 @@ firebase.initializeApp(config);
 
 // ------------------------------------------------------------------------------------
 
-const sttWaiting = 'waiting';
-const sttProcessing = 'processing';
-const AMBULANCE_STATUS_BUZY = 'buzy';
-const AMBULANCE_STATUS_READY = 'ready';
+
 
 var listStatus;
 
@@ -58,10 +55,12 @@ function handleAmbulanceChange(dbRef, ulListAmbulance) {
 		// Get list caller object
 		ambulanceObj = snap.val();
 		
+		// push ambulance object to list available ambulance
 		ambulanceList.push(ambulanceObj); 
-
+		
 		addAmbulanceToUl(ulListAmbulance, ambulanceObj);
 
+		// TODO : just change what change
 		reInitAmbulanceMaker();
 		
 	});
@@ -74,6 +73,7 @@ function handleAmbulanceChange(dbRef, ulListAmbulance) {
 		
 		ambulanceObj = snap.val();
 
+		// Remove from aumbulance list
 		ambulanceList = ambulanceList.filter(function(el) { return el.id != ambulanceObj.id; }); 
 
 		reInitAmbulanceMaker();
@@ -82,24 +82,15 @@ function handleAmbulanceChange(dbRef, ulListAmbulance) {
 
 	// Handle when a caller change
 	dbRef.on('child_changed', snap => {
-		var liChangeId = '#' + 'liAmbulance' + snap.key;
-		deleteLi(liChangeId);
+		var liChangeId = 'liAmbulance' + snap.key;
 
 		ambulanceObj = snap.val();
-		addAmbulanceToUl(ulListAmbulance, ambulanceObj);
 
-		index = ambulanceList.findIndex(x => x.id == ambulanceObj.id);
-
-		
-		console.log('before');
-		console.log(ambulanceList[index]);
+		var index = ambulanceList.findIndex(x => x.id == ambulanceObj.id);
 
 		ambulanceList[index] = ambulanceObj;
-		
 
-		console.log('after');
-		console.log(ambulanceList[index]);
-		console.log(ambulanceList);
+		editLi(liChangeId, ambulanceObj);
 
 		reInitAmbulanceMaker();
 
@@ -170,13 +161,25 @@ function addAmbulanceToUl(ul, ambulanceObject) {
 	pAmbulanceTeam.appendChild(pLocationText);
 
 	const pStatus = document.createElement('p');
-	if(ambulanceObject.status == AMBULANCE_STATUS_BUZY) {
-		var pStatusText = document.createTextNode('Trạng thái : đang bận');
-		pStatus.className += ' item-danger';
-	} else if(ambulanceObject.status == AMBULANCE_STATUS_READY) {
-		var pStatusText = document.createTextNode('Trạng thái : sẵn sàng');
-		pStatus.className += ' item-completed';
+
+	switch(ambulanceObject.status) {
+	    case AMBULANCE_STATUS_BUZY:
+	        var pStatusText = document.createTextNode('Trạng thái : đang bận');
+			pStatus.className += ' item-danger';
+	        break;
+	    case AMBULANCE_STATUS_READY:
+	        var pStatusText = document.createTextNode('Trạng thái : sẵn sàng');
+			pStatus.className += ' item-completed';
+	        break;
+        case AMBULANCE_STATUS_PENDING:
+	        var pStatusText = document.createTextNode('Trạng thái : đang đợi');
+			pStatus.className += ' item-danger';
+	        break;
+	    default:
+	        var pStatusText = document.createTextNode('Trạng thái : chưa đăng nhập');
+			pStatus.className += ' item-danger';
 	}
+
 	pStatus.appendChild(pStatusText);
 
 	liAmbulance.appendChild(a);
@@ -238,6 +241,55 @@ function deleteLi(liChangeId){
 	$(liChangeId).remove();
 }
 
+function editLi(liID, ambulanceObject) {
+	liAmbulance = document.getElementById(liID);
+	liAmbulance.innerHTML = '';
+
+	const a = document.createElement('a');
+	a.href = "javascript:void(0)"
+	a.onclick = function() {
+		
+		onClickLiAmbulance(ambulanceObject);
+	}
+
+	const pAmbulanceTeam = document.createElement('p');
+	var pCallerNumberText = document.createTextNode('Đội : ' + ambulanceObject.team);
+	pAmbulanceTeam.appendChild(pCallerNumberText);
+	pAmbulanceTeam.appendChild(document.createElement('br'));
+
+	const pLocation = document.createElement('p');
+	var pLocationText = document.createTextNode('Vị trí : '+ ambulanceObject.latitude + ' | ' + ambulanceObject.longitude);
+	pAmbulanceTeam.appendChild(pLocationText);
+
+	const pStatus = document.createElement('p');
+
+	switch(ambulanceObject.status) {
+	    case AMBULANCE_STATUS_BUZY:
+	        var pStatusText = document.createTextNode('Trạng thái : đang bận');
+			pStatus.className += ' item-danger';
+	        break;
+	    case AMBULANCE_STATUS_READY:
+	        var pStatusText = document.createTextNode('Trạng thái : sẵn sàng');
+			pStatus.className += ' item-completed';
+	        break;
+        case AMBULANCE_STATUS_PENDING:
+	        var pStatusText = document.createTextNode('Trạng thái : đang đợi');
+			pStatus.className += ' item-danger';
+	        break;
+	    default:
+	        var pStatusText = document.createTextNode('Trạng thái : chưa đăng nhập');
+			pStatus.className += ' item-danger';
+	}
+
+	pStatus.appendChild(pStatusText);
+
+	liAmbulance.appendChild(a);
+	a.appendChild(pAmbulanceTeam);
+	a.appendChild(pLocation);
+	a.appendChild(pStatus);
+
+}
+
 
 
 
@@ -276,6 +328,11 @@ function getCallers(evt, status) {
         liTabWaiting.className = '';
     }
 
+}
+
+
+function setAnAmbulanceToFirebase(ambulance, database) {
+	database.ref('ambulances/' + ambulance.id).set(ambulance);
 }
 
 // END
