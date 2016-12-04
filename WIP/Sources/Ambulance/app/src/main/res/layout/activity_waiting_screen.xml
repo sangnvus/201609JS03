@@ -20,17 +20,13 @@
         android:gravity="center"
         android:background="@drawable/background_waiting_screen">
 
-
-
-        <TextView
-            android:text="CHƯA CÓ NHIỆM VỤ"
-            android:layout_width="match_parent"
+        <Switch
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@android:color/background_light"
-            android:background="@android:color/holo_red_light"
-            android:textAlignment="center"
-            android:textSize="32sp"
-            android:id="@+id/tv_notification" />
-
+            android:id="@+id/switch_ready"
+            android:textOn="Sẵn sàng"
+            android:textOff="Bận"
+            android:thumb="@drawable/customswitchselector"
+            android:track="@drawable/custom_track"/>
     </LinearLayout>
 </RelativeLayout>
