@@ -247,6 +247,7 @@ public class InstructionDetail extends AppCompatActivity implements LocationChan
         mCurrentLocation = location;
         if(isNetworkEnable && mCurrentLocation != null && !isSentUserInfo) {
             //TODO Send caller info when having network and location
+            sendCallerInfoToServer(mCurrentLocation);
         }
     }
 
@@ -257,7 +258,7 @@ public class InstructionDetail extends AppCompatActivity implements LocationChan
         // Assign values
         ciSender.setContext(InstructionDetail.this);
         ciSender.setUrlAddress(urlAddress);
-        ciSender.setPhone("01694639816");
+        ciSender.setPhone("0906111222");
         ciSender.setInjuryId(injuryId);
         ciSender.setLatitude(location.getLatitude());
         ciSender.setLongitude(location.getLongitude());
@@ -271,8 +272,8 @@ public class InstructionDetail extends AppCompatActivity implements LocationChan
     // call button trigger this function
     @Override
     public void requestInformationSending() {
+        isSentUserInfo = false;
         if (isAllowedSendInformation) {
-            //add this
             if (!isLocationEnable || !isNetworkEnable) {
                 createDialog();
             } else {
@@ -312,6 +313,7 @@ public class InstructionDetail extends AppCompatActivity implements LocationChan
         //add this
         if(isNetworkEnable && mCurrentLocation != null && !isSentUserInfo) {
             //TODO Send caller info when having network and location
+            sendCallerInfoToServer(mCurrentLocation);
         }
 
     }
@@ -393,6 +395,7 @@ public class InstructionDetail extends AppCompatActivity implements LocationChan
             case Constants.INFO_SUCCESS_SENDING_INFORMATION:
                 tvSendingInformationStatus.setText(Constants.INFO_SUCCESS_SENDING_INFORMATION);
                 llSendingStatus.setBackgroundColor(getResources().getColor(R.color.colorSuccess));
+                isSentUserInfo = true;
                 break;
             case Constants.INFO_ERROR_SENDING_INFORMATION:
                 tvSendingInformationStatus.setText(Constants.INFO_ERROR_SENDING_INFORMATION);
