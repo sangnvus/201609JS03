@@ -130,6 +130,7 @@
                         android:layout_marginTop="@dimen/margin_8"
                         android:layout_marginBottom="@dimen/margin_8"
                         android:hint="Khác..."
+                        android:textColorHint="@color/cardview_shadow_start_color"
                         android:id="@+id/edittext_title"
                         android:maxLength="255" />
                 </LinearLayout>
