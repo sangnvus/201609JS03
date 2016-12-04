@@ -123,15 +123,16 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private ToggleButton tbMedicineCenter;
     private Button btnShowHealthFacility;
     private CardView layoutHealthFacility;
-    FloatingActionButton fabCLoseHealthFacility;
-    Animation animationShowHide;
-    Animation animationSlide;
-    Animation animationFade;
+    private FloatingActionButton fabCLoseHealthFacility;
+    private Animation animationShowHide;
+    private Animation animationSlide;
+    private Animation animationFade;
+
+    private DirectionFinder directionFinder;
+    private DistanceMatrixFinder distanceMatrixFinder;
 
     protected LocationSettingsRequest mLocationSettingsRequest;
 
-    protected final static String LOCATION_KEY = "location-key";
-    protected static final String LOCATION_ADDRESS_KEY = "location-address";
     protected static final int REQUEST_CHECK_SETTINGS = 0x1;
 
 
@@ -151,6 +152,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private boolean isLoadHealthFacility;
     private String filterHealthFacility;
     private boolean isLoadDirectionClicked;
+    private boolean isRequestedDistance;
 
 
     // Get database
@@ -192,7 +194,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         tbMedicineCenter = (ToggleButton) findViewById(R.id.toggle_medicine_center);
         tbMedicineCenter.setOnClickListener(ToggleAction);
         filterHealthFacility = "";
-        isLoadHealthFacility = true;
+        isLoadHealthFacility = false;
         isLoadDirectionClicked = false;
     }
 
@@ -250,10 +252,29 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 }
 
             } else {
+
                 isNetworkEnable = NetworkStatus.checkNetworkEnable(context);
                 if (isNetworkEnable) {
                     if (isLoadDirectionClicked) {
                         showDirection();
+                        getHealthFacilityData();
+                    }
+                    if (isLoadHealthFacility) {
+                        if (mCurrentLocation != null) {
+                            sendDistanceRequest(mCurrentLocation.getLatitude() + "," + mCurrentLocation
+                                    .getLongitude());
+                        }
+                    }
+                } else {
+                    if (isLoadDirectionClicked) {
+                        if (directionFinder != null) {
+                            directionFinder.stop();
+                        }
+                    }
+                    if (isRequestedDistance) {
+                        if (distanceMatrixFinder != null) {
+                            distanceMatrixFinder.stop();
+                        }
                     }
                 }
             }
@@ -392,18 +413,13 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             mCurrentLocation = location;
             updateLocationUI();
             updateGpsIcon(GPS_STATUS_FIXED);
-            isLoadHealthFacility = true;
 
             // refresh health facility list when layout health facility visible
-            if (isLoadHealthFacility) {
-                getHealthFacilityData();
-            }
+            getHealthFacilityData();
 
             if (isNetworkEnable) {
                 startAddressIntentService();
             }
-
-
         }
     }
 
@@ -519,15 +535,11 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     @Override
     public void onSaveInstanceState(Bundle savedInstanceState) {
         super.onSaveInstanceState(savedInstanceState);
-        savedInstanceState.putParcelable(LOCATION_KEY, mCurrentLocation);
-        savedInstanceState.putString(LOCATION_ADDRESS_KEY, mAddress);
     }
 
     @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
-        mCurrentLocation = savedInstanceState.getParcelable(LOCATION_KEY);
-        mAddress = savedInstanceState.getString(LOCATION_ADDRESS_KEY);
     }
 
 
@@ -606,13 +618,13 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             }
 
         }
-        isLoadHealthFacility = false;
     }
 
     private void warnHealthFacilityResult() {
         if (!isLocationEnable) {
             tvWarning.setText(Constants.WARNING_NO_GPS);
             tvWarning.setVisibility(View.VISIBLE);
+            updateLoadingUI(false);
         } else if (!isNetworkEnable) {
             tvWarning.setText(Constants.WARNING_NO_NETWORK_RESULT);
             tvWarning.setVisibility(View.VISIBLE);
@@ -671,8 +683,10 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     private void sendDistanceRequest(String origin) {
         healthFacilityList = dbHelper.getListHealthFacility(getPoints());
-        new DistanceMatrixFinder(this, origin, healthFacilityList).execute();
+        distanceMatrixFinder = new DistanceMatrixFinder(this, origin, healthFacilityList);
+        distanceMatrixFinder.execute();
         updateLoadingUI(true);
+        isRequestedDistance = true;
     }
 
     private void distanceToHealthFacility() {
@@ -685,7 +699,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                     .getLongitude());
             distance = mCurrentLocation.distanceTo(healthFacilityLocation);
 
-            healthFacilityList.get(i).setDistance(new Distance((int)distance));
+            healthFacilityList.get(i).setDistance(new Distance((int) distance));
         }
 
     }
@@ -708,7 +722,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private void sendDirectionRequest(String origin, String destination) {
         isLoadDirectionClicked = false;
         try {
-            new DirectionFinder(this, origin, destination).execute();
+            directionFinder = new DirectionFinder(this, origin, destination);
+            directionFinder.execute();
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
@@ -719,6 +734,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         healthFacilityList = healthFacilityListResult;
         displayHealthFacility(healthFacilityList);
         updateLoadingUI(false);
+        isRequestedDistance = false;
     }
 
     private void displayHealthFacility(List<HealthFacility> healthFacilityList) {
@@ -849,13 +865,14 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 break;
             case R.id.button_show_health_facility:
                 showHealthFacility(true);
-                if (isLoadHealthFacility) {
-                    getHealthFacilityData();
-                    warnHealthFacilityResult();
-                }
+                isLoadHealthFacility = true;
+                getHealthFacilityData();
+                warnHealthFacilityResult();
+
                 break;
             case R.id.fab:
                 showHealthFacility(false);
+                break;
         }
     }
 
@@ -957,7 +974,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                     R.anim.fade_disappear);
             btnShowHealthFacility.startAnimation(animationSlide);
             layoutHealthFacility.startAnimation(animationFade);
-
+            isLoadHealthFacility = false;
         }
     }
 

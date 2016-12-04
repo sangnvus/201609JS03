@@ -28,6 +28,7 @@ public class DirectionFinder {
     private String distance;
     private String duration;
     private String status;
+    private DownloadRawData downloadRawData;
 
     public DirectionFinder(DirectionFinderListener listener, String origin, String destination) {
         this.listener = listener;
@@ -36,7 +37,12 @@ public class DirectionFinder {
     }
 
     public void execute() throws UnsupportedEncodingException {
-        new DownloadRawData().execute(createUrl());
+        downloadRawData = new DownloadRawData();
+        downloadRawData.execute(createUrl());
+    }
+
+    public void stop() {
+        downloadRawData.cancel(true);
     }
 
     private String createUrl() throws UnsupportedEncodingException {

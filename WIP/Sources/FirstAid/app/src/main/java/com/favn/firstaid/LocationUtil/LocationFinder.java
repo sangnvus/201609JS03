@@ -86,13 +86,7 @@ public class LocationFinder implements GoogleApiClient.ConnectionCallbacks,
             // for ActivityCompat#requestPermissions for more details.
             return;
         }
-        mCurrentLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
-        if (mCurrentLocation != null) {
-            locationChangeListener.locationChangeSuccess(mCurrentLocation);
-        } else {
             startLocationUpdates();
-        }
-
     }
 
     @Override
@@ -137,11 +131,12 @@ public class LocationFinder implements GoogleApiClient.ConnectionCallbacks,
             Toast.makeText(mContext, "can't get current location", Toast.LENGTH_SHORT).show();
             Toast.makeText(mContext, mCurrentLocation + "", Toast.LENGTH_SHORT).show();
         } else {
+            LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
             mCurrentLocation = location;
             locationChangeListener.locationChangeSuccess(mCurrentLocation);
             Toast.makeText(mContext, mCurrentLocation + "", Toast.LENGTH_SHORT).show();
             // Stop Location update
-            LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
+            Log.d("location_test", "remove location update");
         }
     }
 

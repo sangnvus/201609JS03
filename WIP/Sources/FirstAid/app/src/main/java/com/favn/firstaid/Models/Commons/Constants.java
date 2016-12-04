@@ -85,7 +85,7 @@ public class Constants {
     public static final double SEARCH_RADIUS = 20000;
 
     // Number 115
-    public static final String CALL_115 = "tel:115";
+    public static final String CALL_115 = "tel:900";
 
     // Text for notify, warning for sendind information functionality
     public static final String INFO_WARNING_CONNECTIVITY = "| Không có kết nối";
