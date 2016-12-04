@@ -63,6 +63,7 @@ async defer></script>
 <!--   Core JS Files   -->
 <script src="assets/js/customizes/jquery-1.10.2.js" type="text/javascript"></script>
 <script src="assets/js/customizes/bootstrap.min.js" type="text/javascript"></script>
+<script src="assets/js/customizes/bootbox.min.js" type="text/javascript"></script>   
 <script src="assets/js/customizes/bootstrap-checkbox-radio-switch.js"></script>
 <script src="assets/js/customizes/chartist.min.js"></script>
 <script src="assets/js/customizes/bootstrap-notify.js"></script>
@@ -79,7 +80,6 @@ async defer></script>
 <script src="assets/js/functions/firebaseHandle.js" type="text/javascript"></script>
 <script src="assets/js/functions/googlemapHandle.js" type="text/javascript"></script>
 <script src="assets/js/functions/domControl.js" type="text/javascript"></script>    
-
 
 
 <!-- autocomplete search phone number -->
@@ -102,7 +102,7 @@ async defer></script>
         }
     });
 </script>
-
+    
 </html>
 
 

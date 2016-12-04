@@ -2,13 +2,13 @@
 <resources>
     <array name="more_icon">
         <item>@drawable/ic_question_answer</item>
-        <item>@drawable/ic_notifications</item>
+        <!--<item>@drawable/ic_notifications</item>-->
         <item>@drawable/ic_testing</item>
         <item>@drawable/ic_share</item>
     </array>
     <array name="more_item">
         <item>"Ý kiến - Hỏi đáp"</item>
-        <item>"Thông báo"</item>
+        <!--<item>"Thông báo"</item>-->
         <item>"Khóa học sơ cấp cứu"</item>
         <item>"Chia sẻ"</item>
     </array>

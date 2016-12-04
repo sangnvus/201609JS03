@@ -53,7 +53,7 @@
 				<li style="padding: 10px;">
 					<div style="align-content: center;">
 					<button style="background-color: green; color: white; float: right; width: 100px" type="button" class="btn btn-default" onclick="onDispatchClick()">Điều phối xe</button>
-						<button style="background-color: red; color: white; float: right; width: 100px" type="reset" class="btn btn-default" onclick="onCancelDispatchClick()">Hủy</button>
+						<button style="background-color: red; color: white; float: right; width: 100px" type="button" class="btn btn-default" onclick="onCancelDispatchClick()">Hủy</button>
 					</div>
 				</li>
 			</ul>

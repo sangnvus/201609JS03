@@ -41,7 +41,13 @@ function reInitAmbulanceMaker() {
   initAmbulanceMarkers(ambulanceList);
 }
 
-function calculateAndDisplayRoute(directionsService, directionsDisplay, origin, destination) {
+function reInitDefaultMarkers() {
+  clearAllAmbulanceMakers();
+  iniAMarker(emergencyCenterPos, emergencyCenterIconDir, emergencyCenterTitle, 'emergencyCenter');
+  initAmbulanceMarkers(ambulanceList);
+}
+
+function calculateAndDisplayRoute(directionsService, directionsDisplay, origin, destination, callback) {
   directionsService.route({
     origin: origin,
     destination: destination,
@@ -49,6 +55,7 @@ function calculateAndDisplayRoute(directionsService, directionsDisplay, origin, 
   }, function(response, status) {
     if (status === 'OK') {
       directionsDisplay.setDirections(response);
+      callback(response);
     } else {
       window.alert('Directions request failed due to ' + status);
     }
@@ -64,13 +71,14 @@ function iniAMarker(pos, icon, title, type){
     icon: icon
   });
 
+  infoWindowTmp =  
   infoWindow = new google.maps.InfoWindow({
-    content: title, 
     maxwidth: 300,
   });
 
   marker.addListener('mouseover', function() {
-   infoWindow.open(map, marker);
+    infoWindow.setContent(title);
+    infoWindow.open(map, marker);
   });
 
   marker.addListener('mouseout', function() {
@@ -85,6 +93,9 @@ function iniAMarker(pos, icon, title, type){
     callerMaker = marker;
   }
 
+  //TODO
+  console.log(marker.title);
+
 }
 
 // AFTER LOAD ALL AMBULANCE -> INIT MARKER
@@ -98,12 +109,19 @@ function initAmbulanceMarkers(ambulanceList) {
     //initAnAmbulanceMarker(ambulanceList[i]);
     var pos = new google.maps.LatLng(ambulanceList[i].latitude, ambulanceList[i].longitude);
     var icon;
-    if(ambulanceList[i].status == 'ready') {
-      icon = 'assets/img/markers/ic_marker_ambulance_ready.png';
-    } else if(ambulanceList[i].status == 'buzy') {
-      icon = 'assets/img/markers/ic_marker_ambulance_buzy.png';
+     var title = 'Xe cứu thương đội ' + ambulanceList[i].team;
+    switch(ambulanceList[i].status) {
+      case AMBULANCE_STATUS_READY:
+        icon = ambulanceReadyIconDir;
+        break;
+      default:
+        icon = ambulanceBuzyIconDir;
+        break;
     }
-    var title = 'Xe cứu thương đội ' + ambulanceList[i].team;
+
+   
+
+
 
     iniAMarker(pos, icon, title, 'ambulance');
 
