@@ -34,11 +34,14 @@ import com.google.android.gms.appindexing.AppIndex;
 import com.google.android.gms.appindexing.Thing;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.Status;
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+
+import java.util.HashMap;
 
 public class WaitingScreen extends AppCompatActivity implements LocationChangeListener {
 
@@ -77,12 +80,64 @@ public class WaitingScreen extends AppCompatActivity implements LocationChangeLi
         ambulance = SharedPreferencesData.getAmbulanceData(Constants.SPREFS_AMBULANCE_INFO_KEY);
 
 
+        // TODO : HANDLE FIREBASE
+        // Init instant firebase database - KienMT
         database = FirebaseDatabase.getInstance();
+        // Init firebase database reference
+        DatabaseReference dbRef = database.getReference("ambulances");
+        dbRef.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
 
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+                Ambulance tmpAmbulanceChange = dataSnapshot.getValue(Ambulance.class);
+                if(tmpAmbulanceChange.getId() != ambulance.getId()) {
+                    return;
+                }
+
+
+                // Handle task
+
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+//        DatabaseReference dbRef = database.getReference("ambulances/" + ambulance.getId());
+//        dbRef.addValueEventListener(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(DataSnapshot dataSnapshot) {
+//                HashMap<String, String> data = dataSnapshot.get
+//                Log.w("data_snapshot", dataSnapshot.toString());
+//                Ambulance tmp = (Ambulance) dataSnapshot.getValue();
+//            }
+//
+//            @Override
+//            public void onCancelled(DatabaseError databaseError) {
+//
+//            }
+//        });
         updateAmbulance(Constants.STATUS_READY);
+        //TODO : END HANDLE FIREBASE
 
 
-        //createTaskDialog();
+        // createTaskDialog();
         // ATTENTION: This was auto-generated to implement the App Indexing API.
         // See https://g.co/AppIndexing/AndroidStudio for more information.
         client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
