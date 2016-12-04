@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.IntentSender;
 import android.location.Location;
+import android.net.Uri;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.support.v7.app.AlertDialog;
@@ -28,7 +29,16 @@ import com.favn.ambulance.models.Commons.Constants;
 import com.favn.ambulance.models.Commons.SharedPreferencesData;
 import com.favn.ambulance.networkUtil.NetworkStatus;
 import com.favn.mikey.ambulance.R;
+import com.google.android.gms.appindexing.Action;
+import com.google.android.gms.appindexing.AppIndex;
+import com.google.android.gms.appindexing.Thing;
+import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.Status;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 public class WaitingScreen extends AppCompatActivity implements LocationChangeListener {
 
@@ -42,6 +52,14 @@ public class WaitingScreen extends AppCompatActivity implements LocationChangeLi
     IntentFilter intentFilter;
     protected static final int REQUEST_CHECK_SETTINGS = 0x1;
     Ambulance ambulance;
+    FirebaseDatabase database;
+    DatabaseReference dbRef;
+
+    /**
+     * ATTENTION: This was auto-generated to implement the App Indexing API.
+     * See https://g.co/AppIndexing/AndroidStudio for more information.
+     */
+    private GoogleApiClient client;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -58,9 +76,14 @@ public class WaitingScreen extends AppCompatActivity implements LocationChangeLi
         // Get ambulance info from SharedPreferences
         ambulance = SharedPreferencesData.getAmbulanceData(Constants.SPREFS_AMBULANCE_INFO_KEY);
 
-//        Log.d("ambulance_data", ambulance.getUser_id() + "");
+        database = FirebaseDatabase.getInstance();
 
-        createTaskDialog();
+        updateAmbulance(Constants.STATUS_READY);
+
+        //createTaskDialog();
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
     }
 
     @Override
@@ -101,7 +124,9 @@ public class WaitingScreen extends AppCompatActivity implements LocationChangeLi
     }
 
     @Override
-    public void onBackPressed() {}
+    public void onBackPressed() {
+    }
+
     // Broadcast for Connectivity status
     BroadcastReceiver connectivityBroadcastReceiver = new BroadcastReceiver() {
         @Override
@@ -171,11 +196,11 @@ public class WaitingScreen extends AppCompatActivity implements LocationChangeLi
 
     }
 
-    private void createTaskDialog(){
+    private void createTaskDialog() {
         new AlertDialog.Builder(this)
                 .setTitle("Nhiệm vụ mới")
                 .setMessage("Ấn 'Nhận' để nhận nhiệm vụ hoặc ấn 'Hủy' để hủy nhiệm vụ.")
-                .setNegativeButton("Hủy", new DialogInterface.OnClickListener(){
+                .setNegativeButton("Hủy", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         cancelTask();
@@ -191,13 +216,67 @@ public class WaitingScreen extends AppCompatActivity implements LocationChangeLi
                 .show();
     }
 
-    private void cancelTask(){
+    private void cancelTask() {
         Toast.makeText(this, "Hủy rồi nhé !", Toast.LENGTH_LONG).show();
     }
 
-    private void accessTask(){
-        Toast.makeText(this, "Đồng ý rồi này !", Toast.LENGTH_LONG).show();
+    private void accessTask() {
+        database = FirebaseDatabase.getInstance();
+        dbRef = database.getReference("ambulances/" + ambulance.getId());
+        dbRef.child("status").setValue("buzy");
     }
+
+    /**
+     * ATTENTION: This was auto-generated to implement the App Indexing API.
+     * See https://g.co/AppIndexing/AndroidStudio for more information.
+     */
+    public Action getIndexApiAction() {
+        Thing object = new Thing.Builder()
+                .setName("WaitingScreen Page") // TODO: Define a title for the content shown.
+                // TODO: Make sure this auto-generated URL is correct.
+                .setUrl(Uri.parse("http://[ENTER-YOUR-URL-HERE]"))
+                .build();
+        return new Action.Builder(Action.TYPE_VIEW)
+                .setObject(object)
+                .setActionStatus(Action.STATUS_TYPE_COMPLETED)
+                .build();
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        client.connect();
+        AppIndex.AppIndexApi.start(client, getIndexApiAction());
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        AppIndex.AppIndexApi.end(client, getIndexApiAction());
+        client.disconnect();
+    }
+
+    // Handle update ambulance when change status - added by KienMT : 12/4/2016
+    public void updateAmbulance(String type) {
+        DatabaseReference dbRef = database.getReference("ambulances/" + ambulance.getId());
+        if(type.equals(Constants.STATUS_READY)) {
+            dbRef.child("caller_taking_id").setValue(null);
+        }
+        if (mCurrentLocation != null) {
+            dbRef.child("latitude").setValue(mCurrentLocation.getLatitude());
+            dbRef.child("longitude").setValue(mCurrentLocation.getLongitude());
+        }
+        dbRef.child("status").setValue(type);
+    }
+
+
+
 }
 
 
