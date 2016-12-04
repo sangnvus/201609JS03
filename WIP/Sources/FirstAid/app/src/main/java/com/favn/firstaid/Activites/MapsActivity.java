@@ -14,15 +14,12 @@ import android.graphics.PointF;
 import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationManager;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.ResultReceiver;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AlertDialog;
@@ -49,9 +46,11 @@ import com.favn.firstaid.R;
 import com.favn.firstaid.adapter.HealthFacilityAdapter;
 import com.favn.firstaid.database.DatabaseOpenHelper;
 import com.favn.firstaid.models.Commons.Constants;
+import com.favn.firstaid.models.Commons.Distance;
 import com.favn.firstaid.models.Commons.NetworkStatus;
 import com.favn.firstaid.models.Direction.DirectionFinder;
 import com.favn.firstaid.models.Direction.DirectionFinderListener;
+import com.favn.firstaid.models.Direction.Duration;
 import com.favn.firstaid.models.DistanceMatrix.DistanceMatrixFinder;
 import com.favn.firstaid.models.DistanceMatrix.DistanceMatrixFinderListener;
 import com.favn.firstaid.models.FetchAddressIntentService;
@@ -83,6 +82,8 @@ import com.google.android.gms.maps.model.PolylineOptions;
 
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import static com.favn.firstaid.R.id.textview_hospital_destination;
@@ -104,18 +105,17 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     private LinearLayout llCurrentLocation;
     private RelativeLayout rlHealthFacilityDestination;
-    private LinearLayout llHealthFacilityNavigate;
+    private LinearLayout llHealthFacilityShowDirection;
     private LinearLayout llLoadingStatus;
     private ImageView imgGpsStatus;
     private TextView tvCurrentLocation;
     private TextView tvLatLng;
     private TextView tvHealthFacilityDestination;
     private TextView tvHealthFacilityDistance;
-    private BottomSheetBehavior mBottomSheetBehavior;
     private ProgressBar pbLoadingDirection;
     private TextView tvWarning;
     private TextView tvLoadingStatus;
-    private Button btnNavigate;
+    private Button btnShowDirection;
     private Button btnClearDirection;
     private RadioGroup rgFilter;
     private ToggleButton tbAllHealthFacility;
@@ -126,6 +126,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     FloatingActionButton fabCLoseHealthFacility;
     Animation animationShowHide;
     Animation animationSlide;
+    Animation animationFade;
 
     protected LocationSettingsRequest mLocationSettingsRequest;
 
@@ -149,10 +150,10 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private boolean isAddressFound;
     private boolean isLoadHealthFacility;
     private String filterHealthFacility;
+    private boolean isLoadDirectionClicked;
 
 
     // Get database
-    private HealthFacilityAdapter healthFacilityAdapterAdapter;
     private DatabaseOpenHelper dbHelper;
     List<HealthFacility> healthFacilityList = new ArrayList<HealthFacility>();
 
@@ -192,6 +193,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         tbMedicineCenter.setOnClickListener(ToggleAction);
         filterHealthFacility = "";
         isLoadHealthFacility = true;
+        isLoadDirectionClicked = false;
     }
 
 
@@ -199,7 +201,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         llCurrentLocation = (LinearLayout) findViewById(R.id.layout_current_location);
         rlHealthFacilityDestination = (RelativeLayout) findViewById(R.id
                 .layout_health_facility_destination);
-        llHealthFacilityNavigate = (LinearLayout) findViewById(R.id
+        llHealthFacilityShowDirection = (LinearLayout) findViewById(R.id
                 .layout_health_facility_navigate);
         llLoadingStatus = (LinearLayout) findViewById(R.id.layout_loading_status);
         tvCurrentLocation = (TextView) findViewById(R.id.text_current_location);
@@ -211,7 +213,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         imgGpsStatus = (ImageView) findViewById(R.id.image_gps_status);
 
-        btnNavigate = (Button) findViewById(R.id.button_navigate);
+        btnShowDirection = (Button) findViewById(R.id.button_show_direction);
         btnClearDirection = (Button) findViewById(R.id.button_clear_direction);
         pbLoadingDirection = (ProgressBar) findViewById(R.id.progress_loading_direction);
         btnShowHealthFacility = (Button) findViewById(R.id.button_show_health_facility);
@@ -247,27 +249,17 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                     updateGpsIcon(GPS_STATUS_NOT_FIXED);
                 }
 
-                Toast.makeText(context, "GPS Enabled: " + isGpsProviderEnabled + " Network Location Enabled: " + isNetworkProviderEnabled, Toast.LENGTH_LONG).show();
             } else {
-                checkNetworkAvailable(context);
+                isNetworkEnable = NetworkStatus.checkNetworkEnable(context);
+                if (isNetworkEnable) {
+                    if (isLoadDirectionClicked) {
+                        showDirection();
+                    }
+                }
             }
         }
     };
 
-
-    //TODO consider to check CONNECTIVITY_CHANGE
-
-    // Set isNetworkEnable value when Network status change
-    private void checkNetworkAvailable(Context context) {
-        ConnectivityManager connectivityManager = (ConnectivityManager) context
-                .getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo activeNetwork = connectivityManager.getActiveNetworkInfo();
-        if (activeNetwork == null || activeNetwork.getType() == 0) {
-            isNetworkEnable = false;
-        } else {
-            isNetworkEnable = true;
-        }
-    }
 
     @Override
     protected void onStart() {
@@ -400,16 +392,17 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             mCurrentLocation = location;
             updateLocationUI();
             updateGpsIcon(GPS_STATUS_FIXED);
-            //TODO refresh health facility list
-//            if (mBottomSheetBehavior.getState() == BottomSheetBehavior.STATE_EXPANDED) {
-//                getHealthFacilityData();
-//            }
+            isLoadHealthFacility = true;
+
+            // refresh health facility list when layout health facility visible
+            if (isLoadHealthFacility) {
+                getHealthFacilityData();
+            }
 
             if (isNetworkEnable) {
                 startAddressIntentService();
             }
 
-            isLoadHealthFacility = true;
 
         }
     }
@@ -585,6 +578,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                     public void onClick(DialogInterface dialog, int which) {
                         Intent intent = new Intent(Settings.ACTION_WIRELESS_SETTINGS);
                         startActivity(intent);
+                        isLoadDirectionClicked = true;
                     }
                 })
                 .create()
@@ -592,10 +586,11 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
     private void getHealthFacilityData() {
-        Log.d("test_load_db", "load db");
         if (isLocationEnable && (mCurrentLocation != null)) {
             updateLoadingUI(true);
             healthFacilityList = dbHelper.getListHealthFacility(getPoints());
+            distanceToHealthFacility();
+            sortHealthFacility();
             if (healthFacilityList.size() != 0) {
 
                 if (isNetworkEnable) {
@@ -675,11 +670,43 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
     private void sendDistanceRequest(String origin) {
-        new DistanceMatrixFinder(this, origin, getHealthFacilityDestinationArray()).execute();
+        healthFacilityList = dbHelper.getListHealthFacility(getPoints());
+        new DistanceMatrixFinder(this, origin, healthFacilityList).execute();
         updateLoadingUI(true);
     }
 
+    private void distanceToHealthFacility() {
+        float distance = 0;
+        for (int i = 0; i < healthFacilityList.size(); i++) {
+            Location healthFacilityLocation = new Location("healthFacilityLocation");
+            healthFacilityLocation.setLatitude(healthFacilityList.get(i)
+                    .getLatitude());
+            healthFacilityLocation.setLongitude(healthFacilityList.get(i)
+                    .getLongitude());
+            distance = mCurrentLocation.distanceTo(healthFacilityLocation);
+
+            healthFacilityList.get(i).setDistance(new Distance((int)distance));
+        }
+
+    }
+
+    private void sortHealthFacility() {
+        if (healthFacilityList.size() > 0) {
+            try {
+                Collections.sort(healthFacilityList, new Comparator<HealthFacility>() {
+                    public int compare(HealthFacility h1, HealthFacility h2) {
+                        return h1.getDistance().getValue() - h2.getDistance().getValue();
+                    }
+                });
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
     private void sendDirectionRequest(String origin, String destination) {
+        isLoadDirectionClicked = false;
         try {
             new DirectionFinder(this, origin, destination).execute();
         } catch (UnsupportedEncodingException e) {
@@ -724,7 +751,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
                 createMarker(latLng, healthFacilityDestination.getName());
                 btnClearDirection.setVisibility(View.GONE);
-                btnNavigate.setVisibility(View.VISIBLE);
+                btnShowDirection.setVisibility(View.VISIBLE);
                 showHealthFacility(false);
 
             }
@@ -734,13 +761,19 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private void updateDestinationUI(HealthFacility healthFacility) {
 
 
-        btnNavigate.setOnClickListener(this);
+        btnShowDirection.setOnClickListener(this);
 
         tvHealthFacilityDestination.setText(healthFacility.getName());
-        if (healthFacility.getDistance() != null) {
-            tvHealthFacilityDistance.setText(healthFacility.getDistance().getText());
+        if (healthFacility.getDistance().getText() != null) {
+            if (healthFacility.getDistance().getText().equals("NO_RESULT")) {
+                tvHealthFacilityDistance.setText("Không xác định được khoảng cách");
+            } else {
+                tvHealthFacilityDistance.setText(healthFacility.getDistance().getText() + " - " +
+                        healthFacility.getDuration().getText());
+            }
+
             tvHealthFacilityDistance.setVisibility(View.VISIBLE);
-            llHealthFacilityNavigate.setVisibility(View.VISIBLE);
+            llHealthFacilityShowDirection.setVisibility(View.VISIBLE);
         } else {
             tvHealthFacilityDistance.setVisibility(View.GONE);
         }
@@ -773,29 +806,29 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
     @Override
-    public void onDirectionFinderSuccess(List<LatLng> latLngs) {
+    public void onDirectionFinderSuccess(String status, List<LatLng> latLngs, String distance,
+                                         String duration) {
         pbLoadingDirection.setVisibility(View.GONE);
         btnClearDirection.setVisibility(View.VISIBLE);
         btnClearDirection.setOnClickListener(this);
         goToCurrentLocationZoom();
-        PolylineOptions polylineOptions = new PolylineOptions().
-                geodesic(true)
-                .color(getResources().getColor(R.color.colorGpsFixed))
-                .width(10);
+        if (status.equals("OK")) {
+            PolylineOptions polylineOptions = new PolylineOptions().
+                    geodesic(true)
+                    .color(getResources().getColor(R.color.colorGpsFixed))
+                    .width(10);
 
-        for (int i = 0; i < latLngs.size(); i++)
-            polylineOptions.add(latLngs.get(i));
+            for (int i = 0; i < latLngs.size(); i++)
+                polylineOptions.add(latLngs.get(i));
 
-        polylinePaths = mGoogleMap.addPolyline(polylineOptions);
-    }
+            polylinePaths = mGoogleMap.addPolyline(polylineOptions);
 
-    public HealthFacility[] getHealthFacilityDestinationArray() {
-        healthFacilityList = dbHelper.getListHealthFacility(getPoints());
-        HealthFacility hospitalsDestination[] = new HealthFacility[healthFacilityList.size()];
-        for (int i = 0; i < healthFacilityList.size(); i++) {
-            hospitalsDestination[i] = healthFacilityList.get(i);
+            healthFacilityDestination.setDistance(new Distance(distance));
+            healthFacilityDestination.setDuration(new Duration(duration));
+            updateDestinationUI(healthFacilityDestination);
+        } else {
+            tvHealthFacilityDistance.setText("Không xác định được đường đi");
         }
-        return hospitalsDestination;
     }
 
     @Override
@@ -808,7 +841,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             case R.id.layout_health_facility_destination:
                 zoomDestinationLocation();
                 break;
-            case R.id.button_navigate:
+            case R.id.button_show_direction:
                 showDirection();
                 break;
             case R.id.button_clear_direction:
@@ -843,7 +876,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         buildNetworkSetting();
         if (isNetworkEnable) {
             pbLoadingDirection.setVisibility(View.VISIBLE);
-            btnNavigate.setVisibility(View.GONE);
+            btnShowDirection.setVisibility(View.GONE);
             sendDirectionRequest(mCurrentLocation.getLatitude() + "," + mCurrentLocation.getLongitude(),
                     healthFacilityDestination.getLatLngText());
         }
@@ -851,7 +884,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     private void clearDirection() {
         btnClearDirection.setVisibility(View.GONE);
-        btnNavigate.setVisibility(View.VISIBLE);
+        btnShowDirection.setVisibility(View.VISIBLE);
         removeItemsOnMap();
         rlHealthFacilityDestination.setVisibility(View.GONE);
     }
@@ -871,6 +904,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         @Override
         public void onClick(View v) {
             rgFilter.clearCheck();
+
             switch (v.getId()) {
                 case R.id.toggle_all_health_facility:
                     rgFilter.check(R.id.toggle_all_health_facility);
@@ -885,6 +919,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                     filterHealthFacility = Constants.FILTER_MEDICINE_CENTER;
                     break;
             }
+
             displayHealthFacility(healthFacilityList);
         }
     };
@@ -901,8 +936,11 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
             animationSlide = AnimationUtils.loadAnimation(getApplicationContext(),
                     R.anim.slide_down);
+
+            animationFade = AnimationUtils.loadAnimation(getApplicationContext(),
+                    R.anim.fade_appear);
             btnShowHealthFacility.startAnimation(animationSlide);
-           // layoutHealthFacility.startAnimation(animationSlide);
+            layoutHealthFacility.startAnimation(animationFade);
 
         } else {
             layoutHealthFacility.setVisibility(View.GONE);
@@ -914,8 +952,11 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
             animationSlide = AnimationUtils.loadAnimation(getApplicationContext(),
                     R.anim.slide_up);
+
+            animationFade = AnimationUtils.loadAnimation(getApplicationContext(),
+                    R.anim.fade_disappear);
             btnShowHealthFacility.startAnimation(animationSlide);
-           // layoutHealthFacility.startAnimation(animationSlide);
+            layoutHealthFacility.startAnimation(animationFade);
 
         }
     }

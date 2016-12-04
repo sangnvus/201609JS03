@@ -7,13 +7,17 @@ package com.favn.firstaid.models.Direction;
 public class Direction {
 
     public Route routes[];
+    private String status;
+    public Direction(Route[] routes, String status) {
+        this.routes = routes;
+        this.status = status;
+    }
 
     public Route[] getRoutes() {
         return routes;
     }
 
-    public Direction(Route[] routes) {
-        this.routes = routes;
+    public String getStatus() {
+        return status;
     }
-
 }

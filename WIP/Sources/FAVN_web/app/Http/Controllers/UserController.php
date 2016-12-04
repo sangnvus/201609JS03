@@ -207,7 +207,6 @@ class UserController extends Controller
 			$ambulance = new Ambulance;
 			$ambulance->user_id = $user->id;
 			$ambulance->team = $request->team;
-			$ambulance->status = 'ready';
 			$ambulance->save();
 		}
 

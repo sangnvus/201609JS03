@@ -1,11 +1,31 @@
-function onCancelDispatchClick() {
-console.log(ambulanceList);
+function onCancelDispatchClick() {	
+	if(caller != undefined) {
+		bootbox.confirm({ 
+	        size: "small",
+	        message: "Bạn có hủy điều phối ?", 
+	        callback: function(result){
+	        	if (result) {
+	        		cancelDispatch(caller);
+	        	}
+	        }
+	    })
+	}
+}
 
-	// initNewMap();
-	// clearAllMarkers();
-	// initAmbulanceMarkerAfterLoad();
-	// iniAMarker(emergencyCenterPos, emergencyCenterIcon, emergencyCenterTitle);
-	// map.panTo(emergencyCenterPos);
+
+function cancelDispatch(caller) {
+	caller.status = 'cancel';
+	updateCaller(caller, function(result) {
+		if(result) {
+	    	showNoti('success', 'Đã hủy điều phối xe');
+	    	clearAMaker(callerMaker);
+	    	initNewMap();
+	    	reInitDefaultMarkers();
+	    	clearCallerForm();
+	    } else {
+	    	showNoti('success', 'Lỗi kết nối, chưa hủy được xe');
+	    }
+	});
 }
 
 function iniCallerForm(caller) {
@@ -30,22 +50,43 @@ function getListAmbulanceAndDispatch() {
 
 	createListAmbulancePos();
 
-	handleDispatch(listAmbulancePos, callerPos, function(){
+	getReadyAmbulance(listAmbulancePos, callerPos, function(){
 
-		// Draw
-		origin = new google.maps.LatLng(readyAmbulance.latitude, readyAmbulance.longitude);
-		destination = new google.maps.LatLng(caller.latitude, caller.longitude);
+		readyAmbulance.status = 'pending'
+		readyAmbulance.caller_taking_id = caller.id;
 
-		// Init ambulance marker
-		iniAMarker(origin, ambulanceBuzyIconDir, 'On the way');
+		pendingCallers.push(caller);
+		console.log(pendingCallers);
+		caller = null;
 
-		calculateAndDisplayRoute(directionsService, directionsDisplay, origin, destination);
+		var database = firebase.database();
+		sendTaskToAmbulance(readyAmbulance, function(status) {
+			console.log(status);
+		});
+
+// -----------------------------------
+
+		// // Draw
+		// var ambulancePos = new google.maps.LatLng(readyAmbulance.latitude, readyAmbulance.longitude);
+		// var callerPos = new google.maps.LatLng(caller.latitude, caller.longitude);
+
+		// // Init ambulance marker
+		// iniAMarker(ambulancePos, ambulanceBuzyIconDir, 'xe đội ' + readyAmbulance.team);
+
+		// calculateAndDisplayRoute(directionsService, directionsDisplay, ambulancePos, callerPos, function(response) {
+		// 	console.log(response);
+		// });
 
 	});
 }
 
+
+function implementDispatch() {
+
+}
+
 // RETURN SHORTEST DISTANCE TO CALLER 
-function handleDispatch(listAmbulancePos, callerPos, callback) {
+function getReadyAmbulance(listAmbulancePos, callerPos, callback) {
     distanceMatrixService = new google.maps.DistanceMatrixService;
     distanceMatrixService.getDistanceMatrix({
     origins: listAmbulancePos,
@@ -59,27 +100,42 @@ function handleDispatch(listAmbulancePos, callerPos, callback) {
       alert('Error was: ' + status);
     } else {   
        var tmpElementList = response.rows;
-       console.log(tmpElementList);
       for (var i = 0; i < tmpElementList.length; i++) {
         if(tmpElementList[i].elements[0].status == 'OK') {
-          ambulanceList[i].distanceMatrix = tmpElementList[i].elements[0];
+          readyAmbulanceList[i].distanceMatrix = tmpElementList[i].elements[0];
         } else {
-           ambulanceList.splice(i);
+           readyAmbulanceList.splice(i);
         }
       }
 
       // Sort
-      ambulanceList = ambulanceList.slice(0);
-      ambulanceList.sort(function(a,b) {
+      readyAmbulanceList = readyAmbulanceList.slice(0);
+      readyAmbulanceList.sort(function(a,b) {
         return a.distanceMatrix.distance.value - b.distanceMatrix.distance.value;
       });
       
       // Return ready ambulance
-      readyAmbulance = ambulanceList[0];    
+      readyAmbulance = readyAmbulanceList[0];    
 
       callback();
     }
   });
+}
+
+
+function sendTaskToAmbulance(ambulance, callback) {
+	var database = firebase.database();
+	setAnAmbulanceToFirebase(ambulance, database);
+
+	showNoti(NOTI_TYPE_PENDING, 'đang đợi xe nhận nhiệm vụ');
+
+	clearCallerForm();
+
+	// Handle when a caller change
+	database.ref('ambulances/' + ambulance.id).on('child_changed', snap => {
+		status = snap.val();
+		callback(status);
+	});
 }
 
 // Update ambulance
@@ -96,17 +152,24 @@ function updateAmbulance(ambuParam) {
 	});
 }
 
-function updateCaller(callerParam) {
-	var data = JSON.stringify(callerParam);
-	 $.ajax({
-         data: data,
-         type: "post",
-         url: "callerUpdate",
-         async: false,
-         success: function(data){
-              //alert("Data Save: " + data);
-         }
-	 });
+function updateCaller(callerParam, callback) {
+	try{
+		var data = JSON.stringify(callerParam);
+		$.ajax({
+			data: data,
+			type: "post",
+			url: "callerUpdate",
+			async: false,
+			success: function(data){
+				callback(true);
+			},
+			error: function() {
+				callback(false);
+			}
+		});
+	} catch(err) {
+		callback(false);
+	}
 }
 
 function updateAfterMatch() {
@@ -134,13 +197,29 @@ function getListAmbulance() {
 	// });
 }
 
-function createListAmbulancePos() {
-	listAmbulancePos = [];
-	var ambulanceTmpPos;
+function createListAmbulanceReady(ambulanceList, callback) {
 	for (var i = 0; i < ambulanceList.length; i++) {
-		ambulanceTmpPos = new google.maps.LatLng(ambulanceList[i].latitude, ambulanceList[i].longitude);
-		listAmbulancePos.push(ambulanceTmpPos);
+		if (ambulanceList[i].status == AMBULANCE_STATUS_READY) {
+			readyAmbulanceList.push(ambulanceList[i]);
+		}
 	}
+	callback();
+}
+
+function createListAmbulancePos() {
+	createListAmbulanceReady(ambulanceList, function() {
+		listAmbulancePos = [];
+		var ambulanceTmpPos;
+		for (var i = 0; i < readyAmbulanceList.length; i++) {
+			ambulanceTmpPos = new google.maps.LatLng(readyAmbulanceList[i].latitude, readyAmbulanceList[i].longitude);
+			listAmbulancePos.push(ambulanceTmpPos);
+		}
+		console.log(readyAmbulanceList);
+		console.log(listAmbulancePos);
+	});
+	
+	
+	
 }
 
 

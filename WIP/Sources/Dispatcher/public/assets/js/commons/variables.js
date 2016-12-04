@@ -6,12 +6,13 @@ var markers = [];
 var ambulanceMakers = [];
 var callerMaker;
 var emergencyCenterPos;
-
 var emergencyCenterIcon;
 var emergencyCenterTitle;
 var ambulanceList = [];
+var readyAmbulanceList = [];
 var listAmbulancePos;
 var caller;
+var pendingCallers = [];
 var takingCaller;
 var callerPos;
 
@@ -35,3 +36,14 @@ var emergencyCenterIconDir = 'assets/img/markers/ic_115_center.png';
 // constan
 const MAKER_TYPE_AMBULANCE = 'ambulance';
 const MAKER_TYPE_CALLER = 'caller';
+
+
+const sttWaiting = 'waiting';
+const sttProcessing = 'processing';
+const AMBULANCE_STATUS_BUZY = 'buzy';
+const AMBULANCE_STATUS_READY = 'ready';
+const AMBULANCE_STATUS_PENDING = 'pending';
+
+const NOTI_TYPE_SUCCESS = 'success';
+const NOTI_TYPE_ERROR = 'error';
+const NOTI_TYPE_PENDING = 'pending';

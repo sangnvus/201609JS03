@@ -8,8 +8,11 @@ public class Distance {
     private String text;
     private int value;
 
-    public Distance(String text, int value) {
+    public Distance(String text) {
         this.text = text;
+    }
+
+    public Distance(int value) {
         this.value = value;
     }
 
@@ -21,4 +24,7 @@ public class Distance {
         return value;
     }
 
+    public void setValue(int value) {
+        this.value = value;
+    }
 }

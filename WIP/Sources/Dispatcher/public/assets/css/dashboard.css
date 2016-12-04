@@ -3404,6 +3404,24 @@ body > .navbar-collapse[data-color="purple"]:after {
         text-align: center;
     }   
 
+.erroNoti {
+        background-color: #F44336;
+        /*background-color: #a1e82c;*/
+        color: #FFFFFF;
+        padding: 10px 15px;
+        font-size: 16px;
+        text-align: center;
+    }
+
+.pendingNoti {
+        background-color: #FF5722;
+        /*background-color: #a1e82c;*/
+        color: #FFFFFF;
+        padding: 10px 15px;
+        font-size: 16px;
+        text-align: center;
+    }
+
 .nav-content {
     padding: 10px 15px;
     font-size: 16px;

@@ -9,5 +9,6 @@ import java.util.List;
  */
 
 public interface DirectionFinderListener {
-    void onDirectionFinderSuccess(List<LatLng> latLngs);
+    void onDirectionFinderSuccess(String status, List<LatLng> latLngs, String distance, String
+            duration);
 }
