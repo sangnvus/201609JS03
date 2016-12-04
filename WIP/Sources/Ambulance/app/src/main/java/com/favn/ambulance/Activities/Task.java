@@ -234,6 +234,10 @@ public class Task extends AppCompatActivity implements OnMapReadyCallback,
                 isNetworkEnable = NetworkStatus.checkNetworkEnable(context);
                 if (!isNetworkEnable) {
                     createNetworkSetting();
+                  if(directionFinder != null) {
+                      directionFinder.stop();
+                  }
+
                 }
                 // Check location enable in connectivity change
                 isLocationEnable = LocationStatus.checkLocationProvider(context);

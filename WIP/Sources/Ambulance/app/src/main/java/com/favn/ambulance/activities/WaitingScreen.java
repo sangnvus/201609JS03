@@ -76,9 +76,11 @@ public class WaitingScreen extends AppCompatActivity implements LocationChangeLi
         // Get ambulance info from SharedPreferences
         ambulance = SharedPreferencesData.getAmbulanceData(Constants.SPREFS_AMBULANCE_INFO_KEY);
 
+
         database = FirebaseDatabase.getInstance();
 
         updateAmbulance(Constants.STATUS_READY);
+
 
         //createTaskDialog();
         // ATTENTION: This was auto-generated to implement the App Indexing API.

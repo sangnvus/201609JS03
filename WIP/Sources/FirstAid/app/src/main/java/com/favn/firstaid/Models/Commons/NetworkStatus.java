@@ -9,16 +9,12 @@ import android.net.NetworkInfo;
  */
 
 public class NetworkStatus {
-    public static int TYPE_NOT_CONNECTED = 0;
 
     public static boolean checkNetworkEnable(Context context) {
         ConnectivityManager connectivityManager = (ConnectivityManager)context.getSystemService
                 (Context.CONNECTIVITY_SERVICE);
         NetworkInfo activeNetwork = connectivityManager.getActiveNetworkInfo();
-        if (activeNetwork == null || activeNetwork.getType() == TYPE_NOT_CONNECTED) {
-            return false;
-        } else {
-            return true;
-        }
+        return activeNetwork != null && activeNetwork.isConnected();
     }
 }
+

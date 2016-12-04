@@ -85,6 +85,9 @@ public class EmergencyFragment extends Fragment implements AdapterView.OnItemCli
     private LocationFinder locationFinder;
     protected static final int REQUEST_CHECK_SETTINGS = 0x1;
     private boolean isCalled;
+    //add this
+    private Location mCurrentLocation;
+    private boolean isSentUserInfo;
 
     DatabaseReference mDb;
     private LinearLayout llSendingStatus;
@@ -138,6 +141,8 @@ public class EmergencyFragment extends Fragment implements AdapterView.OnItemCli
             intentFilter.addAction(Constants.INTENT_FILTER_PROVIDERS_CHANGED);
             intentFilter.addAction(Constants.INTENT_FILTER_CONNECTIVITY_CHANGE);
             isCalled = false;
+            // add this
+            isSentUserInfo = false;
         }
 
         // Hide advice layout
@@ -273,7 +278,7 @@ public class EmergencyFragment extends Fragment implements AdapterView.OnItemCli
         int id = item.getItemId();
 
         if (id == R.id.action_sos_calling) {
-            if (isAllowedSendInformation && !isLocationEnable && !isNetworkEnable) {
+            if (isAllowedSendInformation && (!isLocationEnable || !isNetworkEnable)) {
                 createDialog();
             } else {
                 SOSCalling.makeSOSCall(getContext());
@@ -315,6 +320,11 @@ public class EmergencyFragment extends Fragment implements AdapterView.OnItemCli
                 }
             }
         };
+
+        //add this
+        if(isNetworkEnable && mCurrentLocation != null && !isSentUserInfo) {
+            //TODO Send caller info when having network and location
+        }
     }
 
     private void createDialog() {
@@ -406,7 +416,12 @@ public class EmergencyFragment extends Fragment implements AdapterView.OnItemCli
 //        mDb = FirebaseDatabase.getInstance().getReference();
 //        mDb.child("callers").push().setValue(caller);
 
-
+        //add this
+        // Set location to mCurrentLocation
+        mCurrentLocation = location;
+        if(isNetworkEnable && mCurrentLocation != null && !isSentUserInfo) {
+            //TODO Send caller info when having network and location
+        }
     }
 
     // Send caller infor to db server - KienMT : 11/27/2016

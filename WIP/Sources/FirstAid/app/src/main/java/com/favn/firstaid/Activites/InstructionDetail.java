@@ -59,6 +59,9 @@ public class InstructionDetail extends AppCompatActivity implements LocationChan
     private LocationFinder locationFinder;
     protected static final int REQUEST_CHECK_SETTINGS = 0x1;
     private boolean isCalled;
+    //add this
+    private Location mCurrentLocation;
+    private boolean isSentUserInfo;
 
     // Web service url, get caller info from app - KienMT : 11/24/2016
     private String urlAddress;
@@ -115,6 +118,8 @@ public class InstructionDetail extends AppCompatActivity implements LocationChan
                 intentFilter.addAction(Constants.INTENT_FILTER_PROVIDERS_CHANGED);
                 intentFilter.addAction(Constants.INTENT_FILTER_CONNECTIVITY_CHANGE);
                 isCalled = false;
+                // add this
+                isSentUserInfo = false;
             }
 
             final int[] audio = {R.raw.audio_1, R.raw.audio_2, R.raw.audio_3};
@@ -192,7 +197,6 @@ public class InstructionDetail extends AppCompatActivity implements LocationChan
         }
         mMediaPlayer = MediaPlayer.create(this, audioId);
         mMediaPlayer.start();
-//        colorLine.setVisibility(View.VISIBLE);
     }
 
     @Override
@@ -223,7 +227,7 @@ public class InstructionDetail extends AppCompatActivity implements LocationChan
 
         //TODO send information to server
 
-        sendCallerInfoToServer(location);
+        //sendCallerInfoToServer(location);
 
         // START SEND TO FIREBAE
         // Init caller
@@ -237,6 +241,13 @@ public class InstructionDetail extends AppCompatActivity implements LocationChan
         // mDb.child("callers").push().setValue(caller);
         // END SEND TO FIREBASE
 
+
+        //add this
+        // Set location to mCurrentLocation
+        mCurrentLocation = location;
+        if(isNetworkEnable && mCurrentLocation != null && !isSentUserInfo) {
+            //TODO Send caller info when having network and location
+        }
     }
 
     // Send caller infor to db server - KienMT : 11/24/2016
@@ -257,10 +268,12 @@ public class InstructionDetail extends AppCompatActivity implements LocationChan
     }
 
 
+    // call button trigger this function
     @Override
     public void requestInformationSending() {
         if (isAllowedSendInformation) {
-            if (!isLocationEnable && !isNetworkEnable) {
+            //add this
+            if (!isLocationEnable || !isNetworkEnable) {
                 createDialog();
             } else {
                 locationFinder.buildLocationFinder();
@@ -295,10 +308,12 @@ public class InstructionDetail extends AppCompatActivity implements LocationChan
                 }
             }
         };
-        
-        if (isLocationEnable && isNetworkEnable) {
-            SOSCalling.makeSOSCall(this);
+
+        //add this
+        if(isNetworkEnable && mCurrentLocation != null && !isSentUserInfo) {
+            //TODO Send caller info when having network and location
         }
+
     }
 
     private void createDialog() {

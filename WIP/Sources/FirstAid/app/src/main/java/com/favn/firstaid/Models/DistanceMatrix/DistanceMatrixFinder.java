@@ -27,6 +27,7 @@ public class DistanceMatrixFinder {
     private DistanceMatrixFinderListener listener;
     private String origin;
     private List<HealthFacility> healthFacilityList;
+    private DownloadRawData downloadRawData;
 
     public DistanceMatrixFinder(DistanceMatrixFinderListener listener, String origin,
                                 List<HealthFacility> destinations) {
@@ -36,7 +37,12 @@ public class DistanceMatrixFinder {
     }
 
     public void execute() {
-        new DownloadRawData().execute(createUrl());
+        downloadRawData = new DownloadRawData();
+        downloadRawData.execute(createUrl());
+    }
+
+    public void stop() {
+        downloadRawData.cancel(true);
     }
 
     private String createUrl() {
@@ -72,7 +78,7 @@ public class DistanceMatrixFinder {
                                     .getElements()[i]
                                     .getDistance());
                             healthFacilityList.get(i).setDuration(results.getRows()[0].getElements()[i].getDuration());
-                        }else{
+                        } else {
                             healthFacilityList.get(i).setDistance(new Distance("NO_RESULT"));
                         }
 
