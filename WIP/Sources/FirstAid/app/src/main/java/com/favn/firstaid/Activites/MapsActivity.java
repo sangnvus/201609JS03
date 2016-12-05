@@ -683,7 +683,17 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     private void sendDistanceRequest(String origin) {
         healthFacilityList = dbHelper.getListHealthFacility(getPoints());
-        distanceMatrixFinder = new DistanceMatrixFinder(this, origin, healthFacilityList);
+
+        if (healthFacilityList.size() > 20) {
+            List<HealthFacility> requestedHealthFacility = new ArrayList<>();
+            for (int i = 0; i < 20; i++) {
+                requestedHealthFacility.add(healthFacilityList.get(i));
+            }
+            distanceMatrixFinder = new DistanceMatrixFinder(this, origin, requestedHealthFacility);
+        } else {
+            distanceMatrixFinder = new DistanceMatrixFinder(this, origin, healthFacilityList);
+        }
+
         distanceMatrixFinder.execute();
         updateLoadingUI(true);
         isRequestedDistance = true;
