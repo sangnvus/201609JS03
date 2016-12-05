@@ -10,10 +10,7 @@
             android:id="@+id/nav_learning"
             android:icon="@drawable/ic_learning"
             android:title="@string/learning_fragment" />
-        <item
-            android:id="@+id/nav_more"
-            android:icon="@drawable/ic_history"
-            android:title="@string/more_fragment" />
+
         <item
             android:id="@+id/nav_notification"
             android:icon="@drawable/ic_notifications"
@@ -26,6 +23,10 @@
             android:id="@+id/nav_infor"
             android:icon="@drawable/ic_about"
             android:title="@string/infor_fragment" />
+        <item
+            android:id="@+id/nav_more"
+            android:icon="@drawable/ic_more_horiz"
+            android:title="@string/more_fragment" />
     </group>
 
 </menu>
