@@ -3,22 +3,16 @@
 		<div class="container">
 			<h3>Trường hợp cấp cứu</h3>
 			<ul class="nav nav-tabs">
-				<li id="tabWaiting">
-					<a href="javascript:void(0)" onclick="getCallers(event, 'waiting')">
+				<li id="liAmbulance" class="active">
+					<a href="javascript:void(0)" onclick="getUl('ambulance')">
 						Đội cứu thương
 					</a>
 				</li>
-				<li id="tabWaiting">
-					<a href="javascript:void(0)" onclick="getCallers(event, 'waiting')">
+				<li id="liCaller">
+					<a href="javascript:void(0)" onclick="getUl('caller')">
 						Đang đợi
 					</a>
 				</li>
-				<li id="tabProcessing">
-					<a href="javascript:void(0)" onclick="getCallers(event, 'processing')">
-						Đang xử lý
-					</a>
-				</li>
-				
 			</ul>
 		</div>
 		<div>
@@ -39,6 +33,10 @@
 
 
 			<ul class="nav" id="listAmbulance"> 
+			
+			</ul> 
+
+			<ul class="nav" id="listWaiting"> 
 			
 			</ul> 
 
