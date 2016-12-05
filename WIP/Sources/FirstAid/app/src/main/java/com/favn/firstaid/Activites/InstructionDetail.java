@@ -6,10 +6,12 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.IntentSender;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.location.Location;
 import android.media.MediaPlayer;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -35,6 +37,7 @@ import com.favn.firstaid.models.Commons.Constants;
 import com.favn.firstaid.models.Commons.InformationSenderListener;
 import com.favn.firstaid.models.Commons.NetworkStatus;
 import com.favn.firstaid.models.Commons.SOSCalling;
+import com.favn.firstaid.models.Commons.SettingPref;
 import com.favn.firstaid.models.Instruction;
 import com.google.android.gms.common.api.Status;
 import com.google.firebase.database.DatabaseReference;
@@ -52,6 +55,7 @@ public class InstructionDetail extends AppCompatActivity implements LocationChan
     private int playingAudioId;
     private MediaPlayer mMediaPlayer = null;
     private boolean isAllowedSendInformation;
+    private String  phoneNumber;
     private IntentFilter intentFilter;
     private boolean isLocationEnable;
     private boolean isNetworkEnable;
@@ -82,7 +86,7 @@ public class InstructionDetail extends AppCompatActivity implements LocationChan
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-
+//        loadPref();
         Intent intent = getIntent();
 
         // START EDIT : Declare injuryID in class level -> others function can access
@@ -104,7 +108,11 @@ public class InstructionDetail extends AppCompatActivity implements LocationChan
         isNetworkEnable = false;
 
         //TODO Get value isAllowSendInformation from SharePreference
-        isAllowedSendInformation = true;
+        phoneNumber = SettingPref.loadPhoneNumber(this);
+
+        isAllowedSendInformation = (phoneNumber != null) ? true : false;
+
+        Log.d("phone_number", phoneNumber + " - " + isAllowedSendInformation);
 
 
         if (isEmergency) {
@@ -403,4 +411,6 @@ public class InstructionDetail extends AppCompatActivity implements LocationChan
                 break;
         }
     }
+
+
 }

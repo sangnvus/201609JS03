@@ -11,7 +11,7 @@ public class Ambulance {
     private double latitude;
     private double longitude;
     private String status;
-    private String caller_taking_id;
+    private int caller_taking_id;
     private int isDeleted;
     private String updated_at;
     private String created_at;
@@ -74,11 +74,11 @@ public class Ambulance {
         this.status = status;
     }
 
-    public String getCaller_taking_id() {
+    public int getCaller_taking_id() {
         return caller_taking_id;
     }
 
-    public void setCaller_taking_id(String caller_taking_id) {
+    public void setCaller_taking_id(int caller_taking_id) {
         this.caller_taking_id = caller_taking_id;
     }
 

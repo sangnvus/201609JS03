@@ -99,7 +99,8 @@ public class HealthFacilityAdapter extends BaseAdapter implements Filterable {
             });
         }
 
-        if (healthFacility.getDistance().getText() != null) {
+        if (healthFacility.getDistance() != null &&  healthFacility.getDistance().getText() !=
+                null) {
             TextView tvItemHealthFacilityDistance = (TextView) v.findViewById(R.id.text_item_health_facility_distance);
 
             if (healthFacility.getDistance().getText().equals("NO_RESULT")) {
@@ -109,7 +110,6 @@ public class HealthFacilityAdapter extends BaseAdapter implements Filterable {
                         healthFacility.getDuration().getText());
             }
             tvItemHealthFacilityDistance.setVisibility(View.VISIBLE);
-
         }
         return v;
     }

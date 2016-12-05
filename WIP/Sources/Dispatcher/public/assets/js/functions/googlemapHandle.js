@@ -93,8 +93,6 @@ function iniAMarker(pos, icon, title, type){
     callerMaker = marker;
   }
 
-  //TODO
-  console.log(marker.title);
 
 }
 
@@ -173,16 +171,24 @@ function geocodeLatLng(geocoder, map, locationString, callback) {
 }
 
 function onClickLiAmbulance(ambulanceObject) {
-
-  //console.log(ambulanceObject);
-  getCallerInfoByID(ambulanceObject.caller_taking_id);
+  initNewMap();
   var ambulancePos = new google.maps.LatLng(ambulanceObject.latitude, ambulanceObject.longitude);
-  var callerPos = new google.maps.LatLng(takingCaller.latitude, takingCaller.longitude);
-  calculateAndDisplayRoute(directionsService, directionsDisplay, ambulancePos, callerPos);
+  getCallerInfoByID(ambulanceObject.caller_taking_id);
+  clearCallerForm();
 
-  // Init caller marker
-  iniAMarker(callerPos, callerIconDir, 'caller');
-  
+  if(takingCaller != null) {
+    iniCallerForm(takingCaller);
+    var callerPos = new google.maps.LatLng(takingCaller.latitude, takingCaller.longitude);
+    calculateAndDisplayRoute(directionsService, directionsDisplay, ambulancePos, callerPos, function(results) {
+      console.log(results);
+    });
+    // Init caller marker
+    iniAMarker(callerPos, callerIconDir, 'caller');
+    iniAMarker(ambulancePos, ambulanceBuzyIconDir, 'ambulance');
+  } else {
+    iniAMarker(ambulancePos, ambulanceBuzyIconDir, 'ambulance');
+    map.panTo(ambulancePos);
+  }
 }
 
 // function onClickLiAmbulance(id) {
@@ -231,7 +237,6 @@ function drawPath(ambulancePos, callerPos) {
    async: false,
    success:function(data){
      takingCaller = data.caller;
-     console.log(takingCaller);
    }
   });
 }

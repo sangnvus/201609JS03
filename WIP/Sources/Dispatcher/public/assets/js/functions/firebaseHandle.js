@@ -94,6 +94,8 @@ function handleAmbulanceChange(dbRef, ulListAmbulance) {
 
 		reInitAmbulanceMaker();
 
+		console.log(ambulanceList[index]);
+
 	});
 }
 
@@ -310,30 +312,49 @@ function initUlCaller() {
     liTabProcessing.className = '';
 }
 
-function getCallers(evt, status) {
-    var ulListWaiting = document.getElementById('listWaiting');
-    var ulListProcessing = document.getElementById('listProcessing');
-    var liTabWaiting = document.getElementById('tabWaiting');
-    var liTabProcessing = document.getElementById('tabProcessing');
+
+function getUl(status) {
+    var ulListAmbulance = document.getElementById('listAmbulance');
+    var ulListCallerWaiting = document.getElementById('listWaiting');
+    var liAmbulance = document.getElementById('liAmbulance');
+    var liCaller = document.getElementById('liCaller');
     
-    if(status == 'waiting') {
-        ulListWaiting.style.display = 'block';
-        ulListProcessing.style.display = 'none';
-        liTabWaiting.className += ' active';
-        liTabProcessing.className = '';
-    } else if(status == 'processing') {
-        ulListWaiting.style.display = 'none';
-        ulListProcessing.style.display = 'block';
-        liTabProcessing.className += ' active';
-        liTabWaiting.className = '';
+    if(status == 'ambulance') {
+        ulListAmbulance.style.display = 'block';
+        ulListCallerWaiting.style.display = 'none';
+        liAmbulance.className += ' active';
+        liCaller.className = '';
+    } else if(status == 'caller') {
+        ulListAmbulance.style.display = 'none';
+        ulListCallerWaiting.style.display = 'block';
+        liCaller.className += ' active';
+        liAmbulance.className = '';
     }
 
 }
 
 
-function setAnAmbulanceToFirebase(ambulance, database) {
-	database.ref('ambulances/' + ambulance.id).set(ambulance);
-}
+// function getCallers(evt, status) {
+//     var ulListWaiting = document.getElementById('listWaiting');
+//     var ulListProcessing = document.getElementById('listProcessing');
+//     var liTabWaiting = document.getElementById('tabWaiting');
+//     var liTabProcessing = document.getElementById('tabProcessing');
+    
+//     if(status == 'waiting') {
+//         ulListWaiting.style.display = 'block';
+//         ulListProcessing.style.display = 'none';
+//         liTabWaiting.className += ' active';
+//         liTabProcessing.className = '';
+//     } else if(status == 'processing') {
+//         ulListWaiting.style.display = 'none';
+//         ulListProcessing.style.display = 'block';
+//         liTabProcessing.className += ' active';
+//         liTabWaiting.className = '';
+//     }
+
+// }
+
+
 
 // END
 
