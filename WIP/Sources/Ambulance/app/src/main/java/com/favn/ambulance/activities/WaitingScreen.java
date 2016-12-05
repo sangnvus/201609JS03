@@ -19,6 +19,8 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.widget.CompoundButton;
+import android.widget.Switch;
 import android.widget.Toast;
 
 import com.favn.ambulance.locationUtil.LocationChangeListener;
@@ -39,9 +41,6 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
-
-import java.util.HashMap;
 
 public class WaitingScreen extends AppCompatActivity implements LocationChangeListener {
 
@@ -141,6 +140,19 @@ public class WaitingScreen extends AppCompatActivity implements LocationChangeLi
         // ATTENTION: This was auto-generated to implement the App Indexing API.
         // See https://g.co/AppIndexing/AndroidStudio for more information.
         client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
+
+        Switch ready = (Switch) findViewById(R.id.switch_ready);
+        ready.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    OnSwitch();
+                } else {
+                    OffSwitch();
+                }
+            }
+        });
+
     }
 
     @Override
@@ -332,8 +344,15 @@ public class WaitingScreen extends AppCompatActivity implements LocationChangeLi
         dbRef.child("status").setValue(type);
     }
 
+    //On switch ready
+    public void OnSwitch(){
+        Toast.makeText(this, "sẵn sàng nè", Toast.LENGTH_LONG).show();
+    }
 
-
+    //Off switch ready
+    public void OffSwitch(){
+        Toast.makeText(this, "bận rồi nhé", Toast.LENGTH_LONG).show();
+    }
 }
 
 
