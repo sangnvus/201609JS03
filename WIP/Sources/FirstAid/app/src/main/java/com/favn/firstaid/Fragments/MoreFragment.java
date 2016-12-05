@@ -120,16 +120,10 @@ public class MoreFragment extends Fragment {
                     startActivity(intent);
                 }
                 else if (position == 1) {
-                    Intent intent = new Intent(getActivity(), NotificationActivity.class);
-                    startActivity(intent);
-                }
-                else if (position == 2) {
                     Intent intent = new Intent(getActivity(), BannerDetail.class);
                     startActivity(intent);
                 }
-                else if (position == 3) {
-//                    Intent intent = new Intent(getActivity(), ShareActivity.class);
-//                    startActivity(intent);
+                else if (position == 2) {
                     shareIt();
                 }
             }
