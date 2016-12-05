@@ -100,16 +100,6 @@
         <service
             android:name=".models.FetchAddressIntentService"
             android:exported="false" />
-        <!-- <receiver -->
-        <!-- android:name="com.favn.firstaid.Models.Common.NetworkChangeReceiver" -->
-        <!-- android:label="NetworkChangeReceiver" > -->
-        <!-- <intent-filter> -->
-        <!-- <action android:name="android.net.conn.CONNECTIVITY_CHANGE" /> -->
-        <!-- <action android:name="android.net.wifi.WIFI_STATE_CHANGED" /> -->
-        <!-- </intent-filter> -->
-        <!-- </receiver> -->
-
-        <!-- share on facebook -->
 
     </application>
 
