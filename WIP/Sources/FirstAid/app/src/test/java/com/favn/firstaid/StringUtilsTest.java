@@ -1,13 +1,9 @@
 package com.favn.firstaid;
 
-import com.favn.firstaid.activites.MainActivity;
-import com.favn.firstaid.models.Commons.StringUtils;
+import com.favn.firstaid.utils.StringConverter;
 
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.robolectric.Robolectric;
-import org.robolectric.RobolectricTestRunner;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 
@@ -25,7 +21,7 @@ public class StringUtilsTest {
 
     @Test
     public void isConvertCorrect() throws Exception {
-        String test = StringUtils.unAccent("Sơ cứu");
+        String test = StringConverter.unAccent("Sơ cứu");
         assertEquals("So cuu", test);
     }
 }

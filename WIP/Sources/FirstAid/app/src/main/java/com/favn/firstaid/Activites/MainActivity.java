@@ -20,7 +20,7 @@ import com.favn.firstaid.fragments.LearningFragment;
 import com.favn.firstaid.fragments.MoreFragment;
 import com.favn.firstaid.fragments.NotificationFragment;
 import com.favn.firstaid.fragments.SettingFragment;
-import com.favn.firstaid.models.Commons.NetworkStatus;
+import com.favn.firstaid.utils.NetworkStatus;
 
 import java.io.File;
 

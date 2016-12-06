@@ -25,6 +25,7 @@ import java.util.List;
  */
 
 public class DatabaseOpenHelper extends SQLiteOpenHelper {
+    private static DatabaseOpenHelper sInstance;
     public static String DB_PATH = "/data/data/com.favn.firstaid/databases/";
     public static String DB_NAME = "favn_ver4.1.db";
     public static String TABLE_NAME_INJURIES = "injuries";
@@ -38,7 +39,18 @@ public class DatabaseOpenHelper extends SQLiteOpenHelper {
     private Context mContext;
     private String tableName;
 
-    public DatabaseOpenHelper(Context context) {
+
+    public static synchronized DatabaseOpenHelper getInstance(Context context) {
+
+        // Use the application context, which will ensure that you
+        // don't accidentally leak an Activity's context.
+        if (sInstance == null) {
+            sInstance = new DatabaseOpenHelper(context.getApplicationContext());
+        }
+        return sInstance;
+    }
+
+    private DatabaseOpenHelper(Context context) {
         super(context, DB_NAME, null, DB_VERSION);
         this.mContext = context;
     }
@@ -184,9 +196,9 @@ public class DatabaseOpenHelper extends SQLiteOpenHelper {
         List<Instruction> instructionList = new ArrayList<>();
         openDatabase();
 
-        if(emergency){
+        if (emergency) {
             tableName = TABLE_NAME_INSTRUCTIONS;
-        }else {
+        } else {
             tableName = TABLE_NAME_LEARNING_INSTRUCTIONS;
         }
 
@@ -201,7 +213,7 @@ public class DatabaseOpenHelper extends SQLiteOpenHelper {
             String audio = cursor.getString(6);
 
 
-            if(emergency){
+            if (emergency) {
                 boolean isMakeCall = cursor.getInt(4) == 1;
                 instruction = new Instruction(injuryId, step, content, isMakeCall, image, audio);
                 instructionList.add(instruction);
@@ -257,7 +269,7 @@ public class DatabaseOpenHelper extends SQLiteOpenHelper {
     }
 
     /**
-     *  Start CRUD FAQs
+     * Start CRUD FAQs
      */
 
     // Get Faqs list

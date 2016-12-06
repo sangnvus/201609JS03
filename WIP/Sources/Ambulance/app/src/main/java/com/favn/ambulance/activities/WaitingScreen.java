@@ -23,22 +23,19 @@ import android.widget.CompoundButton;
 import android.widget.Switch;
 import android.widget.Toast;
 
-import com.favn.ambulance.locationUtil.LocationChangeListener;
-import com.favn.ambulance.locationUtil.LocationFinder;
-import com.favn.ambulance.locationUtil.LocationStatus;
+import com.favn.ambulance.services.location.LocationChangeListener;
+import com.favn.ambulance.services.location.LocationFinder;
+import com.favn.ambulance.services.location.LocationStatus;
 import com.favn.ambulance.models.Ambulance;
-import com.favn.ambulance.models.Commons.Constants;
-import com.favn.ambulance.models.Commons.SharedPreferencesData;
-import com.favn.ambulance.networkUtil.NetworkStatus;
+import com.favn.ambulance.utils.Constants;
+import com.favn.ambulance.utils.SharedPreferencesData;
+import com.favn.ambulance.utils.NetworkStatus;
 import com.favn.mikey.ambulance.R;
 import com.google.android.gms.appindexing.Action;
 import com.google.android.gms.appindexing.AppIndex;
 import com.google.android.gms.appindexing.Thing;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.Status;
-import com.google.firebase.database.ChildEventListener;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -81,42 +78,42 @@ public class WaitingScreen extends AppCompatActivity implements LocationChangeLi
 
         // TODO : HANDLE FIREBASE
         // Init instant firebase database - KienMT
-        database = FirebaseDatabase.getInstance();
+//        database = FirebaseDatabase.getInstance();
         // Init firebase database reference
-        DatabaseReference dbRef = database.getReference("ambulances");
-        dbRef.addChildEventListener(new ChildEventListener() {
-            @Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-
-            }
-
-            @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-                Ambulance tmpAmbulanceChange = dataSnapshot.getValue(Ambulance.class);
-                if(tmpAmbulanceChange.getId() != ambulance.getId()) {
-                    return;
-                }
-
-
-                // Handle task
-
-            }
-
-            @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) {
-
-            }
-
-            @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
+   //     DatabaseReference dbRef = database.getReference("ambulances");
+//        dbRef.addChildEventListener(new ChildEventListener() {
+//            @Override
+//            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+//
+//            }
+//
+//            @Override
+//            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+//                Ambulance tmpAmbulanceChange = dataSnapshot.getValue(Ambulance.class);
+//                if(tmpAmbulanceChange.getId() != ambulance.getId()) {
+//                    return;
+//                }
+//
+//
+//                // Handle task
+//
+//            }
+//
+//            @Override
+//            public void onChildRemoved(DataSnapshot dataSnapshot) {
+//
+//            }
+//
+//            @Override
+//            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+//
+//            }
+//
+//            @Override
+//            public void onCancelled(DatabaseError databaseError) {
+//
+//            }
+//        });
 
 //        DatabaseReference dbRef = database.getReference("ambulances/" + ambulance.getId());
 //        dbRef.addValueEventListener(new ValueEventListener() {
@@ -132,7 +129,7 @@ public class WaitingScreen extends AppCompatActivity implements LocationChangeLi
 //
 //            }
 //        });
-        updateAmbulance(Constants.STATUS_READY);
+//        updateAmbulance(Constants.STATUS_READY);
         //TODO : END HANDLE FIREBASE
 
 

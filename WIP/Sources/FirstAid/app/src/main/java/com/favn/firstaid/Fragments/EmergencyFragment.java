@@ -3,7 +3,6 @@ package com.favn.firstaid.fragments;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
-import android.app.SearchManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -15,9 +14,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.provider.Settings;
 import android.support.v4.app.Fragment;
-import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.widget.SearchView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -26,7 +23,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -34,35 +30,27 @@ import android.widget.TextView;
 import com.favn.firstaid.R;
 import com.favn.firstaid.activites.InstructionDetail;
 import com.favn.firstaid.activites.MapsActivity;
-import com.favn.firstaid.adapter.InjuryAdapter;
+import com.favn.firstaid.adapters.InjuryAdapter;
 import com.favn.firstaid.database.DatabaseOpenHelper;
-import com.favn.firstaid.locationUtil.LocationChangeListener;
-import com.favn.firstaid.locationUtil.LocationFinder;
-import com.favn.firstaid.locationUtil.LocationStatus;
-import com.favn.firstaid.models.Caller;
-import com.favn.firstaid.models.Commons.CallerInfoSender;
-import com.favn.firstaid.models.Commons.Constants;
-import com.favn.firstaid.models.Commons.InformationSenderListener;
-import com.favn.firstaid.models.Commons.NetworkStatus;
-import com.favn.firstaid.models.Commons.SOSCalling;
-import com.favn.firstaid.models.Commons.Sort;
-import com.favn.firstaid.models.Commons.StringUtils;
+import com.favn.firstaid.services.location.LocationChangeListener;
+import com.favn.firstaid.services.location.LocationFinder;
+import com.favn.firstaid.services.location.LocationStatus;
+import com.favn.firstaid.models.CallerInfoSender;
+import com.favn.firstaid.utils.Constants;
+import com.favn.firstaid.models.InformationSenderListener;
+import com.favn.firstaid.utils.NetworkStatus;
+import com.favn.firstaid.utils.SOSCalling;
+import com.favn.firstaid.utils.Sort;
+import com.favn.firstaid.utils.StringConverter;
 import com.favn.firstaid.models.Injury;
 import com.google.android.gms.common.api.Status;
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.miguelcatalan.materialsearchview.MaterialSearchView;
 
-import java.nio.charset.Charset;
-import java.text.Normalizer;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.regex.Pattern;
 
-import static android.content.Context.SEARCH_SERVICE;
-import static com.favn.firstaid.models.Commons.Constants.LISTVIEW_EMERGENCY;
-import static java.nio.charset.StandardCharsets.ISO_8859_1;
-import static java.nio.charset.StandardCharsets.UTF_8;
+import static com.favn.firstaid.utils.Constants.LISTVIEW_EMERGENCY;
 
 
 /**
@@ -114,7 +102,7 @@ public class EmergencyFragment extends Fragment implements AdapterView.OnItemCli
         final ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.fragment_emergency, container, false);
 
         listView = (ListView) rootView.findViewById(R.id.listView);
-        dbHelper = new DatabaseOpenHelper(getActivity());
+        dbHelper = DatabaseOpenHelper.getInstance(getActivity());
         dbHelper.createDatabase();
         dbHelper.openDatabase();
         mInjuryList = dbHelper.getListInjury();
@@ -231,7 +219,7 @@ public class EmergencyFragment extends Fragment implements AdapterView.OnItemCli
 
         String searchStr1 = searchStr.toLowerCase();
 
-        if (str1.contains(searchStr) || StringUtils.unAccent(str1).contains(StringUtils.unAccent
+        if (str1.contains(searchStr) || StringConverter.unAccent(str1).contains(StringConverter.unAccent
                 (searchStr))) {
             return true;
         }

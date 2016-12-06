@@ -98,7 +98,7 @@
             android:screenOrientation="portrait"/>
 
         <service
-            android:name=".models.FetchAddressIntentService"
+            android:name=".services.FetchAddressIntentService"
             android:exported="false" />
 
     </application>

@@ -43,17 +43,17 @@ import android.widget.Toast;
 import android.widget.ToggleButton;
 
 import com.favn.firstaid.R;
-import com.favn.firstaid.adapter.HealthFacilityAdapter;
+import com.favn.firstaid.adapters.HealthFacilityAdapter;
 import com.favn.firstaid.database.DatabaseOpenHelper;
-import com.favn.firstaid.models.Commons.Constants;
-import com.favn.firstaid.models.Commons.Distance;
-import com.favn.firstaid.models.Commons.NetworkStatus;
-import com.favn.firstaid.models.Direction.DirectionFinder;
-import com.favn.firstaid.models.Direction.DirectionFinderListener;
-import com.favn.firstaid.models.Direction.Duration;
-import com.favn.firstaid.models.DistanceMatrix.DistanceMatrixFinder;
-import com.favn.firstaid.models.DistanceMatrix.DistanceMatrixFinderListener;
-import com.favn.firstaid.models.FetchAddressIntentService;
+import com.favn.firstaid.utils.Constants;
+import com.favn.firstaid.models.Distance;
+import com.favn.firstaid.utils.NetworkStatus;
+import com.favn.firstaid.services.direction.DirectionFinder;
+import com.favn.firstaid.services.direction.DirectionFinderListener;
+import com.favn.firstaid.services.direction.Duration;
+import com.favn.firstaid.services.distanceMatrix.DistanceMatrixFinder;
+import com.favn.firstaid.services.distanceMatrix.DistanceMatrixFinderListener;
+import com.favn.firstaid.services.FetchAddressIntentService;
 import com.favn.firstaid.models.HealthFacility;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
@@ -183,7 +183,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         intentFilter.addAction(Constants.INTENT_FILTER_CONNECTIVITY_CHANGE);
 
         updateLocationUI();
-        dbHelper = new DatabaseOpenHelper(this);
+        dbHelper =  DatabaseOpenHelper.getInstance(this);
 
         rgFilter = (RadioGroup) findViewById(R.id.radio_group_filter);
         rgFilter.setOnCheckedChangeListener(ToggleListener);
@@ -790,7 +790,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         btnShowDirection.setOnClickListener(this);
 
         tvHealthFacilityDestination.setText(healthFacility.getName());
-        if (healthFacility.getDistance().getText() != null) {
+        if (healthFacility.getDistance() != null && healthFacility.getDistance().getText() !=
+                null) {
             if (healthFacility.getDistance().getText().equals("NO_RESULT")) {
                 tvHealthFacilityDistance.setText("Không xác định được khoảng cách");
             } else {

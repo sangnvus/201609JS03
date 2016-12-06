@@ -1,14 +1,7 @@
 package com.favn.firstaid;
 
-import com.favn.firstaid.activites.MainActivity;
-import com.favn.firstaid.activites.MapsActivity;
-import com.favn.firstaid.models.Commons.StringUtils;
-
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.robolectric.Robolectric;
-import org.robolectric.RobolectricTestRunner;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 
