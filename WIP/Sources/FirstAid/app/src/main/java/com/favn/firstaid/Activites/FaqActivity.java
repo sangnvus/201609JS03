@@ -9,7 +9,7 @@ import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ListView;
 
-import com.favn.firstaid.adapter.FaqAdapter;
+import com.favn.firstaid.adapters.FaqAdapter;
 import com.favn.firstaid.database.DatabaseOpenHelper;
 import com.favn.firstaid.models.Faq;
 import com.favn.firstaid.R;
@@ -37,10 +37,7 @@ public class FaqActivity extends AppCompatActivity {
         final int injuryId = intent.getExtras().getInt("id");
 
         listView = (ListView) findViewById(R.id.list_faq);
-        dbHelper = new DatabaseOpenHelper(this);
-
-//        dbHelper.createDatabase();
-//        dbHelper.openDatabase();
+        dbHelper = DatabaseOpenHelper.getInstance(this);
 
         mFaqList = dbHelper.getListFaq(injuryId);
         faqAdapter = new FaqAdapter(this, mFaqList);

@@ -14,15 +14,15 @@ import android.widget.ListView;
 
 import com.favn.firstaid.activites.BannerDetail;
 import com.favn.firstaid.activites.InstructionDetail;
-import com.favn.firstaid.adapter.InjuryAdapter;
+import com.favn.firstaid.adapters.InjuryAdapter;
 import com.favn.firstaid.database.DatabaseOpenHelper;
-import com.favn.firstaid.models.Commons.Sort;
+import com.favn.firstaid.utils.Sort;
 import com.favn.firstaid.models.Injury;
 import com.favn.firstaid.R;
 
 import java.util.List;
 
-import static com.favn.firstaid.models.Commons.Constants.LISTVIEW_EMERGENCY;
+import static com.favn.firstaid.utils.Constants.LISTVIEW_EMERGENCY;
 
 
 /**
@@ -46,7 +46,7 @@ public class LearningFragment extends Fragment implements AdapterView.OnItemClic
 
         ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.fragment_learning, container, false);
         listView = (ListView) rootView.findViewById(R.id.listView);
-        dbHelper = new DatabaseOpenHelper(getActivity());
+        dbHelper = DatabaseOpenHelper.getInstance(getActivity());
         dbHelper.createDatabase();
         dbHelper.openDatabase();
 
