@@ -2,7 +2,7 @@
 <resources>
     <array name="more_icon">
         <item>@drawable/ic_question_answer</item>
-        <item>@drawable/ic_testing</item>
+        <item>@drawable/ic_course</item>
         <item>@drawable/ic_share</item>
     </array>
     <array name="more_item">
