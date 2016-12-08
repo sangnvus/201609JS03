@@ -32,7 +32,6 @@ import com.favn.firstaid.R;
 import com.favn.firstaid.activites.InstructionActivity;
 import com.favn.firstaid.activites.MapsActivity;
 import com.favn.firstaid.adapters.InjuryAdapter;
-import com.favn.firstaid.commons.HealthFacility;
 import com.favn.firstaid.database.DatabaseOpenHelper;
 import com.favn.firstaid.services.location.LocationChangeListener;
 import com.favn.firstaid.services.location.LocationFinder;
@@ -42,14 +41,13 @@ import com.favn.firstaid.utils.Constants;
 import com.favn.firstaid.commons.InformationSenderListener;
 import com.favn.firstaid.utils.NetworkStatus;
 import com.favn.firstaid.utils.SOSCalling;
+import com.favn.firstaid.utils.SettingPref;
 import com.favn.firstaid.utils.Sort;
-import com.favn.firstaid.utils.StringConverter;
 import com.favn.firstaid.commons.Injury;
 import com.google.android.gms.common.api.Status;
 import com.google.firebase.database.DatabaseReference;
 import com.miguelcatalan.materialsearchview.MaterialSearchView;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static com.favn.firstaid.utils.Constants.LISTVIEW_EMERGENCY;
@@ -82,7 +80,7 @@ public class EmergencyFragment extends Fragment implements AdapterView.OnItemCli
     private LinearLayout llSendingStatus;
     private TextView tvSendingInformationStatus;
 
-    private String phoneNo = null;
+    private String phoneNumber;
 
     // Web service url, get caller info from app - KienMT : 11/27/2016
     private String urlAddress;
@@ -119,9 +117,10 @@ public class EmergencyFragment extends Fragment implements AdapterView.OnItemCli
         isLocationEnable = false;
         isNetworkEnable = false;
 
+        // Get value isAllowSendInformation from SharePreference
+        phoneNumber = SettingPref.loadPhoneNumber(getContext());
+        isAllowedSendInformation = (phoneNumber != null) ? true : false;
 
-        //TODO Get value isAllowSendInformation from SharePreference
-        isAllowedSendInformation = true;
         if (isAllowedSendInformation) {
             locationFinder = new LocationFinder(getContext(), EmergencyFragment.this);
 
@@ -133,25 +132,6 @@ public class EmergencyFragment extends Fragment implements AdapterView.OnItemCli
             // add this
             isSentUserInfo = false;
         }
-
-        // Hide advice layout
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                final View view = rootView.findViewById(R.id.include_advice);
-                view.animate()
-                        .translationY(-view.getHeight())
-                        .alpha(0.0f)
-                        .setDuration(200)
-                        .setListener(new AnimatorListenerAdapter() {
-                            @Override
-                            public void onAnimationEnd(Animator animation) {
-                                super.onAnimationEnd(animation);
-                                view.setVisibility(View.GONE);
-                            }
-                        });
-            }
-        }, 2000);
 
         //get phone number on setting
 //        phoneNo = getActivity().getIntent().getExtras().getString("phoneNo");
@@ -172,8 +152,6 @@ public class EmergencyFragment extends Fragment implements AdapterView.OnItemCli
             }
         });
 
-        final EditText editText = (EditText) rootView.findViewById(com.miguelcatalan.materialsearchview.R.id
-                .searchTextView);
 
         searchView.setOnQueryTextListener(new MaterialSearchView.OnQueryTextListener() {
             @Override
@@ -183,7 +161,8 @@ public class EmergencyFragment extends Fragment implements AdapterView.OnItemCli
 
             @Override
             public boolean onQueryTextChange(String newText) {
-
+                final EditText editText = (EditText) rootView.findViewById(com.miguelcatalan.materialsearchview.R.id
+                        .searchTextView);
                 if (newText != null && !newText.isEmpty()) {
 //                    int i = editText.getSelectionStart();
 //                    int i1 = editText.getSelectionStart();
@@ -296,7 +275,7 @@ public class EmergencyFragment extends Fragment implements AdapterView.OnItemCli
         };
 
         //add this
-        if(isNetworkEnable && mCurrentLocation != null && !isSentUserInfo) {
+        if (isNetworkEnable && mCurrentLocation != null && !isSentUserInfo) {
             //TODO Send caller info when having network and location
         }
     }
@@ -393,7 +372,7 @@ public class EmergencyFragment extends Fragment implements AdapterView.OnItemCli
         //add this
         // Set location to mCurrentLocation
         mCurrentLocation = location;
-        if(isNetworkEnable && mCurrentLocation != null && !isSentUserInfo) {
+        if (isNetworkEnable && mCurrentLocation != null && !isSentUserInfo) {
             //TODO Send caller info when having network and location
         }
     }

@@ -105,12 +105,10 @@ public class InstructionActivity extends AppCompatActivity implements LocationCh
         isLocationEnable = false;
         isNetworkEnable = false;
 
-        //TODO Get value isAllowSendInformation from SharePreference
+        // Get value isAllowSendInformation from SharePreference
         phoneNumber = SettingPref.loadPhoneNumber(this);
 
         isAllowedSendInformation = (phoneNumber != null) ? true : false;
-
-        Log.d("phone_number", phoneNumber + " - " + isAllowedSendInformation);
 
 
         if (isEmergency) {
