@@ -12,12 +12,12 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ListView;
 
-import com.favn.firstaid.activites.BannerDetail;
-import com.favn.firstaid.activites.InstructionDetail;
+import com.favn.firstaid.activites.CourseActivity;
+import com.favn.firstaid.activites.InstructionActivity;
 import com.favn.firstaid.adapters.InjuryAdapter;
 import com.favn.firstaid.database.DatabaseOpenHelper;
 import com.favn.firstaid.utils.Sort;
-import com.favn.firstaid.models.Injury;
+import com.favn.firstaid.commons.Injury;
 import com.favn.firstaid.R;
 
 import java.util.List;
@@ -68,7 +68,7 @@ public class LearningFragment extends Fragment implements AdapterView.OnItemClic
         banner.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), BannerDetail.class);
+                Intent intent = new Intent(getActivity(), CourseActivity.class);
                 startActivity(intent);
             }
         });
@@ -85,7 +85,7 @@ public class LearningFragment extends Fragment implements AdapterView.OnItemClic
         int injuryId = injury.getId();
         String injuryName = injury.getInjury_name();
 
-        Intent intent = new Intent(getActivity(), InstructionDetail.class);
+        Intent intent = new Intent(getActivity(), InstructionActivity.class);
         intent.putExtra("id", injuryId);
         intent.putExtra("name", injuryName);
         intent.putExtra("typeOfAction", FROM_LEARNING);

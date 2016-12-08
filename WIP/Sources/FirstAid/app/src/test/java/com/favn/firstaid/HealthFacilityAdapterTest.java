@@ -5,7 +5,7 @@ import android.content.Context;
 import android.test.mock.MockContext;
 
 import com.favn.firstaid.adapters.HealthFacilityAdapter;
-import com.favn.firstaid.models.HealthFacility;
+import com.favn.firstaid.commons.HealthFacility;
 
 import org.junit.Before;
 import org.junit.Test;

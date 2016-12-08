@@ -23,26 +23,28 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import com.favn.firstaid.R;
-import com.favn.firstaid.activites.InstructionDetail;
+import com.favn.firstaid.activites.InstructionActivity;
 import com.favn.firstaid.activites.MapsActivity;
 import com.favn.firstaid.adapters.InjuryAdapter;
+import com.favn.firstaid.commons.HealthFacility;
 import com.favn.firstaid.database.DatabaseOpenHelper;
 import com.favn.firstaid.services.location.LocationChangeListener;
 import com.favn.firstaid.services.location.LocationFinder;
 import com.favn.firstaid.services.location.LocationStatus;
-import com.favn.firstaid.models.CallerInfoSender;
+import com.favn.firstaid.commons.CallerInfoSender;
 import com.favn.firstaid.utils.Constants;
-import com.favn.firstaid.models.InformationSenderListener;
+import com.favn.firstaid.commons.InformationSenderListener;
 import com.favn.firstaid.utils.NetworkStatus;
 import com.favn.firstaid.utils.SOSCalling;
 import com.favn.firstaid.utils.Sort;
 import com.favn.firstaid.utils.StringConverter;
-import com.favn.firstaid.models.Injury;
+import com.favn.firstaid.commons.Injury;
 import com.google.android.gms.common.api.Status;
 import com.google.firebase.database.DatabaseReference;
 import com.miguelcatalan.materialsearchview.MaterialSearchView;
@@ -62,7 +64,6 @@ public class EmergencyFragment extends Fragment implements AdapterView.OnItemCli
     private ListView listView;
     private List<Injury> mInjuryList;
     public static final int FROM_EMERGENCY = 1;
-    private Injury injury;
 
     // Sending information functionality
     private boolean isAllowedSendInformation;
@@ -171,6 +172,8 @@ public class EmergencyFragment extends Fragment implements AdapterView.OnItemCli
             }
         });
 
+        final EditText editText = (EditText) rootView.findViewById(com.miguelcatalan.materialsearchview.R.id
+                .searchTextView);
 
         searchView.setOnQueryTextListener(new MaterialSearchView.OnQueryTextListener() {
             @Override
@@ -182,14 +185,13 @@ public class EmergencyFragment extends Fragment implements AdapterView.OnItemCli
             public boolean onQueryTextChange(String newText) {
 
                 if (newText != null && !newText.isEmpty()) {
-                    final List<Injury> injuriesResult = new ArrayList<>();
-                    for (Injury injury : mInjuryList) {
-                        if (searchInjury(injury.getInjury_name(), newText)) {
-                            injuriesResult.add(injury);
-                        }
-                    }
+//                    int i = editText.getSelectionStart();
+//                    int i1 = editText.getSelectionStart();
+//                    Log.d("test_edittext", i + i1 + "");
 
-                    InjuryAdapter adapter = new InjuryAdapter(getActivity(), injuriesResult,
+
+                    List<Injury> searchedList = dbHelper.getResultListInjury(newText);
+                    InjuryAdapter adapter = new InjuryAdapter(getActivity(), searchedList,
                             LISTVIEW_EMERGENCY, true);
                     listView.setAdapter(adapter);
 
@@ -201,7 +203,6 @@ public class EmergencyFragment extends Fragment implements AdapterView.OnItemCli
                 return true;
             }
         });
-
         return rootView;
     }
 
@@ -211,21 +212,6 @@ public class EmergencyFragment extends Fragment implements AdapterView.OnItemCli
         if (connectivityBroadcastReceiver != null) {
             getContext().registerReceiver(connectivityBroadcastReceiver, intentFilter);
         }
-    }
-
-    private boolean searchInjury(String str, String searchStr) {
-        String str1 = str.toLowerCase();
-        String[] words = str1.split("\\W+");
-
-        String searchStr1 = searchStr.toLowerCase();
-
-        if (str1.contains(searchStr) || StringConverter.unAccent(str1).contains(StringConverter.unAccent
-                (searchStr))) {
-            return true;
-        }
-
-
-        return false;
     }
 
     @Override
@@ -242,7 +228,7 @@ public class EmergencyFragment extends Fragment implements AdapterView.OnItemCli
         int injuryId = injury.getId();
         String injuryName = injury.getInjury_name();
 
-        Intent intent = new Intent(getActivity(), InstructionDetail.class);
+        Intent intent = new Intent(getActivity(), InstructionActivity.class);
         intent.putExtra("id", injuryId);
         intent.putExtra("name", injuryName);
         intent.putExtra("typeOfAction", FROM_EMERGENCY);

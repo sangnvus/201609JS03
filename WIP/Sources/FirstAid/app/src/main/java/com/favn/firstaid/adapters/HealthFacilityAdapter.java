@@ -15,7 +15,7 @@ import android.widget.Filterable;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.favn.firstaid.models.HealthFacility;
+import com.favn.firstaid.commons.HealthFacility;
 import com.favn.firstaid.R;
 
 import java.util.List;

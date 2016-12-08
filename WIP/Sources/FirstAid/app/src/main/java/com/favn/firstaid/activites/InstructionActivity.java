@@ -30,19 +30,19 @@ import com.favn.firstaid.database.DatabaseOpenHelper;
 import com.favn.firstaid.services.location.LocationChangeListener;
 import com.favn.firstaid.services.location.LocationFinder;
 import com.favn.firstaid.services.location.LocationStatus;
-import com.favn.firstaid.models.CallerInfoSender;
+import com.favn.firstaid.commons.CallerInfoSender;
 import com.favn.firstaid.utils.Constants;
-import com.favn.firstaid.models.InformationSenderListener;
+import com.favn.firstaid.commons.InformationSenderListener;
 import com.favn.firstaid.utils.NetworkStatus;
 import com.favn.firstaid.utils.SOSCalling;
 import com.favn.firstaid.utils.SettingPref;
-import com.favn.firstaid.models.Instruction;
+import com.favn.firstaid.commons.Instruction;
 import com.google.android.gms.common.api.Status;
 import com.google.firebase.database.DatabaseReference;
 
 import java.util.List;
 
-public class InstructionDetail extends AppCompatActivity implements LocationChangeListener,
+public class InstructionActivity extends AppCompatActivity implements LocationChangeListener,
         InstructionAdapter.InformationSending, InformationSenderListener {
     private InstructionAdapter instructionAdapter;
     private DatabaseOpenHelper dbHelper;
@@ -159,7 +159,7 @@ public class InstructionDetail extends AppCompatActivity implements LocationChan
             btnFaq.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent intent = new Intent(InstructionDetail.this, FaqActivity.class);
+                    Intent intent = new Intent(InstructionActivity.this, FaqActivity.class);
                     intent.putExtra("id", injuryId);
                     startActivity(intent);
                 }
@@ -220,7 +220,7 @@ public class InstructionDetail extends AppCompatActivity implements LocationChan
     @Override
     public void createLocationSettingDialog(Status status) {
         try {
-            status.startResolutionForResult(InstructionDetail.this, REQUEST_CHECK_SETTINGS);
+            status.startResolutionForResult(InstructionActivity.this, REQUEST_CHECK_SETTINGS);
         } catch (IntentSender.SendIntentException e) {
             //PendingIntent unable to execute request.
         }
@@ -262,14 +262,14 @@ public class InstructionDetail extends AppCompatActivity implements LocationChan
         CallerInfoSender ciSender = new CallerInfoSender();
 
         // Assign values
-        ciSender.setContext(InstructionDetail.this);
+        ciSender.setContext(InstructionActivity.this);
         ciSender.setUrlAddress(urlAddress);
         ciSender.setPhone("0906111222");
         ciSender.setInjuryId(injuryId);
         ciSender.setLatitude(location.getLatitude());
         ciSender.setLongitude(location.getLongitude());
         ciSender.setStatus("waiting");
-        ciSender.setInformationSenderListener(InstructionDetail.this);
+        ciSender.setInformationSenderListener(InstructionActivity.this);
 
         ciSender.execute();
     }

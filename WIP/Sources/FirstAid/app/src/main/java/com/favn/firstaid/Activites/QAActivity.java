@@ -13,8 +13,8 @@ import android.widget.Spinner;
 
 import com.favn.firstaid.adapters.InjuryAdapter;
 import com.favn.firstaid.database.DatabaseOpenHelper;
-import com.favn.firstaid.models.QuestionSender;
-import com.favn.firstaid.models.Injury;
+import com.favn.firstaid.commons.QuestionSender;
+import com.favn.firstaid.commons.Injury;
 import com.favn.firstaid.R;
 
 import java.util.List;

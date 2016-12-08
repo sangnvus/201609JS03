@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
     android:soundEffectsEnabled="true"
-    tools:context="com.favn.firstaid.activites.InstructionDetail">
+    tools:context="com.favn.firstaid.activites.InstructionActivity">
 
     <LinearLayout
         android:orientation="vertical"

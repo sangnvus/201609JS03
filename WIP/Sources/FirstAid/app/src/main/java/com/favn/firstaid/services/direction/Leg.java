@@ -1,7 +1,7 @@
 package com.favn.firstaid.services.direction;
 
 
-import com.favn.firstaid.models.Distance;
+import com.favn.firstaid.commons.Distance;
 
 /**
  * Created by Hung Gia on 10/19/2016.

@@ -1,4 +1,4 @@
-package com.favn.firstaid.models;
+package com.favn.firstaid.commons;
 
 import android.app.ProgressDialog;
 import android.content.Context;

@@ -17,8 +17,7 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.favn.firstaid.activites.BannerDetail;
-import com.favn.firstaid.activites.NotificationActivity;
+import com.favn.firstaid.activites.CourseActivity;
 import com.favn.firstaid.activites.QAActivity;
 import com.favn.firstaid.R;
 
@@ -120,7 +119,7 @@ public class MoreFragment extends Fragment {
                     startActivity(intent);
                 }
                 else if (position == 1) {
-                    Intent intent = new Intent(getActivity(), BannerDetail.class);
+                    Intent intent = new Intent(getActivity(), CourseActivity.class);
                     startActivity(intent);
                 }
                 else if (position == 2) {

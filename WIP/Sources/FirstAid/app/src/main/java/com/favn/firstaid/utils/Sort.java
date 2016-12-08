@@ -1,6 +1,6 @@
 package com.favn.firstaid.utils;
 
-import com.favn.firstaid.models.Injury;
+import com.favn.firstaid.commons.Injury;
 
 import java.util.Collections;
 import java.util.Comparator;

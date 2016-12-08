@@ -10,7 +10,7 @@ import android.view.View;
 
 import com.favn.firstaid.R;
 
-public class BannerDetail extends AppCompatActivity {
+public class CourseActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

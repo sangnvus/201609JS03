@@ -1,4 +1,4 @@
-package com.favn.firstaid.models;
+package com.favn.firstaid.commons;
 
 import com.favn.firstaid.services.direction.Duration;
 

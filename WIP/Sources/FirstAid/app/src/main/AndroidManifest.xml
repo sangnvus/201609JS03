@@ -76,7 +76,7 @@
             android:label="@string/map_title"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".activites.InstructionDetail"
+            android:name=".activites.InstructionActivity"
             android:theme="@style/AppTheme.NoActionBar"
             android:screenOrientation="portrait"/>
         <activity
@@ -84,16 +84,12 @@
             android:label="@string/qa_title"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".activites.NotificationActivity"
-            android:label="@string/notification_title"
-            android:screenOrientation="portrait"/>
-        <activity
             android:name=".activites.FaqActivity"
             android:label="@string/faq_title"
             android:screenOrientation="portrait"/>
 
         <activity
-            android:name=".activites.BannerDetail"
+            android:name=".activites.CourseActivity"
             android:label="@string/banner_title"
             android:screenOrientation="portrait"/>
 
