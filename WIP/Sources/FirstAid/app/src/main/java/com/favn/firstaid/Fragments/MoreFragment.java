@@ -12,11 +12,11 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
+
+import com.favn.firstaid.activites.CourseActivity;
 import com.favn.firstaid.R;
-import com.favn.firstaid.activites.BannerDetail;
 import com.favn.firstaid.activites.QAActivity;
 import com.favn.firstaid.adapters.ItemsListAdapter;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,6 +28,7 @@ public class MoreFragment extends Fragment {
     private ItemsListAdapter myItemsListAdapter;
     private List<ItemsListAdapter.Item> items;
     private int InjId = 0;
+
     public MoreFragment() {
         // Required empty public constructor
     }
@@ -50,12 +51,10 @@ public class MoreFragment extends Fragment {
                     Intent intent = new Intent(getActivity(), QAActivity.class);
                     intent.putExtra("id", InjId);
                     startActivity(intent);
-                }
-                else if (position == 1) {
-                    Intent intent = new Intent(getActivity(), BannerDetail.class);
+                } else if (position == 1) {
+                    Intent intent = new Intent(getActivity(), CourseActivity.class);
                     startActivity(intent);
-                }
-                else if (position == 2) {
+                } else if (position == 2) {
                     shareIt();
                 }
             }
@@ -75,14 +74,14 @@ public class MoreFragment extends Fragment {
         startActivity(Intent.createChooser(sharingIntent, "Chia sẻ ứng dụng"));
     }
 
-    private void initItems(){
+    private void initItems() {
 
         items = new ArrayList<ItemsListAdapter.Item>();
 
         TypedArray arrayDrawable = getResources().obtainTypedArray(R.array.more_icon);
         TypedArray arrayText = getResources().obtainTypedArray(R.array.more_item);
 
-        for(int i=0; i<arrayDrawable.length(); i++){
+        for (int i = 0; i < arrayDrawable.length(); i++) {
             Drawable d = arrayDrawable.getDrawable(i);
             String s = arrayText.getString(i);
             ItemsListAdapter.Item item = new ItemsListAdapter().new Item(d, s);

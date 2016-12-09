@@ -3,8 +3,8 @@ package com.favn.firstaid.services.distanceMatrix;
 import android.os.AsyncTask;
 
 import com.favn.firstaid.utils.Constants;
-import com.favn.firstaid.models.Distance;
-import com.favn.firstaid.models.HealthFacility;
+import com.favn.firstaid.commons.Distance;
+import com.favn.firstaid.commons.HealthFacility;
 import com.google.gson.Gson;
 
 import java.io.IOException;

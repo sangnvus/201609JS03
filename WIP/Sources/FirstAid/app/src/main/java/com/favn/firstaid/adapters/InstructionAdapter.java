@@ -10,7 +10,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.favn.firstaid.R;
-import com.favn.firstaid.models.Instruction;
+import com.favn.firstaid.commons.Instruction;
 
 import java.util.List;
 

@@ -7,7 +7,7 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.favn.firstaid.models.Injury;
+import com.favn.firstaid.commons.Injury;
 import com.favn.firstaid.R;
 
 import java.util.List;

@@ -2,8 +2,7 @@ package com.favn.firstaid.adapters;
 
 import android.widget.Filter;
 
-import com.favn.firstaid.adapters.HealthFacilityAdapter;
-import com.favn.firstaid.models.HealthFacility;
+import com.favn.firstaid.commons.HealthFacility;
 
 import java.util.ArrayList;
 import java.util.List;

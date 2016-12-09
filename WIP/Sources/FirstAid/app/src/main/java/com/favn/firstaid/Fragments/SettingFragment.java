@@ -1,7 +1,6 @@
 package com.favn.firstaid.fragments;
 
 
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.EditTextPreference;
@@ -12,7 +11,6 @@ import android.support.v4.app.Fragment;
 import android.util.Log;
 
 import com.favn.firstaid.R;
-import com.favn.firstaid.activites.InstructionDetail;
 
 
 /**

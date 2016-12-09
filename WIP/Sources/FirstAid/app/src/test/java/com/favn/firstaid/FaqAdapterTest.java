@@ -2,8 +2,8 @@ package com.favn.firstaid;
 
 import android.test.mock.MockContext;
 
-import com.favn.firstaid.adapter.FaqAdapter;
-import com.favn.firstaid.models.Faq;
+import com.favn.firstaid.adapters.FaqAdapter;
+import com.favn.firstaid.commons.Faq;
 
 import org.codehaus.plexus.context.Context;
 import org.junit.Before;

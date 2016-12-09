@@ -18,7 +18,6 @@ import com.favn.firstaid.fragments.AboutFragment;
 import com.favn.firstaid.fragments.EmergencyFragment;
 import com.favn.firstaid.fragments.LearningFragment;
 import com.favn.firstaid.fragments.MoreFragment;
-import com.favn.firstaid.fragments.NotificationFragment;
 import com.favn.firstaid.fragments.SettingFragment;
 import com.favn.firstaid.utils.NetworkStatus;
 
@@ -26,11 +25,9 @@ import java.io.File;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
-    private String folderName = "images";
-    private String filePath = "FileStorage";
-    File myInternalFile;
-    String timeSharedPreferences = "updated_time";
-    String updatedTimeKey = "updated_time";
+    FragmentManager fragmentManager;
+    Fragment fragment;
+    EmergencyFragment emergencyFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,7 +35,7 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
 
         //Initial Emergency Fragment
-        FragmentManager fragmentManager = getSupportFragmentManager();
+        fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction().replace(R.id.fragment_container, new EmergencyFragment()).commit();
         setTitle("Khẩn cấp");
 
@@ -55,35 +52,6 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
         navigationView.getMenu().getItem(0).setChecked(true);
-
-        // Check for update content
-
-        //TODO consider set time for check update(days)
-//        SharedPreferences sharedpreferences = getSharedPreferences(timeSharedPreferences, this
-//                .MODE_PRIVATE);
-//
-//        String lastUpdateTime = sharedpreferences.getString(updatedTimeKey, "");
-        // if last update time null save current date then check for update
-//        if(lastUpdateTime.equals("")) {
-//            Date currentDate = new Date();
-//            SharedPreferences.Editor editor = sharedpreferences.edit();
-//            editor.putString(updatedTimeKey, currentDate.toString());
-//        }
-//
-//
-//        long diff = currentDate.getTime() - d.getTime();
-//        Log.d("time_test", currentDate + "");
-//        Log.d("time_test", TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS) + "");
-//
-//        SharedPreferences.Editor editor = sharedpreferences.edit();
-//        editor.putString(updatedTimeKey, currentDate.toString());
-        if (NetworkStatus.checkNetworkEnable(this)) {
-//            UpdateChecking updateChecking = new UpdateChecking();
-//            updateChecking.execute("http://favn.rtsvietnam.com/injury");
-
-        }
-        createInternalFile();
-
 
     }
 
@@ -102,8 +70,8 @@ public class MainActivity extends AppCompatActivity
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
-        Fragment fragment = null;
-        FragmentManager fragmentManager = getSupportFragmentManager();
+
+        fragmentManager = getSupportFragmentManager();
         Class fragmentClass = null;
         if (id == R.id.nav_emergency) {
             fragmentClass = EmergencyFragment.class;
@@ -114,9 +82,6 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.nav_more) {
             fragmentClass = MoreFragment.class;
             setTitle("Thêm");
-        } else if (id == R.id.nav_notification) {
-            fragmentClass = NotificationFragment.class;
-            setTitle("Thông báo");
         } else if (id == R.id.nav_setting) {
             fragmentClass = SettingFragment.class;
             setTitle("Cài đặt");
@@ -137,11 +102,5 @@ public class MainActivity extends AppCompatActivity
         setTitle(item.getTitle());
         drawer.closeDrawer(GravityCompat.START);
         return true;
-    }
-
-    private void createInternalFile() {
-        ContextWrapper contextWrapper = new ContextWrapper(getApplicationContext());
-        File directory = contextWrapper.getDir(filePath, Context.MODE_PRIVATE);
-        myInternalFile = new File(directory , folderName);
     }
 }

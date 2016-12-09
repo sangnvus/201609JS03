@@ -1,32 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <group android:checkableBehavior="single">
+    <group
+        android:id="@+id/main_function_item"
+        android:checkableBehavior="single">
         <item
             android:id="@+id/nav_emergency"
             android:icon="@drawable/ic_emergency"
-            android:title="@string/emergency_fragment" />
+            android:title="@string/emergency_fragment"/>
         <item
             android:id="@+id/nav_learning"
             android:icon="@drawable/ic_learning"
-            android:title="@string/learning_fragment" />
+            android:title="@string/learning_fragment"/>
 
-        <item
-            android:id="@+id/nav_notification"
-            android:icon="@drawable/ic_notifications"
-            android:title="@string/switch_notification" />
-        <item
-            android:id="@+id/nav_setting"
-            android:icon="@drawable/ic_settings"
-            android:title="@string/setting_fragment" />
-        <item
-            android:id="@+id/nav_infor"
-            android:icon="@drawable/ic_about"
-            android:title="@string/infor_fragment" />
         <item
             android:id="@+id/nav_more"
             android:icon="@drawable/ic_more_horiz"
-            android:title="@string/more_fragment" />
+            android:title="@string/more_fragment"/>
+
+    </group>
+
+    <group
+        android:id="@+id/other_item"
+        android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_setting"
+            android:icon="@drawable/ic_settings"
+            android:title="@string/setting_fragment"/>
+        <item
+            android:id="@+id/nav_infor"
+            android:icon="@drawable/ic_about"
+            android:title="@string/infor_fragment"/>
     </group>
 
 </menu>

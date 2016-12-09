@@ -1,6 +1,6 @@
 package com.favn.firstaid.services.distanceMatrix;
 
-import com.favn.firstaid.models.Distance;
+import com.favn.firstaid.commons.Distance;
 import com.favn.firstaid.services.direction.Duration;
 
 /**

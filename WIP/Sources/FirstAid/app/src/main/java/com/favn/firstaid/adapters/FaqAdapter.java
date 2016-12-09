@@ -6,7 +6,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
-import com.favn.firstaid.models.Faq;
+import com.favn.firstaid.commons.Faq;
 
 import com.favn.firstaid.R;
 

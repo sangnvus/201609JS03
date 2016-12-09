@@ -105,5 +105,7 @@ public class Constants {
 
     public static final String INFO_SUCCESS_SENDING_INFORMATION = "Đã gửi thành công";
 
-
+    // type of Action when jump activity
+    public static final int FROM_EMERGENCY = 1;
+    public static final int FROM_LEARNING = 2;
 }
