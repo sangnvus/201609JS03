@@ -1,8 +1,6 @@
 package com.favn.firstaid.fragments;
 
 
-import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.content.res.TypedArray;
 import android.graphics.drawable.Drawable;
@@ -12,16 +10,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.BaseAdapter;
-import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.TextView;
 
-import com.favn.firstaid.activites.BannerDetail;
-import com.favn.firstaid.activites.NotificationActivity;
-import com.favn.firstaid.activites.QAActivity;
+
+import com.favn.firstaid.activites.CourseActivity;
 import com.favn.firstaid.R;
-
+import com.favn.firstaid.activites.QAActivity;
+import com.favn.firstaid.adapters.ItemsListAdapter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,75 +25,13 @@ import java.util.List;
  */
 public class MoreFragment extends Fragment {
 
+    private ItemsListAdapter myItemsListAdapter;
+    private List<ItemsListAdapter.Item> items;
     private int InjId = 0;
+
     public MoreFragment() {
         // Required empty public constructor
     }
-
-    public class Item {
-        Drawable ItemDrawable;
-        String ItemString;
-        Item(Drawable drawable, String t){
-            ItemDrawable = drawable;
-            ItemString = t;
-        }
-    }
-
-    static class ViewHolder {
-        ImageView icon;
-        TextView text;
-    }
-
-    public class ItemsListAdapter extends BaseAdapter {
-
-        private Context context;
-        private List<Item> list;
-
-        ItemsListAdapter(Context c, List<Item> l){
-            context = c;
-            list = l;
-        }
-
-        @Override
-        public int getCount() {
-            return list.size();
-        }
-
-        @Override
-        public Object getItem(int position) {
-            return list.get(position);
-        }
-
-        @Override
-        public long getItemId(int position) {
-            return position;
-        }
-
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-            View rowView = convertView;
-
-            // reuse views
-            if (rowView == null) {
-                LayoutInflater inflater = ((Activity) context).getLayoutInflater();
-                rowView = inflater.inflate(R.layout.target_item, null);
-
-                ViewHolder viewHolder = new ViewHolder();
-                viewHolder.icon = (ImageView) rowView.findViewById(R.id.rowImageView);
-                viewHolder.text = (TextView) rowView.findViewById(R.id.rowTextView);
-                rowView.setTag(viewHolder);
-            }
-
-            ViewHolder holder = (ViewHolder) rowView.getTag();
-            holder.icon.setImageDrawable(list.get(position).ItemDrawable);
-            holder.text.setText(list.get(position).ItemString);
-
-            return rowView;
-        }
-    }
-
-    List<Item> items;
-    ItemsListAdapter myItemsListAdapter;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -118,18 +51,10 @@ public class MoreFragment extends Fragment {
                     Intent intent = new Intent(getActivity(), QAActivity.class);
                     intent.putExtra("id", InjId);
                     startActivity(intent);
-                }
-                else if (position == 1) {
-                    Intent intent = new Intent(getActivity(), NotificationActivity.class);
+                } else if (position == 1) {
+                    Intent intent = new Intent(getActivity(), CourseActivity.class);
                     startActivity(intent);
-                }
-                else if (position == 2) {
-                    Intent intent = new Intent(getActivity(), BannerDetail.class);
-                    startActivity(intent);
-                }
-                else if (position == 3) {
-//                    Intent intent = new Intent(getActivity(), ShareActivity.class);
-//                    startActivity(intent);
+                } else if (position == 2) {
                     shareIt();
                 }
             }
@@ -149,16 +74,17 @@ public class MoreFragment extends Fragment {
         startActivity(Intent.createChooser(sharingIntent, "Chia sẻ ứng dụng"));
     }
 
-    private void initItems(){
-        items = new ArrayList<Item>();
+    private void initItems() {
+
+        items = new ArrayList<ItemsListAdapter.Item>();
 
         TypedArray arrayDrawable = getResources().obtainTypedArray(R.array.more_icon);
         TypedArray arrayText = getResources().obtainTypedArray(R.array.more_item);
 
-        for(int i=0; i<arrayDrawable.length(); i++){
+        for (int i = 0; i < arrayDrawable.length(); i++) {
             Drawable d = arrayDrawable.getDrawable(i);
             String s = arrayText.getString(i);
-            Item item = new Item(d, s);
+            ItemsListAdapter.Item item = new ItemsListAdapter().new Item(d, s);
             items.add(item);
         }
 

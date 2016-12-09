@@ -76,7 +76,7 @@
             android:label="@string/map_title"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".activites.InstructionDetail"
+            android:name=".activites.InstructionActivity"
             android:theme="@style/AppTheme.NoActionBar"
             android:screenOrientation="portrait"/>
         <activity
@@ -84,32 +84,18 @@
             android:label="@string/qa_title"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".activites.NotificationActivity"
-            android:label="@string/notification_title"
-            android:screenOrientation="portrait"/>
-        <activity
             android:name=".activites.FaqActivity"
             android:label="@string/faq_title"
             android:screenOrientation="portrait"/>
 
         <activity
-            android:name=".activites.BannerDetail"
+            android:name=".activites.CourseActivity"
             android:label="@string/banner_title"
             android:screenOrientation="portrait"/>
 
         <service
-            android:name=".models.FetchAddressIntentService"
+            android:name=".services.FetchAddressIntentService"
             android:exported="false" />
-        <!-- <receiver -->
-        <!-- android:name="com.favn.firstaid.Models.Common.NetworkChangeReceiver" -->
-        <!-- android:label="NetworkChangeReceiver" > -->
-        <!-- <intent-filter> -->
-        <!-- <action android:name="android.net.conn.CONNECTIVITY_CHANGE" /> -->
-        <!-- <action android:name="android.net.wifi.WIFI_STATE_CHANGED" /> -->
-        <!-- </intent-filter> -->
-        <!-- </receiver> -->
-
-        <!-- share on facebook -->
 
     </application>
 

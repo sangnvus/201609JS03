@@ -1,7 +1,6 @@
 package com.favn.firstaid.fragments;
 
 
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.EditTextPreference;
@@ -9,15 +8,16 @@ import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.preference.SwitchPreference;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 
 import com.favn.firstaid.R;
-import com.favn.firstaid.activites.InstructionDetail;
 
 
 /**
  * A simple {@link Fragment} subclass.
  */
 public class SettingFragment extends Fragment {
+    String phoneNumber;
 
     public SettingFragment() {
         // Required empty public constructor
@@ -48,10 +48,6 @@ public class SettingFragment extends Fragment {
             SwitchPreference sendInformation = (SwitchPreference) findPreference("switch_sending_information");
             boolean checked = sendInformation.isEnabled();
             if(checked){
-            Intent intent1 = new Intent(getActivity(), InstructionDetail.class);
-            intent1.putExtra("phoneNo", phoneNumber);
-            Intent intent2 = new Intent(getActivity(), EmergencyFragment.class);
-            intent2.putExtra("phoneNo", phoneNumber);
 
             }
         }
@@ -81,9 +77,19 @@ public class SettingFragment extends Fragment {
                 pref.setSummary(R.string.summary_switch_sending_phone_number);
                 if(phoneNumber != null){
                     pref.setSummary(phoneNumber);
+                } else {
+                    pref.setSummary(null);
+                    Preference pref1 = findPreference("switch_sending_information");
+                    pref1.setDefaultValue(false);
                 }
+                Log.d("pref_test", phoneNumber);
             }
         }
     }
 
+    @Override
+    public void onDetach() {
+        super.onDetach();
+
+    }
 }

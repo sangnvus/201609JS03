@@ -7,7 +7,7 @@
               android:layout_height="match_parent"
               android:orientation="vertical"
               app:layout_behavior="@string/appbar_scrolling_view_behavior"
-              tools:context="com.favn.firstaid.activites.InstructionDetail"
+              tools:context="com.favn.firstaid.activites.InstructionActivity"
               tools:showIn="@layout/activity_instruction_detail">
 
     <include layout="@layout/layout_sending_status"/>

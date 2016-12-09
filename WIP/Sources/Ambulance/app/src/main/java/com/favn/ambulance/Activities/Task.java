@@ -28,16 +28,16 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.favn.ambulance.direction.DirectionFinder;
-import com.favn.ambulance.direction.DirectionFinderListener;
-import com.favn.ambulance.direction.Leg;
+import com.favn.ambulance.services.direction.DirectionFinder;
+import com.favn.ambulance.services.direction.DirectionFinderListener;
+import com.favn.ambulance.services.direction.Leg;
 import com.favn.ambulance.models.Ambulance;
-import com.favn.ambulance.models.Commons.SharedPreferencesData;
-import com.favn.ambulance.networkUtil.NetworkStatus;
-import com.favn.ambulance.locationUtil.LocationChangeListener;
-import com.favn.ambulance.locationUtil.LocationFinder;
-import com.favn.ambulance.locationUtil.LocationStatus;
-import com.favn.ambulance.models.Commons.Constants;
+import com.favn.ambulance.utils.SharedPreferencesData;
+import com.favn.ambulance.utils.NetworkStatus;
+import com.favn.ambulance.services.location.LocationChangeListener;
+import com.favn.ambulance.services.location.LocationFinder;
+import com.favn.ambulance.services.location.LocationStatus;
+import com.favn.ambulance.utils.Constants;
 import com.favn.mikey.ambulance.R;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
@@ -113,7 +113,7 @@ public class Task extends AppCompatActivity implements OnMapReadyCallback,
         // Get ambulance info from SharedPreferences
         ambulance = SharedPreferencesData.getAmbulanceData(Constants.SPREFS_AMBULANCE_INFO_KEY);
 
-        Log.d("ambulance_data", ambulance.getUser_id() + "");
+//        Log.d("ambulance_data", ambulance.getUser_id() + "");
 
     }
 

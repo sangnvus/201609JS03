@@ -44,6 +44,8 @@ dependencies {
     compile 'com.android.support:cardview-v7:24.2.1'
     compile 'com.android.support:support-v4:24.2.1'
     testCompile 'junit:junit:4.12'
+    testCompile "org.robolectric:robolectric:3.1.4"
+    testCompile "org.robolectric:shadows-multidex:3.0"
 }
 
 // Apply plugin google messaging service - Kienmt : 11/18/2016

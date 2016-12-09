@@ -10,8 +10,8 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.favn.ambulance.models.Commons.Constants;
-import com.favn.ambulance.models.Commons.UserSender;
+import com.favn.ambulance.utils.Constants;
+import com.favn.ambulance.models.UserSender;
 import com.favn.mikey.ambulance.R;
 
 public class MainActivity extends AppCompatActivity {

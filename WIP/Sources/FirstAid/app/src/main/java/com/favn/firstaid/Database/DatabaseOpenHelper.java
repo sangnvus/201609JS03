@@ -3,16 +3,18 @@ package com.favn.firstaid.database;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.graphics.PointF;
 import android.util.Log;
 
-import com.favn.firstaid.models.Faq;
-import com.favn.firstaid.models.HealthFacility;
-import com.favn.firstaid.models.Injury;
-import com.favn.firstaid.models.Instruction;
+import com.favn.firstaid.commons.Faq;
+import com.favn.firstaid.commons.HealthFacility;
+import com.favn.firstaid.commons.Injury;
+import com.favn.firstaid.commons.Instruction;
+import com.favn.firstaid.utils.StringConverter;
 
 import java.io.FileOutputStream;
 import java.io.InputStream;
@@ -25,6 +27,7 @@ import java.util.List;
  */
 
 public class DatabaseOpenHelper extends SQLiteOpenHelper {
+    private static DatabaseOpenHelper sInstance;
     public static String DB_PATH = "/data/data/com.favn.firstaid/databases/";
     public static String DB_NAME = "favn_ver4.1.db";
     public static String TABLE_NAME_INJURIES = "injuries";
@@ -38,7 +41,18 @@ public class DatabaseOpenHelper extends SQLiteOpenHelper {
     private Context mContext;
     private String tableName;
 
-    public DatabaseOpenHelper(Context context) {
+
+    public static synchronized DatabaseOpenHelper getInstance(Context context) {
+
+        // Use the application context, which will ensure that you
+        // don't accidentally leak an Activity's context.
+        if (sInstance == null) {
+            sInstance = new DatabaseOpenHelper(context.getApplicationContext());
+        }
+        return sInstance;
+    }
+
+    private DatabaseOpenHelper(Context context) {
         super(context, DB_NAME, null, DB_VERSION);
         this.mContext = context;
     }
@@ -184,9 +198,9 @@ public class DatabaseOpenHelper extends SQLiteOpenHelper {
         List<Instruction> instructionList = new ArrayList<>();
         openDatabase();
 
-        if(emergency){
+        if (emergency) {
             tableName = TABLE_NAME_INSTRUCTIONS;
-        }else {
+        } else {
             tableName = TABLE_NAME_LEARNING_INSTRUCTIONS;
         }
 
@@ -201,7 +215,7 @@ public class DatabaseOpenHelper extends SQLiteOpenHelper {
             String audio = cursor.getString(6);
 
 
-            if(emergency){
+            if (emergency) {
                 boolean isMakeCall = cursor.getInt(4) == 1;
                 instruction = new Instruction(injuryId, step, content, isMakeCall, image, audio);
                 instructionList.add(instruction);
@@ -257,7 +271,7 @@ public class DatabaseOpenHelper extends SQLiteOpenHelper {
     }
 
     /**
-     *  Start CRUD FAQs
+     * Start CRUD FAQs
      */
 
     // Get Faqs list
@@ -281,5 +295,101 @@ public class DatabaseOpenHelper extends SQLiteOpenHelper {
         return faqList;
     }
     // End CRUD FAQs
+
+    // FTS
+    //Create a FTS3 Virtual Table for fast searches
+    private static final String FTS_VIRTUAL_TABLE = "search_injuries";
+    private static final String INJURY_ID = "id";
+    private static final String INJURY_SEARCH_SOURCE = "injury_search_source";
+
+    private void createFTSTable() {
+        if (!isFTSTableExists(FTS_VIRTUAL_TABLE)) {
+            String query = "CREATE VIRTUAL TABLE " + FTS_VIRTUAL_TABLE + " USING fts3(" +
+                    INJURY_ID + ", " + INJURY_SEARCH_SOURCE + ");";
+            openDatabase();
+            mDatabase.execSQL(query);
+            closeDatabase();
+            insertDataToFTSTable();
+        }
+    }
+
+    public boolean isFTSTableExists(String tableName) {
+        Cursor cursor = null;
+        boolean tableExists = false;
+        try {
+            cursor = mDatabase.query(tableName, null, null, null, null, null, null);
+            tableExists = true;
+        } catch (Exception e) {
+        }
+        return tableExists;
+    }
+
+    private void insertDataToFTSTable() {
+        List<Injury> sourceList = getListInjury();
+        String stringItem = null;
+        String query = null;
+        openDatabase();
+        for (Injury injury : sourceList) {
+            if (injury.getSymptom() != null) {
+                stringItem = injury.getInjury_name() + " " + injury.getSymptom();
+            } else {
+                stringItem = injury.getInjury_name();
+            }
+
+            String str = StringConverter.unAccent(stringItem.toLowerCase()).replace("/","");
+            Log.d("test_db", str);
+            query = "INSERT INTO " + FTS_VIRTUAL_TABLE + " (id, injury_search_source) VALUES" +
+                    "(" + injury.getId() + ", '"+ str + "')";
+            mDatabase.execSQL(query);
+        }
+
+        closeDatabase();
+    }
+
+    public Cursor searchInjury(String inputText) throws SQLException {
+        createFTSTable();
+        String queryMatchSource = "SELECT id FROM " + FTS_VIRTUAL_TABLE + " WHERE injury_search_source " +
+                "MATCH" + " '" + inputText + "'";
+        String queryLikeSource = "SELECT id FROM " + FTS_VIRTUAL_TABLE +" WHERE " +
+                "injury_search_source LIKE '" + inputText + "%' OR " +
+                "injury_search_source LIKE '%" + inputText + "' OR injury_search_source LIKE '%" + inputText
+                + "%' OR injury_search_source LIKE '" + inputText + "'";
+
+        String query = "SELECT *" +
+                " FROM " + TABLE_NAME_INJURIES +
+                " WHERE id IN (" + queryMatchSource +
+                " UNION " + queryLikeSource +
+                ")";
+
+        openDatabase();
+        Cursor mCursor = mDatabase.rawQuery(query, null);
+
+        if (mCursor != null) {
+            mCursor.moveToFirst();
+        }
+        closeDatabase();
+        return mCursor;
+
+    }
+
+    public List<Injury> getResultListInjury(String inputText) {
+        Injury injury = null;
+        List<Injury> injuryListList = new ArrayList<>();
+        openDatabase();
+        Cursor cursor = searchInjury(StringConverter.unAccent(inputText.toLowerCase()));
+        cursor.moveToFirst();
+        while (!cursor.isAfterLast()) {
+            int id = cursor.getInt(0);
+            String injuryName = cursor.getString(1);
+            String injurySymptom = cursor.getString(2);
+            String injuryImage = cursor.getString(4);
+            injury = new Injury(id, injuryName, injurySymptom, injuryImage);
+            injuryListList.add(injury);
+            cursor.moveToNext();
+        }
+        cursor.close();
+        closeDatabase();
+        return injuryListList;
+    }
 
 }

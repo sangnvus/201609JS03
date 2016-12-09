@@ -3,7 +3,6 @@ package com.favn.firstaid.activites;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -12,15 +11,15 @@ import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.Spinner;
 
-import com.favn.firstaid.adapter.InjuryAdapter;
+import com.favn.firstaid.adapters.InjuryAdapter;
 import com.favn.firstaid.database.DatabaseOpenHelper;
-import com.favn.firstaid.models.Commons.QuestionSender;
-import com.favn.firstaid.models.Injury;
+import com.favn.firstaid.commons.QuestionSender;
+import com.favn.firstaid.commons.Injury;
 import com.favn.firstaid.R;
 
 import java.util.List;
 
-import static com.favn.firstaid.models.Commons.Constants.SPINNER_INJURY;
+import static com.favn.firstaid.utils.Constants.SPINNER_INJURY;
 
 public class QAActivity extends AppCompatActivity {
 
@@ -60,7 +59,7 @@ public class QAActivity extends AppCompatActivity {
         urlAddress = "http://104.199.149.193/question";
 
         // Init dbHelper object
-        dbHelper = new DatabaseOpenHelper(this);
+        dbHelper = DatabaseOpenHelper.getInstance(this);
         dbHelper.createDatabase();
         dbHelper.openDatabase();
 
