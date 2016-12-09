@@ -11,6 +11,11 @@
 |
 */
 
+
+Route::get('write', 'DispatcherController@writeToFirebase');
+
+
+
 Route::get('/', function () {
    return view('login');
 });
@@ -35,7 +40,7 @@ Route::post('callerUpdate', 'CallerController@update');
 
 Route::get('getCaller/{id}', 'CallerController@returnCallerById');
 
-
+Route::get('getdistance', 'DispatcherController@dispatchACaller');
 
 
 // Call controler show login view
@@ -57,6 +62,11 @@ Route::get('accessdenied', function(){
 
 // Autocomple search question
  Route::get('autocompletePhone', ['as' => 'autocompletePhone', 'uses' => 'CallerController@autocomplete']);
+
+
+// Dispatcher route
+ Route::post('dispatch', 'DispatcherController@handleDispatch');
+
 
 
 // Admin route group
