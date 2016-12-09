@@ -16,6 +16,7 @@ import com.favn.firstaid.activites.CourseActivity;
 import com.favn.firstaid.activites.InstructionActivity;
 import com.favn.firstaid.adapters.InjuryAdapter;
 import com.favn.firstaid.database.DatabaseOpenHelper;
+import com.favn.firstaid.utils.Constants;
 import com.favn.firstaid.utils.Sort;
 import com.favn.firstaid.commons.Injury;
 import com.favn.firstaid.R;
@@ -33,7 +34,6 @@ public class LearningFragment extends Fragment implements AdapterView.OnItemClic
     private DatabaseOpenHelper dbHelper;
     private ListView listView;
     private List<Injury> mInjuryList;
-    public static final int FROM_LEARNING = 2;
 
     public LearningFragment() {
         // Required empty public constructor
@@ -88,7 +88,7 @@ public class LearningFragment extends Fragment implements AdapterView.OnItemClic
         Intent intent = new Intent(getActivity(), InstructionActivity.class);
         intent.putExtra("id", injuryId);
         intent.putExtra("name", injuryName);
-        intent.putExtra("typeOfAction", FROM_LEARNING);
+        intent.putExtra("typeOfAction", Constants.FROM_LEARNING);
         startActivity(intent);
     }
 

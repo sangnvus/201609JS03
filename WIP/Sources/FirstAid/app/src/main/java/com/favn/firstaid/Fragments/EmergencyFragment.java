@@ -61,7 +61,6 @@ public class EmergencyFragment extends Fragment implements AdapterView.OnItemCli
     private DatabaseOpenHelper dbHelper;
     private ListView listView;
     private List<Injury> mInjuryList;
-    public static final int FROM_EMERGENCY = 1;
 
     // Sending information functionality
     private boolean isAllowedSendInformation;
@@ -210,7 +209,7 @@ public class EmergencyFragment extends Fragment implements AdapterView.OnItemCli
         Intent intent = new Intent(getActivity(), InstructionActivity.class);
         intent.putExtra("id", injuryId);
         intent.putExtra("name", injuryName);
-        intent.putExtra("typeOfAction", FROM_EMERGENCY);
+        intent.putExtra("typeOfAction", Constants.FROM_EMERGENCY);
         startActivity(intent);
     }
 

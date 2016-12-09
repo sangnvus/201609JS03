@@ -99,7 +99,7 @@ public class InstructionActivity extends AppCompatActivity implements LocationCh
         getSupportActionBar().setTitle(name);
 
 
-        isEmergency = (typeOfAction == 1) ? true : false;
+        isEmergency = (typeOfAction == Constants.FROM_EMERGENCY) ? true : false;
         listView = (ListView) findViewById(R.id.listview_instruction);
         dbHelper = DatabaseOpenHelper.getInstance(this);
         isLocationEnable = false;
