@@ -36,6 +36,15 @@
 
 </head>
 <body>
+    @if(session('noti'))
+           <input type="text" id="sessionNoti" name="sessionNoti" value="{{ session('noti') }}" hidden>
+           <input type="text" id="sessionCaller" name="sessionCaller" value="{{ session('caller') }}" hidden>
+    @endif
+    @if(session('ambulance'))
+        <input type="text" id="sessionAmbulance" name="sessionNoti" value="{{ session('ambulance') }}" hidden>
+        <input type="text" id="sessionCaller" name="sessionCaller" value="{{ session('caller') }}" hidden>
+    @endif
+
     <div class="wrapper">
         <!-- sidebar left -->
         @include('dispatcher.layout.sidebarleft')
@@ -103,6 +112,21 @@ async defer></script>
     });
 </script>
     
+
+ <!-- Get list ambulance and update to firebase -->
+    @if(session('noti'))
+        <script type="text/javascript">
+            checkNoti();
+        </script> 
+    @endif
+
+     @if(session('ambulance'))
+        <script type="text/javascript">
+
+        </script>
+     @endif
+
+
 </html>
 
 

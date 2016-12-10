@@ -1,3 +1,48 @@
+function checkNoti() {
+	var sessionNoti = document.getElementById("sessionNoti").value;
+
+	switch(sessionNoti) {
+		case 'noAmbulance':
+			showAlertBox('hết xe cứu thương !');
+			//var sessionCaller = document.getElementById("sessionCaller").value;
+			//alert(sessionCaller);
+			break;
+		case 'noCaller':
+			showAlertBox('không tồn tại người gọi !');
+			break;
+	}
+
+}
+
+function handlerReturnAmbulance() {
+	if(document.getElementById("sessionAmbulance") != null) {
+		var sessionAmbulance = document.getElementById("sessionAmbulance").value;
+		var sessionCaller = document.getElementById("sessionCaller").value;
+	}
+	if(sessionAmbulance != null) {
+		readyAmbulance = JSON.parse(sessionAmbulance);
+		caller = JSON.parse(sessionCaller);
+		pendingAmbulance(readyAmbulance, function(status) {
+			if(status == AMBULANCE_STATUS_BUZY) {
+				showNoti(NOTI_TYPE_SUCCESS, 'Đã nối xe cho người gọi');
+				closeNotiBox();
+				drawCallerAmbulancePatch(readyAmbulance, caller);
+				processingCaller.push(caller);
+				caller = null;
+			} else if(status == AMBULANCE_STATUS_PROBLEM) {
+				closeNotiBox();
+				showConfirmBox('xe gặp sự cố, nối lại', function(result) {
+					if(result) {
+						onDispatchClick();
+					} else {
+						showAlertBox('Đã hủy');
+					}
+
+				});
+			}
+		});
+	}	
+}
 
 function onCancelDispatchClick() {
 	if(caller != null) {
@@ -36,9 +81,7 @@ function iniCallerForm(caller) {
 	geocodeLatLng(geocoder, map, caller.latitude + ',' + caller.longitude, function(address) {
 		$('#address').val(address);
 	});
-    $('#latitude').val(caller.latitude);
-    $('#longitude').val(caller.longitude);
-     
+    $('#caller_id').val(caller.id);
 }
 
 function onDispatchClick() {
@@ -46,7 +89,11 @@ function onDispatchClick() {
 	if(caller == null) {
 		showAlertBox('Chưa khởi tạo trường hợp khẩn cấp');
 	} else {
-		getListAmbulanceAndDispatch();		
+		$( "#form_caller" ).submit();
+
+		// -----------------
+		// TODO :
+		//getListAmbulanceAndDispatch();		
 	}
 }
 
@@ -201,6 +248,18 @@ function sendTaskToAmbulance(readyAmbulance, callback) {
 
 	clearCallerForm();
 
+	// Handle when a caller change
+	database.ref('ambulances/' + readyAmbulance.id).on('child_changed', snap => {
+		status = snap.val();
+		callback(status);
+	});
+}
+
+function pendingAmbulance(readyAmbulance, callback) {
+	var database = firebase.database();
+	showDialogPending('Đang đợi nối xe...', function(result) {
+
+	});	
 	// Handle when a caller change
 	database.ref('ambulances/' + readyAmbulance.id).on('child_changed', snap => {
 		status = snap.val();

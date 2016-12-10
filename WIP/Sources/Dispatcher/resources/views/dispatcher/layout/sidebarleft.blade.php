@@ -9,8 +9,7 @@
 				Điều phối
 			</a>
 		</div>
-		<form action="expert/injury/addinjury" method="POST" enctype="multipart/form-data">
-			<input type="hidden" name="_token" value="{{ csrf_token() }}"/>
+		
 			<ul class="nav">
 			
 				<label style="padding-left: 10px;">Số điện thoại</label>
@@ -46,20 +45,23 @@
 					</div>
 				</li>
 
+				<input id="status" name="status" type="hidden">
 				<!-- caller location -->
 				<input id="latitude" name="latitude" type="hidden">
 				<input id="longitude" name="longitude" type="hidden">
+				<form id="form_caller" action="dispatch" method="POST" enctype="multipart/form-data">
+						<input type="hidden" name="_token" value="{{ csrf_token() }}"/>
+						<input id="caller_id" name="caller_id" type="hidden">
+						<li style="padding: 10px;">
+							<div style="align-content: center;">
+							<button style="background-color: green; color: white; float: right; width: 100px" type="button" class="btn btn-default" onclick="onDispatchClick()">Điều phối xe</button>
+								<button style="background-color: red; color: white; float: right; width: 100px" type="button" class="btn btn-default" onclick="onCancelDispatchClick()">Hủy</button>
+							</div>
+						</li>
+					
+				</form>
 
-				<li style="padding: 10px;">
-					<div style="align-content: center;">
-					<button style="background-color: green; color: white; float: right; width: 100px" type="button" class="btn btn-default" onclick="onDispatchClick()">Điều phối xe</button>
-						<button style="background-color: red; color: white; float: right; width: 100px" type="button" class="btn btn-default" onclick="onCancelDispatchClick()">Hủy</button>
-					</div>
-				</li>
-			</ul>
-		</form>
-
-		
+		</ul>
 
 	</div>
 </div>
