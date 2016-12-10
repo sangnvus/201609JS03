@@ -200,7 +200,6 @@ public class WaitingScreen extends AppCompatActivity implements LocationChangeLi
                 nm.notify(id, notification.build());
                 break;
             case R.id.application_info:
-                //TODO move to about acivity
                 startActivity(new Intent(this, InformationScreen.class));
                 break;
         }
@@ -282,29 +281,29 @@ public class WaitingScreen extends AppCompatActivity implements LocationChangeLi
 
     private void createTaskDialog() {
         new AlertDialog.Builder(this)
-                .setTitle("Nhiệm vụ mới")
-                .setMessage("Ấn 'Nhận' để nhận nhiệm vụ hoặc ấn 'Hủy' để hủy nhiệm vụ.")
+                .setTitle("Nhiệm vụ")
+                .setMessage("Có nhiệm vụ")
                 .setNegativeButton("Hủy", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        cancelTask();
+                        disclineTask();
                     }
                 })
                 .setPositiveButton("Nhận", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        accessTask();
+                        acceptTask();
                     }
                 })
                 .create()
                 .show();
     }
 
-    private void cancelTask() {
+    private void disclineTask() {
         Toast.makeText(this, "Hủy rồi nhé !", Toast.LENGTH_LONG).show();
     }
 
-    private void accessTask() {
+    private void acceptTask() {
         database = FirebaseDatabase.getInstance();
         dbRef = database.getReference("ambulances/" + ambulance.getId());
         dbRef.child("status").setValue("buzy");

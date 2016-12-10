@@ -110,7 +110,7 @@ public class Task extends AppCompatActivity implements OnMapReadyCallback,
         intentFilter.addAction(Constants.INTENT_FILTER_CONNECTIVITY_CHANGE);
 
         // showing caller location
-        destinationLanLng = new LatLng(21.011371, 105.525721);
+        destinationLanLng = new LatLng(20.989200, 105.799706);
 
         // Get ambulance info from SharedPreferences
         ambulance = SharedPreferencesData.getAmbulanceData(Constants.SPREFS_AMBULANCE_INFO_KEY);
@@ -221,7 +221,7 @@ public class Task extends AppCompatActivity implements OnMapReadyCallback,
         mGoogleMap.setLatLngBoundsForCameraTarget(VIETNAM);
         mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(VIETNAM.getCenter(), Constants.ZOOM_LEVEL_5));
 
-        createMarker(destinationLanLng, "caller address");
+        createMarker(destinationLanLng, "Nguyễn Trãi, Hà Nội");
         zoomDestinationLocation();
     }
 
@@ -289,7 +289,7 @@ public class Task extends AppCompatActivity implements OnMapReadyCallback,
                 .setTitle("Kết nối Internet")
                 .setMessage("Vào cài đặt Internet")
                 .setNegativeButton(android.R.string.cancel, null) // dismisses by default
-                .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                .setPositiveButton("CÀI ĐẶT", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         Intent intent = new Intent(Settings.ACTION_WIRELESS_SETTINGS);
@@ -320,8 +320,7 @@ public class Task extends AppCompatActivity implements OnMapReadyCallback,
 
     private void zoomCurrentLocation() {
         if (mCurrentLocation != null) {
-            goToLocationZoom(new LatLng(mCurrentLocation.getLatitude(), mCurrentLocation
-                    .getLongitude()), Constants.ZOOM_LEVEL_15);
+            goToLocationZoom(getLatLng(mCurrentLocation), Constants.ZOOM_LEVEL_15);
         }
     }
 
@@ -329,6 +328,20 @@ public class Task extends AppCompatActivity implements OnMapReadyCallback,
         if (destinationLanLng != null) {
             goToLocationZoom(destinationLanLng, Constants.ZOOM_LEVEL_15);
         }
+    }
+
+    private void showRouteOverview() {
+        LatLngBounds.Builder builder = new LatLngBounds.Builder();
+
+        builder.include(getLatLng(mCurrentLocation));
+        builder.include(destinationLanLng);
+        LatLngBounds bounds = builder.build();
+        mGoogleMap.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, Constants
+                .ZOOM_LEVEL_15));
+    }
+
+    private LatLng getLatLng(Location location) {
+        return new LatLng(location.getLatitude(), location.getLongitude());
     }
 
     private void reportProblem() {
@@ -368,6 +381,7 @@ public class Task extends AppCompatActivity implements OnMapReadyCallback,
 
     @Override
     public void onDirectionFinderSuccess(Leg leg) {
+        removePolylinePath();
         PolylineOptions polylineOptions = new PolylineOptions().
                 geodesic(true)
                 .color(getResources().getColor(R.color.colorBlue))
@@ -378,6 +392,7 @@ public class Task extends AppCompatActivity implements OnMapReadyCallback,
 
         polylinePaths = mGoogleMap.addPolyline(polylineOptions);
         updateDirectionUI(leg.getDistance().getText(), leg.getDuration().getText());
+        showRouteOverview();
     }
 
     private void manageDirectionUI(boolean isShow) {
@@ -435,15 +450,23 @@ public class Task extends AppCompatActivity implements OnMapReadyCallback,
     }
 
     private void clearDirection() {
+        removePolylinePath();
         directionFinder.stop();
         manageDirectionUI(false);
+
+    }
+
+    private void removePolylinePath() {
         if (polylinePaths != null) {
             polylinePaths.remove();
         }
     }
 
-
     // create this method 10/12
+
+    private void createFinishTaskDialog() {
+
+    }
     private void goBackToWaitingActivity(boolean status) {
         Intent intent = new Intent(this, WaitingScreen.class);
         intent.putExtra("isReady", status);
