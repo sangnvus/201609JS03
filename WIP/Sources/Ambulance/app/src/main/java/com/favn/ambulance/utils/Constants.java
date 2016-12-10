@@ -43,4 +43,7 @@ public class Constants {
     public static  String STATUS_BUZY = "buzy";
     public static  String STATUS_TAKED = "taked";
 
+    // Request check setting
+    public static final int REQUEST_CHECK_SETTINGS = 0x1;
+
 }

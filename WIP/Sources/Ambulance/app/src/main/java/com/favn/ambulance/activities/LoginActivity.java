@@ -14,7 +14,7 @@ import com.favn.ambulance.utils.Constants;
 import com.favn.ambulance.models.UserSender;
 import com.favn.mikey.ambulance.R;
 
-public class MainActivity extends AppCompatActivity {
+public class LoginActivity extends AppCompatActivity {
     private String urlAddress;
     private ImageView bg;
     private EditText etUsername;
@@ -67,7 +67,7 @@ public class MainActivity extends AppCompatActivity {
         String password = etPass.getText().toString();
 
         UserSender us = new UserSender();
-        us.setContext(MainActivity.this);
+        us.setContext(LoginActivity.this);
         us.setUrlAddress(urlAddress);
         us.setUsername(username);
         us.setPassword(password);
@@ -91,8 +91,5 @@ public class MainActivity extends AppCompatActivity {
         return true;
     }
 
-    @Override
-    public void onBackPressed() {
-    }
 
 }

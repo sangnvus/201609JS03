@@ -20,7 +20,9 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.CompoundButton;
+import android.widget.LinearLayout;
 import android.widget.Switch;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.favn.ambulance.services.location.LocationChangeListener;
@@ -48,11 +50,15 @@ public class WaitingScreen extends AppCompatActivity implements LocationChangeLi
     private LocationFinder locationFinder;
     private boolean isLocationEnable;
     private boolean isNetworkEnable;
-    IntentFilter intentFilter;
-    protected static final int REQUEST_CHECK_SETTINGS = 0x1;
-    Ambulance ambulance;
-    FirebaseDatabase database;
-    DatabaseReference dbRef;
+    private IntentFilter intentFilter;
+    private boolean isReady;
+
+    private Ambulance ambulance;
+    private FirebaseDatabase database;
+    private DatabaseReference dbRef;
+    private Intent intent;
+
+    private Switch swReady;
 
     /**
      * ATTENTION: This was auto-generated to implement the App Indexing API.
@@ -63,6 +69,10 @@ public class WaitingScreen extends AppCompatActivity implements LocationChangeLi
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_waiting_screen);
+
+        //Get status swReady from LoginActivity
+        //isReady = intent.getExtras().getBoolean("isReady");
+        isReady = true;
 
         notification = new NotificationCompat.Builder(this);
         notification.setAutoCancel(true);
@@ -80,7 +90,7 @@ public class WaitingScreen extends AppCompatActivity implements LocationChangeLi
         // Init instant firebase database - KienMT
 //        database = FirebaseDatabase.getInstance();
         // Init firebase database reference
-   //     DatabaseReference dbRef = database.getReference("ambulances");
+        //     DatabaseReference dbRef = database.getReference("ambulances");
 //        dbRef.addChildEventListener(new ChildEventListener() {
 //            @Override
 //            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
@@ -138,8 +148,16 @@ public class WaitingScreen extends AppCompatActivity implements LocationChangeLi
         // See https://g.co/AppIndexing/AndroidStudio for more information.
         client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
 
-        Switch ready = (Switch) findViewById(R.id.switch_ready);
-        ready.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        swReady = (Switch) findViewById(R.id.switch_ready);
+
+        if(isReady) {
+            swReady.setChecked(true);
+            setLayoutNotReadyUI(false);
+        } else {
+            swReady.setChecked(false);
+            setLayoutNotReadyUI(true);
+        }
+        swReady.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
@@ -224,7 +242,7 @@ public class WaitingScreen extends AppCompatActivity implements LocationChangeLi
     @Override
     public void createLocationSettingDialog(Status status) {
         try {
-            status.startResolutionForResult(WaitingScreen.this, REQUEST_CHECK_SETTINGS);
+            status.startResolutionForResult(WaitingScreen.this, Constants.REQUEST_CHECK_SETTINGS);
         } catch (IntentSender.SendIntentException e) {
             //PendingIntent unable to execute request.
         }
@@ -331,7 +349,7 @@ public class WaitingScreen extends AppCompatActivity implements LocationChangeLi
     // Handle update ambulance when change status - added by KienMT : 12/4/2016
     public void updateAmbulance(String type) {
         DatabaseReference dbRef = database.getReference("ambulances/" + ambulance.getId());
-        if(type.equals(Constants.STATUS_READY)) {
+        if (type.equals(Constants.STATUS_READY)) {
             dbRef.child("caller_taking_id").setValue(null);
         }
         if (mCurrentLocation != null) {
@@ -341,14 +359,26 @@ public class WaitingScreen extends AppCompatActivity implements LocationChangeLi
         dbRef.child("status").setValue(type);
     }
 
-    //On switch ready
-    public void OnSwitch(){
-        Toast.makeText(this, "sẵn sàng nè", Toast.LENGTH_LONG).show();
+    //On switch swReady
+    public void OnSwitch() {
+        setLayoutNotReadyUI(false);
     }
 
-    //Off switch ready
-    public void OffSwitch(){
-        Toast.makeText(this, "bận rồi nhé", Toast.LENGTH_LONG).show();
+    //Off switch swReady
+    public void OffSwitch() {
+        setLayoutNotReadyUI(true);
+    }
+
+    private void setLayoutNotReadyUI(boolean isNotReady) {
+        LinearLayout llReadyNotReady = (LinearLayout) findViewById(R.id.layout_not_ready);
+        TextView tvReadyStatus = (TextView) findViewById(R.id.textview_ready_status);
+        if (!isNotReady) {
+            llReadyNotReady.setAlpha(0);
+            tvReadyStatus.setTextColor(getResources().getColor(R.color.colorPrimary));
+        } else {
+            llReadyNotReady.setAlpha(1);
+            tvReadyStatus.setTextColor(getResources().getColor(R.color.colorEditText));
+        }
     }
 }
 

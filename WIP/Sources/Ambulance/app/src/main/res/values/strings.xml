@@ -2,9 +2,9 @@
     <string name="app_name">Cấp Cứu 115</string>
 
     <!--action buttons name-->
-    <string name="navigate">chỉ đường</string>
-    <string name="report_problem">báo sự cố</string>
-    <string name="finish_task">hoàn thành</string>
+    <string name="navigate">Chỉ đường</string>
+    <string name="report_problem">Báo sự cố</string>
+    <string name="finish_task">Kết thúc</string>
 
     <!--about screen-->
     <string name="appli_about">Điều khoản sử dụng</string>

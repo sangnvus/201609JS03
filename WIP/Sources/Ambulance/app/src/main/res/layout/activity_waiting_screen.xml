@@ -1,32 +1,88 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/activity_infor"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context="com.favn.ambulance.activities.WaitingScreen">
+                xmlns:tools="http://schemas.android.com/tools"
+                android:id="@+id/activity_infor"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                tools:context="com.favn.ambulance.activities.WaitingScreen">
 
     <ImageView
-        android:layout_width="match_parent"
-        android:src="@drawable/bg_2"
         android:id="@+id/bg_login"
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:scaleType="centerCrop"/>
+        android:scaleType="centerCrop"
+        android:src="@drawable/bg_2"/>
 
     <LinearLayout
-        android:orientation="vertical"
+        android:id="@+id/layout_not_ready"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@drawable/background_waiting_screen"
         android:gravity="center"
-        android:background="@drawable/background_waiting_screen">
+        android:orientation="vertical">
 
-        <Switch
+    </LinearLayout>
+
+    <android.support.v7.widget.CardView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true">
+
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/switch_ready"
-            android:textOn="Sẵn sàng"
-            android:textOff="Bận"
-            android:thumb="@drawable/customswitchselector"
-            android:track="@drawable/custom_track"/>
-    </LinearLayout>
+            android:layout_centerInParent="true"
+            android:background="@color/colorPrimary"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                >
+
+                <ImageView
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginRight="8dp"
+                    android:src="@mipmap/ic_launcher"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Đội xe số 1"
+                    android:textSize="18sp"
+                    android:textColor="@android:color/white"/>
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:layout_width="400dp"
+                android:layout_height="120dp"
+                android:background="@color/colorWhite"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <Switch
+                    android:id="@+id/switch_ready"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textOff="Bận"
+                    android:textOn="Sẵn sàng"
+                    android:thumb="@drawable/custom_switch_selector"
+                    android:track="@drawable/custom_track"/>
+
+                <TextView
+                    android:id="@+id/textview_ready_status"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:text="SẴN SÀNG"
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="24sp"/>
+            </LinearLayout>
+        </LinearLayout>
+    </android.support.v7.widget.CardView>
 </RelativeLayout>

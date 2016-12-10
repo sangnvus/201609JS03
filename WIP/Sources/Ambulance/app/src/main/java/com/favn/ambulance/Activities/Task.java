@@ -70,11 +70,13 @@ public class Task extends AppCompatActivity implements OnMapReadyCallback,
     private boolean isLocationEnable;
     private boolean isNetworkEnable;
     IntentFilter intentFilter;
-    protected static final int REQUEST_CHECK_SETTINGS = 0x1;
 
     private CardView cvDirection;
     private LinearLayout llLoadingStatus;
     private LinearLayout llDirectionResult;
+    private Button btnShowCallerDirection;
+    private Button btnShowDirection;
+    private Button btnPickedUpVictim;
     private Button btnClearDirection;
     private TextView tvDistance;
     private TextView tvDuration;
@@ -125,6 +127,13 @@ public class Task extends AppCompatActivity implements OnMapReadyCallback,
         btnClearDirection.setOnClickListener(this);
         tvDistance = (TextView) findViewById(R.id.textview_distance);
         tvDuration = (TextView) findViewById(R.id.textview_duration);
+
+        btnShowCallerDirection = (Button) findViewById(R.id.button_caller_location);
+        btnShowCallerDirection.setOnClickListener(this);
+        btnShowDirection = (Button) findViewById(R.id.button_show_direction);
+        btnShowDirection.setOnClickListener(this);
+        btnPickedUpVictim = (Button) findViewById(R.id.button_picked_up);
+        btnPickedUpVictim.setOnClickListener(this);
     }
 
     @Override
@@ -140,14 +149,8 @@ public class Task extends AppCompatActivity implements OnMapReadyCallback,
         super.onOptionsItemSelected(item);
 
         switch (item.getItemId()) {
-            case R.id.caller_location:
-                zoomDestinationLocation();
-                break;
             case R.id.my_location:
                 zoomCurrentLocation();
-                break;
-            case R.id.direction:
-                sendDirectionRequest();
                 break;
             case R.id.report_problem:
                 reportProblem();
@@ -234,9 +237,9 @@ public class Task extends AppCompatActivity implements OnMapReadyCallback,
                 isNetworkEnable = NetworkStatus.checkNetworkEnable(context);
                 if (!isNetworkEnable) {
                     createNetworkSetting();
-                  if(directionFinder != null) {
-                      directionFinder.stop();
-                  }
+                    if (directionFinder != null) {
+                        directionFinder.stop();
+                    }
 
                 }
                 // Check location enable in connectivity change
@@ -258,7 +261,7 @@ public class Task extends AppCompatActivity implements OnMapReadyCallback,
     @Override
     public void createLocationSettingDialog(Status status) {
         try {
-            status.startResolutionForResult(Task.this, REQUEST_CHECK_SETTINGS);
+            status.startResolutionForResult(Task.this, Constants.REQUEST_CHECK_SETTINGS);
         } catch (IntentSender.SendIntentException e) {
             //PendingIntent unable to execute request.
         }
@@ -367,7 +370,7 @@ public class Task extends AppCompatActivity implements OnMapReadyCallback,
     public void onDirectionFinderSuccess(Leg leg) {
         PolylineOptions polylineOptions = new PolylineOptions().
                 geodesic(true)
-                .color(getResources().getColor(R.color.colorGpsFixed))
+                .color(getResources().getColor(R.color.colorBlue))
                 .width(10);
 
         for (int i = 0; i < leg.getListLatLng().size(); i++)
@@ -416,6 +419,15 @@ public class Task extends AppCompatActivity implements OnMapReadyCallback,
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
+            case R.id.button_caller_location:
+                zoomDestinationLocation();
+                break;
+            case R.id.button_show_direction:
+                sendDirectionRequest();
+                break;
+            case R.id.button_picked_up:
+                //TODO notify picked up victim
+                break;
             case R.id.button_clear_direction:
                 clearDirection();
                 break;
@@ -430,7 +442,11 @@ public class Task extends AppCompatActivity implements OnMapReadyCallback,
         }
     }
 
-    @Override
-    public void onBackPressed() {
+
+    // create this method 10/12
+    private void goBackToWaitingActivity(boolean status) {
+        Intent intent = new Intent(this, WaitingScreen.class);
+        intent.putExtra("isReady", status);
+        startActivity(intent);
     }
 }

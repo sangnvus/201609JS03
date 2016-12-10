@@ -96,8 +96,7 @@ public class UserSender extends AsyncTask<Void, Void, String>{
         } else if(s.equals("[\"accessdenied\"]")) {
             Toast.makeText(context, "Tài khoản không có quyền đăng nhập !", Toast.LENGTH_LONG).show();
         } else {
-            Intent intent = new Intent(context, WaitingScreen.class);
-            context.startActivity(intent);
+            goToWaitingActivity(true); //extract to method 10/12
             SharedPreferencesData.saveData(context, Constants.SPREFS_NAME, Constants
                     .SPREFS_AMBULANCE_INFO_KEY, s);
         }
@@ -148,6 +147,14 @@ public class UserSender extends AsyncTask<Void, Void, String>{
         }
 
         return null;
+    }
+
+
+    // create this method 10/12
+    private void goToWaitingActivity(boolean status) {
+        Intent intent = new Intent(context, WaitingScreen.class);
+        intent.putExtra("isReady", status);
+        context.startActivity(intent);
     }
 
 
