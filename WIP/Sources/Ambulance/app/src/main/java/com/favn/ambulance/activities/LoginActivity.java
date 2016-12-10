@@ -1,5 +1,6 @@
 package com.favn.ambulance.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.KeyEvent;
@@ -42,7 +43,11 @@ public class LoginActivity extends AppCompatActivity {
         btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                loginRequest();
+//                loginRequest();
+
+                Intent intent = new Intent(LoginActivity.this, WaitingScreen.class);
+                intent.putExtra("isReady", true);
+                startActivity(intent);
             }
         });
 
@@ -91,5 +96,7 @@ public class LoginActivity extends AppCompatActivity {
         return true;
     }
 
-
+    @Override
+    public void onBackPressed() {
+    }
 }

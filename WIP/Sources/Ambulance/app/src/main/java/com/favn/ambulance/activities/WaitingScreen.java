@@ -70,9 +70,16 @@ public class WaitingScreen extends AppCompatActivity implements LocationChangeLi
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_waiting_screen);
 
-        //Get status swReady from LoginActivity
-        //isReady = intent.getExtras().getBoolean("isReady");
-        isReady = true;
+        //Get status swReady from LoginActivity and TaskActivity
+try {
+    isReady = intent.getExtras().getBoolean("isReady");
+    Toast.makeText(this, isReady + "this is my Toast message!!! =)",
+            Toast.LENGTH_LONG).show();
+} catch(Exception e) {
+
+}
+
+
 
         notification = new NotificationCompat.Builder(this);
         notification.setAutoCancel(true);
@@ -150,7 +157,7 @@ public class WaitingScreen extends AppCompatActivity implements LocationChangeLi
 
         swReady = (Switch) findViewById(R.id.switch_ready);
 
-        if(isReady) {
+        if (isReady) {
             swReady.setChecked(true);
             setLayoutNotReadyUI(false);
         } else {
@@ -198,6 +205,9 @@ public class WaitingScreen extends AppCompatActivity implements LocationChangeLi
                 //build noti and issues
                 NotificationManager nm = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
                 nm.notify(id, notification.build());
+
+                //show task dialog
+                createTaskDialog();
                 break;
             case R.id.application_info:
                 startActivity(new Intent(this, InformationScreen.class));
@@ -286,7 +296,7 @@ public class WaitingScreen extends AppCompatActivity implements LocationChangeLi
                 .setNegativeButton("Hủy", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        disclineTask();
+                        declineTask();
                     }
                 })
                 .setPositiveButton("Nhận", new DialogInterface.OnClickListener() {
@@ -299,7 +309,7 @@ public class WaitingScreen extends AppCompatActivity implements LocationChangeLi
                 .show();
     }
 
-    private void disclineTask() {
+    private void declineTask() {
         Toast.makeText(this, "Hủy rồi nhé !", Toast.LENGTH_LONG).show();
     }
 
@@ -379,6 +389,7 @@ public class WaitingScreen extends AppCompatActivity implements LocationChangeLi
             tvReadyStatus.setTextColor(getResources().getColor(R.color.colorEditText));
         }
     }
+
 }
 
 
