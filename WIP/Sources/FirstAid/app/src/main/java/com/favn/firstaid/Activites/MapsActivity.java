@@ -135,7 +135,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     protected static final int REQUEST_CHECK_SETTINGS = 0x1;
 
-
     private static final int GPS_STATUS_NOT_FIXED = 1;
     private static final int GPS_STATUS_FIXED = 2;
     private static final int GPS_STATUS_OFF = 0;
@@ -144,7 +143,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     protected String mAddress;
     private AddressResultReceiver mResultReceiver;
     // Intent filter
-    IntentFilter intentFilter;
+    private IntentFilter intentFilter;
 
     private boolean isLocationEnable;
     private boolean isNetworkEnable;
@@ -157,7 +156,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     // Get database
     private DatabaseOpenHelper dbHelper;
-    List<HealthFacility> healthFacilityList = new ArrayList<HealthFacility>();
+    private List<HealthFacility> mHealthFacilityList = new ArrayList<HealthFacility>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -600,16 +599,16 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private void getHealthFacilityData() {
         if (isLocationEnable && (mCurrentLocation != null)) {
             updateLoadingUI(true);
-            healthFacilityList = dbHelper.getListHealthFacility(getPoints());
+            mHealthFacilityList = dbHelper.getListHealthFacility(getPoints());
             distanceToHealthFacility();
             sortHealthFacility();
-            if (healthFacilityList.size() != 0) {
+            if (mHealthFacilityList.size() != 0) {
 
                 if (isNetworkEnable) {
                     sendDistanceRequest(mCurrentLocation.getLatitude() + "," + mCurrentLocation
                             .getLongitude());
                 } else {
-                    displayHealthFacility(healthFacilityList);
+                    displayHealthFacility(mHealthFacilityList);
                 }
             } else {
                 updateLoadingUI(false);
@@ -628,7 +627,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         } else if (!isNetworkEnable) {
             tvWarning.setText(Constants.WARNING_NO_NETWORK_RESULT);
             tvWarning.setVisibility(View.VISIBLE);
-        } else if (healthFacilityList.size() == 0) {
+        } else if (mHealthFacilityList.size() == 0) {
             tvWarning.setText(Constants.WARNING_NO_RESULT);
             tvWarning.setVisibility(View.VISIBLE);
         } else {
@@ -682,16 +681,16 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
     private void sendDistanceRequest(String origin) {
-        healthFacilityList = dbHelper.getListHealthFacility(getPoints());
+        mHealthFacilityList = dbHelper.getListHealthFacility(getPoints());
 
-        if (healthFacilityList.size() > 20) {
+        if (mHealthFacilityList.size() > 20) {
             List<HealthFacility> requestedHealthFacility = new ArrayList<>();
             for (int i = 0; i < 20; i++) {
-                requestedHealthFacility.add(healthFacilityList.get(i));
+                requestedHealthFacility.add(mHealthFacilityList.get(i));
             }
             distanceMatrixFinder = new DistanceMatrixFinder(this, origin, requestedHealthFacility);
         } else {
-            distanceMatrixFinder = new DistanceMatrixFinder(this, origin, healthFacilityList);
+            distanceMatrixFinder = new DistanceMatrixFinder(this, origin, mHealthFacilityList);
         }
 
         distanceMatrixFinder.execute();
@@ -701,23 +700,23 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     private void distanceToHealthFacility() {
         float distance = 0;
-        for (int i = 0; i < healthFacilityList.size(); i++) {
+        for (int i = 0; i < mHealthFacilityList.size(); i++) {
             Location healthFacilityLocation = new Location("healthFacilityLocation");
-            healthFacilityLocation.setLatitude(healthFacilityList.get(i)
+            healthFacilityLocation.setLatitude(mHealthFacilityList.get(i)
                     .getLatitude());
-            healthFacilityLocation.setLongitude(healthFacilityList.get(i)
+            healthFacilityLocation.setLongitude(mHealthFacilityList.get(i)
                     .getLongitude());
             distance = mCurrentLocation.distanceTo(healthFacilityLocation);
 
-            healthFacilityList.get(i).setDistance(new Distance((int) distance));
+            mHealthFacilityList.get(i).setDistance(new Distance((int) distance));
         }
 
     }
 
     private void sortHealthFacility() {
-        if (healthFacilityList.size() > 0) {
+        if (mHealthFacilityList.size() > 0) {
             try {
-                Collections.sort(healthFacilityList, new Comparator<HealthFacility>() {
+                Collections.sort(mHealthFacilityList, new Comparator<HealthFacility>() {
                     public int compare(HealthFacility h1, HealthFacility h2) {
                         return h1.getDistance().getValue() - h2.getDistance().getValue();
                     }
@@ -741,8 +740,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     @Override
     public void onDistanceMatrixFinderSuccess(List<HealthFacility> healthFacilityListResult) {
-        healthFacilityList = healthFacilityListResult;
-        displayHealthFacility(healthFacilityList);
+        mHealthFacilityList = healthFacilityListResult;
+        displayHealthFacility(mHealthFacilityList);
         updateLoadingUI(false);
         isRequestedDistance = false;
     }
@@ -948,7 +947,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                     break;
             }
 
-            displayHealthFacility(healthFacilityList);
+            displayHealthFacility(mHealthFacilityList);
         }
     };
 
