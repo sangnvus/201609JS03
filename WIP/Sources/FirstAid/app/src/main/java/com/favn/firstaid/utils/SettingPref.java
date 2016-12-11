@@ -20,12 +20,4 @@ public class SettingPref {
         }
         return null;
     }
-
-    public static boolean isShowAdvice(Context context) {
-        SharedPreferences mySharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
-
-        boolean isShow = mySharedPreferences.getBoolean("switch_advice", false);
-
-        return isShow;
-    }
 }

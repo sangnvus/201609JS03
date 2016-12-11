@@ -372,7 +372,7 @@ public class DatabaseOpenHelper extends SQLiteOpenHelper {
 
     }
 
-    public List<Injury> getResultListInjury(String inputText) {
+    public List<Injury> getSearchResultInjuryList(String inputText) {
         Injury injury = null;
         List<Injury> injuryListList = new ArrayList<>();
         openDatabase();

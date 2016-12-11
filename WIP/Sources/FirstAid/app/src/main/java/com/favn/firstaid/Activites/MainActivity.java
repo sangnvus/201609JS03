@@ -27,7 +27,6 @@ public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
     FragmentManager fragmentManager;
     Fragment fragment;
-    EmergencyFragment emergencyFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

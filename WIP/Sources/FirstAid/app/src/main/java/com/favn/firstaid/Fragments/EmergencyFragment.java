@@ -1,8 +1,6 @@
 package com.favn.firstaid.fragments;
 
 
-import android.animation.Animator;
-import android.animation.AnimatorListenerAdapter;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -11,7 +9,6 @@ import android.content.IntentFilter;
 import android.content.IntentSender;
 import android.location.Location;
 import android.os.Bundle;
-import android.os.Handler;
 import android.provider.Settings;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
@@ -168,7 +165,7 @@ public class EmergencyFragment extends Fragment implements AdapterView.OnItemCli
 //                    Log.d("test_edittext", i + i1 + "");
 
 
-                    List<Injury> searchedList = dbHelper.getResultListInjury(newText);
+                    List<Injury> searchedList = dbHelper.getSearchResultInjuryList(newText);
                     InjuryAdapter adapter = new InjuryAdapter(getActivity(), searchedList,
                             LISTVIEW_EMERGENCY, true);
                     listView.setAdapter(adapter);
