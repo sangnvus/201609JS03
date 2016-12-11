@@ -17,4 +17,8 @@
     Đàm Huy Hùng\nMai Trung Kiên\nNguyễn Duy Anh\nNguyễn Phúc An\nNguyễn Tiến Dũng
     </string>
 
+    //checkbox dialog
+    <string name="checkbox_title">Kết thúc nhiệm vụ</string>
+    <string name="checkbox_name">Sẵn sàng làm nhiệm vụ tiếp theo</string>
+
 </resources>

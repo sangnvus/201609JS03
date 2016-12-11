@@ -24,20 +24,22 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.favn.ambulance.models.Ambulance;
 import com.favn.ambulance.services.direction.DirectionFinder;
 import com.favn.ambulance.services.direction.DirectionFinderListener;
 import com.favn.ambulance.services.direction.Leg;
-import com.favn.ambulance.models.Ambulance;
-import com.favn.ambulance.utils.SharedPreferencesData;
-import com.favn.ambulance.utils.NetworkStatus;
 import com.favn.ambulance.services.location.LocationChangeListener;
 import com.favn.ambulance.services.location.LocationFinder;
 import com.favn.ambulance.services.location.LocationStatus;
 import com.favn.ambulance.utils.Constants;
+import com.favn.ambulance.utils.NetworkStatus;
+import com.favn.ambulance.utils.SharedPreferencesData;
 import com.favn.mikey.ambulance.R;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
@@ -80,6 +82,7 @@ public class Task extends AppCompatActivity implements OnMapReadyCallback,
     private Button btnClearDirection;
     private TextView tvDistance;
     private TextView tvDuration;
+    private boolean isReady = true;
     Ambulance ambulance;
 
     @Override
@@ -156,6 +159,7 @@ public class Task extends AppCompatActivity implements OnMapReadyCallback,
                 reportProblem();
                 break;
             case R.id.finish_task:
+                createFinishTaskDialog();
                 break;
         }
         return true;
@@ -465,11 +469,38 @@ public class Task extends AppCompatActivity implements OnMapReadyCallback,
     // create this method 10/12
 
     private void createFinishTaskDialog() {
+        View checkBoxView = View.inflate(this, R.layout.checkbox, null);
+        CheckBox checkBox = (CheckBox) checkBoxView.findViewById(R.id.checkbox);
+        checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                isReady = isChecked;
+            }
+        });
 
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle(R.string.checkbox_title);
+        builder.setView(checkBoxView)
+                .setCancelable(false)
+                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        goBackToWaitingActivity(isReady);
+//                        Toast.makeText(Task.this, isReady + "this is my Toast message!!! =)",
+//                                Toast.LENGTH_LONG).show();
+                    }
+                })
+                .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.cancel();
+                    }
+                }).show();
     }
     private void goBackToWaitingActivity(boolean status) {
         Intent intent = new Intent(this, WaitingScreen.class);
         intent.putExtra("isReady", status);
         startActivity(intent);
+    }
+    @Override
+    public void onBackPressed() {
     }
 }
