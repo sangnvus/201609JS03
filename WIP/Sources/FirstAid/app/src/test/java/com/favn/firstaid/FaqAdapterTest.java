@@ -5,7 +5,7 @@ import android.test.mock.MockContext;
 import com.favn.firstaid.adapters.FaqAdapter;
 import com.favn.firstaid.commons.Faq;
 
-import org.codehaus.plexus.context.Context;
+import android.content.Context;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -33,7 +33,7 @@ public class FaqAdapterTest {
         List<Faq> faqs = new ArrayList<>();
         faq = new Faq(1, "Câu hỏi", "Câu trả lời");
         faqs.add(faq);
-        faqAdapter = new FaqAdapter((android.content.Context) context, faqs);
+        faqAdapter = new FaqAdapter(context, faqs);
     }
 
     @Test
@@ -49,6 +49,6 @@ public class FaqAdapterTest {
 
     @Test
     public void testGetCount() {
-        assertEquals("Faq amount incorrect.", 2, faqAdapter.getCount());
+        assertEquals("Faq amount incorrect.", 1, faqAdapter.getCount());
     }
 }
