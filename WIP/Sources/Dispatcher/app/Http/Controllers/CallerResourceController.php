@@ -10,94 +10,52 @@ use App\Caller;
 
 class CallerResourceController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
-    {
-        //
+    //
+    public function autocomplete(Request $request) {
+    	$term = $request->term;
+    	$data = Caller::where('phone', 'LIKE', '%'.$term.'%')->get();
+    	
+    	$result = array();
+    	foreach ($data as $key => $value) {
+    		$result[] = ['id' => $value->id,
+            'phone' => $value->phone,
+            'injury_id' => $value->injury_id,
+            'symptom' => $value->symptom,
+            'latitude' => $value->latitude,
+            'longitude' => $value->longitude,
+            'status' => $value->status,
+            'dispatcher_user_id' => $value->dispatcher_user_id,
+            'ambulance_user_id' => $value->dispatcher_user_id,
+            'label' => $value->phone];
+    	}
+
+    	return response()->json($result);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
+    public function update(Request $request)
     {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-       
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-
         $dataJson = json_decode($request->getContent(), true);
 
         $caller = Caller::find($dataJson['id']);
 
         // Assign value from request
-        $ambulance->team = $dataJson['team'];
-        $ambulance->latitude = $dataJson['latitude'];
-        $ambulance->longitude = $dataJson['longitude'];
-        $ambulance->status = $dataJson['status'];
-        $ambulance->caller_taking_id =$dataJson['caller_taking_id'];
+        $caller->injury_id = $dataJson['injury_id'];
+        $caller->symptom = $dataJson['symptom'];
+        $caller->latitude = $dataJson['latitude'];
+        $caller->longitude = $dataJson['longitude'];
+        $caller->status = $dataJson['status'];
+        $caller->ambulance_user_id =$dataJson['ambulance_user_id'];
         
         // Save to db
-        $ambulance->save();
+        $caller->save();
 
         echo "done";
+
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
+    public function returnCallerById($id) {
+        $caller = Caller::find($id);
+        return Response(['caller' => $caller], 201);
     }
+
 }

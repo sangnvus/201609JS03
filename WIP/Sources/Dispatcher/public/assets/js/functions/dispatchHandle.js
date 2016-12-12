@@ -258,7 +258,12 @@ function sendTaskToAmbulance(readyAmbulance, callback) {
 function pendingAmbulance(readyAmbulance, callback) {
 	var database = firebase.database();
 	showDialogPending('Đang đợi nối xe...', function(result) {
+		if(result) {
 
+		} else {
+			releaseAmbulance();
+			releaseCaller();
+		}
 	});	
 	// Handle when a caller change
 	database.ref('ambulances/' + readyAmbulance.id).on('child_changed', snap => {
@@ -346,6 +351,13 @@ function createListAmbulancePos() {
 	}
 }
 
+function releaseAmbulance() {
+	
+}
+
+function releaseCaller() {
+	
+}
 
 
 
