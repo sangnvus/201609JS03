@@ -1,4 +1,4 @@
-package com.favn.ambulance.models;
+package com.favn.ambulance.commons;
 
 /**
  * Created by Hung Gia on 11/28/2016.

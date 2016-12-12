@@ -4,7 +4,7 @@
                 android:id="@+id/activity_infor"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                tools:context="com.favn.ambulance.activities.WaitingScreen">
+                tools:context="com.favn.ambulance.activities.WaitingActivity">
 
     <ImageView
         android:id="@+id/bg_login"

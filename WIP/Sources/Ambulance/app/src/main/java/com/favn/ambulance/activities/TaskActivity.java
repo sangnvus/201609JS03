@@ -30,7 +30,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.favn.ambulance.models.Ambulance;
+import com.favn.ambulance.commons.Ambulance;
 import com.favn.ambulance.services.direction.DirectionFinder;
 import com.favn.ambulance.services.direction.DirectionFinderListener;
 import com.favn.ambulance.services.direction.Leg;
@@ -59,7 +59,7 @@ import com.google.android.gms.maps.model.PolylineOptions;
 
 import java.io.UnsupportedEncodingException;
 
-public class Task extends AppCompatActivity implements OnMapReadyCallback,
+public class TaskActivity extends AppCompatActivity implements OnMapReadyCallback,
         LocationChangeListener, DirectionFinderListener, View.OnClickListener {
     private GoogleMap mGoogleMap;
     private Location mCurrentLocation;
@@ -265,7 +265,7 @@ public class Task extends AppCompatActivity implements OnMapReadyCallback,
     @Override
     public void createLocationSettingDialog(Status status) {
         try {
-            status.startResolutionForResult(Task.this, Constants.REQUEST_CHECK_SETTINGS);
+            status.startResolutionForResult(TaskActivity.this, Constants.REQUEST_CHECK_SETTINGS);
         } catch (IntentSender.SendIntentException e) {
             //PendingIntent unable to execute request.
         }
@@ -485,7 +485,7 @@ public class Task extends AppCompatActivity implements OnMapReadyCallback,
                 .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         goBackToWaitingActivity(isReady);
-//                        Toast.makeText(Task.this, isReady + "this is my Toast message!!! =)",
+//                        Toast.makeText(TaskActivity.this, isReady + "this is my Toast message!!! =)",
 //                                Toast.LENGTH_LONG).show();
                     }
                 })
@@ -496,7 +496,7 @@ public class Task extends AppCompatActivity implements OnMapReadyCallback,
                 }).show();
     }
     private void goBackToWaitingActivity(boolean status) {
-        Intent intent = new Intent(this, WaitingScreen.class);
+        Intent intent = new Intent(this, WaitingActivity.class);
         intent.putExtra("isReady", status);
         startActivity(intent);
     }
