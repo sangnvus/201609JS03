@@ -445,12 +445,32 @@ public class TaskActivity extends AppCompatActivity implements OnMapReadyCallbac
                 sendDirectionRequest();
                 break;
             case R.id.button_picked_up:
-                //TODO notify picked up victim
+                createPickedUpConfirmDialog();
                 break;
             case R.id.button_clear_direction:
                 clearDirection();
                 break;
         }
+    }
+
+    private void createPickedUpConfirmDialog(){
+        new AlertDialog.Builder(this)
+                .setTitle("Xác nhận")
+                .setMessage("Đã đón nạn nhân")
+                .setNegativeButton("Hủy", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        //TODO
+                    }
+                })
+                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        //TODO
+                    }
+                })
+                .create()
+                .show();
     }
 
     private void clearDirection() {
@@ -482,14 +502,14 @@ public class TaskActivity extends AppCompatActivity implements OnMapReadyCallbac
         builder.setTitle(R.string.checkbox_title);
         builder.setView(checkBoxView)
                 .setCancelable(false)
-                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         goBackToWaitingActivity(isReady);
 //                        Toast.makeText(TaskActivity.this, isReady + "this is my Toast message!!! =)",
 //                                Toast.LENGTH_LONG).show();
                     }
                 })
-                .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                .setNegativeButton("Hủy", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         dialog.cancel();
                     }

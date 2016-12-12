@@ -207,7 +207,9 @@ try {
                 nm.notify(id, notification.build());
 
                 //show task dialog
-                createTaskDialog();
+//                createTaskDialog();
+
+                createLogoutDialog();
                 break;
             case R.id.application_info:
                 startActivity(new Intent(this, AboutActivity.class));
@@ -299,7 +301,7 @@ try {
                         declineTask();
                     }
                 })
-                .setPositiveButton("Nhận", new DialogInterface.OnClickListener() {
+                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         acceptTask();
@@ -317,6 +319,29 @@ try {
         database = FirebaseDatabase.getInstance();
         dbRef = database.getReference("ambulances/" + ambulance.getId());
         dbRef.child("status").setValue("buzy");
+    }
+
+    //Create logout dialog
+    private void createLogoutDialog(){
+        new AlertDialog.Builder(this)
+                .setTitle("Đăng xuất")
+                .setMessage("Bạn có muốn đăng xuất khỏi ứng dụng không ?")
+                .setNegativeButton("Hủy", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        //TODO
+                    }
+                })
+                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        //TODO
+                        Intent intent = new Intent(WaitingActivity.this, LoginActivity.class);
+                        startActivity(intent);
+                    }
+                })
+                .create()
+                .show();
     }
 
     /**

@@ -7,12 +7,12 @@
     android:layout_height="match_parent"
     tools:context="com.favn.ambulance.activities.LoginActivity">
 
-    <ImageView
-    android:layout_width="match_parent"
-    android:src="@drawable/bg_2"
-    android:id="@+id/bg_login"
-    android:layout_height="match_parent"
-    android:scaleType="centerCrop"/>
+    <!--<ImageView-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:src="@drawable/bg_2"-->
+    <!--android:id="@+id/bg_login"-->
+    <!--android:layout_height="match_parent"-->
+    <!--android:scaleType="centerCrop"/>-->
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -24,14 +24,18 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="center"
-            android:layout_weight="0.17" >
+            android:layout_weight="0.17"
+            android:background="@color/colorBackground">
 
-            <ImageView
-                android:id="@+id/logo_login"
+            <TextView
+                android:text="Đăng Nhập"
                 android:layout_width="match_parent"
-                android:layout_height="150dp"
-                android:alpha="1"
-                android:src="@drawable/login"/>
+                android:layout_height="wrap_content"
+                android:id="@+id/textView"
+                android:gravity="center"
+                android:textSize="40sp"
+                android:textStyle="bold"
+                android:textColor="@android:color/background_light" />
 
             <EditText
                 android:id="@+id/editext_name"
@@ -66,7 +70,8 @@
                 android:clickable="true"
                 android:background="@drawable/button_selector"
                 android:text="Đăng nhập"
-                android:textColor="@android:color/background_light"/>
+                android:textSize="16sp"
+                android:textColor="@color/colorPrimary"/>
         </LinearLayout>
 
     </RelativeLayout>
