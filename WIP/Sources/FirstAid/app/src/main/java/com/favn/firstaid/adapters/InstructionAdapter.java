@@ -29,9 +29,9 @@ public class InstructionAdapter extends BaseAdapter {
     }
 
     public InstructionAdapter(Context Context, InformationSending informationSending, List<Instruction>
-            mInjuryList, boolean isEmergency) {
+            instructions, boolean isEmergency) {
         this.mContext = Context;
-        this.mInstructionList = mInjuryList;
+        this.mInstructionList = instructions;
         this.isEmergency = isEmergency;
         this.informationSending = informationSending;
     }

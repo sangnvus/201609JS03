@@ -1,4 +1,4 @@
-package com.favn.ambulance.models;
+package com.favn.ambulance.commons;
 
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -9,14 +9,14 @@ import android.os.AsyncTask;
  */
 
 public class AmbulanceInfoSender extends AsyncTask<Void, Void, String>{
-    Context context;
-    String urlAddress;
-    String phone;
-    int injuryId;
-    double latitude;
-    double longitude;
-    String status;
-    ProgressDialog pd;
+    private Context context;
+    private String urlAddress;
+    private String phone;
+    private int injuryId;
+    private double latitude;
+    private double longitude;
+    private String status;
+    private ProgressDialog pd;
 
     public Context getContext() {
         return context;

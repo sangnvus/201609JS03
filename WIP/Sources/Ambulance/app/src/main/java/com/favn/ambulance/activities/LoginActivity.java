@@ -12,7 +12,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.favn.ambulance.utils.Constants;
-import com.favn.ambulance.models.UserSender;
+import com.favn.ambulance.commons.UserSender;
 import com.favn.mikey.ambulance.R;
 
 public class LoginActivity extends AppCompatActivity {
@@ -26,7 +26,7 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.log_in);
         initControl();
         getSupportActionBar().hide();
     }
@@ -45,7 +45,7 @@ public class LoginActivity extends AppCompatActivity {
             public void onClick(View v) {
 //                loginRequest();
 
-                Intent intent = new Intent(LoginActivity.this, WaitingScreen.class);
+                Intent intent = new Intent(LoginActivity.this, WaitingActivity.class);
                 intent.putExtra("isReady", true);
                 startActivity(intent);
             }

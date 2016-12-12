@@ -1,4 +1,4 @@
-package com.favn.ambulance.models;
+package com.favn.ambulance.commons;
 
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -6,9 +6,7 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.widget.Toast;
 
-import com.favn.ambulance.activities.WaitingScreen;
-import com.favn.ambulance.models.Connector;
-import com.favn.ambulance.models.User;
+import com.favn.ambulance.activities.WaitingActivity;
 import com.favn.ambulance.utils.Constants;
 import com.favn.ambulance.utils.SharedPreferencesData;
 
@@ -25,11 +23,11 @@ import java.net.HttpURLConnection;
  */
 
 public class UserSender extends AsyncTask<Void, Void, String>{
-    Context context;
-    String urlAddress;
-    String username;
-    String password;
-    ProgressDialog pd;
+    private Context context;
+    private String urlAddress;
+    private String username;
+    private String password;
+    private ProgressDialog pd;
 
     public Context getContext() {
         return context;
@@ -152,7 +150,7 @@ public class UserSender extends AsyncTask<Void, Void, String>{
 
     // create this method 10/12
     private void goToWaitingActivity(boolean status) {
-        Intent intent = new Intent(context, WaitingScreen.class);
+        Intent intent = new Intent(context, WaitingActivity.class);
         intent.putExtra("isReady", status);
         context.startActivity(intent);
     }

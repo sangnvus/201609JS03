@@ -23,11 +23,11 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.favn.ambulance.activities.WaitingScreen"
+            android:name="com.favn.ambulance.activities.WaitingActivity"
             android:screenOrientation="landscape"
             android:label="@string/app_name" />
         <activity
-            android:name="com.favn.ambulance.activities.Task"
+            android:name="com.favn.ambulance.activities.TaskActivity"
             android:screenOrientation="landscape"
             android:label="Nhiệm vụ" />
 
@@ -35,7 +35,7 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyAcYh4HrrRlHTYxkD0ZGgKEOD3CaK_JERE" />
 
-        <activity android:name="com.favn.ambulance.activities.InformationScreen"
+        <activity android:name="com.favn.ambulance.activities.AboutActivity"
             android:screenOrientation="landscape"
             android:label="Thông tin phần mềm" /><!-- ATTENTION: This was auto-generated to add Google Play services to your project for
      App Indexing.  See https://g.co/AppIndexing/AndroidStudio for more information. -->

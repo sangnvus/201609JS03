@@ -28,7 +28,7 @@ import android.widget.Toast;
 import com.favn.ambulance.services.location.LocationChangeListener;
 import com.favn.ambulance.services.location.LocationFinder;
 import com.favn.ambulance.services.location.LocationStatus;
-import com.favn.ambulance.models.Ambulance;
+import com.favn.ambulance.commons.Ambulance;
 import com.favn.ambulance.utils.Constants;
 import com.favn.ambulance.utils.SharedPreferencesData;
 import com.favn.ambulance.utils.NetworkStatus;
@@ -41,7 +41,7 @@ import com.google.android.gms.common.api.Status;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
-public class WaitingScreen extends AppCompatActivity implements LocationChangeListener {
+public class WaitingActivity extends AppCompatActivity implements LocationChangeListener {
 
     NotificationCompat.Builder notification;
     private static final int id = 45612;
@@ -198,7 +198,7 @@ try {
                 notification.setContentTitle("Cấp cứu 115");
                 notification.setContentText("Có nhiệm vụ");
 
-                Intent intent = new Intent(this, Task.class);
+                Intent intent = new Intent(this, TaskActivity.class);
                 PendingIntent pendingIntent = PendingIntent.getActivities(this, 0, new Intent[]{intent}, PendingIntent.FLAG_UPDATE_CURRENT);
                 notification.setContentIntent(pendingIntent);
 
@@ -210,7 +210,7 @@ try {
                 createTaskDialog();
                 break;
             case R.id.application_info:
-                startActivity(new Intent(this, InformationScreen.class));
+                startActivity(new Intent(this, AboutActivity.class));
                 break;
         }
         return true;
@@ -251,7 +251,7 @@ try {
     @Override
     public void createLocationSettingDialog(Status status) {
         try {
-            status.startResolutionForResult(WaitingScreen.this, Constants.REQUEST_CHECK_SETTINGS);
+            status.startResolutionForResult(WaitingActivity.this, Constants.REQUEST_CHECK_SETTINGS);
         } catch (IntentSender.SendIntentException e) {
             //PendingIntent unable to execute request.
         }
@@ -325,7 +325,7 @@ try {
      */
     public Action getIndexApiAction() {
         Thing object = new Thing.Builder()
-                .setName("WaitingScreen Page") // TODO: Define a title for the content shown.
+                .setName("WaitingActivity Page") // TODO: Define a title for the content shown.
                 // TODO: Make sure this auto-generated URL is correct.
                 .setUrl(Uri.parse("http://[ENTER-YOUR-URL-HERE]"))
                 .build();

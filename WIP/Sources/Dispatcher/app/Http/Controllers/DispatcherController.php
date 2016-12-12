@@ -113,6 +113,14 @@ class DispatcherController extends Controller
 
 	}
 
+	function updateMysqlAmbulanceStatus() {
+
+	}
+
+	function updateCallerStatus() {
+		
+	}
+
 
 
 

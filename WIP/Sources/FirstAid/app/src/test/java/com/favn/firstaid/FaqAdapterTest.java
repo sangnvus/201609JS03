@@ -5,12 +5,10 @@ import android.test.mock.MockContext;
 import com.favn.firstaid.adapters.FaqAdapter;
 import com.favn.firstaid.commons.Faq;
 
-import org.codehaus.plexus.context.Context;
+import android.content.Context;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.robolectric.RobolectricTestRunner;
-import org.robolectric.annotation.Config;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,8 +17,6 @@ import static org.junit.Assert.assertEquals;
 /**
  * Created by Mikey on 12/5/2016.
  */
-@RunWith(RobolectricTestRunner.class)
-@Config(constants = BuildConfig.class, sdk = 19)
 
 public class FaqAdapterTest {
     private FaqAdapter faqAdapter;
@@ -33,7 +29,7 @@ public class FaqAdapterTest {
         List<Faq> faqs = new ArrayList<>();
         faq = new Faq(1, "Câu hỏi", "Câu trả lời");
         faqs.add(faq);
-        faqAdapter = new FaqAdapter((android.content.Context) context, faqs);
+        faqAdapter = new FaqAdapter(context, faqs);
     }
 
     @Test
@@ -44,11 +40,11 @@ public class FaqAdapterTest {
 
     @Test
     public void testGetItemId() {
-        assertEquals("Wrong ID.", 0, faqAdapter.getItemId(0));
+        assertEquals("Wrong ID.", 1, faqAdapter.getItemId(0));
     }
 
     @Test
     public void testGetCount() {
-        assertEquals("Faq amount incorrect.", 2, faqAdapter.getCount());
+        assertEquals("Faq amount incorrect.", 1, faqAdapter.getCount());
     }
 }

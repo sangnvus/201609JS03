@@ -1,4 +1,4 @@
-package com.favn.ambulance.models;
+package com.favn.ambulance.commons;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;

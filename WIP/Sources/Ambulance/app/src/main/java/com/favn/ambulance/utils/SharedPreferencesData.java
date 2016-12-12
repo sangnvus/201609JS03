@@ -2,11 +2,8 @@ package com.favn.ambulance.utils;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.util.Log;
 
-import com.favn.ambulance.models.Ambulance;
-import com.google.gson.Gson;
-import com.google.gson.JsonParseException;
+import com.favn.ambulance.commons.Ambulance;
 
 /**
  * Created by Hung Gia on 11/28/2016.

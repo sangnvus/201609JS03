@@ -6,7 +6,7 @@ import android.view.MenuItem;
 
 import com.favn.mikey.ambulance.R;
 
-public class InformationScreen extends AppCompatActivity {
+public class AboutActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
