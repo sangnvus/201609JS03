@@ -25,11 +25,11 @@ import java.net.HttpURLConnection;
  */
 
 public class UserSender extends AsyncTask<Void, Void, String>{
-    Context context;
-    String urlAddress;
-    String username;
-    String password;
-    ProgressDialog pd;
+    private Context context;
+    private String urlAddress;
+    private String username;
+    private String password;
+    private ProgressDialog pd;
 
     public Context getContext() {
         return context;
