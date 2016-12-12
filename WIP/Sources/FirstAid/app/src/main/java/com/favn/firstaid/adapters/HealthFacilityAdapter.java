@@ -54,7 +54,7 @@ public class HealthFacilityAdapter extends BaseAdapter implements Filterable {
 
     @Override
     public long getItemId(int position) {
-        return 0;
+        return mHealthFacilityList.get(position).getId();
     }
 
     @Override

@@ -9,8 +9,6 @@ import android.content.Context;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.robolectric.RobolectricTestRunner;
-import org.robolectric.annotation.Config;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,8 +17,6 @@ import static org.junit.Assert.assertEquals;
 /**
  * Created by Mikey on 12/5/2016.
  */
-@RunWith(RobolectricTestRunner.class)
-@Config(constants = BuildConfig.class, sdk = 19)
 
 public class FaqAdapterTest {
     private FaqAdapter faqAdapter;
@@ -44,7 +40,7 @@ public class FaqAdapterTest {
 
     @Test
     public void testGetItemId() {
-        assertEquals("Wrong ID.", 0, faqAdapter.getItemId(0));
+        assertEquals("Wrong ID.", 1, faqAdapter.getItemId(0));
     }
 
     @Test

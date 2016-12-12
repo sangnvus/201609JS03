@@ -10,8 +10,6 @@ import com.favn.firstaid.commons.HealthFacility;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.robolectric.RobolectricTestRunner;
-import org.robolectric.annotation.Config;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,8 +19,7 @@ import static org.junit.Assert.assertEquals;
 /**
  * Created by Hung Gia on 12/5/2016.
  */
-@RunWith(RobolectricTestRunner.class)
-@Config(constants = BuildConfig.class, sdk = 19)
+
 
 public class HealthFacilityAdapterTest {
     private HealthFacilityAdapter healthFacilityAdapter;
@@ -49,7 +46,7 @@ public class HealthFacilityAdapterTest {
 
     @Test
     public void testGetItemId() {
-        assertEquals("Wrong ID.", 0, healthFacilityAdapter.getItemId(0));
+        assertEquals("Wrong ID.", 1, healthFacilityAdapter.getItemId(0));
     }
 
     @Test
