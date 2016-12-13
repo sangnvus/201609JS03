@@ -31,6 +31,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.favn.ambulance.commons.Ambulance;
+import com.favn.ambulance.commons.FirebaseHandle;
 import com.favn.ambulance.services.direction.DirectionFinder;
 import com.favn.ambulance.services.direction.DirectionFinderListener;
 import com.favn.ambulance.services.direction.Leg;
@@ -83,7 +84,8 @@ public class TaskActivity extends AppCompatActivity implements OnMapReadyCallbac
     private TextView tvDistance;
     private TextView tvDuration;
     private boolean isReady = true;
-    Ambulance ambulance;
+    private Ambulance ambulance;
+    private FirebaseHandle firebaseHandle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

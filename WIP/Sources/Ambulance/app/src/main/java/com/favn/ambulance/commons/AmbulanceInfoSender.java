@@ -17,6 +17,7 @@ public class AmbulanceInfoSender extends AsyncTask<Void, Void, String>{
     private double longitude;
     private String status;
     private ProgressDialog pd;
+    private Ambulance ambulance;
 
     public Context getContext() {
         return context;

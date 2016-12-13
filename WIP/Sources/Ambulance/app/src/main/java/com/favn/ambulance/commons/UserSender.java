@@ -28,6 +28,7 @@ public class UserSender extends AsyncTask<Void, Void, String>{
     private String username;
     private String password;
     private ProgressDialog pd;
+    private User user;
 
     public Context getContext() {
         return context;
@@ -84,19 +85,19 @@ public class UserSender extends AsyncTask<Void, Void, String>{
     }
 
     @Override
-    protected void onPostExecute(String s) {
+    protected void onPostExecute(String user) {
         pd.dismiss();
 
-        if(s == null){
+        if(user == null){
             Toast.makeText(context, "Lỗi kết nối !", Toast.LENGTH_LONG).show();
-        } else if(s.equals("[\"wrong\"]")){
+        } else if(user.equals("[\"wrong\"]")){
             Toast.makeText(context, "Sai tên đăng nhập hoặc mật khẩu !", Toast.LENGTH_LONG).show();
-        } else if(s.equals("[\"accessdenied\"]")) {
+        } else if(user.equals("[\"accessdenied\"]")) {
             Toast.makeText(context, "Tài khoản không có quyền đăng nhập !", Toast.LENGTH_LONG).show();
         } else {
             goToWaitingActivity(true); //extract to method 10/12
             SharedPreferencesData.saveData(context, Constants.SPREFS_NAME, Constants
-                    .SPREFS_AMBULANCE_INFO_KEY, s);
+                    .SPREFS_AMBULANCE_INFO_KEY, user);
         }
     }
 
@@ -112,7 +113,8 @@ public class UserSender extends AsyncTask<Void, Void, String>{
 
             // Write
             BufferedWriter bw =  new BufferedWriter(new OutputStreamWriter(os, "UTF-8"));
-            bw.write(new User(username, password).packData());
+            user = new User(username, password);
+            bw.write(user.packData());
 
             // Release res
             bw.flush();

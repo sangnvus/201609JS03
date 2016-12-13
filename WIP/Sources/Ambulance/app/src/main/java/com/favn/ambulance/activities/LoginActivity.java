@@ -11,6 +11,8 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.favn.ambulance.commons.AmbulanceInfoSender;
+import com.favn.ambulance.commons.FirebaseHandle;
 import com.favn.ambulance.utils.Constants;
 import com.favn.ambulance.commons.UserSender;
 import com.favn.mikey.ambulance.R;
@@ -21,6 +23,9 @@ public class LoginActivity extends AppCompatActivity {
     private EditText etUsername;
     private EditText etPass;
     private Button btnLogin;
+    private UserSender userSender;
+    private AmbulanceInfoSender ambulanceInfoSender;
+    private FirebaseHandle fireBaseHandle;
 
 
     @Override
@@ -71,12 +76,12 @@ public class LoginActivity extends AppCompatActivity {
         String username = etUsername.getText().toString();
         String password = etPass.getText().toString();
 
-        UserSender us = new UserSender();
-        us.setContext(LoginActivity.this);
-        us.setUrlAddress(urlAddress);
-        us.setUsername(username);
-        us.setPassword(password);
-        us.execute();
+        userSender = new UserSender();
+        userSender.setContext(LoginActivity.this);
+        userSender.setUrlAddress(urlAddress);
+        userSender.setUsername(username);
+        userSender.setPassword(password);
+        userSender.execute();
     }
 
     private boolean isValidateInput() {
