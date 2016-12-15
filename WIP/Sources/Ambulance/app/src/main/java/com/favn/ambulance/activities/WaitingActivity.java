@@ -25,6 +25,9 @@ import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.favn.ambulance.commons.AmbulanceInfoSender;
+import com.favn.ambulance.commons.AmbulanceStatusReturnListener;
+import com.favn.ambulance.commons.FirebaseHandle;
 import com.favn.ambulance.services.location.LocationChangeListener;
 import com.favn.ambulance.services.location.LocationFinder;
 import com.favn.ambulance.services.location.LocationStatus;
@@ -41,7 +44,7 @@ import com.google.android.gms.common.api.Status;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
-public class WaitingActivity extends AppCompatActivity implements LocationChangeListener {
+public class WaitingActivity extends AppCompatActivity implements LocationChangeListener, AmbulanceStatusReturnListener{
 
     NotificationCompat.Builder notification;
     private static final int id = 45612;
@@ -57,6 +60,12 @@ public class WaitingActivity extends AppCompatActivity implements LocationChange
     private FirebaseDatabase database;
     private DatabaseReference dbRef;
     private Intent intent;
+    // Add instant FirebaseHandle object - KienMT : 12/16/2016
+    private FirebaseHandle firebaseHandle;
+    // Update ambulance webservice URL - Kienmt : 12/16/2016
+    private String urlAddress;
+
+
 
     private Switch swReady;
 
@@ -71,13 +80,13 @@ public class WaitingActivity extends AppCompatActivity implements LocationChange
         setContentView(R.layout.activity_waiting_screen);
 
         //Get status swReady from LoginActivity and TaskActivity
-try {
-    isReady = intent.getExtras().getBoolean("isReady");
-    Toast.makeText(this, isReady + "this is my Toast message!!! =)",
-            Toast.LENGTH_LONG).show();
-} catch(Exception e) {
+        try {
+            isReady = intent.getExtras().getBoolean("isReady");
+            Toast.makeText(this, isReady + "this is my Toast message!!! =)",
+                    Toast.LENGTH_LONG).show();
+        } catch(Exception e) {
 
-}
+        }
 
 
 
@@ -89,8 +98,18 @@ try {
         intentFilter.addAction(Constants.INTENT_FILTER_PROVIDERS_CHANGED);
         intentFilter.addAction(Constants.INTENT_FILTER_CONNECTIVITY_CHANGE);
 
+        // Assign update ambulance webservice url value - Kienmt : 12/16/2016
+        urlAddress = "http://10.20.19.73/capston/WIP/Sources/Dispatcher/public/updatefromambulance";
+
         // Get ambulance info from SharedPreferences
         ambulance = SharedPreferencesData.getAmbulanceData(Constants.SPREFS_AMBULANCE_INFO_KEY);
+
+        // Listen ambulance status change - KienMT : 12/16/2016
+        firebaseHandle = new FirebaseHandle(this);
+        firebaseHandle.listenAmbulanceStatusChanged(ambulance.getId());
+
+        Log.w("ambulance ID:", String.valueOf(ambulance.getId()));
+
 
 
         // TODO : HANDLE FIREBASE
@@ -146,7 +165,7 @@ try {
 //
 //            }
 //        });
-//        updateAmbulance(Constants.STATUS_READY);
+//        updateAmbulance(Constants.AMBULANCE_STATUS_READY);
         //TODO : END HANDLE FIREBASE
 
 
@@ -316,9 +335,20 @@ try {
     }
 
     private void acceptTask() {
-        database = FirebaseDatabase.getInstance();
-        dbRef = database.getReference("ambulances/" + ambulance.getId());
-        dbRef.child("status").setValue("buzy");
+        AmbulanceInfoSender ambulanceInfoSender= new AmbulanceInfoSender();
+        ambulanceInfoSender.setContext(WaitingActivity.this);
+        ambulanceInfoSender.setUrlAddress(urlAddress);
+        ambulanceInfoSender.setId(64);
+        ambulanceInfoSender.setStatus("ok status");
+        ambulanceInfoSender.setLatitude(123);
+        ambulanceInfoSender.setLongitude(321);
+        ambulanceInfoSender.setCaller_taking_id(1);
+        ambulanceInfoSender.execute();
+
+
+//        database = FirebaseDatabase.getInstance();
+//        dbRef = database.getReference("ambulances/" + ambulance.getId());
+//        dbRef.child("status").setValue("buzy");
     }
 
     //Create logout dialog
@@ -383,7 +413,7 @@ try {
     // Handle update ambulance when change status - added by KienMT : 12/4/2016
     public void updateAmbulance(String type) {
         DatabaseReference dbRef = database.getReference("ambulances/" + ambulance.getId());
-        if (type.equals(Constants.STATUS_READY)) {
+        if (type.equals(Constants.AMBULANCE_STATUS_READY)) {
             dbRef.child("caller_taking_id").setValue(null);
         }
         if (mCurrentLocation != null) {
@@ -414,6 +444,17 @@ try {
             tvReadyStatus.setTextColor(getResources().getColor(R.color.colorEditText));
         }
     }
+
+    @Override
+    public void getAmbulanceStatus(String status) {
+        Log.w("status", status);
+        if(status.equals(Constants.AMBULANCE_STATUS_PENDING)) {
+
+            createTaskDialog();
+        }
+    }
+
+
 
 }
 

@@ -31,6 +31,9 @@ Route::get('ambulance', 'AmbulanceResourceController@getAmbulances');
 
 Route::post('ambulanceUpdate', 'AmbulanceController@update');
 
+// Update ambulance from app
+Route::post('updatefromambulance', 'AmbulanceResourceController@updateFromAmbulance');
+
 
 Route::post('callerUpdate', 'CallerResourceController@update');
 

@@ -45,16 +45,19 @@ class CallerResourceController extends Controller
         $caller->phone = $request->input('phone');
         $caller->latitude = $request->input('latitude');
         $caller->longitude = $request->input('longitude');
+        $caller->status = $request->input('status');
 
         $injury_id = $request->input('injuryId');
         if(!IsNullOrEmptyString($injury_id)) {
-                    $caller->injury_id = $injury_id;
+            $caller->injury_id = $injury_id;
         }
 
         $symptom = $request->input('symptom');
         if(!IsNullOrEmptyString($symptom)) {
-                    $caller->symptom = $symptom;
+            $caller->symptom = $symptom;
         }
+
+
 
         // Save to db
         $caller->save();

@@ -4,6 +4,8 @@ import android.content.Context;
 import android.content.SharedPreferences;
 
 import com.favn.ambulance.commons.Ambulance;
+import com.google.gson.Gson;
+import com.google.gson.JsonParseException;
 
 /**
  * Created by Hung Gia on 11/28/2016.
@@ -23,13 +25,13 @@ public class SharedPreferencesData {
     }
 
     public static Ambulance getAmbulanceData(String ambulanceInfoKey) {
-//        Gson gson = new Gson();
-//        String json = sharedPreferences.getString(ambulanceInfoKey, "");
+        Gson gson = new Gson();
+        String json = sharedPreferences.getString(ambulanceInfoKey, "");
         Ambulance ambulance = null;
-//        try {
-//            ambulance = gson.fromJson(json, Ambulance.class);
-//        } catch (JsonParseException e) {
-//        }
+        try {
+            ambulance = gson.fromJson(json, Ambulance.class);
+        } catch (JsonParseException e) {
+        }
         return ambulance;
     }
 

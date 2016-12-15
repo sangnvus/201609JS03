@@ -39,9 +39,11 @@ public class Constants {
     public static String SPREFS_AMBULANCE_INFO_KEY = "ambulance_sPrefs";
 
     // Ambulance status - added by KienMT : 12/04/2016
-    public static  String STATUS_READY = "ready";
-    public static  String STATUS_BUZY = "buzy";
-    public static  String STATUS_TAKED = "taked";
+    public static  String AMBULANCE_STATUS_READY = "ready";
+    public static  String AMBULANCE_STATUS_BUZY = "buzy";
+    public static  String AMBULANCE_STATUS_TAKED = "taked";
+    public static  String AMBULANCE_STATUS_PROBLEM = "problem";
+    public static  String AMBULANCE_STATUS_PENDING = "pending";
 
     // Request check setting
     public static final int REQUEST_CHECK_SETTINGS = 0x1;

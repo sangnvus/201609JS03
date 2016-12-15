@@ -40,7 +40,7 @@ public class LoginActivity extends AppCompatActivity {
     private void initControl() {
 
         //urlAddress = "http://104.199.149.193/ambulancelogin";
-        urlAddress = "http://10.20.19.73/capston/WIP/Sources/FAVN_web/public/ambulancelogin";
+        urlAddress = "http://admin.rtsvietnam.com/ambulancelogin";
         bg = (ImageView) findViewById(R.id.bg_login);
         etUsername = (EditText) findViewById(R.id.editext_name);
         etPass = (EditText) findViewById(R.id.editext_pass);
@@ -48,11 +48,11 @@ public class LoginActivity extends AppCompatActivity {
         btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                loginRequest();
+                loginRequest();
 
-                Intent intent = new Intent(LoginActivity.this, WaitingActivity.class);
-                intent.putExtra("isReady", true);
-                startActivity(intent);
+//                Intent intent = new Intent(LoginActivity.this, WaitingActivity.class);
+//                intent.putExtra("isReady", true);
+//                startActivity(intent);
             }
         });
 

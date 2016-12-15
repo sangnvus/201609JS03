@@ -1,5 +1,12 @@
 package com.favn.ambulance.commons;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.util.Iterator;
+
 /**
  * Created by Hung Gia on 11/28/2016.
  */
@@ -24,6 +31,14 @@ public class Ambulance {
         this.id = id;
         this.user_id = user_id;
         this.team = team;
+    }
+
+    public Ambulance(int id, String status, double longitude, double latitude, int caller_taking_id) {
+        this.id = id;
+        this.status = status;
+        this.longitude = longitude;
+        this.latitude = latitude;
+        this.caller_taking_id = caller_taking_id;
     }
 
     public int getId() {
@@ -105,6 +120,49 @@ public class Ambulance {
     public void setCreated_at(String created_at) {
         this.created_at = created_at;
     }
+
+    // Pack data to send to server
+    public String packData() {
+        JSONObject jo = new JSONObject();
+        StringBuffer sb = new StringBuffer();
+
+        try {
+            jo.put("id", id);
+            jo.put("status", status);
+            jo.put("longitude", longitude);
+            jo.put("latitude", latitude);
+            jo.put("caller_taking_id", caller_taking_id);
+
+
+            Boolean isFirstValue = true;
+            Iterator it = jo.keys();
+
+            do {
+                String key = it.next().toString();
+                String value = jo.get(key).toString();
+
+                if(isFirstValue) {
+                    isFirstValue = false;
+                } else {
+                    sb.append("&");
+                }
+
+                sb.append(URLEncoder.encode(key, "UTF-8"));
+                sb.append("=");
+                sb.append(URLEncoder.encode(value, "UTF-8"));
+            } while (it.hasNext());
+
+            return sb.toString();
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
 
 
 }
