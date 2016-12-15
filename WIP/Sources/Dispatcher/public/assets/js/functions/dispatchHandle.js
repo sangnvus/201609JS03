@@ -181,12 +181,16 @@ function enableCallerForm() {
 }
 
 function drawCallerAmbulancePatch(ambulance, caller) {
+
 	// Draw
 	var ambulancePos = new google.maps.LatLng(ambulance.latitude, ambulance.longitude);
 	var callerPos = new google.maps.LatLng(caller.latitude, caller.longitude);
 
 	// Init ambulance marker
 	iniAMarker(ambulancePos, ambulanceBuzyIconDir, 'xe đội ' + ambulance.team);
+
+	// Init caller marker
+	iniAMarker(callerPos, callerIconDir, 'Caller: ' + caller.phone);
 
 	calculateAndDisplayRoute(directionsService, directionsDisplay, ambulancePos, callerPos, function(response) {
 		console.log(response);

@@ -147,7 +147,7 @@ function addAmbulanceToUl(ul, ambulanceObject) {
 	liAmbulance.className += ' active';
 
 	const a = document.createElement('a');
-	a.href = "javascript:void(0)"
+	a.href = "javascript:void(0)";
 	a.onclick = function() {
 		
 		onClickLiAmbulance(ambulanceObject);

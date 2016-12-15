@@ -80,3 +80,13 @@ function showDialogPending(content) {
 function closeNotiBox() {
 	bootbox.hideAll();
 }
+
+
+function confirmLogout() {
+
+	showConfirmBox('Bạn có muốn logout', function(result) {
+        if(result) {
+         window.location.href = 'logout';
+        }
+    });
+}

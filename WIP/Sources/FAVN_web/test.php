@@ -19,6 +19,16 @@
 		password : <input type="password" name="password"><br/>
 
 		<button type="submit">login</button><br/>
+
+		<!-- ambulance update -->
+		id : <input type="text" name="id"><br/>
+		team : <input type="text" name="team"><br/>
+		latitude : <input type="text" name="latitude"><br/>
+		longitude : <input type="text" name="longitude"><br/>
+		status : <input type="text" name="status"><br/>
+
+
+		<button type="submit">login</button><br/>
 	</form>
 
 </body>
