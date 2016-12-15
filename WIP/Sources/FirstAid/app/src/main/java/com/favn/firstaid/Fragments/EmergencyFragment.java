@@ -54,7 +54,7 @@ import static com.favn.firstaid.utils.Constants.LISTVIEW_EMERGENCY;
  * A simple {@link Fragment} subclass.
  */
 public class EmergencyFragment extends Fragment implements AdapterView.OnItemClickListener, LocationChangeListener, InformationSenderListener {
-    private InjuryAdapter adapter;
+    private InjuryAdapter injuryAdapter;
     private DatabaseOpenHelper dbHelper;
     private ListView listView;
     private List<Injury> mInjuryList;
@@ -101,8 +101,8 @@ public class EmergencyFragment extends Fragment implements AdapterView.OnItemCli
         dbHelper.createDatabase();
         dbHelper.openDatabase();
         mInjuryList = dbHelper.getListInjury();
-        adapter = new InjuryAdapter(getActivity(), mInjuryList, LISTVIEW_EMERGENCY, false);
-        listView.setAdapter(adapter);
+        injuryAdapter = new InjuryAdapter(getActivity(), mInjuryList, LISTVIEW_EMERGENCY, false);
+        listView.setAdapter(injuryAdapter);
         listView.setOnItemClickListener(this);
         setHasOptionsMenu(true);
         container.removeAllViews();
@@ -143,8 +143,8 @@ public class EmergencyFragment extends Fragment implements AdapterView.OnItemCli
             @Override
             public void onSearchViewClosed() {
                 // Listview return default list
-                adapter = new InjuryAdapter(getActivity(), mInjuryList, LISTVIEW_EMERGENCY, false);
-                listView.setAdapter(adapter);
+                injuryAdapter = new InjuryAdapter(getActivity(), mInjuryList, LISTVIEW_EMERGENCY, false);
+                listView.setAdapter(injuryAdapter);
             }
         });
 

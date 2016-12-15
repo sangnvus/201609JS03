@@ -525,4 +525,9 @@ public class TaskActivity extends AppCompatActivity implements OnMapReadyCallbac
     @Override
     public void onBackPressed() {
     }
+
+    //TODO : Report picked up caller
+    public void reportPickupCaller(String ambulanceID) {
+
+    }
 }
