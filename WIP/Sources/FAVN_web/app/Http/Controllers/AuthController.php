@@ -39,9 +39,9 @@ class AuthController extends Controller
 			$role_id = Auth::user()->role_id;
 			switch ($role_id) {
 				case 1: // Admin
-					return redirect('admin/user/listuser');
+					return redirect('admin/dashboard');
 				case 2: // Expert
-					return redirect('expert/injury/listinjury');
+					return redirect('expert/dashboard');
 				default: // Other user
 					return redirect('login')->with('noti', 'Tài khoản của bạn không có quyền đăng nhập.');
 			}

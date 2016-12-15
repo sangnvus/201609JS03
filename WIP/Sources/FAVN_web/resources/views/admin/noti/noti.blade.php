@@ -1,4 +1,4 @@
-@extends('expert.layout.index')
+@extends('admin.layout.index')
 
 @section('content')
 	<div class="content">
@@ -11,7 +11,7 @@
 
 	                    <div class="header">
 	                        <h4 class="title">
-	                            Thống kê cuộc gọi
+	                            Câu hỏi / Ý kiến người dùng
 	                        </h4>
 	                       <!--  <p class="category">Danh sách câu hỏi / ý kiến</p> -->
 	                        <div class="row">
@@ -44,11 +44,6 @@
 	                                    @endif
 	                                </div>
 	                            </div> -->
-	                            <!-- <div class="col-md-9">
-	                            	<ul class="nav nav-pills">
-	                            		<li class="active"><a href="#">Thống kê cuộc gọi</a></li>
-	                            	</ul>
-	                            </div> -->
 	                            <div class="col-md-12">
 									<form action="expert/qanda/search" class="form-inline pull-right">
 										<div class="form-group">
@@ -68,150 +63,30 @@
 								</div>
 							@endif
 
-							<div class="statistical-bar" id="test">
-									THỐNG KÊ - Câu hỏi về chấn thương: 10 | Không nối được xe : 3 | Cuộc gọi mục đích khác : 2 
-							</div>
 							<table class="table table-hover table-striped">
 								<thead>
-									<th>Số điện thoại</th>
-									<th>Chấn thương</th>
-									<th>Thời gian gọi</th>
-									<th>Tình trạng</th>
+									<th>Người hỏi</th>
+									<th>Email</th>
+									<th>Chấn thương / tiêu đề</th>
+									<th>Nội dung</th>
 									<th>Thao tác</th>
 								</thead>
 								<tbody>
 									
-										<tr>
-										<td>
-											0906 113 555
-										</td>
-										<td>
-											Gãy chân
-										</td>
-										<td>
-											8:39 PM - 12/12/2016
-										</td>
-										<td>
-											Đã được nối xe
-										</td>
-
-										<td style="width: 85px;">
-											<button type="button" rel="tooltip" title="Reply" class="btn btn-info btn-simple btn-xs">
-												<i class="fa fa-search-plus fa-lg"></i>
-											</button>
-
-											<button type="button" rel="tooltip" title="Remove" class="btn btn-danger btn-simple btn-xs">
-												<i class="fa fa-times fa-lg"></i>
-											</button>
-										</td>
-
-									</tr>
-
 									<tr>
-										<td>
-											0305 118 239
-										</td>
-										<td>
-											Bỏng nặng
-										</td>
-										<td>
-											8:39 PM - 12/12/2016
-										</td>
-										<td>
-											Hủy nối xe
-										</td>
-
 										<td style="width: 85px;">
 											<button type="button" rel="tooltip" title="Reply" class="btn btn-info btn-simple btn-xs">
-												<i class="fa fa-search-plus fa-lg"></i>
+												<i class="fa fa-reply fa-lg"></i>
 											</button>
 
 											<button type="button" rel="tooltip" title="Remove" class="btn btn-danger btn-simple btn-xs">
 												<i class="fa fa-times fa-lg"></i>
 											</button>
 										</td>
-
-									</tr>
-
-									<tr>
-										<td>
-											0906 113 555
-										</td>
-										<td>
-											Gãy chân
-										</td>
-										<td>
-											8:39 PM - 12/12/2016
-										</td>
-										<td>
-											Đã được nối xe
-										</td>
-
-										<td style="width: 85px;">
-											<button type="button" rel="tooltip" title="Reply" class="btn btn-info btn-simple btn-xs">
-												<i class="fa fa-search-plus fa-lg"></i>
-											</button>
-
-											<button type="button" rel="tooltip" title="Remove" class="btn btn-danger btn-simple btn-xs">
-												<i class="fa fa-times fa-lg"></i>
-											</button>
-										</td>
-
-									</tr>
-
-									<tr>
-										<td>
-											0123 252 213
-										</td>
-										<td>
-											Đau ruột thừa
-										</td>
-										<td>
-											8:39 PM - 12/12/2016
-										</td>
-										<td>
-											Đã được nối xe
-										</td>
-
-										<td style="width: 85px;">
-											<button type="button" rel="tooltip" title="Reply" class="btn btn-info btn-simple btn-xs">
-												<i class="fa fa-search-plus fa-lg"></i>
-											</button>
-
-											<button type="button" rel="tooltip" title="Remove" class="btn btn-danger btn-simple btn-xs">
-												<i class="fa fa-times fa-lg"></i>
-											</button>
-										</td>
-
-									</tr>
-
-									<tr>
-										<td>
-											0906 113 555
-										</td>
-										<td>
-											Hen xuyễn
-										</td>
-										<td>
-											8:39 PM - 12/12/2016
-										</td>
-										<td>
-											Đã được nối xe
-										</td>
-
-										<td style="width: 85px;">
-											<button type="button" rel="tooltip" title="Reply" class="btn btn-info btn-simple btn-xs">
-												<i class="fa fa-search-plus fa-lg"></i>
-											</button>
-
-											<button type="button" rel="tooltip" title="Remove" class="btn btn-danger btn-simple btn-xs">
-												<i class="fa fa-times fa-lg"></i>
-											</button>
-										</td>
-
 									</tr>
 								</tbody>
 							</table>
+
 						</div>
 
 	                   
@@ -245,7 +120,7 @@
 
 	<!-- set class active for li (menu list item) -->
 	<script type="text/javascript">
-	    document.getElementById("nav-dashboard-item").className += "active";
+	    document.getElementById("nav-notis-item").className += "active";
 	</script>
 
 
@@ -264,5 +139,8 @@
 			redirect(goto);
 		};
 	</script>
+
+
 	
 @endsection
+

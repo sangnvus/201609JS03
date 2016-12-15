@@ -55,6 +55,12 @@ Route::get('accessdenied', function(){
 // Admin route group
 Route::group(['prefix'=>'admin', 'middleware' => 'adminLogin'], function(){
 
+	// Call controller show dashboard
+	Route::get('dashboard', 'DashBoardController@showAdminDashboard');
+
+	// Call controller show noti
+	Route::get('noti', 'DashBoardController@showAdminNoti');
+
 	Route::group(['prefix'=>'user'], function(){
 
 		// Call controller show list all user
@@ -80,6 +86,8 @@ Route::group(['prefix'=>'admin', 'middleware' => 'adminLogin'], function(){
 		// Call controller search user
 		Route::get('search', 'UserController@search');
 
+		
+
 	});	
 
 	// Q&A
@@ -104,6 +112,8 @@ Route::group(['prefix'=>'admin', 'middleware' => 'adminLogin'], function(){
 
 	});
 
+
+
 });
 
 
@@ -113,7 +123,8 @@ Route::group(['prefix'=>'admin', 'middleware' => 'adminLogin'], function(){
 // expert route group 
 Route::group(['prefix'=>'expert', 'middleware' => 'expertLogin'], function(){
 	// Dashboard
-	Route::get('dashboard', 'DashBoardController@showDashboard');
+	Route::get('dashboard', 'DashBoardController@showDashboardExpert');
+
 
 	// Injury
 	Route::group(['prefix'=>'injury'], function(){

@@ -3428,3 +3428,8 @@ body > .navbar-collapse[data-color="purple"]:after {
     color: #757575;
     text-align: center;
 }
+
+.a-tag-sibar-right {
+  background: white;
+  color: grey;
+}

@@ -1,4 +1,4 @@
-@extends('expert.layout.index')
+@extends('admin.layout.index')
 
 @section('content')
 	<div class="content">
@@ -69,7 +69,7 @@
 							@endif
 
 							<div class="statistical-bar" id="test">
-									THỐNG KÊ - Câu hỏi về chấn thương: 10 | Không nối được xe : 3 | Cuộc gọi mục đích khác : 2 
+									THỐNG KÊ - Cuộc gọi: 10 | Đã nối xe: 5 | Không nối được xe : 3 | Cuộc gọi mục đích khác : 2 
 							</div>
 							<table class="table table-hover table-striped">
 								<thead>
@@ -266,3 +266,4 @@
 	</script>
 	
 @endsection
+

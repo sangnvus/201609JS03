@@ -10,18 +10,18 @@
 
     <div class="sidebar-wrapper">
         <div class="logo">
-            <a href="expert/injury/listinjury" class="simple-text">
+            <a href="expert/dashboard" class="simple-text">
                 Bảng điều khiển
             </a>
         </div>
 
         <ul id="sidebar-menu-group" class="nav">
-            <li id="nav-dashboard-item">
-                <a href="expert/injury/listinjury">
+           <!--  <li id="nav-dashboard-item">
+                <a href="expert/dashboard">
                     <i class="pe-7s-graph"></i>
                     <p>Trang chủ</p>
                 </a>
-            </li>
+            </li> -->
 
             <li id="nav-injuries-item">
                 <a href="expert/injury/listinjury">
@@ -37,12 +37,12 @@
                 </a>
             </li>
 
-            <li id="nav-noti-item">
+           <!--  <li id="nav-noti-item">
                 <a href="expert/injury/listinjury">
                     <i class="pe-7s-bell"></i>
                     <p>Thông báo</p>
                 </a>
-            </li>
+            </li> -->
         </ul>
     </div>
 </div>
