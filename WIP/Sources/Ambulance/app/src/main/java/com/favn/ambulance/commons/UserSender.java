@@ -8,6 +8,7 @@ import android.widget.Toast;
 
 import com.favn.ambulance.activities.WaitingActivity;
 import com.favn.ambulance.utils.Constants;
+import com.favn.ambulance.utils.LoginWarning;
 import com.favn.ambulance.utils.SharedPreferencesData;
 
 import java.io.BufferedReader;
@@ -89,11 +90,11 @@ public class UserSender extends AsyncTask<Void, Void, String>{
         pd.dismiss();
 
         if(user == null){
-            Toast.makeText(context, "Lỗi kết nối !", Toast.LENGTH_LONG).show();
+//            Toast.makeText(context, "Lỗi kết nối !", Toast.LENGTH_LONG).show();
         } else if(user.equals("[\"wrong\"]")){
-            Toast.makeText(context, "Sai tên đăng nhập hoặc mật khẩu !", Toast.LENGTH_LONG).show();
+            LoginWarning.createLoginWarningDialog(context, "Sai tên đăng nhập hoặc mật khẩu !");
         } else if(user.equals("[\"accessdenied\"]")) {
-            Toast.makeText(context, "Tài khoản không có quyền đăng nhập !", Toast.LENGTH_LONG).show();
+            LoginWarning.createLoginWarningDialog(context, "Tài khoản không có quyền đăng nhập !");
         } else {
             goToWaitingActivity(true); //extract to method 10/12
             SharedPreferencesData.saveData(context, Constants.SPREFS_NAME, Constants
