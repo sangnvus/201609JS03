@@ -45,6 +45,11 @@ public class Constants {
     public static  String AMBULANCE_STATUS_PROBLEM = "problem";
     public static  String AMBULANCE_STATUS_PENDING = "pending";
 
+    // Ambulance task report type - added by KienMT : 12/17/2016
+    public static String REPORT_TASK_DECLINE = "decline";
+    public static String REPORT_TASK_ACCEPT = "accept";
+
+
     // Request check setting
     public static final int REQUEST_CHECK_SETTINGS = 0x1;
 

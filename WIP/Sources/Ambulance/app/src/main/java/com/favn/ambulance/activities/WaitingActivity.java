@@ -28,6 +28,7 @@ import android.widget.Toast;
 import com.favn.ambulance.commons.AmbulanceInfoSender;
 import com.favn.ambulance.commons.AmbulanceStatusReturnListener;
 import com.favn.ambulance.commons.FirebaseHandle;
+import com.favn.ambulance.services.TaskReporter;
 import com.favn.ambulance.services.location.LocationChangeListener;
 import com.favn.ambulance.services.location.LocationFinder;
 import com.favn.ambulance.services.location.LocationStatus;
@@ -331,10 +332,16 @@ public class WaitingActivity extends AppCompatActivity implements LocationChange
     }
 
     private void declineTask() {
-        Toast.makeText(this, "Hủy rồi nhé !", Toast.LENGTH_LONG).show();
+        TaskReporter taskReporter = new TaskReporter();
+        taskReporter.declineTask(ambulance.getId());
+
+        // TODO : Switch to problem mod
+        
     }
 
     private void acceptTask() {
+
+
         AmbulanceInfoSender ambulanceInfoSender= new AmbulanceInfoSender();
         ambulanceInfoSender.setContext(WaitingActivity.this);
         ambulanceInfoSender.setUrlAddress(urlAddress);
