@@ -38,5 +38,23 @@ class AmbulanceResourceController extends Controller
 
     }
 
+    public function updateFromAmbulance(Request $request)
+    {
+
+        $ambulance = Ambulance::find($request->input('id'));
+
+        $ambulance->status = $request->input('status');
+        $ambulance->latitude = $request->input('latitude');
+        $ambulance->longitude = $request->input('longitude');
+        $ambulance->caller_taking_id = $request->input('caller_taking_id');
+        // Save to db
+        $ambulance->save();
+
+        echo 'Gửi câu hỏi thành công';
+
+    }
+
+
+
 
 }

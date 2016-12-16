@@ -92,7 +92,7 @@ public class InstructionActivity extends AppCompatActivity implements LocationCh
         injuryId = intent.getExtras().getInt("id");
 
         // Assign url address value (web service url) - Kienmt : 11/24/2016
-        urlAddress = "http://104.199.149.193/caller";
+        urlAddress = "http://10.20.19.73/capston/WIP/Sources/FAVN_web/public/caller";
 
         String name = intent.getExtras().getString("name");
         int typeOfAction = intent.getExtras().getInt("typeOfAction");
@@ -262,19 +262,19 @@ public class InstructionActivity extends AppCompatActivity implements LocationCh
 
     // Send caller infor to db server - KienMT : 11/24/2016
     private void sendCallerInfoToServer(Location location) {
-        CallerInfoSender ciSender = new CallerInfoSender();
+        CallerInfoSender callerInforSender = new CallerInfoSender();
 
         // Assign values
-        ciSender.setContext(InstructionActivity.this);
-        ciSender.setUrlAddress(urlAddress);
-        ciSender.setPhone("0906111222");
-        ciSender.setInjuryId(injuryId);
-        ciSender.setLatitude(location.getLatitude());
-        ciSender.setLongitude(location.getLongitude());
-        ciSender.setStatus("waiting");
-        ciSender.setInformationSenderListener(InstructionActivity.this);
+        callerInforSender.setContext(InstructionActivity.this);
+        callerInforSender.setUrlAddress(urlAddress);
+        callerInforSender.setPhone(phoneNumber);
+        callerInforSender.setInjuryId(injuryId);
+        callerInforSender.setLatitude(location.getLatitude());
+        callerInforSender.setLongitude(location.getLongitude());
+        callerInforSender.setStatus("waiting");
+        callerInforSender.setInformationSenderListener(InstructionActivity.this);
 
-        ciSender.execute();
+        callerInforSender.execute();
     }
 
 

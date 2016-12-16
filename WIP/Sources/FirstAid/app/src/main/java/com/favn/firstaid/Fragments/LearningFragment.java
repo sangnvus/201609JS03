@@ -30,7 +30,7 @@ import static com.favn.firstaid.utils.Constants.LISTVIEW_EMERGENCY;
  * A simple {@link Fragment} subclass.
  */
 public class LearningFragment extends Fragment implements AdapterView.OnItemClickListener {
-    private InjuryAdapter adapter;
+    private InjuryAdapter injuryAdapter;
     private DatabaseOpenHelper dbHelper;
     private ListView listView;
     private List<Injury> mInjuryList;
@@ -53,10 +53,10 @@ public class LearningFragment extends Fragment implements AdapterView.OnItemClic
         mInjuryList = dbHelper.getListInjury();
 
         // TODO : pending data for learning screen
-        // adapter = new InjuryAdapter(getActivity(), mInjuryList);
-        adapter = new InjuryAdapter(getActivity(), mInjuryList, LISTVIEW_EMERGENCY);
+        // injuryAdapter = new InjuryAdapter(getActivity(), mInjuryList);
+        injuryAdapter = new InjuryAdapter(getActivity(), mInjuryList, LISTVIEW_EMERGENCY);
 
-        listView.setAdapter(adapter);
+        listView.setAdapter(injuryAdapter);
         listView.setOnItemClickListener(this);
         setHasOptionsMenu(true);
         container.removeAllViews();

@@ -57,6 +57,7 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
+import com.google.gson.Gson;
 
 import java.io.UnsupportedEncodingException;
 
@@ -105,8 +106,10 @@ public class TaskActivity extends AppCompatActivity implements OnMapReadyCallbac
 //        });
 //
 //        dialog.setCancelable(true);
+
 //        dialog.create().show();
 //
+
 
         createLocationFinder();
         createUI();
@@ -506,9 +509,16 @@ public class TaskActivity extends AppCompatActivity implements OnMapReadyCallbac
                 .setCancelable(false)
                 .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
+                        String status = null;
+                        if(isReady) {
+                            status = Constants.AMBULANCE_STATUS_READY;
+                        } else {
+                            status = Constants.AMBULANCE_STATUS_BUZY;
+                        }
+                        SharedPreferencesData.saveData(getBaseContext(), Constants.SPREFS_NAME, Constants
+                                .SPREFS_AMBULANCE_STATUS_KEY, status);
                         goBackToWaitingActivity(isReady);
-//                        Toast.makeText(TaskActivity.this, isReady + "this is my Toast message!!! =)",
-//                                Toast.LENGTH_LONG).show();
+
                     }
                 })
                 .setNegativeButton("Hủy", new DialogInterface.OnClickListener() {
@@ -524,5 +534,10 @@ public class TaskActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
     @Override
     public void onBackPressed() {
+    }
+
+    //TODO : Report picked up caller
+    public void reportPickupCaller(String ambulanceID) {
+
     }
 }

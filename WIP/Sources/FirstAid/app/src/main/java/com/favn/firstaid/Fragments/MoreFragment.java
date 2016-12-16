@@ -25,7 +25,7 @@ import java.util.List;
  */
 public class MoreFragment extends Fragment {
 
-    private ItemsListAdapter myItemsListAdapter;
+    private ItemsListAdapter mItemsListAdapter;
     private List<ItemsListAdapter.Item> items;
     private int InjId = 0;
 
@@ -41,8 +41,8 @@ public class MoreFragment extends Fragment {
         ListView listView = (ListView) rootView.findViewById(R.id.list_more);
 
         initItems();
-        myItemsListAdapter = new ItemsListAdapter(getActivity(), items);
-        listView.setAdapter(myItemsListAdapter);
+        mItemsListAdapter = new ItemsListAdapter(getActivity(), items);
+        listView.setAdapter(mItemsListAdapter);
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override

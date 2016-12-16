@@ -97,7 +97,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private GoogleApiClient mGoogleApiClient;
     private LocationRequest mLocationRequest;
     private Location mCurrentLocation;
-    protected LatLng mHealthFacilityLatLng;
+    private LatLng mHealthFacilityLatLng;
     private HealthFacility healthFacilityDestination;
 
     private Marker destinationMarkers;

@@ -65,22 +65,40 @@ function calculateAndDisplayRoute(directionsService, directionsDisplay, origin, 
 }
 
 //----- INIT A MARKER BY POST, ICON, TITLE
-function iniAMarker(pos, icon, title, type){
+function iniAMarker(pos, icon, object, type){
   var marker = new google.maps.Marker({
     position: pos,
     map: map,
-    title: title,
     icon: icon
   });
-
-  infoWindowTmp =  
+ 
   infoWindow = new google.maps.InfoWindow({
     maxwidth: 300,
   });
 
   marker.addListener('mouseover', function() {
-    infoWindow.setContent(title);
-    infoWindow.open(map, marker);
+    if(type == MAKER_TYPE_AMBULANCE) {
+      if(object.status == 'ready') {
+        infoWindow.setContent(
+          '<div style="color:green;">Đội: ' + object.team + '</div></br>' + 
+          '<div style="color:green;"Vị trí: >' + object.latitude + '</div></br>'
+        );
+      } else {
+         if(object.caller_taking_id != null) {
+            getCallerInfoByID(object.caller_taking_id);
+            infoWindow.setContent(
+              '<div style="color:green;">Đội: ' + object.team + '</div></br>' + 
+              '<div style="color:green;">Vị trí: ' + object.latitude + '</div></br>' +
+              '<div style="color:green;">Đang đón: ' + takingCaller.phone + '</div></br>'
+            );
+          }
+        
+      }
+      infoWindow.open(map, marker);
+    } else {
+      infoWindow.setContent('<h1>abc</h1>');
+      infoWindow.open(map, marker);
+    }
   });
 
   marker.addListener('mouseout', function() {
@@ -123,7 +141,7 @@ function initAmbulanceMarkers(ambulanceList) {
 
 
 
-    iniAMarker(pos, icon, title, 'ambulance');
+    iniAMarker(pos, icon, ambulanceList[i], 'ambulance');
 
   }
 }

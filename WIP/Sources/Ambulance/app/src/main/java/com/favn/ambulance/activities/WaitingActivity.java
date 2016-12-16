@@ -25,6 +25,9 @@ import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.favn.ambulance.commons.AmbulanceInfoSender;
+import com.favn.ambulance.commons.AmbulanceStatusReturnListener;
+import com.favn.ambulance.commons.FirebaseHandle;
 import com.favn.ambulance.services.location.LocationChangeListener;
 import com.favn.ambulance.services.location.LocationFinder;
 import com.favn.ambulance.services.location.LocationStatus;
@@ -41,7 +44,7 @@ import com.google.android.gms.common.api.Status;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
-public class WaitingActivity extends AppCompatActivity implements LocationChangeListener {
+public class WaitingActivity extends AppCompatActivity implements LocationChangeListener, AmbulanceStatusReturnListener {
 
     NotificationCompat.Builder notification;
     private static final int id = 45612;
@@ -57,6 +60,11 @@ public class WaitingActivity extends AppCompatActivity implements LocationChange
     private FirebaseDatabase database;
     private DatabaseReference dbRef;
     private Intent intent;
+    // Add instant FirebaseHandle object - KienMT : 12/16/2016
+    private FirebaseHandle firebaseHandle;
+    // Update ambulance webservice URL - Kienmt : 12/16/2016
+    private String urlAddress;
+
 
     private Switch swReady;
 
@@ -70,17 +78,6 @@ public class WaitingActivity extends AppCompatActivity implements LocationChange
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_waiting_screen);
 
-        //Get status swReady from LoginActivity and TaskActivity
-try {
-    isReady = intent.getExtras().getBoolean("isReady");
-    Toast.makeText(this, isReady + "this is my Toast message!!! =)",
-            Toast.LENGTH_LONG).show();
-} catch(Exception e) {
-
-}
-
-
-
         notification = new NotificationCompat.Builder(this);
         notification.setAutoCancel(true);
 
@@ -89,8 +86,21 @@ try {
         intentFilter.addAction(Constants.INTENT_FILTER_PROVIDERS_CHANGED);
         intentFilter.addAction(Constants.INTENT_FILTER_CONNECTIVITY_CHANGE);
 
+        // Assign update ambulance webservice url value - Kienmt : 12/16/2016
+        urlAddress = "http://10.20.19.73/capston/WIP/Sources/Dispatcher/public/updatefromambulance";
+
         // Get ambulance info from SharedPreferences
         ambulance = SharedPreferencesData.getAmbulanceData(Constants.SPREFS_AMBULANCE_INFO_KEY);
+
+
+        // Set Task switch status
+        setSwitchStatus(SharedPreferencesData.getAmbulanceStatus());
+
+        // Listen ambulance status change - KienMT : 12/16/2016
+        firebaseHandle = new FirebaseHandle(this);
+        firebaseHandle.listenAmbulanceStatusChanged(ambulance.getId());
+
+        Log.w("ambulance ID:", String.valueOf(ambulance.getId()));
 
 
         // TODO : HANDLE FIREBASE
@@ -146,7 +156,7 @@ try {
 //
 //            }
 //        });
-//        updateAmbulance(Constants.STATUS_READY);
+//        updateAmbulance(Constants.AMBULANCE_STATUS_READY);
         //TODO : END HANDLE FIREBASE
 
 
@@ -155,25 +165,6 @@ try {
         // See https://g.co/AppIndexing/AndroidStudio for more information.
         client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
 
-        swReady = (Switch) findViewById(R.id.switch_ready);
-
-        if (isReady) {
-            swReady.setChecked(true);
-            setLayoutNotReadyUI(false);
-        } else {
-            swReady.setChecked(false);
-            setLayoutNotReadyUI(true);
-        }
-        swReady.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked) {
-                    OnSwitch();
-                } else {
-                    OffSwitch();
-                }
-            }
-        });
 
     }
 
@@ -316,13 +307,24 @@ try {
     }
 
     private void acceptTask() {
-        database = FirebaseDatabase.getInstance();
-        dbRef = database.getReference("ambulances/" + ambulance.getId());
-        dbRef.child("status").setValue("buzy");
+        AmbulanceInfoSender ambulanceInfoSender = new AmbulanceInfoSender();
+        ambulanceInfoSender.setContext(WaitingActivity.this);
+        ambulanceInfoSender.setUrlAddress(urlAddress);
+        ambulanceInfoSender.setId(64);
+        ambulanceInfoSender.setStatus("ok status");
+        ambulanceInfoSender.setLatitude(123);
+        ambulanceInfoSender.setLongitude(321);
+        ambulanceInfoSender.setCaller_taking_id(1);
+        ambulanceInfoSender.execute();
+
+
+//        database = FirebaseDatabase.getInstance();
+//        dbRef = database.getReference("ambulances/" + ambulance.getId());
+//        dbRef.child("status").setValue("buzy");
     }
 
     //Create logout dialog
-    private void createLogoutDialog(){
+    private void createLogoutDialog() {
         new AlertDialog.Builder(this)
                 .setTitle("Đăng xuất")
                 .setMessage("Bạn có muốn đăng xuất khỏi ứng dụng không ?")
@@ -383,7 +385,7 @@ try {
     // Handle update ambulance when change status - added by KienMT : 12/4/2016
     public void updateAmbulance(String type) {
         DatabaseReference dbRef = database.getReference("ambulances/" + ambulance.getId());
-        if (type.equals(Constants.STATUS_READY)) {
+        if (type.equals(Constants.AMBULANCE_STATUS_READY)) {
             dbRef.child("caller_taking_id").setValue(null);
         }
         if (mCurrentLocation != null) {
@@ -393,14 +395,47 @@ try {
         dbRef.child("status").setValue(type);
     }
 
-    //On switch swReady
-    public void OnSwitch() {
-        setLayoutNotReadyUI(false);
+
+    // switch listten for change
+    private void setSwitchStatus(String status) {
+        swReady = (Switch) findViewById(R.id.switch_ready);
+        if (status.equals(Constants.AMBULANCE_STATUS_READY)) {
+            swReady.setChecked(true);
+            setLayoutNotReadyUI(false);
+        } else {
+            swReady.setChecked(false);
+            setLayoutNotReadyUI(true);
+        }
+
+        swReady.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    OnSwitch();
+                } else {
+                    OffSwitch();
+                }
+            }
+        });
     }
 
-    //Off switch swReady
-    public void OffSwitch() {
+    //On switch
+    private void OnSwitch() {
+        setLayoutNotReadyUI(false);
+        // Save ambulance status to SharedPreferences
+        SharedPreferencesData.saveData(this, Constants.SPREFS_NAME, Constants
+                .SPREFS_AMBULANCE_STATUS_KEY, Constants.AMBULANCE_STATUS_READY);
+        //TODO send status ready to server
+    }
+
+    //Off switch
+    private void OffSwitch() {
         setLayoutNotReadyUI(true);
+        // Save ambulance status to SharedPreferences
+        SharedPreferencesData.saveData(this, Constants.SPREFS_NAME, Constants
+                .SPREFS_AMBULANCE_STATUS_KEY, Constants.AMBULANCE_STATUS_BUZY);
+        //TODO send status buzy to server
+
     }
 
     private void setLayoutNotReadyUI(boolean isNotReady) {
@@ -414,6 +449,16 @@ try {
             tvReadyStatus.setTextColor(getResources().getColor(R.color.colorEditText));
         }
     }
+
+    @Override
+    public void getAmbulanceStatus(String status) {
+        Log.w("status", status);
+        if (status.equals(Constants.AMBULANCE_STATUS_PENDING)) {
+
+            createTaskDialog();
+        }
+    }
+
 
 }
 

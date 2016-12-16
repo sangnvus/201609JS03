@@ -4,11 +4,9 @@
 
 
 	<div class="sidebar-wrapper">
-		<div class="logo">
-			<a href="dispatcher.html" class="simple-text">
-				Điều phối
-			</a>
-		</div>
+	<div class="container">
+	<h3>Điều xe</h3>
+	</div>
 		
 			<ul class="nav">
 			
@@ -54,7 +52,7 @@
 						<input id="caller_id" name="caller_id" type="hidden">
 						<li style="padding: 10px;">
 							<div style="align-content: center;">
-							<button style="background-color: green; color: white; float: right; width: 100px" type="button" class="btn btn-default" onclick="onDispatchClick()">Điều phối xe</button>
+							<button style="background-color: green; color: white; float: right; width: 100px" type="button" class="btn btn-default" onclick="onDispatchClick()">Điều xe</button>
 								<button style="background-color: red; color: white; float: right; width: 100px" type="button" class="btn btn-default" onclick="onCancelDispatchClick()">Hủy</button>
 							</div>
 						</li>
