@@ -105,8 +105,10 @@ public class TaskActivity extends AppCompatActivity implements OnMapReadyCallbac
 //        });
 //
 //        dialog.setCancelable(true);
+
 //        dialog.create().show();
 //
+
 
         createLocationFinder();
         createUI();
