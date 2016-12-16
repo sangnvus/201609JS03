@@ -26,17 +26,17 @@ import android.widget.TextView;
 
 import com.favn.firstaid.R;
 import com.favn.firstaid.adapters.InstructionAdapter;
+import com.favn.firstaid.commons.CallerInfoSender;
+import com.favn.firstaid.commons.InformationSenderListener;
+import com.favn.firstaid.commons.Instruction;
 import com.favn.firstaid.database.DatabaseOpenHelper;
 import com.favn.firstaid.services.location.LocationChangeListener;
 import com.favn.firstaid.services.location.LocationFinder;
 import com.favn.firstaid.services.location.LocationStatus;
-import com.favn.firstaid.commons.CallerInfoSender;
 import com.favn.firstaid.utils.Constants;
-import com.favn.firstaid.commons.InformationSenderListener;
 import com.favn.firstaid.utils.NetworkStatus;
 import com.favn.firstaid.utils.SOSCalling;
 import com.favn.firstaid.utils.SettingPref;
-import com.favn.firstaid.commons.Instruction;
 import com.google.android.gms.common.api.Status;
 import com.google.firebase.database.DatabaseReference;
 
@@ -126,27 +126,31 @@ public class InstructionActivity extends AppCompatActivity implements LocationCh
                 isSentUserInfo = false;
             }
 
-            final int[] audio = {R.raw.audio_1, R.raw.audio_2, R.raw.audio_3};
 
-            listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
-                @Override
-                public void onItemClick(AdapterView<?> parent, View view, int pos, long id) {
-
-                    if (playingAudioId == audio[pos] && mMediaPlayer.isPlaying()) {
-                        mMediaPlayer.stop();
-                    } else {
-                        playAudio(audio[pos]);
-                    }
-                    for (int i = 0; i < listView.getChildCount(); i++) {
-                        if (pos == i) {
-                            listView.getChildAt(i).setBackground(getResources().getDrawable(R.drawable.list_item_color));
-                        } else {
-                            listView.getChildAt(i).setBackgroundColor(Color.TRANSPARENT);
+                    @Override
+                    public void onItemClick(AdapterView<?> parent, View view, int pos, long id) {
+                        Instruction instruction = mInstructionList.get(pos);
+                        final int audioID = getResources().getIdentifier("com.favn.firstaid:raw/" + instruction.getAudio(), null, null);
+                        try {
+                            if (playingAudioId == audioID && mMediaPlayer.isPlaying()) {
+                                mMediaPlayer.stop();
+                            } else {
+                                playAudio(audioID);
+                            }
+                        }catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        for (int i = 0; i < listView.getChildCount(); i++) {
+                            if (pos == i) {
+                                listView.getChildAt(i).setBackground(getResources().getDrawable(R.drawable.list_item_color));
+                            } else {
+                                listView.getChildAt(i).setBackgroundColor(Color.TRANSPARENT);
+                            }
                         }
                     }
-                }
-            });
+                });
         } else {
             mInstructionList = dbHelper.getListInstruction(injuryId, isEmergency);
             instructionAdapter = new InstructionAdapter(this, this, mInstructionList, isEmergency);
@@ -167,6 +171,7 @@ public class InstructionActivity extends AppCompatActivity implements LocationCh
         }
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
     }
 
     @Override

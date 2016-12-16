@@ -1,6 +1,7 @@
 package com.favn.firstaid.adapters;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -22,7 +23,7 @@ public class InstructionAdapter extends BaseAdapter {
     private Context mContext;
     private List<Instruction> mInstructionList;
     private boolean isEmergency;
-    private InformationSending informationSending;
+    private InformationSending informationSending;;
 
     public interface InformationSending {
         void requestInformationSending();
@@ -59,10 +60,8 @@ public class InstructionAdapter extends BaseAdapter {
         TextView tvInstruction = (TextView) v.findViewById(R.id.text_instruction_content);
         TextView tvExplanation = (TextView) v.findViewById(R.id.text_instruction_explaination);
         ImageView imgImage = (ImageView) v.findViewById(R.id.image_instruction);
-        int imagePath = v.getResources().getIdentifier("com.favn.firstaid:drawable/" +
-                instruction.getImage(), null, null);
-        int audio = v.getResources().getIdentifier("com.favn.firstaid:raw/" +
-                instruction.getAudio(), null, null);
+        int imagePath = v.getResources().getIdentifier("com.favn.firstaid:drawable/" + instruction.getImage(), null, null);
+        String audio = instruction.getAudio();
 
         tvStep.setText(instruction.getStep() + "");
         tvInstruction.setText(instruction.getContent());
@@ -81,6 +80,8 @@ public class InstructionAdapter extends BaseAdapter {
                     }
                 });
             }
+            Log.d("abc", String.valueOf(imagePath));
+
         } else {
             if(instruction.getExplanation() != null) {
                 tvExplanation.setVisibility(View.VISIBLE);

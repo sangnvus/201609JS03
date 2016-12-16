@@ -207,9 +207,9 @@ try {
                 nm.notify(id, notification.build());
 
                 //show task dialog
-//                createTaskDialog();
+                createTaskDialog();
 
-                createLogoutDialog();
+//                createLogoutDialog();
                 break;
             case R.id.application_info:
                 startActivity(new Intent(this, AboutActivity.class));
