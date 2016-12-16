@@ -14,13 +14,10 @@ import com.google.gson.JsonParseException;
 public class SharedPreferencesData {
     static SharedPreferences sharedPreferences;
 
-    public static void saveData(Context context, String SPName, String ambulanceInfoKey, String
-            ambulanceInfoData) {
+    public static void saveData(Context context, String SPName, String key, String value) {
         sharedPreferences = context.getSharedPreferences(SPName, context.MODE_PRIVATE);
-
         SharedPreferences.Editor editor = sharedPreferences.edit();
-
-        editor.putString(ambulanceInfoKey, ambulanceInfoData);
+        editor.putString(key, value);
         editor.commit();
     }
 
@@ -33,6 +30,10 @@ public class SharedPreferencesData {
         } catch (JsonParseException e) {
         }
         return ambulance;
+    }
+
+    public static String getAmbulanceStatus() {
+        return sharedPreferences.getString(Constants.SPREFS_AMBULANCE_STATUS_KEY, "");
     }
 
     // Call this method when logout

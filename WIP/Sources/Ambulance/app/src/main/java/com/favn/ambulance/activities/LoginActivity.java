@@ -52,9 +52,6 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 checkBeforeLogin();
-//                Intent intent = new Intent(LoginActivity.this, WaitingActivity.class);
-//                intent.putExtra("isReady", true);
-//                startActivity(intent);
             }
         });
 
@@ -109,15 +106,6 @@ public class LoginActivity extends AppCompatActivity {
         }
 
         return true;
-    }
-
-    private void createWarningNetworkDialog() {
-        new AlertDialog.Builder(this)
-                .setTitle("Đăng nhập không thành công")
-                .setMessage("Rất tiếc, không thể đăng nhập. Vui lòng kiểm tra kết nối.")
-                .setNegativeButton("OK", null) // dismisses by default
-                .create()
-                .show();
     }
 
     @Override

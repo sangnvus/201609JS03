@@ -10,6 +10,7 @@ import com.favn.ambulance.activities.WaitingActivity;
 import com.favn.ambulance.utils.Constants;
 import com.favn.ambulance.utils.LoginWarning;
 import com.favn.ambulance.utils.SharedPreferencesData;
+import com.google.gson.Gson;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -99,6 +100,8 @@ public class UserSender extends AsyncTask<Void, Void, String>{
             goToWaitingActivity(true); //extract to method 10/12
             SharedPreferencesData.saveData(context, Constants.SPREFS_NAME, Constants
                     .SPREFS_AMBULANCE_INFO_KEY, user);
+            SharedPreferencesData.saveData(context, Constants.SPREFS_NAME, Constants
+                    .SPREFS_AMBULANCE_STATUS_KEY, Constants.AMBULANCE_STATUS_READY);
         }
     }
 

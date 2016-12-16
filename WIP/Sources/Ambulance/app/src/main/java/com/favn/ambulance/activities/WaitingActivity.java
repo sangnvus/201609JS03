@@ -45,7 +45,7 @@ import com.google.android.gms.common.api.Status;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
-public class WaitingActivity extends AppCompatActivity implements LocationChangeListener, AmbulanceStatusReturnListener{
+public class WaitingActivity extends AppCompatActivity implements LocationChangeListener, AmbulanceStatusReturnListener {
 
     NotificationCompat.Builder notification;
     private static final int id = 45612;
@@ -67,7 +67,6 @@ public class WaitingActivity extends AppCompatActivity implements LocationChange
     private String urlAddress;
 
 
-
     private Switch swReady;
 
     /**
@@ -79,17 +78,6 @@ public class WaitingActivity extends AppCompatActivity implements LocationChange
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_waiting_screen);
-
-        //Get status swReady from LoginActivity and TaskActivity
-        try {
-            isReady = intent.getExtras().getBoolean("isReady");
-            Toast.makeText(this, isReady + "this is my Toast message!!! =)",
-                    Toast.LENGTH_LONG).show();
-        } catch(Exception e) {
-
-        }
-
-
 
         notification = new NotificationCompat.Builder(this);
         notification.setAutoCancel(true);
@@ -105,12 +93,15 @@ public class WaitingActivity extends AppCompatActivity implements LocationChange
         // Get ambulance info from SharedPreferences
         ambulance = SharedPreferencesData.getAmbulanceData(Constants.SPREFS_AMBULANCE_INFO_KEY);
 
+
+        // Set Task switch status
+        setSwitchStatus(SharedPreferencesData.getAmbulanceStatus());
+
         // Listen ambulance status change - KienMT : 12/16/2016
         firebaseHandle = new FirebaseHandle(this);
         firebaseHandle.listenAmbulanceStatusChanged(ambulance.getId());
 
         Log.w("ambulance ID:", String.valueOf(ambulance.getId()));
-
 
 
         // TODO : HANDLE FIREBASE
@@ -175,25 +166,6 @@ public class WaitingActivity extends AppCompatActivity implements LocationChange
         // See https://g.co/AppIndexing/AndroidStudio for more information.
         client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
 
-        swReady = (Switch) findViewById(R.id.switch_ready);
-
-        if (isReady) {
-            swReady.setChecked(true);
-            setLayoutNotReadyUI(false);
-        } else {
-            swReady.setChecked(false);
-            setLayoutNotReadyUI(true);
-        }
-        swReady.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked) {
-                    OnSwitch();
-                } else {
-                    OffSwitch();
-                }
-            }
-        });
 
     }
 
@@ -227,9 +199,9 @@ public class WaitingActivity extends AppCompatActivity implements LocationChange
                 nm.notify(id, notification.build());
 
                 //show task dialog
-//                createTaskDialog();
+                createTaskDialog();
 
-                createLogoutDialog();
+//                createLogoutDialog();
                 break;
             case R.id.application_info:
                 startActivity(new Intent(this, AboutActivity.class));
@@ -340,9 +312,7 @@ public class WaitingActivity extends AppCompatActivity implements LocationChange
     }
 
     private void acceptTask() {
-
-
-        AmbulanceInfoSender ambulanceInfoSender= new AmbulanceInfoSender();
+        AmbulanceInfoSender ambulanceInfoSender = new AmbulanceInfoSender();
         ambulanceInfoSender.setContext(WaitingActivity.this);
         ambulanceInfoSender.setUrlAddress(urlAddress);
         ambulanceInfoSender.setId(64);
@@ -359,7 +329,7 @@ public class WaitingActivity extends AppCompatActivity implements LocationChange
     }
 
     //Create logout dialog
-    private void createLogoutDialog(){
+    private void createLogoutDialog() {
         new AlertDialog.Builder(this)
                 .setTitle("Đăng xuất")
                 .setMessage("Bạn có muốn đăng xuất khỏi ứng dụng không ?")
@@ -430,14 +400,47 @@ public class WaitingActivity extends AppCompatActivity implements LocationChange
         dbRef.child("status").setValue(type);
     }
 
-    //On switch swReady
-    public void OnSwitch() {
-        setLayoutNotReadyUI(false);
+
+    // switch listten for change
+    private void setSwitchStatus(String status) {
+        swReady = (Switch) findViewById(R.id.switch_ready);
+        if (status.equals(Constants.AMBULANCE_STATUS_READY)) {
+            swReady.setChecked(true);
+            setLayoutNotReadyUI(false);
+        } else {
+            swReady.setChecked(false);
+            setLayoutNotReadyUI(true);
+        }
+
+        swReady.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    OnSwitch();
+                } else {
+                    OffSwitch();
+                }
+            }
+        });
     }
 
-    //Off switch swReady
-    public void OffSwitch() {
+    //On switch
+    private void OnSwitch() {
+        setLayoutNotReadyUI(false);
+        // Save ambulance status to SharedPreferences
+        SharedPreferencesData.saveData(this, Constants.SPREFS_NAME, Constants
+                .SPREFS_AMBULANCE_STATUS_KEY, Constants.AMBULANCE_STATUS_READY);
+        //TODO send status ready to server
+    }
+
+    //Off switch
+    private void OffSwitch() {
         setLayoutNotReadyUI(true);
+        // Save ambulance status to SharedPreferences
+        SharedPreferencesData.saveData(this, Constants.SPREFS_NAME, Constants
+                .SPREFS_AMBULANCE_STATUS_KEY, Constants.AMBULANCE_STATUS_BUZY);
+        //TODO send status buzy to server
+
     }
 
     private void setLayoutNotReadyUI(boolean isNotReady) {
@@ -455,12 +458,11 @@ public class WaitingActivity extends AppCompatActivity implements LocationChange
     @Override
     public void getAmbulanceStatus(String status) {
         Log.w("status", status);
-        if(status.equals(Constants.AMBULANCE_STATUS_PENDING)) {
+        if (status.equals(Constants.AMBULANCE_STATUS_PENDING)) {
 
             createTaskDialog();
         }
     }
-
 
 
 }

@@ -37,6 +37,7 @@ public class Constants {
     // SharedPreferences
     public static String SPREFS_NAME = "ambulance_sPrefs";
     public static String SPREFS_AMBULANCE_INFO_KEY = "ambulance_sPrefs";
+    public static String SPREFS_AMBULANCE_STATUS_KEY = "ambulance_status_sPrefs";
 
     // Ambulance status - added by KienMT : 12/04/2016
     public static  String AMBULANCE_STATUS_READY = "ready";
