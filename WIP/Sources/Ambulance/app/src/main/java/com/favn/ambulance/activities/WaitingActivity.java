@@ -26,10 +26,7 @@ import android.widget.TextView;
 
 import com.favn.ambulance.commons.AmbulanceInfoSender;
 import com.favn.ambulance.commons.AmbulanceStatusReturnListener;
-import com.favn.ambulance.commons.Caller;
 import com.favn.ambulance.commons.FirebaseHandle;
-import com.favn.ambulance.services.CallerInformationGetter;
-import com.favn.ambulance.services.CallerInformationGetterListener;
 import com.favn.ambulance.services.TaskReporter;
 import com.favn.ambulance.services.location.LocationChangeListener;
 import com.favn.ambulance.services.location.LocationFinder;
@@ -252,12 +249,15 @@ public class WaitingActivity extends AppCompatActivity implements LocationChange
         }
     }
 
+    //TODO send ambulance info
     @Override
     public void locationChangeSuccess(Location location) {
         mCurrentLocation = location;
-        Log.d("location_test", location + "");
 
-        // Need to check if ambulance != null
+        if(isNetworkEnable && mCurrentLocation != null) {
+            TaskReporter taskReporter = new TaskReporter();
+            taskReporter.sendLocation(mCurrentLocation);
+        }
     }
 
     private void buildNetworkSetting() {
