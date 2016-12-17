@@ -64,6 +64,23 @@
 
 </body>
 
+<!-- MAP -->
+<script type="text/javascript">
+    window.initMap = function() {
+
+        initDefaultMap(); 
+
+        // call init 115 center marker
+        iniAMarker(emergencyCenterPos, emergencyCenterIconDir, emergencyCenterTitle, 'emergencyCenter');
+
+        // call init all ambulance marker after load list ambulance
+        // initAmbulanceMarkerAfterLoad();
+
+        handlerReturnAmbulance();
+
+} 
+</script>
+
 <!-- API -->
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBcG5eSgX7ZSWWdvnnNUTz4tzNhYIK3uBs&callback=initMap"
 async defer></script> 
@@ -91,22 +108,7 @@ async defer></script>
 <script src="assets/js/functions/domControl.js" type="text/javascript"></script>    
 
 
-<!-- MAP -->
-<script type="text/javascript">
-    window.initMap = function() {
 
-        initDefaultMap(); 
-
-        // call init 115 center marker
-        iniAMarker(emergencyCenterPos, emergencyCenterIconDir, emergencyCenterTitle, 'emergencyCenter');
-
-        // call init all ambulance marker after load list ambulance
-        // initAmbulanceMarkerAfterLoad();
-
-        handlerReturnAmbulance();
-
-} 
-</script>
 
 <!-- autocomplete search phone number -->
 <script type="text/javascript">
