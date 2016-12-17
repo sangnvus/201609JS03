@@ -23,7 +23,6 @@ import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 import android.widget.Switch;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.favn.ambulance.commons.AmbulanceInfoSender;
 import com.favn.ambulance.commons.AmbulanceStatusReturnListener;
@@ -304,11 +303,7 @@ public class WaitingActivity extends AppCompatActivity implements LocationChange
     }
 
     private void declineTask() {
-        TaskReporter taskReporter = new TaskReporter();
-        taskReporter.declineTask(ambulance.getId());
-
-        // TODO : Switch to problem mod
-        
+        setSwitchStatus(Constants.AMBULANCE_STATUS_PROBLEM);
     }
 
     private void acceptTask() {
@@ -406,42 +401,53 @@ public class WaitingActivity extends AppCompatActivity implements LocationChange
         swReady = (Switch) findViewById(R.id.switch_ready);
         if (status.equals(Constants.AMBULANCE_STATUS_READY)) {
             swReady.setChecked(true);
-            setLayoutNotReadyUI(false);
+            switchOn();
         } else {
             swReady.setChecked(false);
-            setLayoutNotReadyUI(true);
+            switchOff();
         }
+
+
 
         swReady.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
-                    OnSwitch();
+                    switchOn();
                 } else {
-                    OffSwitch();
+                    switchOff();
                 }
             }
         });
     }
 
     //On switch
-    private void OnSwitch() {
+    private void switchOn() {
         setLayoutNotReadyUI(false);
         // Save ambulance status to SharedPreferences
         SharedPreferencesData.saveData(this, Constants.SPREFS_NAME, Constants
                 .SPREFS_AMBULANCE_STATUS_KEY, Constants.AMBULANCE_STATUS_READY);
         //TODO send status ready to server
+        TaskReporter taskReporter = new TaskReporter();
+        taskReporter.readyToDoTask(ambulance.getId());
+
+
     }
 
     //Off switch
-    private void OffSwitch() {
+    private void switchOff() {
         setLayoutNotReadyUI(true);
         // Save ambulance status to SharedPreferences
         SharedPreferencesData.saveData(this, Constants.SPREFS_NAME, Constants
                 .SPREFS_AMBULANCE_STATUS_KEY, Constants.AMBULANCE_STATUS_BUZY);
+
         //TODO send status buzy to server
+        TaskReporter taskReporter = new TaskReporter();
+        taskReporter.declineTask(ambulance.getId());
 
     }
+
+
 
     private void setLayoutNotReadyUI(boolean isNotReady) {
         LinearLayout llReadyNotReady = (LinearLayout) findViewById(R.id.layout_not_ready);
