@@ -12,7 +12,7 @@
 
     <color name="colorSeparate">#dfdfdf</color>
 
-    <color name="colorInActive">#ff000000</color>
+    <color name="colorInActive">#606060</color>
     <color name="colorBlue">#2196F3</color>
     <color name="colorAdvice">#5fba7d</color>
     <color name="colorNavigate">#4CAF50</color>

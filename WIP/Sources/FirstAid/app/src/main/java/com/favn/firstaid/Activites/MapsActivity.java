@@ -531,6 +531,21 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 .getLongitude()), Constants.ZOOM_LEVEL_15);
     }
 
+    private void showRouteOverview() {
+        LatLngBounds.Builder builder = new LatLngBounds.Builder();
+
+        builder.include(getLatLng(mCurrentLocation));
+        builder.include(new LatLng(healthFacilityDestination.getLatitude(), healthFacilityDestination
+                .getLongitude()));
+        LatLngBounds bounds = builder.build();
+        mGoogleMap.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, Constants
+                .PADDING_100));
+    }
+
+    private LatLng getLatLng(Location location) {
+        return new LatLng(location.getLatitude(), location.getLongitude());
+    }
+
     @Override
     public void onSaveInstanceState(Bundle savedInstanceState) {
         super.onSaveInstanceState(savedInstanceState);
@@ -837,7 +852,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         pbLoadingDirection.setVisibility(View.GONE);
         btnClearDirection.setVisibility(View.VISIBLE);
         btnClearDirection.setOnClickListener(this);
-        goToCurrentLocationZoom();
+        showRouteOverview();
         if (status.equals("OK")) {
             PolylineOptions polylineOptions = new PolylineOptions().
                     geodesic(true)
