@@ -1,5 +1,5 @@
  
-function initMap() {
+window.initMap = function() {
 
   initDefaultMap(); 
 
