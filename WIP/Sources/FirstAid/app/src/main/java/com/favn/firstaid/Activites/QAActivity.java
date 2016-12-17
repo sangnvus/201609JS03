@@ -56,7 +56,7 @@ public class QAActivity extends AppCompatActivity {
 
     // Init elements, controls and variables
     private void initControl() {
-        urlAddress = "http://104.199.149.193/question";
+        urlAddress = "http://admin.rtsvietnam.com/question";
 
         // Init dbHelper object
         dbHelper = DatabaseOpenHelper.getInstance(this);

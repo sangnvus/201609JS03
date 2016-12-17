@@ -12,6 +12,8 @@ use App\Ambulance;
 
 use App\Caller;
 
+use Illuminate\Support\Facades\Redirect;
+
 class DispatcherController extends Controller
 {
     
@@ -23,11 +25,14 @@ class DispatcherController extends Controller
 
 
 	function handleDispatch(Request $request) {
-		// TODO :
 		$caller = Caller::find($request->caller_id);
 
+		$caller->dispatcher_user_id = $request->dispatcher_user_id;
+		$caller->symptom = $request->symptom;
+		$caller->save();
+
 		if($caller == null) {
-			return redirect('dispatcher')->with(['noti'=> 'noCaller']); 
+			return redirect('dispatcher')->with(['noti'=> 'noCaller'])->withInput(); 
 		}
 
 		$ambulances = Ambulance::where('status', '=', 'ready')
@@ -42,11 +47,16 @@ class DispatcherController extends Controller
 		$readyAmbulanceID = $this->getNearestAmbulanceID($ambulances, $caller);
 
 		if($readyAmbulanceID == 0) {
-			return redirect('dispatcher')->with(['noti'=> 'noAmbulance', 'caller' => $caller]); 
+			return redirect('dispatcher')->with(['noti'=> 'noAmbulance', 'caller' => $caller])->withInput(); 
 		} else {
-			$this->createAmbulanceTask($readyAmbulanceID);
+			$this->createAmbulanceTask($readyAmbulanceID, $request->caller_id);
 			$ambulance = Ambulance::find($readyAmbulanceID);
-			return redirect('dispatcher')->with(['ambulance'=> $ambulance, 'caller' => $caller]); 
+
+			$caller->status = 'processing';
+			$caller->ambulance_user_id = $ambulance->user_id;
+			$caller->save();
+
+			return redirect('dispatcher')->with(['ambulance'=> $ambulance, 'caller' => $caller])->withInput(); 
 		}
 	}
 
@@ -88,28 +98,32 @@ class DispatcherController extends Controller
 		return $first_key;
 	}
 
-	function createAmbulanceTask($ambulanceID) {
+	function createAmbulanceTask($ambulanceID, $caller_taking_id) {
 		$ambulance = Ambulance::find($ambulanceID);
 
 		// UPDATE TO MYSQL
 		// Assign new status
 		$ambulance->status = 'pending';
+		$ambulance->caller_taking_id = $caller_taking_id;
 		$ambulance->save();
 
 		// UPDATE TO FIREBASE
-		$this->updateFbAmbulanceStatus($ambulanceID, 'pending');
+		$this->updateFbAmbulance($ambulanceID, 'pending', $caller_taking_id);
 
 	}
 	
-	function updateFbAmbulanceStatus($ambulanceID, $status) {
+	function updateFbAmbulance($ambulanceID, $status, $caller_taking_id) {
 		$DEFAULT_URL = 'https://favn-e63df.firebaseio.com/';
 		$DEFAULT_TOKEN = 'qlDIJ3a2P0Y5OBYiyV6krah7EUjaPeufwW6875CM';
-		$DEFAULT_PATH = 'ambulances/'. $ambulanceID .'/status/';
-
 		$firebase = new \Firebase\FirebaseLib($DEFAULT_URL, $DEFAULT_TOKEN);
 
+
 		// --- storing an array ---
+		$DEFAULT_PATH = 'ambulances/'. $ambulanceID .'/status/';
 		$firebase->set($DEFAULT_PATH, $status);
+
+		$DEFAULT_PATH = 'ambulances/'. $ambulanceID .'/caller_taking_id/';
+		$firebase->set($DEFAULT_PATH, $caller_taking_id);
 
 	}
 

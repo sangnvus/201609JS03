@@ -33,7 +33,7 @@
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label>Tên chấn thương</label>
-                                <input type="text" class="form-control" placeholder="Chấn thương..." name="injury_name">
+                                <input type="text" class="form-control" placeholder="Chấn thương..." name="injury_name" value="{{ old('injury_name') }}">
                             </div>
                         </div>
                         <div class="col-md-2">

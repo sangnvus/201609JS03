@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8" />
-    <link rel="icon" type="image/png" href="assets/img/favicon.ico">
+    <link rel="icon" type="image/png" href="assets/img/markers/ic_115_center.png">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
 
     <title>Dispatcher</title>
@@ -125,6 +125,14 @@ async defer></script>
 
         </script>
      @endif
+
+     <script type="text/javascript">
+         //callCanCelDispatcheService(2);
+     </script>
+
+     <script type="text/javascript">
+      setUnAvailableAmbulanceNoti();
+     </script>
 
 
 

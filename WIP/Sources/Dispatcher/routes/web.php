@@ -25,6 +25,21 @@ Route::get('getpass', function(){
 });
 
 
+// Ambulance decline tag
+Route::get('declinetask/{id}', 'AmbulanceResourceController@declineTask');
+// Ambulance decline tag
+Route::get('readytodotask/{id}', 'AmbulanceResourceController@readyToDoTask');
+// Ambulance decline tag
+Route::get('accepttask/{id}', 'AmbulanceResourceController@acceptTask');
+
+
+// Call is available ambulance
+Route::get('isavailableambulance', 'AmbulanceResourceController@isAvailableAmbulance');
+
+
+// Call cancel service
+Route::get('canceldispatchservice/{id}', 'CallerResourceController@cancelDispatchService');
+
 
 
 Route::get('ambulance', 'AmbulanceResourceController@getAmbulances');

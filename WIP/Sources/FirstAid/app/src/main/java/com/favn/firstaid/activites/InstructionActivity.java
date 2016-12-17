@@ -273,7 +273,6 @@ public class InstructionActivity extends AppCompatActivity implements LocationCh
         callerInforSender.setLongitude(location.getLongitude());
         callerInforSender.setStatus("waiting");
         callerInforSender.setInformationSenderListener(InstructionActivity.this);
-
         callerInforSender.execute();
     }
 

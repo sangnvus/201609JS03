@@ -58,4 +58,13 @@ class CallerResourceController extends Controller
         return Response(['caller' => $caller], 201);
     }
 
+      // Service for dispatcher client
+    function cancelDispatchService($caller_id) {
+        $caller = Caller::find($caller_id);
+        if(isset($caller_id)) {
+            $caller->status = 'cancel';
+            $caller->save();
+        }
+    }
+
 }

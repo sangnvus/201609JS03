@@ -18,6 +18,24 @@ class AmbulanceResourceController extends Controller
         return Response(['ambulance' => $ambulance], 201);
     }
 
+    public function isAvailableAmbulance()
+    {
+        $ambulances = Ambulance::where('status', '=', 'ready')
+                         ->whereNotNull('latitude')
+                         ->whereNotNull('longitude')
+                         ->where(function ($query) {
+                            $query->whereNull('isDeleted')
+                                  ->orWhere('isDeleted', '<>', 1);
+                          })
+                        ->get();  
+        if(count($ambulances) != 0) {
+            echo true;
+        } else {
+            echo false;
+        }
+
+    }
+
 	public function update(Request $request)
     {
         $dataJson = json_decode($request->getContent(), true);
@@ -53,6 +71,87 @@ class AmbulanceResourceController extends Controller
         echo 'Gửi câu hỏi thành công';
 
     }
+
+    public function declineTask($id) {
+        $ambulance = Ambulance::find($id);
+        $ambulance->status = "problem";
+        $caller_id = $ambulance->caller_taking_id;
+        $ambulance->caller_taking_id = null;
+        $ambulance->save();
+
+        if(isset($caller_id)) {
+            $caller = Caller::find($caller_id);
+            $caller->status = 'waiting';
+            $caller->ambulance_user_id = null;
+            $caller->save();
+        }
+
+        // UPDATE TO FIREBASE
+        $this->updateFbAmbulance($id, 'problem', null);
+    }
+
+    public function readyToDoTask($id) {
+        $ambulance = Ambulance::find($id);
+        $ambulance->status = "ready";
+        $ambulance->caller_taking_id = null;
+        $ambulance->save();
+
+        // UPDATE TO FIREBASE
+        $this->updateFbAmbulance($id, 'ready', null);
+    }
+
+    public function acceptTask($id) {
+        $ambulance = Ambulance::find($id);
+        $ambulance->status = "buzy";
+        $ambulance->save();
+
+        $caller_id = $ambulance->caller_taking_id;
+        if(isset($caller_id)) {
+            $caller = Caller::find($caller_id);
+            $caller->status = 'processing';
+            $caller->ambulance_user_id = $id;
+            $caller->save();
+        }
+
+        // UPDATE TO FIREBASE
+        $this->updateFbAmbulance($id, 'buzy', $caller_id);
+    }
+
+    public function successTask($id) {
+        $ambulance = Ambulance::find($id);
+        $ambulance->status = "ready";
+        $caller_id = $ambulance->caller_taking_id;
+        $ambulance->caller_taking_id = null;
+        $ambulance->save();
+
+        $caller = Caller::find($caller_id);
+        if(isset($caller_id)) {
+            $caller->status = 'success';
+            $caller->ambulance_user_id = $id;
+            $caller->save();
+        }
+
+        // UPDATE TO FIREBASE
+        $this->updateFbAmbulance($id, 'ready', null);
+    }
+
+    function updateFbAmbulance($ambulanceID, $status, $caller_taking_id) {
+        $DEFAULT_URL = 'https://favn-e63df.firebaseio.com/';
+        $DEFAULT_TOKEN = 'qlDIJ3a2P0Y5OBYiyV6krah7EUjaPeufwW6875CM';
+        $firebase = new \Firebase\FirebaseLib($DEFAULT_URL, $DEFAULT_TOKEN);
+
+
+        // --- storing an array ---
+        $DEFAULT_PATH = 'ambulances/'. $ambulanceID .'/status/';
+        $firebase->set($DEFAULT_PATH, $status);
+
+        $DEFAULT_PATH = 'ambulances/'. $ambulanceID .'/caller_taking_id/';
+        $firebase->set($DEFAULT_PATH, $caller_taking_id);
+
+    }
+
+  
+
 
 
 

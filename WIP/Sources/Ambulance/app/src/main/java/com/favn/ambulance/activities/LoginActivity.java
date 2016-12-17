@@ -42,8 +42,8 @@ public class LoginActivity extends AppCompatActivity {
     // INITIATION SCREEN CONTROLS
     private void initControl() {
 
-        //urlAddress = "http://104.199.149.193/ambulancelogin";
         urlAddress = "http://admin.rtsvietnam.com/ambulancelogin";
+        //urlAddress = "http://10.20.22.25/capston/WIP/Sources/FAVN_web/public/ambulancelogin";
         bg = (ImageView) findViewById(R.id.bg_login);
         etUsername = (EditText) findViewById(R.id.editext_name);
         etPass = (EditText) findViewById(R.id.editext_pass);

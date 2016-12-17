@@ -1,4 +1,4 @@
-function showNoti(type, content) {	
+function showNoti(type, content, time) {	
 	$("#divNoti").removeClass();
 	$("#divNoti").show();
 	$("#divNavContent").hide();
@@ -7,15 +7,26 @@ function showNoti(type, content) {
 	switch(type) {
 		case NOTI_TYPE_SUCCESS:
 			$("#divNoti").addClass("successNoti");
-			$("#divNoti").delay(2000).fadeOut(function() {
-				$("#divNavContent").show();
-			});
+			if(time != 0) {
+				$("#divNoti").delay(time).fadeOut(function() {
+					$("#divNavContent").show();
+				});	
+			} else {
+				$("#divNoti").show();
+			}
+
+			
 			break;
 		case NOTI_TYPE_ERROR:
 			$("#divNoti").addClass("erroNoti");
-			$("#divNoti").delay(2000).fadeOut(function() {
-				$("#divNavContent").show();
-			});
+			if(time != 0) {
+				$("#divNoti").delay(time).fadeOut(function() {
+					$("#divNavContent").show();
+				});	
+			} else {
+				$("#divNoti").show();
+			}
+
 			break;
 		case NOTI_TYPE_PENDING:
 			$("#divNoti").addClass("pendingNoti");
@@ -90,3 +101,4 @@ function confirmLogout() {
         }
     });
 }
+
