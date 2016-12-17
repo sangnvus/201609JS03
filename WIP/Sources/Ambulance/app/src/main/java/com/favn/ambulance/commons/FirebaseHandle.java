@@ -1,9 +1,5 @@
 package com.favn.ambulance.commons;
 
-import android.util.Log;
-import android.widget.Toast;
-
-import com.favn.ambulance.activities.WaitingActivity;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -91,7 +87,7 @@ public class FirebaseHandle {
             @Override
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {
                 statusChanged = dataSnapshot.getValue().toString();
-                ambulanceStatusReturnListener.getAmbulanceStatus(statusChanged);
+                ambulanceStatusReturnListener.getAmbulanceStatusSuccess(statusChanged);
             }
 
             @Override

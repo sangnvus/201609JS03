@@ -462,7 +462,7 @@ public class WaitingActivity extends AppCompatActivity implements LocationChange
     }
 
     @Override
-    public void getAmbulanceStatus(String status) {
+    public void getAmbulanceStatusSuccess(String status) {
         Log.w("status", status);
         if (status.equals(Constants.AMBULANCE_STATUS_PENDING)) {
 
