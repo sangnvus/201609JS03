@@ -6,6 +6,7 @@ package com.favn.ambulance.commons;
 
 public interface AmbulanceStatusReturnListener {
 
-    void getAmbulanceStatus(String status);
+    void getAmbulanceStatusSuccess(String status);
 
 }
+
