@@ -25,57 +25,7 @@ function calculateAndDisplayRoute(directionsService, directionsDisplay, origin, 
   });
 }
 
-//----- INIT A MARKER BY POST, ICON, TITLE
-function iniAMarker(pos, icon, object, type){
-  var marker = new google.maps.Marker({
-    position: pos,
-    map: map,
-    icon: icon
-  });
- 
-  infoWindow = new google.maps.InfoWindow({
-    maxwidth: 300,
-  });
 
-  marker.addListener('mouseover', function() {
-    if(type == MAKER_TYPE_AMBULANCE) {
-      if(object.status == 'ready') {
-        infoWindow.setContent(
-          '<div style="color:green;">Đội: ' + object.team + '</div></br>' + 
-          '<div style="color:green;"Vị trí: >' + object.latitude + '</div></br>'
-        );
-      } else {
-         if(object.caller_taking_id != null) {
-            getCallerInfoByID(object.caller_taking_id);
-            infoWindow.setContent(
-              '<div style="color:green;">Đội: ' + object.team + '</div></br>' + 
-              '<div style="color:green;">Vị trí: ' + object.latitude + '</div></br>' +
-              '<div style="color:green;">Đang đón: ' + takingCaller.phone + '</div></br>'
-            );
-          }
-        
-      }
-      infoWindow.open(map, marker);
-    } else {
-      infoWindow.setContent('<h1>abc</h1>');
-      infoWindow.open(map, marker);
-    }
-  });
-
-  marker.addListener('mouseout', function() {
-   infoWindow.close(map, marker);
-  });
-
-  markers.push(marker);
-
-  if (type == MAKER_TYPE_AMBULANCE) {
-    ambulanceMakers.push(marker);
-  } else if(type == MAKER_TYPE_CALLER) {
-    callerMaker = marker;
-  }
-
-
-}
 
 // AFTER LOAD ALL AMBULANCE -> INIT MARKER
 function initAmbulanceMarkerAfterLoad(){
