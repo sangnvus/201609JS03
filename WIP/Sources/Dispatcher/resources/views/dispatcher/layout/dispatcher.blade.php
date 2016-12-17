@@ -91,6 +91,23 @@ async defer></script>
 <script src="assets/js/functions/domControl.js" type="text/javascript"></script>    
 
 
+<!-- MAP -->
+<script type="text/javascript">
+    window.initMap = function() {
+
+        initDefaultMap(); 
+
+        // call init 115 center marker
+        iniAMarker(emergencyCenterPos, emergencyCenterIconDir, emergencyCenterTitle, 'emergencyCenter');
+
+        // call init all ambulance marker after load list ambulance
+        // initAmbulanceMarkerAfterLoad();
+
+        handlerReturnAmbulance();
+
+} 
+</script>
+
 <!-- autocomplete search phone number -->
 <script type="text/javascript">
     $('#phone').autocomplete({
