@@ -1,17 +1,5 @@
  
-window.initMap = function() {
 
-  initDefaultMap(); 
-
-  // call init 115 center marker
-  iniAMarker(emergencyCenterPos, emergencyCenterIconDir, emergencyCenterTitle, 'emergencyCenter');
-
-  // call init all ambulance marker after load list ambulance
-  // initAmbulanceMarkerAfterLoad();
-
-  handlerReturnAmbulance();
-
-} 
 
 function initDefaultMap() {
   // Init service
