@@ -26,7 +26,10 @@ import android.widget.TextView;
 
 import com.favn.ambulance.commons.AmbulanceInfoSender;
 import com.favn.ambulance.commons.AmbulanceStatusReturnListener;
+import com.favn.ambulance.commons.Caller;
 import com.favn.ambulance.commons.FirebaseHandle;
+import com.favn.ambulance.services.CallerInformationGetter;
+import com.favn.ambulance.services.CallerInformationGetterListener;
 import com.favn.ambulance.services.TaskReporter;
 import com.favn.ambulance.services.location.LocationChangeListener;
 import com.favn.ambulance.services.location.LocationFinder;
@@ -64,7 +67,6 @@ public class WaitingActivity extends AppCompatActivity implements LocationChange
     private FirebaseHandle firebaseHandle;
     // Update ambulance webservice URL - Kienmt : 12/16/2016
     private String urlAddress;
-
 
     private Switch swReady;
 
@@ -469,7 +471,6 @@ public class WaitingActivity extends AppCompatActivity implements LocationChange
             createTaskDialog();
         }
     }
-
 
 }
 
