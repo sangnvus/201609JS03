@@ -191,24 +191,42 @@ function geocodeLatLng(geocoder, map, locationString, callback) {
 }
 
 function onClickLiAmbulance(ambulanceObject) {
-  initNewMap();
-  var ambulancePos = new google.maps.LatLng(ambulanceObject.latitude, ambulanceObject.longitude);
-  getCallerInfoByID(ambulanceObject.caller_taking_id);
-  clearCallerForm();
+  
 
-  if(takingCaller != null) {
-    iniCallerForm(takingCaller);
-    var callerPos = new google.maps.LatLng(takingCaller.latitude, takingCaller.longitude);
-    calculateAndDisplayRoute(directionsService, directionsDisplay, ambulancePos, callerPos, function(results) {
-      console.log(results);
-    });
-    // Init caller marker
-    iniAMarker(callerPos, callerIconDir, 'caller');
-    iniAMarker(ambulancePos, ambulanceBuzyIconDir, 'ambulance');
+  if(ambulanceObject.latitude != null && ambulanceObject.longitude != null) {
+    var ambulancePos = new google.maps.LatLng(ambulanceObject.latitude, ambulanceObject.longitude);
   } else {
-    iniAMarker(ambulancePos, ambulanceBuzyIconDir, 'ambulance');
-    map.panTo(ambulancePos);
+    ambulancePos = null;
   }
+
+  if(ambulancePos != null) {
+    initNewMap();
+    getCallerInfoByID(ambulanceObject.caller_taking_id);
+    clearCallerForm();
+    if(takingCaller != null) {
+      iniCallerForm(takingCaller);
+      var callerPos = new google.maps.LatLng(takingCaller.latitude, takingCaller.longitude);
+      calculateAndDisplayRoute(directionsService, directionsDisplay, ambulancePos, callerPos, function(results) {
+        console.log(results);
+      });
+      // Init caller marker
+      iniAMarker(callerPos, callerIconDir, 'caller');
+      iniAMarker(ambulancePos, ambulanceBuzyIconDir, 'ambulance');
+    } else {
+
+        if(ambulanceObject.status == AMBULANCE_STATUS_READY) {
+          iniAMarker(ambulancePos, ambulanceReadyIconDir, 'ambulance');
+
+        } else {
+          iniAMarker(ambulancePos, ambulanceBuzyIconDir, 'ambulance');
+        }
+        
+        map.panTo(ambulancePos);  
+    }
+  } else {
+    showNoti(NOTI_TYPE_ERROR, 'Không xác định được vị trí xe', 2000)
+  }
+
 }
 
 // function onClickLiAmbulance(id) {

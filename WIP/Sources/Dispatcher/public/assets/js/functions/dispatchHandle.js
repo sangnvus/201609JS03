@@ -24,7 +24,7 @@ function handlerReturnAmbulance() {
 		caller = JSON.parse(sessionCaller);
 		pendingAmbulance(readyAmbulance, function(status) {
 			if(status == AMBULANCE_STATUS_BUZY) {
-				showNoti(NOTI_TYPE_SUCCESS, 'Đã nối xe cho người gọi');
+				showNoti(NOTI_TYPE_SUCCESS, 'Đã nối xe cho người gọi', 2000);
 				closeNotiBox();
 				drawCallerAmbulancePatch(readyAmbulance, caller);
 				processingCaller.push(caller);
@@ -35,6 +35,8 @@ function handlerReturnAmbulance() {
 					if(result) {
 						onDispatchClick();
 					} else {
+						callCanCelDispatcheService(caller.id);
+						caller = null;
 						showAlertBox('Đã hủy');
 					}
 
@@ -63,13 +65,13 @@ function cancelDispatch(caller) {
 	caller.status = 'cancel';
 	updateCaller(caller, function(result) {
 		if(result) {
-	    	showNoti('success', 'Đã hủy điều phối xe');
+	    	showNoti('success', 'Đã hủy điều phối xe', 2000);
 	    	clearAMaker(callerMaker);
 	    	initNewMap();
 	    	reInitDefaultMarkers();
 	    	clearCallerForm();
 	    } else {
-	    	showNoti('success', 'Lỗi kết nối, chưa hủy được xe');
+	    	showNoti('success', 'Lỗi kết nối, chưa hủy được xe', 2000);
 	    }
 	});
 }
@@ -85,16 +87,17 @@ function iniCallerForm(caller) {
 }
 
 function onDispatchClick() {
-	clearAllCurrentObject();
-	if(caller == null) {
-		showAlertBox('Chưa khởi tạo trường hợp khẩn cấp');
-	} else {
-		$( "#form_caller" ).submit();
+	$( "#form_caller" ).submit();
+	// clearAllCurrentObject();
+	// if(caller == null) {
+	// 	showAlertBox('Chưa khởi tạo trường hợp khẩn cấp');
+	// } else {
+	// 	$( "#form_caller" ).submit();
 
-		// -----------------
-		// TODO :
-		//getListAmbulanceAndDispatch();		
-	}
+	// 	// -----------------
+	// 	// TODO :
+	// 	//getListAmbulanceAndDispatch();		
+	// }
 }
 
 function clearAllCurrentObject() {
@@ -142,7 +145,7 @@ function getListAmbulanceAndDispatch() {
 
 		sendTaskToAmbulance(readyAmbulance, function(status) {
 			if(status == AMBULANCE_STATUS_BUZY) {
-				showNoti(NOTI_TYPE_SUCCESS, 'Đã nối xe cho người gọi');
+				showNoti(NOTI_TYPE_SUCCESS, 'Đã nối xe cho người gọi', 2000);
 				closeNotiBox();
 				drawCallerAmbulancePatch(readyAmbulance, caller);
 				processingCaller.push(caller);
@@ -242,10 +245,6 @@ function getReadyAmbulance(listAmbulancePos, callerPos, callback) {
 
 
 function sendTaskToAmbulance(readyAmbulance, callback) {
-	var database = firebase.database();
-	database.ref('ambulances/' + readyAmbulance.id + '/status').set('pending');
-	database.ref('ambulances/' + readyAmbulance.id + '/caller_taking_id').set(caller.id);
-
 	showDialogPending('Đang đợi nối xe...', function(result) {
 
 	});
@@ -364,10 +363,41 @@ function releaseCaller() {
 }
 
 
+function callCanCelDispatcheService(caller_id) {
+	$.ajax({
+		type: "get",
+		url: "canceldispatchservice/" + caller_id,
+		async: false
+	});
+}
 
+function isAvailableListAmbulance(callback) {
+	$.ajax({
+		type:'GET',
+		url:'isavailableambulance',
+		async: false,
+		success:function(result){
+			callback(result);
+		}
+	});
+}
 
-
-
+function setUnAvailableAmbulanceNoti() {
+	isAvailableListAmbulance(function(result) {
+		console.log(result);
+		if(result == false) {
+			if(IS_AVAILABLE_AMBULANCE) {
+				showNoti(NOTI_TYPE_ERROR, 'Hiện tại đã hết xe', 0);
+				IS_AVAILABLE_AMBULANCE = false;
+			}
+		} else {
+			if(!IS_AVAILABLE_AMBULANCE) {
+				showNoti(NOTI_TYPE_SUCCESS, 'Đã có xe sẵn sàng', 2000);
+				IS_AVAILABLE_AMBULANCE = true;
+			}
+		}
+	});
+}
 
 
 

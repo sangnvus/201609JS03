@@ -51,3 +51,5 @@ const AMBULANCE_STATUS_PROBLEM = 'problem';
 const NOTI_TYPE_SUCCESS = 'success';
 const NOTI_TYPE_ERROR = 'error';
 const NOTI_TYPE_PENDING = 'pending';
+
+IS_AVAILABLE_AMBULANCE = true;
