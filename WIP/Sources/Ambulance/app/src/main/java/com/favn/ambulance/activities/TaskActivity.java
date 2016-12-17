@@ -31,10 +31,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.favn.ambulance.commons.Ambulance;
+import com.favn.ambulance.commons.AmbulanceInfoSender;
 import com.favn.ambulance.commons.Caller;
 import com.favn.ambulance.commons.FirebaseHandle;
 import com.favn.ambulance.services.CallerInformationGetter;
 import com.favn.ambulance.services.CallerInformationGetterListener;
+import com.favn.ambulance.services.TaskReporter;
 import com.favn.ambulance.services.direction.DirectionFinder;
 import com.favn.ambulance.services.direction.DirectionFinderListener;
 import com.favn.ambulance.services.direction.Leg;
@@ -276,15 +278,17 @@ public class TaskActivity extends AppCompatActivity implements OnMapReadyCallbac
         }
     }
 
+    //TODO send ambulance info
     @Override
     public void locationChangeSuccess(Location location) {
         mCurrentLocation = location;
-        Log.d("location", location + "");
 
-        // Need to check if ambulance != null
-
-
+        if(isNetworkEnable && mCurrentLocation != null) {
+            TaskReporter taskReporter = new TaskReporter();
+            taskReporter.sendLocation(mCurrentLocation);
+        }
     }
+
 
     private void buildNetworkSetting() {
         isNetworkEnable = NetworkStatus.checkNetworkEnable(this);

@@ -1,5 +1,6 @@
 package com.favn.ambulance.services;
 
+import android.location.Location;
 import android.os.AsyncTask;
 import android.util.Log;
 
@@ -41,6 +42,10 @@ public class TaskReporter {
         String url = "http://dispatcher.rtsvietnam.com/readytodotask/" + ambulanceID;
         callDeclineService.execute(url);
 
+    }
+
+    public void sendLocation(Location location) {
+        //TODO send location to server
     }
 
     private class CallDeclineService extends AsyncTask<String, Void, String> {
