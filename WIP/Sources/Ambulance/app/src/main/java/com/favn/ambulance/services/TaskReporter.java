@@ -25,11 +25,21 @@ public class TaskReporter {
     public void declineTask(int ambulanceID) {
         // update ambulance to database by webservice
         CallDeclineService callDeclineService = new CallDeclineService();
-        String url = "http://10.20.22.25/capston/WIP/Sources/Dispatcher/public/declinetask/" + ambulanceID;
+        String url = "http://dispatcher.rtsvietnam.com/declinetask/" + ambulanceID;
         callDeclineService.execute(url);
 
         // update ambulance to firebase
-        updateFbWhenReportTask(Constants.REPORT_TASK_DECLINE, ambulanceID);
+        //updateFbWhenReportTask(Constants.REPORT_TASK_DECLINE, ambulanceID);
+
+    }
+
+
+
+    public void readyToDoTask(int ambulanceID) {
+        // update ambulance to database by webservice
+        CallDeclineService callDeclineService = new CallDeclineService();
+        String url = "http://dispatcher.rtsvietnam.com/readytodotask/" + ambulanceID;
+        callDeclineService.execute(url);
 
     }
 
@@ -59,6 +69,7 @@ public class TaskReporter {
 
         }
     }
+
 
     public void updateFbWhenReportTask(String type, int ambulanceID) {
         FirebaseDatabase database = FirebaseDatabase.getInstance();
