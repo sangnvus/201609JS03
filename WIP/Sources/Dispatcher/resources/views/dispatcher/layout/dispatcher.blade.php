@@ -79,6 +79,32 @@
         handlerReturnAmbulance();
 
 } 
+
+function initDefaultMap() {
+  // Init service
+  directionsService = new google.maps.DirectionsService;
+  geocoder = new google.maps.Geocoder;
+
+  emergencyCenterPos = {lat: 21.0222965, lng: 105.8567074};
+  tmpPos = {lat: 21.0000, lng: 105.0000};
+  emergencyCenterTitle = 'Trung tâm cấp cứu 115';
+
+  initNewMap();
+
+} 
+
+
+function initNewMap() {
+  map = new google.maps.Map(document.getElementById('map'), {
+    zoom: 17,
+    center: emergencyCenterPos,
+    streetViewControl:false
+  });
+  directionsDisplay = new google.maps.DirectionsRenderer({suppressMarkers: true});
+  directionsDisplay.setMap(map);
+
+}
+
 </script>
 
 <!-- API -->
