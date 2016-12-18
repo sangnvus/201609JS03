@@ -1,7 +1,6 @@
 package com.favn.firstaid.adapters;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -10,6 +9,8 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.target.GlideDrawableImageViewTarget;
 import com.favn.firstaid.R;
 import com.favn.firstaid.commons.Instruction;
 
@@ -60,12 +61,16 @@ public class InstructionAdapter extends BaseAdapter {
         TextView tvInstruction = (TextView) v.findViewById(R.id.text_instruction_content);
         TextView tvExplanation = (TextView) v.findViewById(R.id.text_instruction_explaination);
         ImageView imgImage = (ImageView) v.findViewById(R.id.image_instruction);
-        int imagePath = v.getResources().getIdentifier("com.favn.firstaid:drawable/" + instruction.getImage(), null, null);
-        String audio = instruction.getAudio();
+//        int imagePath = v.getResources().getIdentifier("com.favn.firstaid:drawable/" + instruction.getImage(), null, null);
+//        Ion.with(imgImage)
+//                .animateGif(AnimateGifMode.ANIMATE)
+//                .load("file:///drawable/" + instruction.getImage() + ".gif");
+        GlideDrawableImageViewTarget imageViewTarget = new GlideDrawableImageViewTarget(imgImage);
+        Glide.with(mContext).load(v.getResources().getIdentifier("com.favn.firstaid:drawable/" + instruction.getImage(), null, null)).into(imageViewTarget);
 
         tvStep.setText(instruction.getStep() + "");
         tvInstruction.setText(instruction.getContent());
-        imgImage.setImageResource(imagePath);
+//        imgImage.setImageResource(imagePath);
 
         if(isEmergency){
             if (instruction.isMakeCall() == true) {
@@ -80,13 +85,15 @@ public class InstructionAdapter extends BaseAdapter {
                     }
                 });
             }
-            Log.d("abc", String.valueOf(imagePath));
 
         } else {
             if(instruction.getExplanation() != null) {
                 tvExplanation.setVisibility(View.VISIBLE);
                 tvExplanation.setText(instruction.getExplanation());
             }
+        }
+        if(instruction.getImage() != null){
+            imgImage.setVisibility(View.VISIBLE);
         }
         return v;
     }
