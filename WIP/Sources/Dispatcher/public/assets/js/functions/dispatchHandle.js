@@ -17,17 +17,18 @@ function checkNoti() {
 
 
 function onCancelDispatchClick() {
-	if(caller != null) {
-		bootbox.confirm({ 
-	        size: "small",
-	        message: "Bạn có hủy điều phối ?", 
-	        callback: function(result){
-	        	if (result) {
-	        		cancelDispatch(caller);
-	        	}
-	        }
-	    })
-	}
+	getReadyAmbulanceFromService();
+	// if(caller != null) {
+	// 	bootbox.confirm({ 
+	//         size: "small",
+	//         message: "Bạn có hủy điều phối ?", 
+	//         callback: function(result){
+	//         	if (result) {
+	//         		cancelDispatch(caller);
+	//         	}
+	//         }
+	//     })
+	// }
 }
 
 
@@ -57,7 +58,7 @@ function iniCallerForm(caller) {
 }
 
 function onDispatchClick() {
-	$( "#form_caller" ).submit();
+	//$( "#form_caller" ).submit();
 	// clearAllCurrentObject();
 	// if(caller == null) {
 	// 	showAlertBox('Chưa khởi tạo trường hợp khẩn cấp');
@@ -368,6 +369,47 @@ function setUnAvailableAmbulanceNoti() {
 		}
 	});
 }
+
+function handleReturnDispatch(result) {
+	switch(result) {
+		case 'noambulance':
+			showAlertBox('hết xe cứu thương !');
+			//var sessionCaller = document.getElementById("sessionCaller").value;
+			//alert(sessionCaller);
+			break;
+		case 'nocaller':
+			showAlertBox('không tồn tại người gọi !');
+			break;
+		default:
+			readyAmbulance = result.ambulance;
+	        caller = result.caller;
+	        pendingAmbulance(readyAmbulance, function(status) {
+	            if(status == AMBULANCE_STATUS_BUZY) {
+	                showNoti(NOTI_TYPE_SUCCESS, 'Đã nối xe cho người gọi', 2000);
+	                closeNotiBox();
+	                drawCallerAmbulancePatch(readyAmbulance, caller);
+	                processingCaller.push(caller);
+	                caller = null;
+	            } else if(status == AMBULANCE_STATUS_PROBLEM) {
+	                closeNotiBox();
+	                showConfirmBox('xe gặp sự cố, nối lại', function(result) {
+	                    if(result) {
+	                        onDispatchClick();
+	                    } else {
+	                        callCanCelDispatcheService(caller.id);
+	                        caller = null;
+	                        showAlertBox('Đã hủy');
+	                    }
+
+	                });
+	            }
+	        });
+	}
+}
+
+
+
+
 
 
 

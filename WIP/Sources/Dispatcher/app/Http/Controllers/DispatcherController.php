@@ -60,6 +60,49 @@ class DispatcherController extends Controller
 		}
 	}
 
+
+	function returnReadyAmbulance(Request $request) {
+		$caller_id = $request->caller_id;
+		$symptom = $request->symptom;
+		$dispatcher_user_id = $request->dispatcher_user_id;
+
+		$caller = Caller::find($caller_id);
+
+		if($caller == null) {
+			return 'nocaller';
+		}
+
+		// Save caller symptom and dispatcher that take
+		$caller->dispatcher_user_id = $dispatcher_user_id;
+		$caller->symptom = $symptom;
+		$caller->save();
+
+		$ambulances = Ambulance::where('status', '=', 'ready')
+						 ->whereNotNull('latitude')
+						 ->whereNotNull('longitude')
+						 ->where(function ($query) {
+			                $query->whereNull('isDeleted')
+			                      ->orWhere('isDeleted', '<>', 1);
+	                      })
+						->get();
+						
+		$readyAmbulanceID = $this->getNearestAmbulanceID($ambulances, $caller);
+
+		if($readyAmbulanceID == 0) {
+			return 'noambulance'; 
+		} else {
+			$this->createAmbulanceTask($readyAmbulanceID, $request->caller_id);
+			$ambulance = Ambulance::find($readyAmbulanceID);
+
+			$caller->status = 'processing';
+			$caller->ambulance_user_id = $ambulance->user_id;
+			$caller->save();
+
+			return ['ambulance' => $ambulance, 'caller' => $caller];
+		}
+	}
+
+
 	function getListDistanceMatrix($ambulanceArray, $caller) {
 		// $url = 'https://maps.googleapis.com/maps/api/distancematrix/json?units=imperial&origins=21.022707,105.856471|21.019863,105.856042&destinations=21.024690,105.855967&key=AIzaSyBioI0HSh4p-EY1qGgSOKcsRm7vQjyIuuE';
 		$baseUrl = 'https://maps.googleapis.com/maps/api/distancematrix/json?units=imperial';

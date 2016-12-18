@@ -139,9 +139,30 @@ async defer></script>
       setUnAvailableAmbulanceNoti();
      </script>
 
-
-
-
+     <!-- Handle dispatcher Click -->
+     <script type="text/javascript">
+        function getReadyAmbulanceFromService() {
+            var caller_id = $('#caller_id').val();
+            var symptom = $('#symptom').val();
+            var dispatcher_user_id = "{{$userLogin->id}}"; 
+            
+            $.ajax({
+             type:'GET',
+             url:'getreadyambulance',
+             data:{
+                 caller_id: caller_id,
+                 symptom: symptom,
+                 dispatcher_user_id: dispatcher_user_id
+             },
+             async: false,
+             success:function(data){
+                 //ambulanceList = data.ambulance;
+                 console.log(data.ambulance);
+                 handleReturnDispatch(data);
+             }
+            });
+        }
+        </script>
 </html>
 
 
