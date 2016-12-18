@@ -172,8 +172,6 @@ function initAmbulanceMarkers(ambulanceList) {
         break;
     }
 
-   
-
 
 
     iniAMarker(pos, icon, ambulanceList[i], 'ambulance');
@@ -312,5 +310,22 @@ function drawPath(ambulancePos, callerPos) {
      takingCaller = data.caller;
    }
   });
+}
+
+
+function reInitAnAmbulanceAmarker(ambulance, oldMaker) {
+
+  console.log(ambulanceMakers);
+  //ambulanceMakers[0].setMap(null);
+  for (var i = 0; i < ambulanceMakers.length; i++) {
+    ambulanceMakers[i].setMap(null);
+  }
+
+  // // ambulanceMakers[]
+  // // oldMaker.setMap(null);
+
+  // // pos = google.maps.LatLng(ambulance.latitude, ambulance.longitude);
+
+  // // iniAMarker(pos, ambulanceBuzyIconDir, ambulance, 'ambulance');
 }
 
