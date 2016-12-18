@@ -17,18 +17,17 @@ function checkNoti() {
 
 
 function onCancelDispatchClick() {
-	getReadyAmbulanceFromService();
-	// if(caller != null) {
-	// 	bootbox.confirm({ 
-	//         size: "small",
-	//         message: "Bạn có hủy điều phối ?", 
-	//         callback: function(result){
-	//         	if (result) {
-	//         		cancelDispatch(caller);
-	//         	}
-	//         }
-	//     })
-	// }
+	if(caller != null) {
+		bootbox.confirm({ 
+	        size: "small",
+	        message: "Bạn có hủy điều phối ?", 
+	        callback: function(result){
+	        	if (result) {
+	        		cancelDispatch(caller);
+	        	}
+	        }
+	    })
+	}
 }
 
 
@@ -58,6 +57,7 @@ function iniCallerForm(caller) {
 }
 
 function onDispatchClick() {
+	getReadyAmbulanceFromService();
 	//$( "#form_caller" ).submit();
 	// clearAllCurrentObject();
 	// if(caller == null) {
