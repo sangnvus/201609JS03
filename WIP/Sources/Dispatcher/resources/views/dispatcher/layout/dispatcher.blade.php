@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8" />
-    <link rel="icon" type="image/png" href="assets/img/favicon.ico">
+    <link rel="icon" type="image/png" href="assets/img/markers/ic_115_center.png">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
 
     <title>Dispatcher</title>
@@ -63,6 +63,15 @@
 
 
 </body>
+<!-- include commons script -->
+<script src="assets/js/commons/models.js" type="text/javascript"></script>
+<script src="assets/js/commons/variables.js" type="text/javascript"></script>
+
+<!-- include function script -->
+<script src="assets/js/functions/googlemapHandle.js" type="text/javascript"></script>
+<script src="assets/js/functions/dispatchHandle.js" type="text/javascript"></script>
+<script src="assets/js/functions/domControl.js" type="text/javascript"></script>    
+
 
 <!-- API -->
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBcG5eSgX7ZSWWdvnnNUTz4tzNhYIK3uBs&callback=initMap"
@@ -80,15 +89,11 @@ async defer></script>
 <script src="assets/js/customizes/jquery-3.1.1.min.js" type="text/javascript"></script>
 <script src="assets/js/customizes/jquery-ui.min.js" type="text/javascript"></script>
 
-<!-- include commons script -->
-<script src="assets/js/commons/models.js" type="text/javascript"></script>
-<script src="assets/js/commons/variables.js" type="text/javascript"></script>
 
 <!-- include function script -->
-<script src="assets/js/functions/dispatchHandle.js" type="text/javascript"></script>
 <script src="assets/js/functions/firebaseHandle.js" type="text/javascript"></script>
-<script src="assets/js/functions/googlemapHandle.js" type="text/javascript"></script>
-<script src="assets/js/functions/domControl.js" type="text/javascript"></script>    
+
+
 
 
 <!-- autocomplete search phone number -->
@@ -125,6 +130,14 @@ async defer></script>
 
         </script>
      @endif
+
+     <script type="text/javascript">
+         //callCanCelDispatcheService(2);
+     </script>
+
+     <script type="text/javascript">
+      setUnAvailableAmbulanceNoti();
+     </script>
 
 
 

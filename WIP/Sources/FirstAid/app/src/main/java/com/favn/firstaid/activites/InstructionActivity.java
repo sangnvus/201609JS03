@@ -92,7 +92,7 @@ public class InstructionActivity extends AppCompatActivity implements LocationCh
         injuryId = intent.getExtras().getInt("id");
 
         // Assign url address value (web service url) - Kienmt : 11/24/2016
-        urlAddress = "http://10.20.19.73/capston/WIP/Sources/FAVN_web/public/caller";
+        urlAddress = "http://admin.rtsvietnam.com/caller";
 
         String name = intent.getExtras().getString("name");
         int typeOfAction = intent.getExtras().getInt("typeOfAction");
@@ -273,7 +273,6 @@ public class InstructionActivity extends AppCompatActivity implements LocationCh
         callerInforSender.setLongitude(location.getLongitude());
         callerInforSender.setStatus("waiting");
         callerInforSender.setInformationSenderListener(InstructionActivity.this);
-
         callerInforSender.execute();
     }
 

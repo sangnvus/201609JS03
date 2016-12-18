@@ -31,6 +31,9 @@ public class Constants {
 
     public static int ZOOM_LEVEL_15 = 15;
 
+    public static int PADDING_100 = 100;
+
+
     public static final int SUCCESS_RESULT = 0;
 
     public static final int FAILURE_RESULT = 1;

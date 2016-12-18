@@ -28,7 +28,6 @@ function getAmbulanceFromFirebase() {
 
 	// Get UI element
 	const ulListAmbulance = document.getElementById('listAmbulance'); 
-	
 
 	// Handle when a caller added
 	handleAmbulanceChange(dbRefAmbulances, ulListAmbulance);
@@ -50,7 +49,7 @@ function getAmbulanceFromFirebase() {
 // }
 
 
-function handleAmbulanceChange(dbRef, ulListAmbulance) {
+function handleAmbulanceChange(dbRef, ulListAmbulance, callback) {
 	dbRef.on('child_added', snap => {
 		// Get list caller object
 		ambulanceObj = snap.val();
@@ -78,6 +77,9 @@ function handleAmbulanceChange(dbRef, ulListAmbulance) {
 
 		reInitAmbulanceMaker();
 
+		// Set Noti if ambulance is unavailabe
+		setUnAvailableAmbulanceNoti()
+
 	});
 
 	// Handle when a caller change
@@ -94,12 +96,11 @@ function handleAmbulanceChange(dbRef, ulListAmbulance) {
 
 		reInitAmbulanceMaker();
 
-		console.log(ambulanceList[index]);
+		// Set Noti if ambulance is unavailabe
+		setUnAvailableAmbulanceNoti()
 
 	});
 }
-
-
 
 
 // function handlerCallerChange(dbRef, ulListWaiting, ulListProcessing) {
@@ -175,6 +176,10 @@ function addAmbulanceToUl(ul, ambulanceObject) {
 	        break;
         case AMBULANCE_STATUS_PENDING:
 	        var pStatusText = document.createTextNode('Trạng thái : đang đợi');
+			pStatus.className += ' item-danger';
+	        break;
+	    case AMBULANCE_STATUS_PROBLEM:
+	        var pStatusText = document.createTextNode('Trạng thái : sự cố');
 			pStatus.className += ' item-danger';
 	        break;
 	    default:
@@ -278,6 +283,10 @@ function editLi(liID, ambulanceObject) {
 	        var pStatusText = document.createTextNode('Trạng thái : đang đợi');
 			pStatus.className += ' item-danger';
 	        break;
+        case AMBULANCE_STATUS_PROBLEM:
+        var pStatusText = document.createTextNode('Trạng thái : sự cố');
+		pStatus.className += ' item-danger';
+        break;
 	    default:
 	        var pStatusText = document.createTextNode('Trạng thái : chưa đăng nhập');
 			pStatus.className += ' item-danger';
@@ -356,7 +365,10 @@ function getUl(status) {
 
 
 
+
+
 // END
+
 
 
 

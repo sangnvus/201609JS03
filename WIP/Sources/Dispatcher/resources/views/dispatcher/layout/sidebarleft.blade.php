@@ -4,26 +4,30 @@
 
 
 	<div class="sidebar-wrapper">
-	<div class="container">
-	<h3>Điều xe</h3>
-	</div>
-		
-			<ul class="nav">
-			
+		<div class="container">
+			<h3>Điều xe</h3>
+		</div>
+
+		<ul class="nav">
+			<form id="form_caller" action="dispatch" method="POST" enctype="multipart/form-data">
+				<input type="hidden" name="_token" value="{{ csrf_token() }}"/>
 				<label style="padding-left: 10px;">Số điện thoại</label>
 				<li style="padding: 10px;">
 					<div>
-						<input id="phone" name="phone" type="text" class="form-control" placeholder="Số điện thoại">
+						<input id="phone" name="phone" type="text" class="form-control" placeholder="Số điện thoại" value="{{ old('phone') }}">
 					</div>
 				</li>
-
 				<label style="padding-left: 10px;">Chấn thương</label>
 				<li style="padding: 10px;">
-					<select id="injury_id" class="form-control">
+					<select id="injury_id" class="form-control" name="injury">
 						<option value="0">Khác</option>
 						@if(isset($injury))
 							@foreach($injury as $inj)
-								<option value="{{ $inj->id }}">{{ $inj->injury_name }}</option>
+								@if(old('injury') == $inj->id)
+									<option value="{{ $inj->id }}" selected>{{ $inj->injury_name }}</option>
+								@else
+									<option value="{{ $inj->id }}">{{ $inj->injury_name }}</option>
+								@endif
 							@endforeach
 						@endif
 					</select>
@@ -32,32 +36,30 @@
 				<label style="padding-left: 10px;">Triệu chứng khác</label>
 				<li style="padding: 10px;">
 					<div>
-						<textarea id="symptom" name="symptom" type="text" class="form-control" placeholder="Triệu chứng khác"></textarea>
+						<textarea id="symptom" name="symptom" type="text" class="form-control" placeholder="Triệu chứng khác">{{ old('symptom') }}</textarea>
 					</div>
 				</li>
 
 				<label style="padding-left: 10px;">Vị trí người gọi</label>
 				<li style="padding: 10px;">
 					<div>
-					<textarea id="address" name="address" type="text" class="form-control" placeholder="Vị trí người gọi"></textarea>
+						<textarea id="address" name="address" type="text" class="form-control" placeholder="Vị trí người gọi">{{ old('address') }}</textarea>
 					</div>
 				</li>
 
-				<input id="status" name="status" type="hidden">
 				<!-- caller location -->
-				<input id="latitude" name="latitude" type="hidden">
-				<input id="longitude" name="longitude" type="hidden">
-				<form id="form_caller" action="dispatch" method="POST" enctype="multipart/form-data">
-						<input type="hidden" name="_token" value="{{ csrf_token() }}"/>
-						<input id="caller_id" name="caller_id" type="hidden">
-						<li style="padding: 10px;">
-							<div style="align-content: center;">
-							<button style="background-color: green; color: white; float: right; width: 100px" type="button" class="btn btn-default" onclick="onDispatchClick()">Điều xe</button>
-								<button style="background-color: red; color: white; float: right; width: 100px" type="button" class="btn btn-default" onclick="onCancelDispatchClick()">Hủy</button>
-							</div>
-						</li>
-					
-				</form>
+				<input id="latitude" name="latitude" type="hidden" value="{{ old('latitude') }}">
+				<input id="longitude" name="longitude" type="hidden" value="{{ old('longitude') }}">
+				<input id="caller_id" name="caller_id" type="hidden" value="{{ old('caller_id') }}">
+				<input id="dispatcher_user_id" name="dispatcher_user_id" type="hidden" value="{{ $userLogin->id }}">
+				<li style="padding: 10px;">
+					<div style="align-content: center;">
+						<button style="background-color: green; color: white; float: right; width: 100px" type="button" class="btn btn-default" onclick="onDispatchClick()">Điều xe</button>
+						<button style="background-color: red; color: white; float: right; width: 100px" type="button" class="btn btn-default" onclick="onCancelDispatchClick()">Hủy</button>
+					</div>
+				</li>
+
+			</form>
 
 		</ul>
 

@@ -31,7 +31,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.favn.ambulance.commons.Ambulance;
+import com.favn.ambulance.commons.AmbulanceInfoSender;
+import com.favn.ambulance.commons.Caller;
 import com.favn.ambulance.commons.FirebaseHandle;
+import com.favn.ambulance.services.CallerInformationGetter;
+import com.favn.ambulance.services.CallerInformationGetterListener;
+import com.favn.ambulance.services.TaskReporter;
 import com.favn.ambulance.services.direction.DirectionFinder;
 import com.favn.ambulance.services.direction.DirectionFinderListener;
 import com.favn.ambulance.services.direction.Leg;
@@ -62,7 +67,7 @@ import com.google.gson.Gson;
 import java.io.UnsupportedEncodingException;
 
 public class TaskActivity extends AppCompatActivity implements OnMapReadyCallback,
-        LocationChangeListener, DirectionFinderListener, View.OnClickListener {
+        LocationChangeListener, DirectionFinderListener, View.OnClickListener, CallerInformationGetterListener {
     private GoogleMap mGoogleMap;
     private Location mCurrentLocation;
     private DirectionFinder directionFinder;
@@ -87,6 +92,8 @@ public class TaskActivity extends AppCompatActivity implements OnMapReadyCallbac
     private boolean isReady = true;
     private Ambulance ambulance;
     private FirebaseHandle firebaseHandle;
+    private CallerInformationGetter callerInformationGetter;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -96,26 +103,21 @@ public class TaskActivity extends AppCompatActivity implements OnMapReadyCallbac
         if (googleServiceAvailable()) {
             initMap();
         }
-//        AlertDialog.Builder dialog  = new AlertDialog.Builder(this);
-//        dialog.setTitle("NHIỆM VỤ MỚI");
-//        dialog.setMessage("Nhận nhiệm vụ mới");
-//        dialog.setPositiveButton("Nhận", new DialogInterface.OnClickListener() {
-//            public void onClick(DialogInterface dialog, int id) {
-//                // You don't have to do anything here if you just want it dismissed when clicked
-//            }
-//        });
-//
-//        dialog.setCancelable(true);
-
-//        dialog.create().show();
-//
-
 
         createLocationFinder();
         createUI();
         intentFilter = new IntentFilter();
         intentFilter.addAction(Constants.INTENT_FILTER_PROVIDERS_CHANGED);
         intentFilter.addAction(Constants.INTENT_FILTER_CONNECTIVITY_CHANGE);
+
+
+        // Request Caller info
+        try {
+            callerInformationGetter = new CallerInformationGetter(this);
+            callerInformationGetter.execute();
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
 
         // showing caller location
         destinationLanLng = new LatLng(20.989200, 105.799706);
@@ -276,15 +278,17 @@ public class TaskActivity extends AppCompatActivity implements OnMapReadyCallbac
         }
     }
 
+    //TODO send ambulance info
     @Override
     public void locationChangeSuccess(Location location) {
         mCurrentLocation = location;
-        Log.d("location", location + "");
 
-        // Need to check if ambulance != null
-
-
+        if(isNetworkEnable && mCurrentLocation != null) {
+            TaskReporter taskReporter = new TaskReporter();
+            taskReporter.sendLocation(mCurrentLocation);
+        }
     }
+
 
     private void buildNetworkSetting() {
         isNetworkEnable = NetworkStatus.checkNetworkEnable(this);
@@ -346,7 +350,7 @@ public class TaskActivity extends AppCompatActivity implements OnMapReadyCallbac
         builder.include(destinationLanLng);
         LatLngBounds bounds = builder.build();
         mGoogleMap.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, Constants
-                .ZOOM_LEVEL_15));
+                .PADDING_420));
     }
 
     private LatLng getLatLng(Location location) {
@@ -458,7 +462,7 @@ public class TaskActivity extends AppCompatActivity implements OnMapReadyCallbac
         }
     }
 
-    private void createPickedUpConfirmDialog(){
+    private void createPickedUpConfirmDialog() {
         new AlertDialog.Builder(this)
                 .setTitle("Xác nhận")
                 .setMessage("Đã đón nạn nhân")
@@ -510,7 +514,7 @@ public class TaskActivity extends AppCompatActivity implements OnMapReadyCallbac
                 .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         String status = null;
-                        if(isReady) {
+                        if (isReady) {
                             status = Constants.AMBULANCE_STATUS_READY;
                         } else {
                             status = Constants.AMBULANCE_STATUS_BUZY;
@@ -527,11 +531,13 @@ public class TaskActivity extends AppCompatActivity implements OnMapReadyCallbac
                     }
                 }).show();
     }
+
     private void goBackToWaitingActivity(boolean status) {
         Intent intent = new Intent(this, WaitingActivity.class);
         intent.putExtra("isReady", status);
         startActivity(intent);
     }
+
     @Override
     public void onBackPressed() {
     }
@@ -539,5 +545,10 @@ public class TaskActivity extends AppCompatActivity implements OnMapReadyCallbac
     //TODO : Report picked up caller
     public void reportPickupCaller(String ambulanceID) {
 
+    }
+
+    @Override
+    public void getCallerInformationSuccess(Caller caller) {
+        // TODO get caller info
     }
 }

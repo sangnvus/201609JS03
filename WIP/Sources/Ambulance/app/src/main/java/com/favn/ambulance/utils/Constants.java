@@ -29,6 +29,7 @@ public class Constants {
     // Zoom level for map camera
     public static int ZOOM_LEVEL_5 = 5;
     public static int ZOOM_LEVEL_15 = 15;
+    public static int PADDING_420 = 420;
 
     // Warning text
     public static String REQUIRED_ENTER_USERNAME = "Chưa nhập tên đăng nhập";
@@ -45,6 +46,11 @@ public class Constants {
     public static  String AMBULANCE_STATUS_TAKED = "taked";
     public static  String AMBULANCE_STATUS_PROBLEM = "problem";
     public static  String AMBULANCE_STATUS_PENDING = "pending";
+
+    // Ambulance task report type - added by KienMT : 12/17/2016
+    public static String REPORT_TASK_DECLINE = "decline";
+    public static String REPORT_TASK_ACCEPT = "accept";
+
 
     // Request check setting
     public static final int REQUEST_CHECK_SETTINGS = 0x1;
