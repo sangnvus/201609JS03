@@ -66,7 +66,6 @@ public class EmergencyFragment extends Fragment implements AdapterView.OnItemCli
     private boolean isNetworkEnable;
     BroadcastReceiver connectivityBroadcastReceiver;
     private LocationFinder locationFinder;
-    protected static final int REQUEST_CHECK_SETTINGS = 0x1;
     private boolean isCalled;
     //add this
     private Location mCurrentLocation;
@@ -92,7 +91,7 @@ public class EmergencyFragment extends Fragment implements AdapterView.OnItemCli
                              Bundle savedInstanceState) {
 
         // Assign url address value (web service url) - Kienmt : 11/27/2016
-        urlAddress = "http://localhost/capston/WIP/Sources/FAVN_web/public/caller";
+        urlAddress = "http://admin.rtsvietnam.com/caller";
 
         final ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.fragment_emergency, container, false);
 
@@ -129,9 +128,6 @@ public class EmergencyFragment extends Fragment implements AdapterView.OnItemCli
             isSentUserInfo = false;
         }
 
-        //get phone number on setting
-//        phoneNo = getActivity().getIntent().getExtras().getString("phoneNo");
-
         searchView = (MaterialSearchView) getActivity().findViewById(R.id.search_view);
         searchView.setOnSearchViewListener(new MaterialSearchView.SearchViewListener() {
 
@@ -157,14 +153,8 @@ public class EmergencyFragment extends Fragment implements AdapterView.OnItemCli
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                final EditText editText = (EditText) rootView.findViewById(com.miguelcatalan.materialsearchview.R.id
-                        .searchTextView);
+
                 if (newText != null && !newText.isEmpty()) {
-//                    int i = editText.getSelectionStart();
-//                    int i1 = editText.getSelectionStart();
-//                    Log.d("test_edittext", i + i1 + "");
-
-
                     List<Injury> searchedList = dbHelper.getSearchResultInjuryList(newText);
                     InjuryAdapter adapter = new InjuryAdapter(getActivity(), searchedList,
                             LISTVIEW_EMERGENCY, true);
@@ -227,8 +217,18 @@ public class EmergencyFragment extends Fragment implements AdapterView.OnItemCli
         int id = item.getItemId();
 
         if (id == R.id.action_sos_calling) {
-            if (isAllowedSendInformation && (!isLocationEnable || !isNetworkEnable)) {
-                createDialog();
+            isSentUserInfo = false;
+            if (isAllowedSendInformation) {
+                if (!isLocationEnable || !isNetworkEnable) {
+                    createDialog();
+                } else {
+                    locationFinder.buildLocationFinder();
+                    locationFinder.connectGoogleApiClient();
+                    isCalled = true;
+                    createSendingInformationUI(true);
+                    updateSendingInformationUI();
+                    SOSCalling.makeSOSCall(getContext());
+                }
             } else {
                 SOSCalling.makeSOSCall(getContext());
             }
@@ -264,7 +264,7 @@ public class EmergencyFragment extends Fragment implements AdapterView.OnItemCli
                     // Check location enable in connectivity change
                     isLocationEnable = LocationStatus.checkLocationProvider(context);
                 }
-                if (isCalled) {
+                if (isCalled && !isSentUserInfo) {
                     updateSendingInformationUI();
                 }
             }
@@ -272,7 +272,8 @@ public class EmergencyFragment extends Fragment implements AdapterView.OnItemCli
 
         //add this
         if (isNetworkEnable && mCurrentLocation != null && !isSentUserInfo) {
-            //TODO Send caller info when having network and location
+            // Send caller info when having network and location
+            sendCallerInfoToServer(mCurrentLocation);
         }
     }
 
@@ -322,10 +323,11 @@ public class EmergencyFragment extends Fragment implements AdapterView.OnItemCli
 
     private void createSendingInformationUI(boolean isShow) {
         llSendingStatus = (LinearLayout) getView().findViewById(R.id.include_sending_status);
-        tvSendingInformationStatus = (TextView) getView().findViewById(R.id
-                .textview_sending_information_status);
+
         if (isShow) {
             llSendingStatus.setVisibility(View.VISIBLE);
+            tvSendingInformationStatus = (TextView) getView().findViewById(R.id
+                    .textview_sending_information_status);
         } else {
             llSendingStatus.setVisibility(View.GONE);
         }
@@ -333,16 +335,19 @@ public class EmergencyFragment extends Fragment implements AdapterView.OnItemCli
 
     private void updateSendingInformationUI() {
         if (isLocationEnable && isNetworkEnable) {
-            tvSendingInformationStatus.setText("Có thể gửi thông tin");
+            tvSendingInformationStatus.setText(Constants.INFO_ENABLE_CONNECTIVITY);
+            llSendingStatus.setBackgroundColor(getResources().getColor(R.color.colorSuccess));
         } else {
-            tvSendingInformationStatus.setText("Không thể gửi thông tin");
+            tvSendingInformationStatus.setText(Constants.INFO_WARNING_CONNECTIVITY);
+            llSendingStatus.setBackgroundColor(getResources().getColor(R.color.colorWarning));
+
         }
     }
 
     @Override
     public void createLocationSettingDialog(Status status) {
         try {
-            status.startResolutionForResult(getActivity(), REQUEST_CHECK_SETTINGS);
+            status.startResolutionForResult(getActivity(), Constants.REQUEST_CHECK_SETTINGS);
         } catch (IntentSender.SendIntentException e) {
             //PendingIntent unable to execute request.
         }
@@ -350,9 +355,6 @@ public class EmergencyFragment extends Fragment implements AdapterView.OnItemCli
 
     @Override
     public void locationChangeSuccess(Location location) {
-        Log.d("location_test", location + "");
-
-        sendCallerInfoToServer(location);
 
         //TODO send information to firebase - START comment by KienMT :
         // Init caller
@@ -365,28 +367,37 @@ public class EmergencyFragment extends Fragment implements AdapterView.OnItemCli
 //        mDb = FirebaseDatabase.getInstance().getReference();
 //        mDb.child("callers").push().setValue(caller);
 
-        //add this
         // Set location to mCurrentLocation
         mCurrentLocation = location;
         if (isNetworkEnable && mCurrentLocation != null && !isSentUserInfo) {
-            //TODO Send caller info when having network and location
+            // Send caller info when having network and location
+            sendCallerInfoToServer(mCurrentLocation);
         }
     }
 
     // Send caller infor to db server - KienMT : 11/27/2016
     private void sendCallerInfoToServer(Location location) {
-        CallerInfoSender ciSender = new CallerInfoSender();
+        CallerInfoSender callerInforSender = new CallerInfoSender();
 
         // Assign values
-        ciSender.setContext(getActivity());
-        ciSender.setUrlAddress(urlAddress);
-        ciSender.setPhone("5555");
-        ciSender.setLatitude(location.getLatitude());
-        ciSender.setLongitude(location.getLongitude());
-        ciSender.setStatus("waiting");
-        ciSender.setInformationSenderListener(EmergencyFragment.this);
+//        ciSender.setContext(getActivity());
+//        ciSender.setUrlAddress(urlAddress);
+//        ciSender.setPhone(phoneNumber);
+//        ciSender.setLatitude(location.getLatitude());
+//        ciSender.setLongitude(location.getLongitude());
+//        ciSender.setStatus("waiting");
+//        ciSender.setInformationSenderListener(EmergencyFragment.this);
+//        ciSender.execute();
 
-        ciSender.execute();
+        callerInforSender.setContext(getActivity());
+        callerInforSender.setUrlAddress(urlAddress);
+        callerInforSender.setPhone(phoneNumber);
+        callerInforSender.setInjuryId(1);
+        callerInforSender.setLatitude(location.getLatitude());
+        callerInforSender.setLongitude(location.getLongitude());
+        callerInforSender.setStatus("waiting");
+        callerInforSender.setInformationSenderListener(EmergencyFragment.this);
+        callerInforSender.execute();
     }
 
     @Override
@@ -399,6 +410,7 @@ public class EmergencyFragment extends Fragment implements AdapterView.OnItemCli
             case Constants.INFO_SUCCESS_SENDING_INFORMATION:
                 tvSendingInformationStatus.setText(Constants.INFO_SUCCESS_SENDING_INFORMATION);
                 llSendingStatus.setBackgroundColor(getResources().getColor(R.color.colorSuccess));
+                isSentUserInfo = true;
                 break;
             case Constants.INFO_ERROR_SENDING_INFORMATION:
                 tvSendingInformationStatus.setText(Constants.INFO_ERROR_SENDING_INFORMATION);
