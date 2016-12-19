@@ -49,7 +49,7 @@ import com.favn.ambulance.services.location.LocationStatus;
 import com.favn.ambulance.utils.Constants;
 import com.favn.ambulance.utils.NetworkStatus;
 import com.favn.ambulance.utils.SharedPreferencesData;
-import com.favn.mikey.ambulance.R;
+import com.favn.ambulance.R;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.common.api.Status;
@@ -554,6 +554,7 @@ public class TaskActivity extends AppCompatActivity implements OnMapReadyCallbac
         Location callerLocation = new Location("caller_location");
         callerLocation.setLatitude(caller.getLatitude());
         callerLocation.setLongitude(caller.getLongitude());
+
         if (isNetworkEnable) {
             startAddressIntentService(callerLocation);
         }
@@ -586,8 +587,11 @@ public class TaskActivity extends AppCompatActivity implements OnMapReadyCallbac
         protected void onReceiveResult(int resultCode, Bundle resultData) {
             // Set address if was found.
             TextView tvLocation = (TextView) findViewById(R.id.textview_location);
+            String mAddress = resultData.getString(Constants.RESULT_DATA_KEY);
+            Toast.makeText(getBaseContext(), mAddress + "", Toast.LENGTH_SHORT).show();
+
             if (resultCode == Constants.SUCCESS_RESULT) {
-                String mAddress = resultData.getString(Constants.RESULT_DATA_KEY);
+                 mAddress = resultData.getString(Constants.RESULT_DATA_KEY);
                 tvLocation.setText(mAddress);
             } else {
                 tvLocation.setText("Không xác định được địa chỉ.");

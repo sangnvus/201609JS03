@@ -18,7 +18,7 @@ import com.favn.ambulance.utils.Constants;
 import com.favn.ambulance.commons.UserSender;
 import com.favn.ambulance.utils.LoginWarning;
 import com.favn.ambulance.utils.NetworkStatus;
-import com.favn.mikey.ambulance.R;
+import com.favn.ambulance.R;
 
 public class LoginActivity extends AppCompatActivity {
     private String urlAddress;

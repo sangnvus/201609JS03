@@ -36,7 +36,7 @@ import com.favn.ambulance.commons.Ambulance;
 import com.favn.ambulance.utils.Constants;
 import com.favn.ambulance.utils.SharedPreferencesData;
 import com.favn.ambulance.utils.NetworkStatus;
-import com.favn.mikey.ambulance.R;
+import com.favn.ambulance.R;
 import com.google.android.gms.appindexing.Action;
 import com.google.android.gms.appindexing.AppIndex;
 import com.google.android.gms.appindexing.Thing;
@@ -67,6 +67,7 @@ public class WaitingActivity extends AppCompatActivity implements LocationChange
     private String urlAddress;
 
     private Switch swReady;
+    private TextView tvAmbulanceTeamInformation;
 
     /**
      * ATTENTION: This was auto-generated to implement the App Indexing API.
@@ -165,6 +166,9 @@ public class WaitingActivity extends AppCompatActivity implements LocationChange
         // See https://g.co/AppIndexing/AndroidStudio for more information.
         client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
 
+        // Set ambulance team information
+        tvAmbulanceTeamInformation = (TextView) findViewById(R.id.textview_ambulance_team_information);
+        tvAmbulanceTeamInformation.setText("Kíp xe " + ambulance.getTeam());
 
     }
 

@@ -4,7 +4,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 
-import com.favn.mikey.ambulance.R;
+import com.favn.ambulance.R;
 
 public class AboutActivity extends AppCompatActivity {
 

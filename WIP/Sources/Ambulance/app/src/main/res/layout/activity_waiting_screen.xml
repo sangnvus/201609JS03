@@ -50,9 +50,10 @@
                     android:src="@mipmap/ic_launcher"/>
 
                 <TextView
+                    android:id="@+id/textview_ambulance_team_information"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Đội xe số 1"
+                    android:text=""
                     android:textSize="18sp"
                     android:textColor="@android:color/white"/>
             </LinearLayout>
