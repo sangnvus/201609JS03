@@ -327,6 +327,11 @@ public class WaitingActivity extends AppCompatActivity implements LocationChange
 //        ambulanceInfoSender.execute();
         TaskReporter taskReporter = new TaskReporter();
         taskReporter.acceptTask(ambulance.getId());
+
+        //TODO : Go to task screen with caller return from url below - Assign to HUNG GIA
+        String url = "http://dispatcher.rtsvietnam.com/getcaller/" + ambulance.getCaller_taking_id();
+
+
     }
 
     @Override
