@@ -756,6 +756,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     @Override
     public void onDistanceMatrixFinderSuccess(List<HealthFacility> healthFacilityListResult) {
         mHealthFacilityList = healthFacilityListResult;
+        sortHealthFacility();
         displayHealthFacility(mHealthFacilityList);
         updateLoadingUI(false);
         isRequestedDistance = false;

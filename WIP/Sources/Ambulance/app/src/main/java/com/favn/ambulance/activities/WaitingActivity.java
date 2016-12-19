@@ -309,20 +309,22 @@ public class WaitingActivity extends AppCompatActivity implements LocationChange
     }
 
     private void acceptTask() {
-        AmbulanceInfoSender ambulanceInfoSender = new AmbulanceInfoSender();
-        ambulanceInfoSender.setContext(WaitingActivity.this);
-        ambulanceInfoSender.setUrlAddress(urlAddress);
-        ambulanceInfoSender.setId(64);
-        ambulanceInfoSender.setStatus("ok status");
-        ambulanceInfoSender.setLatitude(123);
-        ambulanceInfoSender.setLongitude(321);
-        ambulanceInfoSender.setCaller_taking_id(1);
-        ambulanceInfoSender.execute();
+//        TaskReporter taskReporter = new TaskReporter();
+//        taskReporter.readyToDoTask(ambulance.getId());
+//        AmbulanceInfoSender ambulanceInfoSender = new AmbulanceInfoSender();
+//        ambulanceInfoSender.setContext(WaitingActivity.this);
+//        ambulanceInfoSender.setUrlAddress(urlAddress);
+//        ambulanceInfoSender.setId(64);
+//        ambulanceInfoSender.setStatus("ok status");
+//        ambulanceInfoSender.setLatitude(123);
+//        ambulanceInfoSender.setLongitude(321);
+//        ambulanceInfoSender.setCaller_taking_id(1);
+//        ambulanceInfoSender.execute();
 
 
-//        database = FirebaseDatabase.getInstance();
-//        dbRef = database.getReference("ambulances/" + ambulance.getId());
-//        dbRef.child("status").setValue("buzy");
+        database = FirebaseDatabase.getInstance();
+        dbRef = database.getReference("ambulances/" + ambulance.getId());
+        dbRef.child("status").setValue("buzy");
     }
 
     //Create logout dialog

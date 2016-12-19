@@ -44,6 +44,13 @@ public class TaskReporter {
 
     }
 
+    public void acceptTask(int ambulanceID) {
+        // update ambulance to database by webservice
+        CallDeclineService callDeclineService = new CallDeclineService();
+        String url = "http://dispatcher.rtsvietnam.com/accepttask/" + ambulanceID;
+        callDeclineService.execute(url);
+    }
+
     public void sendLocation(Location location) {
         //TODO send location to server
     }
