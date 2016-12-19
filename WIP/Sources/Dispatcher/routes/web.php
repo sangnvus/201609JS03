@@ -34,6 +34,9 @@ Route::get('declinetask/{id}', 'AmbulanceResourceController@declineTask');
 Route::get('readytodotask/{id}', 'AmbulanceResourceController@readyToDoTask');
 // Ambulance decline tag
 Route::get('accepttask/{id}', 'AmbulanceResourceController@acceptTask');
+// Call Ambulance send location service
+Route::get('sendlocation/{id}/{latitude}/{longitude}', 'AmbulanceResourceController@sendAmbulanceLocationService');
+
 
 
 // Call is available ambulance
