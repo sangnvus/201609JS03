@@ -325,11 +325,8 @@ public class WaitingActivity extends AppCompatActivity implements LocationChange
 //        ambulanceInfoSender.setLongitude(321);
 //        ambulanceInfoSender.setCaller_taking_id(1);
 //        ambulanceInfoSender.execute();
-
-
-        database = FirebaseDatabase.getInstance();
-        dbRef = database.getReference("ambulances/" + ambulance.getId());
-        dbRef.child("status").setValue("buzy");
+        TaskReporter taskReporter = new TaskReporter();
+        taskReporter.acceptTask(ambulance.getId());
     }
 
     @Override

@@ -8,6 +8,8 @@ use App\Http\Requests;
 
 use App\Ambulance;
 
+use App\Caller;
+
 class AmbulanceResourceController extends Controller
 {
     //
@@ -109,7 +111,7 @@ class AmbulanceResourceController extends Controller
         if(isset($caller_id)) {
             $caller = Caller::find($caller_id);
             $caller->status = 'processing';
-            $caller->ambulance_user_id = $id;
+            $caller->ambulance_user_id = $ambulance->user_id;
             $caller->save();
         }
 
