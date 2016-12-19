@@ -131,16 +131,16 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private DirectionFinder directionFinder;
     private DistanceMatrixFinder distanceMatrixFinder;
 
-    protected LocationSettingsRequest mLocationSettingsRequest;
+    private LocationSettingsRequest mLocationSettingsRequest;
 
-    protected static final int REQUEST_CHECK_SETTINGS = 0x1;
+    private static final int REQUEST_CHECK_SETTINGS = 0x1;
 
     private static final int GPS_STATUS_NOT_FIXED = 1;
     private static final int GPS_STATUS_FIXED = 2;
     private static final int GPS_STATUS_OFF = 0;
 
 
-    protected String mAddress;
+    private String mAddress;
     private AddressResultReceiver mResultReceiver;
     // Intent filter
     private IntentFilter intentFilter;
@@ -445,26 +445,26 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 mGoogleApiClient, mLocationRequest, this);
     }
 
-    protected void stopLocationUpdates() {
+    private void stopLocationUpdates() {
         LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
     }
 
     // Call address intent service
-    protected void startAddressIntentService() {
+    private void startAddressIntentService() {
         Intent intent = new Intent(this, FetchAddressIntentService.class);
         intent.putExtra(Constants.RECEIVER, mResultReceiver);
         intent.putExtra(Constants.LOCATION_DATA_EXTRA, mCurrentLocation);
         startService(intent);
     }
 
-    protected void buildLocationSettingsRequest() {
+    private void buildLocationSettingsRequest() {
         LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder();
         builder.addLocationRequest(mLocationRequest);
         builder.setAlwaysShow(true);
         mLocationSettingsRequest = builder.build();
     }
 
-    protected void checkLocationSettings() {
+    private void checkLocationSettings() {
         PendingResult<LocationSettingsResult> result =
                 LocationServices.SettingsApi.checkLocationSettings(
                         mGoogleApiClient,
