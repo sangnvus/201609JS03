@@ -152,7 +152,7 @@ function drawCallerAmbulancePatch(ambulance, caller) {
 	iniAMarker(callerPos, callerIconDir, 'Caller: ' + caller.phone);
 
 	calculateAndDisplayRoute(directionsService, directionsDisplay, ambulancePos, callerPos, function(response) {
-		console.log(response);
+		//console.log(response);
 	});
 }
 
@@ -367,11 +367,13 @@ function handleReturnDispatch(result) {
 		default:
 			readyAmbulance = result.ambulance;
 	        caller = result.caller;
+	        console.log(caller);
 	        pendingAmbulance(readyAmbulance, function(status) {
 	            if(status == AMBULANCE_STATUS_BUZY) {
 	                showNoti(NOTI_TYPE_SUCCESS, 'Đã nối xe cho người gọi', 2000);
 	                closeNotiBox();
 	                drawCallerAmbulancePatch(readyAmbulance, caller);
+	                database.ref('ambulances/' + readyAmbulance.id).off();
 	            } else if(status == AMBULANCE_STATUS_PROBLEM) {
 	                closeNotiBox();
 	                showConfirmBox('xe gặp sự cố, nối lại xe khác', function(result) {

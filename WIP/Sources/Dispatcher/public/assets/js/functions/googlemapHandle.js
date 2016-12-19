@@ -89,37 +89,37 @@ function iniAMarker(pos, icon, object, type){
 
 }
 
-function handlerReturnAmbulance() {
-    if(document.getElementById("sessionAmbulance") != null) {
-        var sessionAmbulance = document.getElementById("sessionAmbulance").value;
-        var sessionCaller = document.getElementById("sessionCaller").value;
-    }
-    if(sessionAmbulance != null) {
-        readyAmbulance = JSON.parse(sessionAmbulance);
-        caller = JSON.parse(sessionCaller);
-        pendingAmbulance(readyAmbulance, function(status) {
-            if(status == AMBULANCE_STATUS_BUZY) {
-                showNoti(NOTI_TYPE_SUCCESS, 'Đã nối xe cho người gọi', 2000);
-                closeNotiBox();
-                drawCallerAmbulancePatch(readyAmbulance, caller);
-                processingCaller.push(caller);
-                caller = null;
-            } else if(status == AMBULANCE_STATUS_PROBLEM) {
-                closeNotiBox();
-                showConfirmBox('xe gặp sự cố, nối lại', function(result) {
-                    if(result) {
-                        onDispatchClick();
-                    } else {
-                        callCanCelDispatcheService(caller.id);
-                        caller = null;
-                        showAlertBox('Đã hủy');
-                    }
+// function handlerReturnAmbulance() {
+//     if(document.getElementById("sessionAmbulance") != null) {
+//         var sessionAmbulance = document.getElementById("sessionAmbulance").value;
+//         var sessionCaller = document.getElementById("sessionCaller").value;
+//     }
+//     if(sessionAmbulance != null) {
+//         readyAmbulance = JSON.parse(sessionAmbulance);
+//         caller = JSON.parse(sessionCaller);
+//         pendingAmbulance(readyAmbulance, function(status) {
+//             if(status == AMBULANCE_STATUS_BUZY) {
+//                 showNoti(NOTI_TYPE_SUCCESS, 'Đã nối xe cho người gọi', 2000);
+//                 closeNotiBox();
+//                 drawCallerAmbulancePatch(readyAmbulance, caller);
+//                 processingCaller.push(caller);
+//                 caller = null;
+//             } else if(status == AMBULANCE_STATUS_PROBLEM) {
+//                 closeNotiBox();
+//                 showConfirmBox('xe gặp sự cố, nối lại', function(result) {
+//                     if(result) {
+//                         onDispatchClick();
+//                     } else {
+//                         callCanCelDispatcheService(caller.id);
+//                         caller = null;
+//                         showAlertBox('Đã hủy');
+//                     }
 
-                });
-            }
-        });
-    }   
-}
+//                 });
+//             }
+//         });
+//     }   
+// }
 
 
 
