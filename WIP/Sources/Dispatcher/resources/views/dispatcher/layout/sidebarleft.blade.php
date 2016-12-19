@@ -57,11 +57,34 @@
 						<button style="background-color: green; color: white; float: right; width: 100px" type="button" class="btn btn-default" onclick="onDispatchClick()">Điều xe</button>
 						<button style="background-color: red; color: white; float: right; width: 100px" type="button" class="btn btn-default" onclick="onCancelDispatchClick()">Hủy</button>
 					</div>
+					<br>
 				</li>
+
+							
 
 			</form>
 
 		</ul>
+
+		<div id="ambulanceInfoBox" style="display: none;">
+			<ul class="nav">
+				<li style="padding: 10px;">
+					<hr>
+					<label>Thông tin xe cứu thương</label>
+					<a id="aAmbulanceInfoBox" style="background-color: white; margin: 0px;" href="javascript:void(0)" onclick="">	
+						<p class="ambulance-infobox-row" id="infobox_team" style="display: none;"></p>
+						
+						<p class="ambulance-infobox-row" id="infobox_status" style="display: none;"></p>
+						
+						<p class="ambulance-infobox-row" id="inforbox_caller" style="display: none;"></p>
+						
+						<p class="ambulance-infobox-row" id="inforbox_distance" style="display: none;"></p>
+
+						<p class="ambulance-infobox-row" id="inforbox_duration" style="display: none;"></p>
+					</a>
+				</li>
+			</ul>
+		</div>
 
 	</div>
 </div>
