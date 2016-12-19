@@ -12,6 +12,9 @@
 */
 
 
+Route::get('getreadyambulance', 'DispatcherController@returnReadyAmbulance');
+
+
 Route::get('/', function () {
    return view('login');
 });

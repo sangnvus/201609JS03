@@ -13,7 +13,9 @@ class CallerResourceController extends Controller
     //
     public function autocomplete(Request $request) {
     	$term = $request->term;
-    	$data = Caller::where('phone', 'LIKE', '%'.$term.'%')->get();
+    	$data = Caller::where('phone', 'LIKE', '%'.$term.'%')
+                        ->where('status', 'LIKE', 'waiting')
+                        ->get();
     	
     	$result = array();
     	foreach ($data as $key => $value) {

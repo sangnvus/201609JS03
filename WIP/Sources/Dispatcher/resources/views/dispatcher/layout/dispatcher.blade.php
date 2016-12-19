@@ -119,17 +119,6 @@ async defer></script>
     
 
  <!-- Get list ambulance and update to firebase -->
-    @if(session('noti'))
-        <script type="text/javascript">
-            checkNoti();
-        </script> 
-    @endif
-
-     @if(session('ambulance'))
-        <script type="text/javascript">
-
-        </script>
-     @endif
 
      <script type="text/javascript">
          //callCanCelDispatcheService(2);
@@ -139,9 +128,45 @@ async defer></script>
       setUnAvailableAmbulanceNoti();
      </script>
 
+     <!-- Handle dispatcher Click -->
+     <script type="text/javascript">
 
+     function onDispatchClick() {
+        getReadyAmbulanceFromService();
+        //$( "#form_caller" ).submit();
+        // clearAllCurrentObject();
+        // if(caller == null) {
+        //  showAlertBox('Chưa khởi tạo trường hợp khẩn cấp');
+        // } else {
+        //  $( "#form_caller" ).submit();
 
-
+        //  // -----------------
+        //  // TODO :
+        //  //getListAmbulanceAndDispatch();        
+        // }
+    }
+    function getReadyAmbulanceFromService() {
+        var caller_id = $('#caller_id').val();
+        var symptom = $('#symptom').val();
+        var dispatcher_user_id = "{{$userLogin->id}}"; 
+        
+        $.ajax({
+         type:'GET',
+         url:'getreadyambulance',
+         data:{
+             caller_id: caller_id,
+             symptom: symptom,
+             dispatcher_user_id: dispatcher_user_id
+         },
+         async: false,
+         success:function(data){
+             //ambulanceList = data.ambulance;
+             console.log(data.ambulance);
+             handleReturnDispatch(data);
+         }
+        });
+    }
+    </script>
 </html>
 
 
