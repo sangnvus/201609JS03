@@ -8,6 +8,8 @@ use App\Http\Requests;
 
 use App\Caller;
 
+use App\Ambulance;
+
 class CallerResourceController extends Controller
 {
     //
@@ -67,6 +69,15 @@ class CallerResourceController extends Controller
             $caller->status = 'cancel';
             $caller->save();
         }
+    }
+
+    public function returnCallerTakingByAmbulanceID($id) {
+        $Ambulance = Ambulance::find($id);
+        if($Ambulance != null) {
+            $caller = Caller::find($Ambulance->caller_taking_id);
+            return Response($caller, 201);
+        }
+        
     }
 
 
