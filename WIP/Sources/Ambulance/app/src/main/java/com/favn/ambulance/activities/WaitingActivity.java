@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.IntentSender;
 import android.location.Location;
+import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.Settings;
@@ -55,7 +56,7 @@ public class WaitingActivity extends AppCompatActivity implements LocationChange
     private boolean isNetworkEnable;
     private IntentFilter intentFilter;
     private boolean isReady;
-
+    private MediaPlayer mMediaPlayer = null;
     private Ambulance ambulance;
     private FirebaseDatabase database;
     private DatabaseReference dbRef;
@@ -285,19 +286,23 @@ public class WaitingActivity extends AppCompatActivity implements LocationChange
     }
 
     private void createTaskDialog() {
+        playAudio();
         new AlertDialog.Builder(this)
                 .setTitle("Nhiệm vụ")
                 .setMessage("Có nhiệm vụ")
+                .setCancelable(false)
                 .setNegativeButton("Hủy", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         declineTask();
+                        mMediaPlayer.stop();
                     }
                 })
                 .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         acceptTask();
+                        mMediaPlayer.stop();
                     }
                 })
                 .create()
@@ -323,6 +328,18 @@ public class WaitingActivity extends AppCompatActivity implements LocationChange
 //        database = FirebaseDatabase.getInstance();
 //        dbRef = database.getReference("ambulances/" + ambulance.getId());
 //        dbRef.child("status").setValue("buzy");
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if (mMediaPlayer != null) {
+            mMediaPlayer.stop();
+        }
+    }
+    private void playAudio() {
+        mMediaPlayer = MediaPlayer.create(this, R.raw.ring);
+        mMediaPlayer.start();
     }
 
     //Create logout dialog
