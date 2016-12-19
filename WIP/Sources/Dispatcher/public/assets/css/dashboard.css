@@ -3433,3 +3433,7 @@ body > .navbar-collapse[data-color="purple"]:after {
   background: white;
   color: grey;
 }
+
+.ambulance-infobox-row {
+  color: #757575;
+}

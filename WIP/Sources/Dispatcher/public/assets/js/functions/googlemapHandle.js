@@ -52,14 +52,13 @@ function iniAMarker(pos, icon, object, type){
               if(object.caller_taking_id != null) {
                 getCallerInfoByID(object.caller_taking_id);
                 infoWindow.setContent(
-                    '<div style="color:red; font-size:20px">Đội: ' + object.team + '</div></br>' + 
-                    '<div style="color:red; font-size:20px;">Trạng thái: Không sẵn sàng</div></br>'
+                    
                 );
               } else {
+                getCallerInfoByID(object.caller_taking_id);
+
                 infoWindow.setContent(
-                    '<div style="color:red; font-size:20px">Đội: ' + object.team + '</div></br>' + 
-                    '<div style="color:red; font-size:20px;">Trạng thái: Không sẵn sàng</div></br>' + 
-                    '<div style="color:red; font-size:20px;">Trạng thái:' + takingCaller.phone + '</div></br>'
+                    
                 );
               }
                 
@@ -67,8 +66,7 @@ function iniAMarker(pos, icon, object, type){
                 if(object.caller_taking_id != null) {
                     getCallerInfoByID(object.caller_taking_id);
                     infoWindow.setContent(
-                        '<div style="color:green; font-size:20px">Đội: ' + object.team + '</div></br>' + 
-                        '<div style="color:green; font-size:20px">Vị trí: ' + object.latitude + '</div></br>'
+                        
              
                         );
                 }
@@ -145,7 +143,7 @@ function calculateAndDisplayRoute(directionsService, directionsDisplay, origin, 
   directionsService.route({
     origin: origin,
     destination: destination,
-    travelMode: 'DRIVING'
+    travelMode: 'DRIVING',
   }, function(response, status) {
     if (status === 'OK') {
       directionsDisplay.setDirections(response);
@@ -231,6 +229,8 @@ function geocodeLatLng(geocoder, map, locationString, callback) {
 }
 
 function onClickLiAmbulance(ambulanceObject) {
+  ambulanceObject = ambulanceObject;
+  
   if(ambulanceObject.latitude != null && ambulanceObject.longitude != null) {
     var ambulancePos = new google.maps.LatLng(ambulanceObject.latitude, ambulanceObject.longitude);
   } else {
@@ -246,7 +246,9 @@ function onClickLiAmbulance(ambulanceObject) {
       iniCallerForm(takingCaller);
       var callerPos = new google.maps.LatLng(takingCaller.latitude, takingCaller.longitude);
       calculateAndDisplayRoute(directionsService, directionsDisplay, ambulancePos, callerPos, function(results) {
-        console.log(results);
+        ambulanceObject.distance = results.routes[0].legs[0].distance.text;
+        ambulanceObject.duration = results.routes[0].legs[0].duration.text;
+        showInfoBox(ambulanceObject, takingCaller);
       });
       // Init caller marker
       iniAMarker(callerPos, callerIconDir, 'caller');
@@ -260,11 +262,15 @@ function onClickLiAmbulance(ambulanceObject) {
           iniAMarker(ambulancePos, ambulanceBuzyIconDir, 'ambulance');
         }
         
-        map.panTo(ambulancePos);  
+        map.panTo(ambulancePos);
+        showInfoBox(ambulanceObject, takingCaller);  
     }
   } else {
-    showNoti(NOTI_TYPE_ERROR, 'Không xác định được vị trí xe', 2000)
+    showNoti(NOTI_TYPE_ERROR, 'Không xác định được vị trí xe', 2000) 
+    showInfoBox(ambulanceObject, takingCaller);  
   }
+
+  
 
 }
 
@@ -321,7 +327,7 @@ function drawPath(ambulancePos, callerPos) {
 
 function reInitAnAmbulanceAmarker(ambulance, oldMaker) {
 
-
+  console.log(ambulanceMakers);
   //ambulanceMakers[0].setMap(null);
   for (var i = 0; i < ambulanceMakers.length; i++) {
     ambulanceMakers[i].setMap(null);
@@ -333,5 +339,62 @@ function reInitAnAmbulanceAmarker(ambulance, oldMaker) {
   // // pos = google.maps.LatLng(ambulance.latitude, ambulance.longitude);
 
   // // iniAMarker(pos, ambulanceBuzyIconDir, ambulance, 'ambulance');
+}
+
+function showInfoBox(ambulance, takingCaller) {
+  clearInfoBox();
+  if(ambulance != null) {
+    $("#ambulanceInfoBox").show();
+
+    // Team
+    $("#infobox_team").text('Kíp xe: ' + ambulance.team);
+    $("#infobox_team").show();
+
+    // Status
+    status = ambulance.status;
+    switch(status) {
+      case AMBULANCE_STATUS_BUZY:
+        statusVal = "đang làm nhiệm vụ";
+        break;
+      case AMBULANCE_STATUS_PENDING:
+        statusVal = "đang chờ chấp nhận nhiệm vụ";
+        break;
+      case AMBULANCE_STATUS_PROBLEM:
+        statusVal = "đang gặp sự cố";
+        break;
+      case AMBULANCE_STATUS_READY:
+        statusVal = "Sẵn sàng";
+        break;
+    }
+
+    $("#infobox_status").text(statusVal);
+    $("#infobox_status").show();
+
+    // Caller
+    if(takingCaller != null)
+    if(ambulance.caller_taking_id != null) {
+      // Distance
+      if(ambulance.distance != null) {
+        $("#inforbox_distance").text('Khoảng cách còn: ' + ambulance.distance);
+        $("#inforbox_distance").show();
+      }
+      
+      // Duration
+      if(ambulance.duration != null) {
+        $("#inforbox_duration").text('Thời gian còn: ' + ambulance.duration);
+        $("#inforbox_duration").show();
+      }
+    }
+    
+  }
+  $("#ambulanceInfoBox").show();
+}
+
+function clearInfoBox() {
+  $("#infobox_team").hide();
+  $("#infobox_status").hide();
+  $("#inforbox_caller").hide();
+  $("#inforbox_distance").hide();
+  $("#inforbox_duration").hide();
 }
 
