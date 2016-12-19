@@ -48,18 +48,28 @@ function iniAMarker(pos, icon, object, type){
 
     marker.addListener('mouseover', function() {
         if(type == MAKER_TYPE_AMBULANCE) {
-            if(object.status == 'ready') {
+            if(object.status != 'ready') {
+              if(object.caller_taking_id != null) {
+                getCallerInfoByID(object.caller_taking_id);
                 infoWindow.setContent(
-                    '<div style="color:green;">Đội: ' + object.team + '</div></br>' + 
-                    '<div style="color:green;"Vị trí: >' + object.latitude + '</div></br>'
-                    );
+                    '<div style="color:red; font-size:20px">Đội: ' + object.team + '</div></br>' + 
+                    '<div style="color:red; font-size:20px;">Trạng thái: Không sẵn sàng</div></br>'
+                );
+              } else {
+                infoWindow.setContent(
+                    '<div style="color:red; font-size:20px">Đội: ' + object.team + '</div></br>' + 
+                    '<div style="color:red; font-size:20px;">Trạng thái: Không sẵn sàng</div></br>' + 
+                    '<div style="color:red; font-size:20px;">Trạng thái:' + takingCaller.phone + '</div></br>'
+                );
+              }
+                
             } else {
                 if(object.caller_taking_id != null) {
                     getCallerInfoByID(object.caller_taking_id);
                     infoWindow.setContent(
-                        '<div style="color:green;">Đội: ' + object.team + '</div></br>' + 
-                        '<div style="color:green;">Vị trí: ' + object.latitude + '</div></br>' +
-                        '<div style="color:green;">Đang đón: ' + takingCaller.phone + '</div></br>'
+                        '<div style="color:green; font-size:20px">Đội: ' + object.team + '</div></br>' + 
+                        '<div style="color:green; font-size:20px">Vị trí: ' + object.latitude + '</div></br>'
+             
                         );
                 }
 
@@ -171,7 +181,7 @@ function initAmbulanceMarkers(ambulanceList) {
 
 
 
-    iniAMarker(pos, icon, ambulanceList[i], 'ambulance');
+    iniAMarker(pos, icon, ambulanceList[i], MAKER_TYPE_AMBULANCE);
 
   }
 }
@@ -221,8 +231,6 @@ function geocodeLatLng(geocoder, map, locationString, callback) {
 }
 
 function onClickLiAmbulance(ambulanceObject) {
-  
-
   if(ambulanceObject.latitude != null && ambulanceObject.longitude != null) {
     var ambulancePos = new google.maps.LatLng(ambulanceObject.latitude, ambulanceObject.longitude);
   } else {
@@ -232,6 +240,7 @@ function onClickLiAmbulance(ambulanceObject) {
   if(ambulancePos != null) {
     initNewMap();
     getCallerInfoByID(ambulanceObject.caller_taking_id);
+    console.log(takingCaller);
     clearCallerForm();
     if(takingCaller != null) {
       iniCallerForm(takingCaller);
@@ -304,7 +313,7 @@ function drawPath(ambulancePos, callerPos) {
    dataType: 'json',
    async: false,
    success:function(data){
-     takingCaller = data.caller;
+     takingCaller = data;
    }
   });
 }
@@ -312,7 +321,7 @@ function drawPath(ambulancePos, callerPos) {
 
 function reInitAnAmbulanceAmarker(ambulance, oldMaker) {
 
-  console.log(ambulanceMakers);
+
   //ambulanceMakers[0].setMap(null);
   for (var i = 0; i < ambulanceMakers.length; i++) {
     ambulanceMakers[i].setMap(null);

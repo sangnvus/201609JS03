@@ -57,6 +57,10 @@ Route::post('callerUpdate', 'CallerResourceController@update');
 
 Route::get('getcaller/{id}', 'CallerResourceController@returnCallerById');
 
+// get caller by ambulance ID
+Route::get('getcallerbyambulance/{id}', 'CallerResourceController@returnCallerTakingByAmbulanceID');
+
+
 Route::get('getdistance', 'DispatcherController@dispatchACaller');
 
 
