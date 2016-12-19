@@ -1,30 +1,124 @@
- 
+function initMap() {
 
+    initDefaultMap(); 
+
+    // call init 115 center marker
+    iniAMarker(emergencyCenterPos, emergencyCenterIconDir, emergencyCenterTitle, 'emergencyCenter');
+
+    // call init all ambulance marker after load list ambulance
+    // initAmbulanceMarkerAfterLoad();
+} 
 
 function initDefaultMap() {
-  // Init service
-  directionsService = new google.maps.DirectionsService;
-  geocoder = new google.maps.Geocoder;
+    // Init service
+    directionsService = new google.maps.DirectionsService;
+    geocoder = new google.maps.Geocoder;
 
-  emergencyCenterPos = {lat: 21.0222965, lng: 105.8567074};
-  tmpPos = {lat: 21.0000, lng: 105.0000};
-  emergencyCenterTitle = 'Trung tâm cấp cứu 115';
+    emergencyCenterPos = {lat: 21.0222965, lng: 105.8567074};
+    tmpPos = {lat: 21.0000, lng: 105.0000};
+    emergencyCenterTitle = 'Trung tâm cấp cứu 115';
 
-  initNewMap();
+    initNewMap();
 
 } 
 
 
 function initNewMap() {
-  map = new google.maps.Map(document.getElementById('map'), {
-    zoom: 17,
-    center: emergencyCenterPos,
-    streetViewControl:false
-  });
-  directionsDisplay = new google.maps.DirectionsRenderer({suppressMarkers: true});
-  directionsDisplay.setMap(map);
+    map = new google.maps.Map(document.getElementById('map'), {
+        zoom: 17,
+        center: emergencyCenterPos,
+        streetViewControl:false
+    });
+    directionsDisplay = new google.maps.DirectionsRenderer({suppressMarkers: true});
+    directionsDisplay.setMap(map);
 
 }
+
+//----- INIT A MARKER BY POST, ICON, TITLE
+function iniAMarker(pos, icon, object, type){
+    var marker = new google.maps.Marker({
+        position: pos,
+        map: map,
+        icon: icon
+    });
+
+    infoWindow = new google.maps.InfoWindow({
+        maxwidth: 300,
+    });
+
+    marker.addListener('mouseover', function() {
+        if(type == MAKER_TYPE_AMBULANCE) {
+            if(object.status == 'ready') {
+                infoWindow.setContent(
+                    '<div style="color:green;">Đội: ' + object.team + '</div></br>' + 
+                    '<div style="color:green;"Vị trí: >' + object.latitude + '</div></br>'
+                    );
+            } else {
+                if(object.caller_taking_id != null) {
+                    getCallerInfoByID(object.caller_taking_id);
+                    infoWindow.setContent(
+                        '<div style="color:green;">Đội: ' + object.team + '</div></br>' + 
+                        '<div style="color:green;">Vị trí: ' + object.latitude + '</div></br>' +
+                        '<div style="color:green;">Đang đón: ' + takingCaller.phone + '</div></br>'
+                        );
+                }
+
+            }
+            infoWindow.open(map, marker);
+        } else {
+            infoWindow.setContent('<h1>abc</h1>');
+            infoWindow.open(map, marker);
+        }
+    });
+
+    marker.addListener('mouseout', function() {
+        infoWindow.close(map, marker);
+    });
+
+    markers.push(marker);
+
+    if (type == MAKER_TYPE_AMBULANCE) {
+        ambulanceMakers.push(marker);
+    } else if(type == MAKER_TYPE_CALLER) {
+        callerMaker = marker;
+    }
+
+
+}
+
+// function handlerReturnAmbulance() {
+//     if(document.getElementById("sessionAmbulance") != null) {
+//         var sessionAmbulance = document.getElementById("sessionAmbulance").value;
+//         var sessionCaller = document.getElementById("sessionCaller").value;
+//     }
+//     if(sessionAmbulance != null) {
+//         readyAmbulance = JSON.parse(sessionAmbulance);
+//         caller = JSON.parse(sessionCaller);
+//         pendingAmbulance(readyAmbulance, function(status) {
+//             if(status == AMBULANCE_STATUS_BUZY) {
+//                 showNoti(NOTI_TYPE_SUCCESS, 'Đã nối xe cho người gọi', 2000);
+//                 closeNotiBox();
+//                 drawCallerAmbulancePatch(readyAmbulance, caller);
+//                 processingCaller.push(caller);
+//                 caller = null;
+//             } else if(status == AMBULANCE_STATUS_PROBLEM) {
+//                 closeNotiBox();
+//                 showConfirmBox('xe gặp sự cố, nối lại', function(result) {
+//                     if(result) {
+//                         onDispatchClick();
+//                     } else {
+//                         callCanCelDispatcheService(caller.id);
+//                         caller = null;
+//                         showAlertBox('Đã hủy');
+//                     }
+
+//                 });
+//             }
+//         });
+//     }   
+// }
+
+
 
 function reInitAmbulanceMaker() {
   clearAllAmbulanceMakers();
@@ -52,57 +146,7 @@ function calculateAndDisplayRoute(directionsService, directionsDisplay, origin, 
   });
 }
 
-//----- INIT A MARKER BY POST, ICON, TITLE
-function iniAMarker(pos, icon, object, type){
-  var marker = new google.maps.Marker({
-    position: pos,
-    map: map,
-    icon: icon
-  });
- 
-  infoWindow = new google.maps.InfoWindow({
-    maxwidth: 300,
-  });
 
-  marker.addListener('mouseover', function() {
-    if(type == MAKER_TYPE_AMBULANCE) {
-      if(object.status == 'ready') {
-        infoWindow.setContent(
-          '<div style="color:green;">Đội: ' + object.team + '</div></br>' + 
-          '<div style="color:green;"Vị trí: >' + object.latitude + '</div></br>'
-        );
-      } else {
-         if(object.caller_taking_id != null) {
-            getCallerInfoByID(object.caller_taking_id);
-            infoWindow.setContent(
-              '<div style="color:green;">Đội: ' + object.team + '</div></br>' + 
-              '<div style="color:green;">Vị trí: ' + object.latitude + '</div></br>' +
-              '<div style="color:green;">Đang đón: ' + takingCaller.phone + '</div></br>'
-            );
-          }
-        
-      }
-      infoWindow.open(map, marker);
-    } else {
-      infoWindow.setContent('<h1>abc</h1>');
-      infoWindow.open(map, marker);
-    }
-  });
-
-  marker.addListener('mouseout', function() {
-   infoWindow.close(map, marker);
-  });
-
-  markers.push(marker);
-
-  if (type == MAKER_TYPE_AMBULANCE) {
-    ambulanceMakers.push(marker);
-  } else if(type == MAKER_TYPE_CALLER) {
-    callerMaker = marker;
-  }
-
-
-}
 
 // AFTER LOAD ALL AMBULANCE -> INIT MARKER
 function initAmbulanceMarkerAfterLoad(){
@@ -124,8 +168,6 @@ function initAmbulanceMarkers(ambulanceList) {
         icon = ambulanceBuzyIconDir;
         break;
     }
-
-   
 
 
 
@@ -257,7 +299,7 @@ function drawPath(ambulancePos, callerPos) {
  function getCallerInfoByID(id) {
   $.ajax({
    type:'GET',
-   url:'getCaller/' + id,
+   url:'getcaller/' + id,
    data:'_token = <?php echo csrf_token() ?>',
    dataType: 'json',
    async: false,
@@ -265,5 +307,22 @@ function drawPath(ambulancePos, callerPos) {
      takingCaller = data.caller;
    }
   });
+}
+
+
+function reInitAnAmbulanceAmarker(ambulance, oldMaker) {
+
+  console.log(ambulanceMakers);
+  //ambulanceMakers[0].setMap(null);
+  for (var i = 0; i < ambulanceMakers.length; i++) {
+    ambulanceMakers[i].setMap(null);
+  }
+
+  // // ambulanceMakers[]
+  // // oldMaker.setMap(null);
+
+  // // pos = google.maps.LatLng(ambulance.latitude, ambulance.longitude);
+
+  // // iniAMarker(pos, ambulanceBuzyIconDir, ambulance, 'ambulance');
 }
 

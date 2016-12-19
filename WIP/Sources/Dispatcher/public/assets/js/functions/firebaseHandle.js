@@ -94,7 +94,8 @@ function handleAmbulanceChange(dbRef, ulListAmbulance, callback) {
 
 		editLi(liChangeId, ambulanceObj);
 
-		reInitAmbulanceMaker();
+		//reInitAmbulanceMaker();
+		reInitAnAmbulanceAmarker(ambulanceObj, ambulanceMakers[index]);
 
 		// Set Noti if ambulance is unavailabe
 		setUnAvailableAmbulanceNoti()

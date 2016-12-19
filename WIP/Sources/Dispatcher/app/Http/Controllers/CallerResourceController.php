@@ -13,7 +13,9 @@ class CallerResourceController extends Controller
     //
     public function autocomplete(Request $request) {
     	$term = $request->term;
-    	$data = Caller::where('phone', 'LIKE', '%'.$term.'%')->get();
+    	$data = Caller::where('phone', 'LIKE', '%'.$term.'%')
+                        ->where('status', 'LIKE', 'waiting')
+                        ->get();
     	
     	$result = array();
     	foreach ($data as $key => $value) {
@@ -55,7 +57,7 @@ class CallerResourceController extends Controller
 
     public function returnCallerById($id) {
         $caller = Caller::find($id);
-        return Response(['caller' => $caller], 201);
+        return Response($caller, 201);
     }
 
       // Service for dispatcher client
@@ -66,5 +68,7 @@ class CallerResourceController extends Controller
             $caller->save();
         }
     }
+
+
 
 }

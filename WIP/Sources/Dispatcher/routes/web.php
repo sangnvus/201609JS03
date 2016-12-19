@@ -12,6 +12,9 @@
 */
 
 
+Route::get('getreadyambulance', 'DispatcherController@returnReadyAmbulance');
+
+
 Route::get('/', function () {
    return view('login');
 });
@@ -52,7 +55,7 @@ Route::post('updatefromambulance', 'AmbulanceResourceController@updateFromAmbula
 
 Route::post('callerUpdate', 'CallerResourceController@update');
 
-Route::get('getCaller/{id}', 'CallerResourceController@returnCallerById');
+Route::get('getcaller/{id}', 'CallerResourceController@returnCallerById');
 
 Route::get('getdistance', 'DispatcherController@dispatchACaller');
 
