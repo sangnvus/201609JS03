@@ -58,6 +58,9 @@ public class Constants {
 
     public static final double SEARCH_RADIUS = 20000; // radius ro health facilities
 
+    public static final int REQUEST_CHECK_SETTINGS = 0x1;
+
+
     /**
      * End Location, Map, Direction
      */

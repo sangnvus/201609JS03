@@ -53,13 +53,12 @@ public class InstructionActivity extends AppCompatActivity implements LocationCh
     private int playingAudioId;
     private MediaPlayer mMediaPlayer = null;
     private boolean isAllowedSendInformation;
-    private String  phoneNumber;
+    private String phoneNumber;
     private IntentFilter intentFilter;
     private boolean isLocationEnable;
     private boolean isNetworkEnable;
     BroadcastReceiver connectivityBroadcastReceiver;
     private LocationFinder locationFinder;
-    protected static final int REQUEST_CHECK_SETTINGS = 0x1;
     private boolean isCalled;
     //add this
     private Location mCurrentLocation;
@@ -107,7 +106,6 @@ public class InstructionActivity extends AppCompatActivity implements LocationCh
 
         // Get value isAllowSendInformation from SharePreference
         phoneNumber = SettingPref.loadPhoneNumber(this);
-
         isAllowedSendInformation = (phoneNumber != null) ? true : false;
 
 
@@ -223,7 +221,8 @@ public class InstructionActivity extends AppCompatActivity implements LocationCh
     @Override
     public void createLocationSettingDialog(Status status) {
         try {
-            status.startResolutionForResult(InstructionActivity.this, REQUEST_CHECK_SETTINGS);
+            status.startResolutionForResult(InstructionActivity.this, Constants
+                    .REQUEST_CHECK_SETTINGS);
         } catch (IntentSender.SendIntentException e) {
             //PendingIntent unable to execute request.
         }
@@ -231,8 +230,6 @@ public class InstructionActivity extends AppCompatActivity implements LocationCh
 
     @Override
     public void locationChangeSuccess(Location location) {
-
-        Log.d("location_test", location + "");
 
         //TODO send information to server
 
@@ -250,12 +247,10 @@ public class InstructionActivity extends AppCompatActivity implements LocationCh
         // mDb.child("callers").push().setValue(caller);
         // END SEND TO FIREBASE
 
-
-        //add this
         // Set location to mCurrentLocation
         mCurrentLocation = location;
         if(isNetworkEnable && mCurrentLocation != null && !isSentUserInfo) {
-            //TODO Send caller info when having network and location
+            // Send caller info when having network and location
             sendCallerInfoToServer(mCurrentLocation);
         }
     }
@@ -312,7 +307,7 @@ public class InstructionActivity extends AppCompatActivity implements LocationCh
                     // Check location enable in connectivity change
                     isLocationEnable = LocationStatus.checkLocationProvider(context);
                 }
-                if (isCalled) {
+                if (isCalled && !isSentUserInfo) {
                     updateSendingInformationUI();
                 }
             }
@@ -320,7 +315,7 @@ public class InstructionActivity extends AppCompatActivity implements LocationCh
 
         //add this
         if(isNetworkEnable && mCurrentLocation != null && !isSentUserInfo) {
-            //TODO Send caller info when having network and location
+            // Send caller info when having network and location
             sendCallerInfoToServer(mCurrentLocation);
         }
 
