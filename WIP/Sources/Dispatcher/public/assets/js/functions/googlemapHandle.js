@@ -7,9 +7,6 @@ function initMap() {
 
     // call init all ambulance marker after load list ambulance
     // initAmbulanceMarkerAfterLoad();
-
-    handlerReturnAmbulance();
-
 } 
 
 function initDefaultMap() {

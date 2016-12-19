@@ -373,14 +373,20 @@ function handleReturnDispatch(result) {
 	                showNoti(NOTI_TYPE_SUCCESS, 'Đã nối xe cho người gọi', 2000);
 	                closeNotiBox();
 	                drawCallerAmbulancePatch(readyAmbulance, caller);
+
+	                // OFF listen from ambulance node
+	                var database = firebase.database();
 	                database.ref('ambulances/' + readyAmbulance.id).off();
 	            } else if(status == AMBULANCE_STATUS_PROBLEM) {
 	                closeNotiBox();
 	                showConfirmBox('xe gặp sự cố, nối lại xe khác', function(result) {
 	                    if(result) {
 	                        onDispatchClick();
+	                        database.ref('ambulances/' + readyAmbulance.id).off();
 	                    } else {
 	                        callCanCelDispatcheService(caller.id);
+
+	                        // OFF listen from ambulance node
 	                        var database = firebase.database();
 	                        database.ref('ambulances/' + readyAmbulance.id).off();
 	                    }
