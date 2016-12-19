@@ -299,7 +299,7 @@ function drawPath(ambulancePos, callerPos) {
  function getCallerInfoByID(id) {
   $.ajax({
    type:'GET',
-   url:'getCaller/' + id,
+   url:'getcaller/' + id,
    data:'_token = <?php echo csrf_token() ?>',
    dataType: 'json',
    async: false,

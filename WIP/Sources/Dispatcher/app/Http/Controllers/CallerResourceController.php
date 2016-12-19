@@ -57,7 +57,7 @@ class CallerResourceController extends Controller
 
     public function returnCallerById($id) {
         $caller = Caller::find($id);
-        return Response(['caller' => $caller], 201);
+        return Response($caller, 201);
     }
 
       // Service for dispatcher client
@@ -68,5 +68,7 @@ class CallerResourceController extends Controller
             $caller->save();
         }
     }
+
+
 
 }
