@@ -543,7 +543,17 @@ public class TaskActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     //TODO : Report picked up caller
     public void reportPickupCaller(String ambulanceID) {
+        removeItemsOnMap();
+    }
 
+    // Remove marker and polyline on Map
+    private void removeItemsOnMap() {
+        if (destinationMarkers != null) {
+            destinationMarkers.remove();
+        }
+        if (polylinePaths != null) {
+            polylinePaths.remove();
+        }
     }
 
     @Override

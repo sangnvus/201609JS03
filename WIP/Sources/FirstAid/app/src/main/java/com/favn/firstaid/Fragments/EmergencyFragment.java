@@ -9,6 +9,7 @@ import android.content.IntentFilter;
 import android.content.IntentSender;
 import android.location.Location;
 import android.os.Bundle;
+import android.os.Handler;
 import android.provider.Settings;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
@@ -357,18 +358,6 @@ public class EmergencyFragment extends Fragment implements AdapterView.OnItemCli
 
     @Override
     public void locationChangeSuccess(Location location) {
-
-        //TODO send information to firebase - START comment by KienMT :
-        // Init caller
-//        Caller caller = new Caller();
-//        caller.setPhone(phoneNo);
-//        caller.setInjuryId(0);
-//        caller.setLatitude(location.getLatitude());
-//        caller.setLongitude(location.getLongitude());
-//
-//        mDb = FirebaseDatabase.getInstance().getReference();
-//        mDb.child("callers").push().setValue(caller);
-
         // Set location to mCurrentLocation
         mCurrentLocation = location;
         if (isNetworkEnable && mCurrentLocation != null && !isSentUserInfo) {
