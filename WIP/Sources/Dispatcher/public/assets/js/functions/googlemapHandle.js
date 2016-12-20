@@ -236,6 +236,7 @@ function onClickLiAmbulance(ambulanceObject) {
       // Init caller marker
       iniAMarker(callerPos, callerIconDir, takingCaller.phone,  'caller');
       iniAMarker(ambulancePos, ambulanceBuzyIconDir,ambulanceObject.team , MAKER_TYPE_AMBULANCE);
+      map.panTo(ambulancePos);
     } else {
 
         if(ambulanceObject.status == AMBULANCE_STATUS_READY) {

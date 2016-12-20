@@ -475,6 +475,8 @@ public class TaskActivity extends AppCompatActivity implements OnMapReadyCallbac
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         //TODO
+                        TaskReporter taskReporter = new TaskReporter();
+                        taskReporter.pickedCaller(ambulance.getId());
                     }
                 })
                 .create()
