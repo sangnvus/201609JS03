@@ -69,8 +69,8 @@ public class MoreFragment extends Fragment {
     private void shareIt() {
         Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
         sharingIntent.setType("text/plain");
-        sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "Demo sharing");
-        sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, "Hot boy keo con voi https://www.facebook.com/your.vitieubu/ ");
+        sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "Ứng dụng Hướng dẫn sơ cứu");
+        sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, "Hướng dẫn sơ cứu, hỗ trợ cấp cứu và còn hơn thế nữa !!! https://intro.rtsvietnam.com/ ");
         startActivity(Intent.createChooser(sharingIntent, "Chia sẻ ứng dụng"));
     }
 
