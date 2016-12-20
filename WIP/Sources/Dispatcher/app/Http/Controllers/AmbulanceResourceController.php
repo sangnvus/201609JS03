@@ -191,6 +191,16 @@ class AmbulanceResourceController extends Controller
         $this->updateFbAmbulanceStatus($ambulanceID, 'picked');
     }
 
+    function logoutService($id) {
+        $ambulance = Ambulance::find($id);
+        $ambulance->status = "off";
+        $ambulance->caller_taking_id = null;
+        $ambulance->save();
+
+        // UPDATE TO FIREBASE
+        $this->updateFbAmbulance($id, 'off', null);
+    }
+
     function updateFbAmbulanceStatus($ambulanceID, $status) {
         $DEFAULT_URL = 'https://favn-e63df.firebaseio.com/';
         $DEFAULT_TOKEN = 'qlDIJ3a2P0Y5OBYiyV6krah7EUjaPeufwW6875CM';

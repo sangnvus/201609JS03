@@ -36,6 +36,14 @@ Route::get('readytodotask/{id}', 'AmbulanceResourceController@readyToDoTask');
 Route::get('accepttask/{id}', 'AmbulanceResourceController@acceptTask');
 // Call Ambulance send location service
 Route::get('sendlocation/{id}/{latitude}/{longitude}', 'AmbulanceResourceController@sendAmbulanceLocationService');
+// Call ambulace picked caller service
+Route::get('pickedcaller/{id}', 'AmbulanceResourceController@pickedCaller');
+// Call logout service
+Route::get('ambulancelogout/{id}', 'AmbulanceResourceController@logoutService');
+
+
+
+
 
 
 
