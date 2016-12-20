@@ -230,12 +230,15 @@ function onClickLiAmbulance(ambulanceObject) {
           ambulanceObject.duration = results.routes[0].legs[0].duration.text;
           showInfoBox(ambulanceObject, takingCaller);
         });
+        iniAMarker(ambulancePos, ambulanceBuzyIconDir,ambulanceObject.team , MAKER_TYPE_AMBULANCE);
+      } else {
+        // Init caller marker
+        iniAMarker(callerPos, callerIconDir, takingCaller.phone,  'caller');
+        iniAMarker(ambulancePos, ambulanceBuzyIconDir,ambulanceObject.team , MAKER_TYPE_AMBULANCE);
       }
       showInfoBox(ambulanceObject, takingCaller);
      
-      // Init caller marker
-      //iniAMarker(callerPos, callerIconDir, takingCaller.phone,  'caller');
-      iniAMarker(ambulancePos, ambulanceBuzyIconDir,ambulanceObject.team , MAKER_TYPE_AMBULANCE);
+      
       map.panTo(ambulancePos);
     } else {
 
