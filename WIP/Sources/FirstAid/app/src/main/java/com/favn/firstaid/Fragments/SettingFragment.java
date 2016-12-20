@@ -47,13 +47,13 @@ public class SettingFragment extends Fragment {
             addPreferencesFromResource(R.xml.preference_screen);
 
             // set texts correctly
-            onSharedPreferenceChanged(null, "");
-
-            SwitchPreference sendInformation = (SwitchPreference) findPreference("switch_sending_information");
-            boolean checked = sendInformation.isEnabled();
-            if (checked) {
-
-            }
+//            onSharedPreferenceChanged(null, "");
+//
+//            SwitchPreference sendInformation = (SwitchPreference) findPreference("switch_sending_information");
+//            boolean checked = sendInformation.isEnabled();
+//            if (checked) {
+//
+//            }
 
             phoneNumber = SettingPref.loadPhoneNumber(getActivity());
             if (phoneNumber != null) {
@@ -85,23 +85,19 @@ public class SettingFragment extends Fragment {
                 EditTextPreference etPhoneNumber = (EditTextPreference) pref;
                 phoneNumber = etPhoneNumber.getText();
                 pref.setSummary(R.string.summary_switch_sending_phone_number);
-                if (phoneNumber != "") {
                     pref.setSummary(phoneNumber);
-                } else {
-//                    pref.setSummary(null);
-//                    Preference pref1 = findPreference("switch_sending_information");
-//                    pref1.setDefaultValue(false);
-                    Log.d("pref_test", "no value");
-                }
 
             }
+
+
         }
-        
+
+
+
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
-
     }
 }

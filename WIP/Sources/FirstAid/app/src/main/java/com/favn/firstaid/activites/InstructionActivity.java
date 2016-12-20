@@ -10,6 +10,7 @@ import android.graphics.Color;
 import android.location.Location;
 import android.media.MediaPlayer;
 import android.os.Bundle;
+import android.os.Handler;
 import android.provider.Settings;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -189,6 +190,16 @@ public class InstructionActivity extends AppCompatActivity implements LocationCh
         super.onResume();
         if (connectivityBroadcastReceiver != null) {
             registerReceiver(connectivityBroadcastReceiver, intentFilter);
+        }
+
+        if(isSentUserInfo) {
+            Handler handler = new Handler();
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    llSendingStatus.setVisibility(View.GONE);
+                }
+            }, 5000);
         }
     }
 

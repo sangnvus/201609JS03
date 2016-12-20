@@ -180,6 +180,15 @@ public class EmergencyFragment extends Fragment implements AdapterView.OnItemCli
         if (connectivityBroadcastReceiver != null) {
             getContext().registerReceiver(connectivityBroadcastReceiver, intentFilter);
         }
+        if(isSentUserInfo) {
+            Handler handler = new Handler();
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    llSendingStatus.setVisibility(View.GONE);
+                }
+            }, 5000);
+        }
     }
 
     @Override
@@ -392,6 +401,7 @@ public class EmergencyFragment extends Fragment implements AdapterView.OnItemCli
                 tvSendingInformationStatus.setText(Constants.INFO_SUCCESS_SENDING_INFORMATION);
                 llSendingStatus.setBackgroundColor(getResources().getColor(R.color.colorSuccess));
                 isSentUserInfo = true;
+
                 break;
             case Constants.INFO_ERROR_SENDING_INFORMATION:
                 tvSendingInformationStatus.setText(Constants.INFO_ERROR_SENDING_INFORMATION);
