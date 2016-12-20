@@ -150,7 +150,6 @@ async defer></script>
         var caller_id = $('#caller_id').val();
         var symptom = $('#symptom').val();
         var dispatcher_user_id = "{{$userLogin->id}}"; 
-        
         $.ajax({
          type:'GET',
          url:'getreadyambulance',
@@ -166,7 +165,11 @@ async defer></script>
         });
     }
     </script>
+<!--     <script type="text/javascript">
+        DISPATCHER_ID = "{{$userLogin->id}}"; 
 
+        getlistWaitingCaller(DISPATCHER_ID);
+    </script> -->
 </html>
 
 

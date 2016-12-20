@@ -398,7 +398,18 @@ function handleReturnDispatch(result) {
 
 
 
-
+// // Get list caller
+// function getlistWaitingCaller(dispatcheID, callback) {
+// 	$.ajax({
+// 		type:'GET',
+// 		url:'getcallerbydispatcher/' + dispatcheID,
+// 		async: false,
+// 		success:function(data){
+// 			callerHistoryList = data;
+// 			callback();
+// 		}
+// 	});
+// }
 
 
 

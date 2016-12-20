@@ -41,7 +41,8 @@ Route::get('pickedcaller/{id}', 'AmbulanceResourceController@pickedCaller');
 // Call logout service
 Route::get('ambulancelogout/{id}', 'AmbulanceResourceController@logoutService');
 
-
+// Call get caller by dispatcher service
+Route::get('getcallerbydispatcher/{id}', 'CallerResourceController@returnCallerByDispatcher');
 
 
 
