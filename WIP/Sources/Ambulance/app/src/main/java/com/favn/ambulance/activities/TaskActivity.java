@@ -477,6 +477,7 @@ public class TaskActivity extends AppCompatActivity implements OnMapReadyCallbac
                         //TODO
                         TaskReporter taskReporter = new TaskReporter();
                         taskReporter.pickedCaller(ambulance.getId());
+                        clearDirection();
                     }
                 })
                 .create()
