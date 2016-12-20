@@ -259,9 +259,11 @@ public class WaitingActivity extends AppCompatActivity implements LocationChange
     public void locationChangeSuccess(Location location) {
         mCurrentLocation = location;
 
-        if(isNetworkEnable && mCurrentLocation != null) {
+        if(mCurrentLocation != null) {
             TaskReporter taskReporter = new TaskReporter();
-            taskReporter.sendLocation(mCurrentLocation);
+            Log.w("Location lat : ", mCurrentLocation.getLatitude() + "");
+
+            taskReporter.sendLocation(ambulance.getId(), mCurrentLocation);
         }
     }
 

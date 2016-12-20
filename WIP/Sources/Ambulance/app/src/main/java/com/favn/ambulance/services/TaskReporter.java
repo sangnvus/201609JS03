@@ -2,14 +2,10 @@ package com.favn.ambulance.services;
 
 import android.location.Location;
 import android.os.AsyncTask;
-import android.util.Log;
 
-import com.favn.ambulance.services.direction.Direction;
-import com.favn.ambulance.services.direction.Leg;
 import com.favn.ambulance.utils.Constants;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.gson.Gson;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -25,9 +21,9 @@ public class TaskReporter {
 
     public void declineTask(int ambulanceID) {
         // update ambulance to database by webservice
-        CallDeclineService callDeclineService = new CallDeclineService();
+        CallService callService = new CallService();
         String url = "http://dispatcher.rtsvietnam.com/declinetask/" + ambulanceID;
-        callDeclineService.execute(url);
+        callService.execute(url);
 
         // update ambulance to firebase
         //updateFbWhenReportTask(Constants.REPORT_TASK_DECLINE, ambulanceID);
@@ -38,24 +34,27 @@ public class TaskReporter {
 
     public void readyToDoTask(int ambulanceID) {
         // update ambulance to database by webservice
-        CallDeclineService callDeclineService = new CallDeclineService();
+        CallService callService = new CallService();
         String url = "http://dispatcher.rtsvietnam.com/readytodotask/" + ambulanceID;
-        callDeclineService.execute(url);
+        callService.execute(url);
 
     }
 
     public void acceptTask(int ambulanceID) {
         // update ambulance to database by webservice
-        CallDeclineService callDeclineService = new CallDeclineService();
+        CallService callService = new CallService();
         String url = "http://dispatcher.rtsvietnam.com/accepttask/" + ambulanceID;
-        callDeclineService.execute(url);
+        callService.execute(url);
     }
 
-    public void sendLocation(Location location) {
+    public void sendLocation(int ambulanceID, Location location) {
         //TODO send location to server
+        CallService callService = new CallService();
+        String url = "http://dispatcher.rtsvietnam.com/sendlocation/" + ambulanceID + "/" + location.getLatitude() + "/" + location.getLongitude();
+        callService.execute(url);
     }
 
-    private class CallDeclineService extends AsyncTask<String, Void, String> {
+    private class CallService extends AsyncTask<String, Void, String> {
         @Override
         protected String doInBackground(String... params) {
             String link = params[0];
@@ -81,6 +80,9 @@ public class TaskReporter {
 
         }
     }
+
+
+
 
 
     public void updateFbWhenReportTask(String type, int ambulanceID) {

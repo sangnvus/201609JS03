@@ -284,7 +284,7 @@ public class TaskActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         if(isNetworkEnable && mCurrentLocation != null) {
             TaskReporter taskReporter = new TaskReporter();
-            taskReporter.sendLocation(mCurrentLocation);
+            taskReporter.sendLocation(ambulance.getId(), mCurrentLocation);
         }
     }
 

@@ -104,7 +104,7 @@ public class LocationFinder implements GoogleApiClient.ConnectionCallbacks,
         mLocationRequest = new LocationRequest();
         mLocationRequest.setInterval(UPDATE_INTERVAL_IN_MILLISECONDS);
         mLocationRequest.setFastestInterval(FASTEST_UPDATE_INTERVAL_IN_MILLISECONDS);
-        mLocationRequest.setSmallestDisplacement(UPDATE_SMALLEST_DISPLACEMENT);
+        //mLocationRequest.setSmallestDisplacement(UPDATE_SMALLEST_DISPLACEMENT);
         mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
     }
 
@@ -132,6 +132,7 @@ public class LocationFinder implements GoogleApiClient.ConnectionCallbacks,
             Toast.makeText(mContext, "can't get current location", Toast.LENGTH_SHORT).show();
         } else {
             mCurrentLocation = location;
+            Log.d("gps", "location to update");
             locationChangeListener.locationChangeSuccess(mCurrentLocation);
         }
     }

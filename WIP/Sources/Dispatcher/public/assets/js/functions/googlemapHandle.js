@@ -35,7 +35,7 @@ function initNewMap() {
 }
 
 //----- INIT A MARKER BY POST, ICON, TITLE
-function iniAMarker(pos, icon, object, type){
+function iniAMarker(pos, icon, title, type){
     var marker = new google.maps.Marker({
         position: pos,
         map: map,
@@ -47,36 +47,8 @@ function iniAMarker(pos, icon, object, type){
     });
 
     marker.addListener('mouseover', function() {
-        if(type == MAKER_TYPE_AMBULANCE) {
-            if(object.status != 'ready') {
-              if(object.caller_taking_id != null) {
-                getCallerInfoByID(object.caller_taking_id);
-                infoWindow.setContent(
-                    
-                );
-              } else {
-                getCallerInfoByID(object.caller_taking_id);
-
-                infoWindow.setContent(
-                    
-                );
-              }
-                
-            } else {
-                if(object.caller_taking_id != null) {
-                    getCallerInfoByID(object.caller_taking_id);
-                    infoWindow.setContent(
-                        
-             
-                        );
-                }
-
-            }
+            infoWindow.setContent(title);
             infoWindow.open(map, marker);
-        } else {
-            infoWindow.setContent('<h1>abc</h1>');
-            infoWindow.open(map, marker);
-        }
     });
 
     marker.addListener('mouseout', function() {
@@ -179,7 +151,7 @@ function initAmbulanceMarkers(ambulanceList) {
 
 
 
-    iniAMarker(pos, icon, ambulanceList[i], MAKER_TYPE_AMBULANCE);
+    iniAMarker(pos, icon, ambulanceList[i].team, MAKER_TYPE_AMBULANCE);
 
   }
 }
@@ -238,9 +210,14 @@ function onClickLiAmbulance(ambulanceObject) {
   }
 
   if(ambulancePos != null) {
+
+    // Re assign list
+    ambulanceMakers = [];
+    ambulanceList = [];
+    ambulanceList.push(ambulanceObject);
+
     initNewMap();
     getCallerInfoByID(ambulanceObject.caller_taking_id);
-    console.log(takingCaller);
     clearCallerForm();
     if(takingCaller != null) {
       iniCallerForm(takingCaller);
@@ -252,14 +229,14 @@ function onClickLiAmbulance(ambulanceObject) {
       });
       // Init caller marker
       iniAMarker(callerPos, callerIconDir, 'caller');
-      iniAMarker(ambulancePos, ambulanceBuzyIconDir, 'ambulance');
+      iniAMarker(ambulancePos, ambulanceBuzyIconDir,ambulanceObject.team , MAKER_TYPE_AMBULANCE);
     } else {
 
         if(ambulanceObject.status == AMBULANCE_STATUS_READY) {
-          iniAMarker(ambulancePos, ambulanceReadyIconDir, 'ambulance');
+          iniAMarker(ambulancePos, ambulanceReadyIconDir,ambulanceObject.team, MAKER_TYPE_AMBULANCE);
 
         } else {
-          iniAMarker(ambulancePos, ambulanceBuzyIconDir, 'ambulance');
+          iniAMarker(ambulancePos, ambulanceBuzyIconDir,ambulanceObject.team, MAKER_TYPE_AMBULANCE);
         }
         
         map.panTo(ambulancePos);
@@ -325,20 +302,18 @@ function drawPath(ambulancePos, callerPos) {
 }
 
 
-function reInitAnAmbulanceAmarker(ambulance, oldMaker) {
+function reInitAnAmbulanceAmarker(ambulanceMarker, ambulance) {
+  // New location
+  newPosition = new google.maps.LatLng( ambulance.latitude, ambulance.longitude );
+  ambulanceMarker.setPosition(newPosition);
 
-  console.log(ambulanceMakers);
-  //ambulanceMakers[0].setMap(null);
-  for (var i = 0; i < ambulanceMakers.length; i++) {
-    ambulanceMakers[i].setMap(null);
+  // New marker
+  if(ambulance.status == AMBULANCE_STATUS_READY) {
+    ambulanceMarker.setIcon(ambulanceReadyIconDir); 
+  } else {
+    ambulanceMarker.setIcon(ambulanceBuzyIconDir); 
   }
 
-  // // ambulanceMakers[]
-  // // oldMaker.setMap(null);
-
-  // // pos = google.maps.LatLng(ambulance.latitude, ambulance.longitude);
-
-  // // iniAMarker(pos, ambulanceBuzyIconDir, ambulance, 'ambulance');
 }
 
 function showInfoBox(ambulance, takingCaller) {
