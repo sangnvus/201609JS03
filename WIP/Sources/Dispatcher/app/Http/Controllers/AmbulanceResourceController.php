@@ -137,6 +137,32 @@ class AmbulanceResourceController extends Controller
         $this->updateFbAmbulance($id, 'ready', null);
     }
 
+    function sendAmbulanceLocationService($id, $latitude, $longitude) {
+        $ambulance = Ambulance::find($id);
+        $ambulance->latitude = $latitude;
+        $ambulance->longitude = $longitude;
+        $ambulance->save();
+
+        // UPDATE TO FIREBASE
+        $this->undateFbAmbulanceLocation($id, $latitude, $longitude);
+
+    }
+
+
+    function undateFbAmbulanceLocation($ambulanceID, $latitude, $longitude) {
+        $DEFAULT_URL = 'https://favn-e63df.firebaseio.com/';
+        $DEFAULT_TOKEN = 'qlDIJ3a2P0Y5OBYiyV6krah7EUjaPeufwW6875CM';
+        $firebase = new \Firebase\FirebaseLib($DEFAULT_URL, $DEFAULT_TOKEN);
+
+
+        // --- storing an array ---
+        $DEFAULT_PATH = 'ambulances/'. $ambulanceID .'/latitude/';
+        $firebase->set($DEFAULT_PATH, $latitude);
+
+        $DEFAULT_PATH = 'ambulances/'. $ambulanceID .'/longitude/';
+        $firebase->set($DEFAULT_PATH, $longitude);
+    }
+
     function updateFbAmbulance($ambulanceID, $status, $caller_taking_id) {
         $DEFAULT_URL = 'https://favn-e63df.firebaseio.com/';
         $DEFAULT_TOKEN = 'qlDIJ3a2P0Y5OBYiyV6krah7EUjaPeufwW6875CM';
@@ -151,6 +177,8 @@ class AmbulanceResourceController extends Controller
         $firebase->set($DEFAULT_PATH, $caller_taking_id);
 
     }
+
+
 
   
 
