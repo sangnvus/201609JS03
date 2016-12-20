@@ -188,8 +188,12 @@ function addAmbulanceToUl(ul, ambulanceObject) {
 	        var pStatusText = document.createTextNode('Trạng thái : sự cố');
 			pStatus.className += ' item-danger';
 	        break;
+	    case AMBULANCE_STATUS_PICKED:
+	   		var pStatusText = document.createTextNode('Trạng thái : đã đón nạn nhân');
+			pStatus.className += ' item-danger';
+	        break;
 	    default:
-	        var pStatusText = document.createTextNode('Trạng thái : chưa đăng nhập');
+	        var pStatusText = document.createTextNode('Trạng thái : chưa sẵn sàng');
 			pStatus.className += ' item-danger';
 	}
 

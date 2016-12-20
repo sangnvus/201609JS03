@@ -224,11 +224,14 @@ function onClickLiAmbulance(ambulanceObject) {
     if(takingCaller != null) {
       iniCallerForm(takingCaller);
       var callerPos = new google.maps.LatLng(takingCaller.latitude, takingCaller.longitude);
-      calculateAndDisplayRoute(directionsService, directionsDisplay, ambulancePos, callerPos, function(results) {
-        ambulanceObject.distance = results.routes[0].legs[0].distance.text;
-        ambulanceObject.duration = results.routes[0].legs[0].duration.text;
-        showInfoBox(ambulanceObject, takingCaller);
-      });
+      if(ambulanceObject.status != AMBULANCE_STATUS_PICKED) {
+        calculateAndDisplayRoute(directionsService, directionsDisplay, ambulancePos, callerPos, function(results) {
+          ambulanceObject.distance = results.routes[0].legs[0].distance.text;
+          ambulanceObject.duration = results.routes[0].legs[0].duration.text;
+          showInfoBox(ambulanceObject, takingCaller);
+        });
+      }
+      showInfoBox(ambulanceObject, takingCaller);
       // Init caller marker
       iniAMarker(callerPos, callerIconDir, takingCaller.phone,  'caller');
       iniAMarker(ambulancePos, ambulanceBuzyIconDir,ambulanceObject.team , MAKER_TYPE_AMBULANCE);
@@ -343,13 +346,14 @@ function showInfoBox(ambulance, takingCaller) {
       case AMBULANCE_STATUS_READY:
         statusVal = "Sẵn sàng";
         break;
+      case AMBULANCE_STATUS_PICKED:
+        statusVal = "Đã đón người gọi";
+        break;
     }
 
     $("#infobox_status").text(statusVal);
     $("#infobox_status").show();
 
-    // Caller
-    if(takingCaller != null)
     if(ambulance.caller_taking_id != null) {
       // Distance
       if(ambulance.distance != null) {
@@ -364,7 +368,7 @@ function showInfoBox(ambulance, takingCaller) {
       }
     }
     
-  }
+
   $("#ambulanceInfoBox").show();
 }
 
