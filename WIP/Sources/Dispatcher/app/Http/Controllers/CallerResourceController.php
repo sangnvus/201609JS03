@@ -8,6 +8,8 @@ use App\Http\Requests;
 
 use App\Caller;
 
+use App\Ambulance;
+
 class CallerResourceController extends Controller
 {
     //
@@ -57,7 +59,7 @@ class CallerResourceController extends Controller
 
     public function returnCallerById($id) {
         $caller = Caller::find($id);
-        return Response(['caller' => $caller], 201);
+        return Response($caller, 201);
     }
 
       // Service for dispatcher client
@@ -68,5 +70,16 @@ class CallerResourceController extends Controller
             $caller->save();
         }
     }
+
+    public function returnCallerTakingByAmbulanceID($id) {
+        $Ambulance = Ambulance::find($id);
+        if($Ambulance != null) {
+            $caller = Caller::find($Ambulance->caller_taking_id);
+            return Response($caller, 201);
+        }
+        
+    }
+
+
 
 }

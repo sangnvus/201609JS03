@@ -48,7 +48,7 @@ class CallerResourceController extends Controller
         $caller->status = $request->input('status');
 
         $injury_id = $request->input('injuryId');
-        if(!IsNullOrEmptyString($injury_id)) {
+        if($injury_id != 0) {
             $caller->injury_id = $injury_id;
         }
 

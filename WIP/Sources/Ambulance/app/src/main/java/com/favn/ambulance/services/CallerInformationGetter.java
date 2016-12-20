@@ -17,16 +17,19 @@ import java.net.URL;
 
 public class CallerInformationGetter {
     private CallerInformationGetterListener callerInformationGetterListener;
+    private int ambulanceId;
     DownloadRawData downloadRawData;
 
-    public CallerInformationGetter(CallerInformationGetterListener callerInformationGetterListener) {
+    public CallerInformationGetter(CallerInformationGetterListener
+                                           callerInformationGetterListener, int ambulanceId) {
         this.callerInformationGetterListener = callerInformationGetterListener;
+        this.ambulanceId = ambulanceId;
     }
 
     public void execute() throws UnsupportedEncodingException {
         downloadRawData = new DownloadRawData();
-        //TODO Get caller json
-        downloadRawData.execute("url for get json of Caller");
+        String url = "http://dispatcher.rtsvietnam.com/getcallerbyambulance/" + ambulanceId;
+        downloadRawData.execute(url);
     }
 
     public void stop() {

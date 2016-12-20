@@ -13,6 +13,8 @@ import android.content.pm.PackageManager;
 import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.ResultReceiver;
 import android.provider.Settings;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AlertDialog;
@@ -36,6 +38,7 @@ import com.favn.ambulance.commons.Caller;
 import com.favn.ambulance.commons.FirebaseHandle;
 import com.favn.ambulance.services.CallerInformationGetter;
 import com.favn.ambulance.services.CallerInformationGetterListener;
+import com.favn.ambulance.services.FetchAddressIntentService;
 import com.favn.ambulance.services.TaskReporter;
 import com.favn.ambulance.services.direction.DirectionFinder;
 import com.favn.ambulance.services.direction.DirectionFinderListener;
@@ -46,7 +49,7 @@ import com.favn.ambulance.services.location.LocationStatus;
 import com.favn.ambulance.utils.Constants;
 import com.favn.ambulance.utils.NetworkStatus;
 import com.favn.ambulance.utils.SharedPreferencesData;
-import com.favn.mikey.ambulance.R;
+import com.favn.ambulance.R;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.common.api.Status;
@@ -93,6 +96,7 @@ public class TaskActivity extends AppCompatActivity implements OnMapReadyCallbac
     private Ambulance ambulance;
     private FirebaseHandle firebaseHandle;
     private CallerInformationGetter callerInformationGetter;
+    private AddressResultReceiver mResultReceiver;
 
 
     @Override
@@ -110,22 +114,18 @@ public class TaskActivity extends AppCompatActivity implements OnMapReadyCallbac
         intentFilter.addAction(Constants.INTENT_FILTER_PROVIDERS_CHANGED);
         intentFilter.addAction(Constants.INTENT_FILTER_CONNECTIVITY_CHANGE);
 
+        // Get ambulance info from SharedPreferences
+        ambulance = SharedPreferencesData.getAmbulanceData(Constants.SPREFS_AMBULANCE_INFO_KEY);
 
         // Request Caller info
         try {
-            callerInformationGetter = new CallerInformationGetter(this);
+            callerInformationGetter = new CallerInformationGetter(this, ambulance.getId());
             callerInformationGetter.execute();
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
 
-        // showing caller location
-        destinationLanLng = new LatLng(20.989200, 105.799706);
-
-        // Get ambulance info from SharedPreferences
-        ambulance = SharedPreferencesData.getAmbulanceData(Constants.SPREFS_AMBULANCE_INFO_KEY);
-
-//        Log.d("ambulance_data", ambulance.getUser_id() + "");
+        mResultReceiver = new AddressResultReceiver(new Handler());
 
     }
 
@@ -232,8 +232,7 @@ public class TaskActivity extends AppCompatActivity implements OnMapReadyCallbac
         mGoogleMap.setLatLngBoundsForCameraTarget(VIETNAM);
         mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(VIETNAM.getCenter(), Constants.ZOOM_LEVEL_5));
 
-        createMarker(destinationLanLng, "Nguyễn Trãi, Hà Nội");
-        zoomDestinationLocation();
+
     }
 
     // Broadcast for Connectivity status
@@ -549,6 +548,54 @@ public class TaskActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     @Override
     public void getCallerInformationSuccess(Caller caller) {
-        // TODO get caller info
+        destinationLanLng = new LatLng(caller.getLatitude(), caller.getLongitude());
+        createMarker(destinationLanLng, "this is address");
+        zoomDestinationLocation();
+        Location callerLocation = new Location("caller_location");
+        callerLocation.setLatitude(caller.getLatitude());
+        callerLocation.setLongitude(caller.getLongitude());
+
+        if (isNetworkEnable) {
+            startAddressIntentService(callerLocation);
+        }
+        updateEmergencyInfo(caller);
+    }
+
+    private void startAddressIntentService(Location location) {
+        Intent intent = new Intent(this, FetchAddressIntentService.class);
+        intent.putExtra(Constants.RECEIVER, mResultReceiver);
+        intent.putExtra(Constants.LOCATION_DATA_EXTRA, location);
+        startService(intent);
+    }
+
+    private void updateEmergencyInfo(Caller caller) {
+        TextView tvPhoneNumber = (TextView) findViewById(R.id.textview_phone_number);
+        tvPhoneNumber.setText(caller.getPhone());
+
+
+
+        TextView tvDescription = (TextView) findViewById(R.id.textview_description);
+        tvDescription.setText(caller.getSymptom());
+    }
+
+    class AddressResultReceiver extends ResultReceiver {
+        public AddressResultReceiver(Handler handler) {
+            super(handler);
+        }
+
+        @Override
+        protected void onReceiveResult(int resultCode, Bundle resultData) {
+            // Set address if was found.
+            TextView tvLocation = (TextView) findViewById(R.id.textview_location);
+            String mAddress = resultData.getString(Constants.RESULT_DATA_KEY);
+            Toast.makeText(getBaseContext(), mAddress + "", Toast.LENGTH_SHORT).show();
+
+            if (resultCode == Constants.SUCCESS_RESULT) {
+                 mAddress = resultData.getString(Constants.RESULT_DATA_KEY);
+                tvLocation.setText(mAddress);
+            } else {
+                tvLocation.setText("Không xác định được địa chỉ.");
+            }
+        }
     }
 }

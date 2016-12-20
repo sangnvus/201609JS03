@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.favn.mikey.ambulance">
+    package="com.favn.ambulance">
 
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
@@ -30,6 +30,9 @@
             android:name="com.favn.ambulance.activities.TaskActivity"
             android:screenOrientation="landscape"
             android:label="Nhiệm vụ" />
+        <service
+            android:name="com.favn.ambulance.services.FetchAddressIntentService"
+            android:exported="false" />
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"

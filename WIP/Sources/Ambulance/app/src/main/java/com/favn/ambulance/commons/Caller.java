@@ -13,19 +13,20 @@ import java.util.Iterator;
 
 public class Caller {
     private String phone;
-    private int injuryId;
+    private int injury_id;
     private double latitude;
     private double longitude;
     private String status;
+    private String symptom;
 
     // Use to get data from firebase
     public Caller() {
 
     }
 
-    public Caller(String phone, int injuryId, double latitude, double longitude, String status) {
+    public Caller(String phone, int injury_id, double latitude, double longitude, String status) {
         this.phone = phone;
-        this.injuryId = injuryId;
+        this.injury_id = injury_id;
         this.latitude = latitude;
         this.longitude = longitude;
         this.status = status;
@@ -39,12 +40,12 @@ public class Caller {
         this.phone = phone;
     }
 
-    public int getInjuryId() {
-        return injuryId;
+    public int getInjury_id() {
+        return injury_id;
     }
 
-    public void setInjuryId(int injuryId) {
-        this.injuryId = injuryId;
+    public void setInjury_id(int injury_id) {
+        this.injury_id = injury_id;
     }
 
     public double getLatitude() {
@@ -71,6 +72,14 @@ public class Caller {
         this.status = status;
     }
 
+    public String getSymptom() {
+        return symptom;
+    }
+
+    public void setSymptom(String symptom) {
+        this.symptom = symptom;
+    }
+
     // Pack data to send to server
     public String packData() {
         JSONObject jo = new JSONObject();
@@ -78,7 +87,7 @@ public class Caller {
 
         try {
             jo.put("phone", phone);
-            jo.put("injuryId", injuryId);
+            jo.put("injury_id", injury_id);
             jo.put("latitude", latitude);
             jo.put("longitude", longitude);
             jo.put("status", status);

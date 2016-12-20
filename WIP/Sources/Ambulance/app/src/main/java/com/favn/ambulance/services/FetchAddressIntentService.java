@@ -1,4 +1,4 @@
-package com.favn.firstaid.services;
+package com.favn.ambulance.services;
 
 import android.app.IntentService;
 import android.content.Intent;
@@ -9,7 +9,7 @@ import android.os.Bundle;
 import android.os.ResultReceiver;
 import android.text.TextUtils;
 
-import com.favn.firstaid.utils.Constants;
+import com.favn.ambulance.utils.Constants;
 
 import java.io.IOException;
 import java.util.ArrayList;
