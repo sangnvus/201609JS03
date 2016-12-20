@@ -178,6 +178,14 @@ class AmbulanceResourceController extends Controller
 
     }
 
+    function cancelDispatch() {
+
+    }
+
+    function pickedCaller($ambulanceID) {
+        
+    }
+
 
 
   

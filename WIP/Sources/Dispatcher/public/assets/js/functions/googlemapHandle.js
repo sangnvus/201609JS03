@@ -201,6 +201,8 @@ function geocodeLatLng(geocoder, map, locationString, callback) {
 }
 
 function onClickLiAmbulance(ambulanceObject) {
+  takingCaller = null;
+  initNewMap();
   ambulanceObject = ambulanceObject;
   
   if(ambulanceObject.latitude != null && ambulanceObject.longitude != null) {
@@ -228,7 +230,7 @@ function onClickLiAmbulance(ambulanceObject) {
         showInfoBox(ambulanceObject, takingCaller);
       });
       // Init caller marker
-      iniAMarker(callerPos, callerIconDir, 'caller');
+      iniAMarker(callerPos, callerIconDir, takingCaller.phone,  'caller');
       iniAMarker(ambulancePos, ambulanceBuzyIconDir,ambulanceObject.team , MAKER_TYPE_AMBULANCE);
     } else {
 
@@ -276,16 +278,17 @@ function onClickLiAmbulance(ambulanceObject) {
 //   map.setZoom(17);
 // }
 
-function drawPath(ambulancePos, callerPos) {
+// function drawPath(ambulancePos, callerPos) {
 
-  // Init ambulance marker
-  iniAMarker(ambulancePos, ambulanceBuzyIconDir, 'On the way');
+//   // Init ambulance marker
+//   iniAMarker(ambulancePos, ambulanceBuzyIconDir, 'On the way');
 
-  // Init caller marker
-  iniAMarker(callerPos, callerIconDir, 'caller');
+//   // Init caller marker
+//   var title = 'Người gọi : ' + caller.phone;
+//   iniAMarker(callerPos, callerIconDir, 'caller');
 
-  calculateAndDisplayRoute(directionsService, directionsDisplay, ambulancePos, callerPos);
-}
+//   calculateAndDisplayRoute(directionsService, directionsDisplay, ambulancePos, callerPos);
+// }
  
 
  function getCallerInfoByID(id) {
