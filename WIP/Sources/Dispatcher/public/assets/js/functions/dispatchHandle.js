@@ -17,13 +17,13 @@
 
 
 function onCancelDispatchClick() {
-	if(caller != null) {
+	if(takingCaller != null) {
 		bootbox.confirm({ 
 	        size: "small",
 	        message: "Bạn có hủy điều phối ?", 
 	        callback: function(result){
 	        	if (result) {
-	        		cancelDispatch(caller);
+	        		cancelDispatch(takingCaller);
 	        	}
 	        }
 	    })

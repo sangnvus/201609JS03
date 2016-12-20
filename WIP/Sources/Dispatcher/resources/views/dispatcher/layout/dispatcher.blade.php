@@ -107,6 +107,7 @@ async defer></script>
                 initNewMap();
                 var tmpObj = ui.item;
                 caller = ui.item;
+                takingCaller = ui.item;
                 tmpCallerPost = new google.maps.LatLng(caller.latitude, caller.longitude);
                 callerPos = [];
                 callerPos.push(tmpCallerPost);

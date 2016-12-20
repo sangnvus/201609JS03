@@ -201,6 +201,7 @@ function geocodeLatLng(geocoder, map, locationString, callback) {
 }
 
 function onClickLiAmbulance(ambulanceObject) {
+  clearCallerForm();
   takingCaller = null;
   initNewMap();
   ambulanceObject = ambulanceObject;
@@ -354,6 +355,9 @@ function showInfoBox(ambulance, takingCaller) {
         break;
       case AMBULANCE_STATUS_PICKED:
         statusVal = "Đã đón người gọi";
+        break;
+      default:
+        statusVal = "Chưa sẵn sàng";
         break;
     }
 

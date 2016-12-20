@@ -178,10 +178,6 @@ class AmbulanceResourceController extends Controller
 
     }
 
-    function cancelDispatch() {
-
-    }
-
     function pickedCaller($ambulanceID) {
         $ambulance = Ambulance::find($ambulanceID);
         $ambulance->status = "picked";
