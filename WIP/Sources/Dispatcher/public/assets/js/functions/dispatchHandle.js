@@ -367,7 +367,6 @@ function handleReturnDispatch(result) {
 		default:
 			readyAmbulance = result.ambulance;
 	        caller = result.caller;
-	        console.log(caller);
 	        pendingAmbulance(readyAmbulance, function(status) {
 	            if(status == AMBULANCE_STATUS_BUZY) {
 	                showNoti(NOTI_TYPE_SUCCESS, 'Đã nối xe cho người gọi', 2000);

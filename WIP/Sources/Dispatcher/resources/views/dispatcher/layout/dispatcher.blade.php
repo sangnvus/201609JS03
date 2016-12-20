@@ -160,8 +160,6 @@ async defer></script>
          },
          async: false,
          success:function(data){
-             //ambulanceList = data.ambulance;
-             console.log(data.ambulance);
              handleReturnDispatch(data);
          }
         });
