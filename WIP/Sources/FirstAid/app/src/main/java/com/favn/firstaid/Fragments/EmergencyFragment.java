@@ -24,6 +24,7 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.favn.firstaid.R;
 import com.favn.firstaid.activites.InstructionActivity;
@@ -148,7 +149,8 @@ public class EmergencyFragment extends Fragment implements AdapterView.OnItemCli
         searchView.setOnQueryTextListener(new MaterialSearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                return false;
+                searchView.clearFocus();
+                return true;
             }
 
             @Override
@@ -378,16 +380,6 @@ public class EmergencyFragment extends Fragment implements AdapterView.OnItemCli
     // Send caller infor to db server - KienMT : 11/27/2016
     private void sendCallerInfoToServer(Location location) {
         CallerInfoSender callerInforSender = new CallerInfoSender();
-
-        // Assign values
-//        ciSender.setContext(getActivity());
-//        ciSender.setUrlAddress(urlAddress);
-//        ciSender.setPhone(phoneNumber);
-//        ciSender.setLatitude(location.getLatitude());
-//        ciSender.setLongitude(location.getLongitude());
-//        ciSender.setStatus("waiting");
-//        ciSender.setInformationSenderListener(EmergencyFragment.this);
-//        ciSender.execute();
 
         callerInforSender.setContext(getActivity());
         callerInforSender.setUrlAddress(urlAddress);
