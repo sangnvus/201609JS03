@@ -372,7 +372,7 @@ function handleReturnDispatch(result) {
 	                showNoti(NOTI_TYPE_SUCCESS, 'Đã nối xe cho người gọi', 2000);
 	                closeNotiBox();
 	                drawCallerAmbulancePatch(readyAmbulance, caller);
-
+	                showInfoBox(readyAmbulance, caller);
 	                // OFF listen from ambulance node
 	                var database = firebase.database();
 	                database.ref('ambulances/' + readyAmbulance.id).off();
