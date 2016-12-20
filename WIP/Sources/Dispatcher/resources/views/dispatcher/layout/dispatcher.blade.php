@@ -74,7 +74,7 @@
 
 
 <!-- API -->
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBcG5eSgX7ZSWWdvnnNUTz4tzNhYIK3uBs&callback=initMap"
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBcG5eSgX7ZSWWdvnnNUTz4tzNhYIK3uBs&language=vi&callback=initMap"
 async defer></script> 
 <script src="https://www.gstatic.com/firebasejs/3.6.1/firebase.js"></script>
 
@@ -107,6 +107,7 @@ async defer></script>
                 initNewMap();
                 var tmpObj = ui.item;
                 caller = ui.item;
+                takingCaller = ui.item;
                 tmpCallerPost = new google.maps.LatLng(caller.latitude, caller.longitude);
                 callerPos = [];
                 callerPos.push(tmpCallerPost);
@@ -149,7 +150,6 @@ async defer></script>
         var caller_id = $('#caller_id').val();
         var symptom = $('#symptom').val();
         var dispatcher_user_id = "{{$userLogin->id}}"; 
-        
         $.ajax({
          type:'GET',
          url:'getreadyambulance',
@@ -165,7 +165,11 @@ async defer></script>
         });
     }
     </script>
+<!--     <script type="text/javascript">
+        DISPATCHER_ID = "{{$userLogin->id}}"; 
 
+        getlistWaitingCaller(DISPATCHER_ID);
+    </script> -->
 </html>
 
 

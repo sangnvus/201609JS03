@@ -9,6 +9,7 @@ import android.content.IntentFilter;
 import android.content.IntentSender;
 import android.location.Location;
 import android.os.Bundle;
+import android.os.Handler;
 import android.provider.Settings;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
@@ -178,6 +179,15 @@ public class EmergencyFragment extends Fragment implements AdapterView.OnItemCli
         super.onResume();
         if (connectivityBroadcastReceiver != null) {
             getContext().registerReceiver(connectivityBroadcastReceiver, intentFilter);
+        }
+        if(isSentUserInfo) {
+            Handler handler = new Handler();
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    llSendingStatus.setVisibility(View.GONE);
+                }
+            }, 5000);
         }
     }
 
@@ -357,18 +367,6 @@ public class EmergencyFragment extends Fragment implements AdapterView.OnItemCli
 
     @Override
     public void locationChangeSuccess(Location location) {
-
-        //TODO send information to firebase - START comment by KienMT :
-        // Init caller
-//        Caller caller = new Caller();
-//        caller.setPhone(phoneNo);
-//        caller.setInjuryId(0);
-//        caller.setLatitude(location.getLatitude());
-//        caller.setLongitude(location.getLongitude());
-//
-//        mDb = FirebaseDatabase.getInstance().getReference();
-//        mDb.child("callers").push().setValue(caller);
-
         // Set location to mCurrentLocation
         mCurrentLocation = location;
         if (isNetworkEnable && mCurrentLocation != null && !isSentUserInfo) {
@@ -403,6 +401,7 @@ public class EmergencyFragment extends Fragment implements AdapterView.OnItemCli
                 tvSendingInformationStatus.setText(Constants.INFO_SUCCESS_SENDING_INFORMATION);
                 llSendingStatus.setBackgroundColor(getResources().getColor(R.color.colorSuccess));
                 isSentUserInfo = true;
+
                 break;
             case Constants.INFO_ERROR_SENDING_INFORMATION:
                 tvSendingInformationStatus.setText(Constants.INFO_ERROR_SENDING_INFORMATION);

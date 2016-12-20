@@ -11,6 +11,9 @@ import android.support.v4.app.Fragment;
 import android.util.Log;
 
 import com.favn.firstaid.R;
+import com.favn.firstaid.utils.SettingPref;
+
+import static android.R.attr.key;
 
 
 /**
@@ -29,6 +32,7 @@ public class SettingFragment extends Fragment {
         getActivity().getFragmentManager().beginTransaction()
                 .replace(R.id.fragment_container, new MyPreferenceFragment())
                 .commit();
+
     }
 
     public static class MyPreferenceFragment extends PreferenceFragment implements SharedPreferences.OnSharedPreferenceChangeListener {
@@ -43,12 +47,18 @@ public class SettingFragment extends Fragment {
             addPreferencesFromResource(R.xml.preference_screen);
 
             // set texts correctly
-            onSharedPreferenceChanged(null, "");
+//            onSharedPreferenceChanged(null, "");
+//
+//            SwitchPreference sendInformation = (SwitchPreference) findPreference("switch_sending_information");
+//            boolean checked = sendInformation.isEnabled();
+//            if (checked) {
+//
+//            }
 
-            SwitchPreference sendInformation = (SwitchPreference) findPreference("switch_sending_information");
-            boolean checked = sendInformation.isEnabled();
-            if(checked){
-
+            phoneNumber = SettingPref.loadPhoneNumber(getActivity());
+            if (phoneNumber != null) {
+                Preference pref = findPreference("et_phone_number");
+                pref.setSummary(phoneNumber);
             }
         }
 
@@ -75,21 +85,19 @@ public class SettingFragment extends Fragment {
                 EditTextPreference etPhoneNumber = (EditTextPreference) pref;
                 phoneNumber = etPhoneNumber.getText();
                 pref.setSummary(R.string.summary_switch_sending_phone_number);
-                if(phoneNumber != null){
                     pref.setSummary(phoneNumber);
-                } else {
-                    pref.setSummary(null);
-                    Preference pref1 = findPreference("switch_sending_information");
-                    pref1.setDefaultValue(false);
-                }
-                Log.d("pref_test", phoneNumber);
+
             }
+
+
         }
+
+
+
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
-
     }
 }

@@ -290,9 +290,13 @@ function editLi(liID, ambulanceObject) {
 			pStatus.className += ' item-danger';
 	        break;
         case AMBULANCE_STATUS_PROBLEM:
-        var pStatusText = document.createTextNode('Trạng thái : sự cố');
-		pStatus.className += ' item-danger';
-        break;
+	        var pStatusText = document.createTextNode('Trạng thái : sự cố');
+			pStatus.className += ' item-danger';
+	        break;
+	    case 'picked':
+	        var pStatusText = document.createTextNode('Trạng thái : Đã đón nạn nhân');
+			pStatus.className += ' item-danger';
+	        break;    
 	    default:
 	        var pStatusText = document.createTextNode('Trạng thái : chưa đăng nhập');
 			pStatus.className += ' item-danger';
