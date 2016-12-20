@@ -45,6 +45,7 @@ const AMBULANCE_STATUS_BUZY = 'buzy';
 const AMBULANCE_STATUS_READY = 'ready';
 const AMBULANCE_STATUS_PENDING = 'pending';
 const AMBULANCE_STATUS_PROBLEM = 'problem';
+const AMBULANCE_STATUS_PICKED = 'picked';
 
 
 

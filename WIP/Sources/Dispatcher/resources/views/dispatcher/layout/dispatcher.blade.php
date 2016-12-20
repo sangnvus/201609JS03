@@ -74,7 +74,7 @@
 
 
 <!-- API -->
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBcG5eSgX7ZSWWdvnnNUTz4tzNhYIK3uBs&callback=initMap"
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBcG5eSgX7ZSWWdvnnNUTz4tzNhYIK3uBs&language=vi&callback=initMap"
 async defer></script> 
 <script src="https://www.gstatic.com/firebasejs/3.6.1/firebase.js"></script>
 

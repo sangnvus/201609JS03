@@ -178,6 +178,32 @@ class AmbulanceResourceController extends Controller
 
     }
 
+    function cancelDispatch() {
+
+    }
+
+    function pickedCaller($ambulanceID) {
+        $ambulance = Ambulance::find($ambulanceID);
+        $ambulance->status = "picked";
+        $ambulance->save();
+
+        // UPDATE TO FIREBASE
+        $this->updateFbAmbulanceStatus($ambulanceID, 'picked');
+    }
+
+    function updateFbAmbulanceStatus($ambulanceID, $status) {
+        $DEFAULT_URL = 'https://favn-e63df.firebaseio.com/';
+        $DEFAULT_TOKEN = 'qlDIJ3a2P0Y5OBYiyV6krah7EUjaPeufwW6875CM';
+        $firebase = new \Firebase\FirebaseLib($DEFAULT_URL, $DEFAULT_TOKEN);
+
+
+        // --- storing an array ---
+        $DEFAULT_PATH = 'ambulances/'. $ambulanceID .'/status/';
+        $firebase->set($DEFAULT_PATH, $status);
+
+    }
+
+
 
 
   
