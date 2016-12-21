@@ -87,7 +87,7 @@ public class SettingFragment extends Fragment {
                     pref.setSummary(phoneNumber);
 
                 }
-                if(phoneNumber.isEmpty()) {
+                if(phoneNumber != null && phoneNumber.isEmpty()) {
                     SwitchPreference switchPreference = (SwitchPreference ) findPreference
                             ("switch_sending_information");
                     switchPreference.setChecked(false);
