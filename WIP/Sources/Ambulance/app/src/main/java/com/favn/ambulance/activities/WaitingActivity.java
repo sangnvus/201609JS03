@@ -187,24 +187,24 @@ public class WaitingActivity extends AppCompatActivity implements LocationChange
         switch (item.getItemId()) {
             case R.id.sign_out:
                 //build the noti
-                notification.setSmallIcon(R.mipmap.ic_launcher);
-                notification.setTicker("ticker");
-                notification.setWhen(System.currentTimeMillis());
-                notification.setContentTitle("Cấp cứu 115");
-                notification.setContentText("Có nhiệm vụ");
-
-                Intent intent = new Intent(this, TaskActivity.class);
-                PendingIntent pendingIntent = PendingIntent.getActivities(this, 0, new Intent[]{intent}, PendingIntent.FLAG_UPDATE_CURRENT);
-                notification.setContentIntent(pendingIntent);
-
-                //build noti and issues
-                NotificationManager nm = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-                nm.notify(id, notification.build());
+//                notification.setSmallIcon(R.mipmap.ic_launcher);
+//                notification.setTicker("ticker");
+//                notification.setWhen(System.currentTimeMillis());
+//                notification.setContentTitle("Cấp cứu 115");
+//                notification.setContentText("Có nhiệm vụ");
+//
+//                Intent intent = new Intent(this, TaskActivity.class);
+//                PendingIntent pendingIntent = PendingIntent.getActivities(this, 0, new Intent[]{intent}, PendingIntent.FLAG_UPDATE_CURRENT);
+//                notification.setContentIntent(pendingIntent);
+//
+//                //build noti and issues
+//                NotificationManager nm = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+//                nm.notify(id, notification.build());
 
                 //show task dialog
-                createTaskDialog();
+//                createTaskDialog();
 
-//                createLogoutDialog();
+                createLogoutDialog();
                 break;
             case R.id.application_info:
                 startActivity(new Intent(this, AboutActivity.class));
@@ -357,6 +357,9 @@ public class WaitingActivity extends AppCompatActivity implements LocationChange
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         //TODO
+                        TaskReporter taskReporter = new TaskReporter();
+                        taskReporter.logoutService(ambulance.getId());
+
                         Intent intent = new Intent(WaitingActivity.this, LoginActivity.class);
                         startActivity(intent);
                     }

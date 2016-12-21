@@ -48,9 +48,20 @@ public class TaskReporter {
     }
 
     public void sendLocation(int ambulanceID, Location location) {
-        //TODO send location to server
         CallService callService = new CallService();
         String url = "http://dispatcher.rtsvietnam.com/sendlocation/" + ambulanceID + "/" + location.getLatitude() + "/" + location.getLongitude();
+        callService.execute(url);
+    }
+
+    public void pickedCaller(int ambulanceID) {
+        CallService callService = new CallService();
+        String url = "http://dispatcher.rtsvietnam.com/pickedcaller/" + ambulanceID;
+        callService.execute(url);
+    }
+
+    public void logoutService(int ambulanceID) {
+        CallService callService = new CallService();
+        String url = "http://dispatcher.rtsvietnam.com/ambulancelogout/" + ambulanceID;
         callService.execute(url);
     }
 
@@ -80,6 +91,8 @@ public class TaskReporter {
 
         }
     }
+
+
 
 
 

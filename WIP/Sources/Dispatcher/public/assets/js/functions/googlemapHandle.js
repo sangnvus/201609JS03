@@ -201,6 +201,7 @@ function geocodeLatLng(geocoder, map, locationString, callback) {
 }
 
 function onClickLiAmbulance(ambulanceObject) {
+  clearCallerForm();
   takingCaller = null;
   initNewMap();
   ambulanceObject = ambulanceObject;
@@ -230,12 +231,17 @@ function onClickLiAmbulance(ambulanceObject) {
           ambulanceObject.duration = results.routes[0].legs[0].duration.text;
           showInfoBox(ambulanceObject, takingCaller);
         });
+        // Init caller marker
+        iniAMarker(callerPos, callerIconDir, takingCaller.phone,  'caller');
+        iniAMarker(ambulancePos, ambulanceBuzyIconDir,ambulanceObject.team , MAKER_TYPE_AMBULANCE);
+      } else {
+        // Init caller marker
+        iniAMarker(ambulancePos, ambulanceBuzyIconDir,ambulanceObject.team , MAKER_TYPE_AMBULANCE);
       }
       showInfoBox(ambulanceObject, takingCaller);
      
-      // Init caller marker
-      iniAMarker(callerPos, callerIconDir, takingCaller.phone,  'caller');
-      iniAMarker(ambulancePos, ambulanceBuzyIconDir,ambulanceObject.team , MAKER_TYPE_AMBULANCE);
+      
+      map.panTo(ambulancePos);
     } else {
 
         if(ambulanceObject.status == AMBULANCE_STATUS_READY) {
@@ -349,6 +355,9 @@ function showInfoBox(ambulance, takingCaller) {
         break;
       case AMBULANCE_STATUS_PICKED:
         statusVal = "Đã đón người gọi";
+        break;
+      default:
+        statusVal = "Chưa sẵn sàng";
         break;
     }
 

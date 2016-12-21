@@ -80,6 +80,12 @@ class CallerResourceController extends Controller
         
     }
 
+    public function returnCallerByDispatcher($dispatcherID) {
+        $caller = Caller::where('dispatcher_user_id', '=', $dispatcherID)
+                        ->get();
+        return $caller;
+    }
+
 
 
 }

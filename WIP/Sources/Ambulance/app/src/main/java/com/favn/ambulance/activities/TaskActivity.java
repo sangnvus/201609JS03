@@ -475,6 +475,7 @@ public class TaskActivity extends AppCompatActivity implements OnMapReadyCallbac
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         //TODO
+                        reportPickupCaller(ambulance.getId());
                     }
                 })
                 .create()
@@ -542,7 +543,9 @@ public class TaskActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
     //TODO : Report picked up caller
-    public void reportPickupCaller(String ambulanceID) {
+    public void reportPickupCaller(int ambulanceID) {
+        TaskReporter taskReporter = new TaskReporter();
+        taskReporter.pickedCaller(ambulance.getId());
         removeItemsOnMap();
     }
 

@@ -8,11 +8,11 @@
 						Đội cứu thương
 					</a>
 				</li>
-				<li id="liCaller">
+	<!-- 			<li id="liCaller">
 					<a href="javascript:void(0)" onclick="getUl('caller')">
 						Đang đợi
 					</a>
-				</li>
+				</li> -->
 			</ul>
 		</div>
 		<div>
@@ -36,9 +36,9 @@
 			
 			</ul> 
 
-			<ul class="nav" id="listWaiting"> 
-			
-			</ul> 
+<!-- 			<ul class="nav" id="listWaiting"> 
+				
+			</ul>  -->
 
 			<!-- <ul class="nav" id="listWaiting"> -->
 				<!-- content go here -->

@@ -178,10 +178,6 @@ class AmbulanceResourceController extends Controller
 
     }
 
-    function cancelDispatch() {
-
-    }
-
     function pickedCaller($ambulanceID) {
         $ambulance = Ambulance::find($ambulanceID);
         $ambulance->status = "picked";
@@ -189,6 +185,16 @@ class AmbulanceResourceController extends Controller
 
         // UPDATE TO FIREBASE
         $this->updateFbAmbulanceStatus($ambulanceID, 'picked');
+    }
+
+    function logoutService($id) {
+        $ambulance = Ambulance::find($id);
+        $ambulance->status = "off";
+        $ambulance->caller_taking_id = null;
+        $ambulance->save();
+
+        // UPDATE TO FIREBASE
+        $this->updateFbAmbulance($id, 'off', null);
     }
 
     function updateFbAmbulanceStatus($ambulanceID, $status) {

@@ -17,13 +17,13 @@
 
 
 function onCancelDispatchClick() {
-	if(caller != null) {
+	if(takingCaller != null) {
 		bootbox.confirm({ 
 	        size: "small",
 	        message: "Bạn có hủy điều phối ?", 
 	        callback: function(result){
 	        	if (result) {
-	        		cancelDispatch(caller);
+	        		cancelDispatch(takingCaller);
 	        	}
 	        }
 	    })
@@ -372,7 +372,7 @@ function handleReturnDispatch(result) {
 	                showNoti(NOTI_TYPE_SUCCESS, 'Đã nối xe cho người gọi', 2000);
 	                closeNotiBox();
 	                drawCallerAmbulancePatch(readyAmbulance, caller);
-
+	                showInfoBox(readyAmbulance, caller);
 	                // OFF listen from ambulance node
 	                var database = firebase.database();
 	                database.ref('ambulances/' + readyAmbulance.id).off();
@@ -398,7 +398,18 @@ function handleReturnDispatch(result) {
 
 
 
-
+// // Get list caller
+// function getlistWaitingCaller(dispatcheID, callback) {
+// 	$.ajax({
+// 		type:'GET',
+// 		url:'getcallerbydispatcher/' + dispatcheID,
+// 		async: false,
+// 		success:function(data){
+// 			callerHistoryList = data;
+// 			callback();
+// 		}
+// 	});
+// }
 
 
 

@@ -54,3 +54,6 @@ const NOTI_TYPE_ERROR = 'error';
 const NOTI_TYPE_PENDING = 'pending';
 
 IS_AVAILABLE_AMBULANCE = true;
+
+var DISPATCHER_ID;
+var callerHistoryList = [];
