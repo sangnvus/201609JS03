@@ -562,7 +562,6 @@ public class TaskActivity extends AppCompatActivity implements OnMapReadyCallbac
     @Override
     public void getCallerInformationSuccess(Caller caller) {
         destinationLanLng = new LatLng(caller.getLatitude(), caller.getLongitude());
-        createMarker(destinationLanLng, "this is address");
         zoomDestinationLocation();
         Location callerLocation = new Location("caller_location");
         callerLocation.setLatitude(caller.getLatitude());
@@ -601,11 +600,12 @@ public class TaskActivity extends AppCompatActivity implements OnMapReadyCallbac
             // Set address if was found.
             TextView tvLocation = (TextView) findViewById(R.id.textview_location);
             String mAddress = resultData.getString(Constants.RESULT_DATA_KEY);
-            Toast.makeText(getBaseContext(), mAddress + "", Toast.LENGTH_SHORT).show();
 
             if (resultCode == Constants.SUCCESS_RESULT) {
                  mAddress = resultData.getString(Constants.RESULT_DATA_KEY);
                 tvLocation.setText(mAddress);
+                createMarker(destinationLanLng, mAddress);
+
             } else {
                 tvLocation.setText("Không xác định được địa chỉ.");
             }

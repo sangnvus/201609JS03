@@ -302,6 +302,8 @@ public class WaitingActivity extends AppCompatActivity implements LocationChange
                     public void onClick(DialogInterface dialog, int which) {
                         declineTask();
                         mMediaPlayer.stop();
+                        mMediaPlayer.release();
+                        mMediaPlayer = null;
                     }
                 })
                 .setPositiveButton("OK", new DialogInterface.OnClickListener() {
@@ -309,6 +311,8 @@ public class WaitingActivity extends AppCompatActivity implements LocationChange
                     public void onClick(DialogInterface dialog, int which) {
                         acceptTask();
                         mMediaPlayer.stop();
+                        mMediaPlayer.release();
+                        mMediaPlayer = null;
                     }
                 })
                 .create()
