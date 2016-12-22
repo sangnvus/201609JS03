@@ -766,6 +766,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         final ListView lv = (ListView) findViewById(R.id.listview_hospital);
 
         HealthFacilityAdapter adapter = new HealthFacilityAdapter(this, healthFacilityList);
+
         if (filterHealthFacility.equals(Constants.FILTER_HOSPITAL)) {
             adapter.getFilter().filter(Constants.FILTER_HOSPITAL);
         } else if (filterHealthFacility.equals(Constants.FILTER_MEDICINE_CENTER)) {
@@ -773,9 +774,10 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         } else {
             adapter.getFilter().filter(null);
         }
+
+        lv.setAdapter(adapter);
         updateLoadingUI(false);
         warnHealthFacilityResult();
-        lv.setAdapter(adapter);
 
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
