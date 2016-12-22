@@ -80,19 +80,21 @@ public class SettingFragment extends Fragment {
         public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
 
             Preference pref = findPreference(key);
-
             if (pref instanceof EditTextPreference) {
                 EditTextPreference etPhoneNumber = (EditTextPreference) pref;
                 phoneNumber = etPhoneNumber.getText();
                 pref.setSummary(R.string.summary_switch_sending_phone_number);
                     pref.setSummary(phoneNumber);
 
-            }
+                }
+                if(phoneNumber != null && phoneNumber.isEmpty()) {
+                    SwitchPreference switchPreference = (SwitchPreference ) findPreference
+                            ("switch_sending_information");
+                    switchPreference.setChecked(false);
 
+                }
 
         }
-
-
 
     }
 

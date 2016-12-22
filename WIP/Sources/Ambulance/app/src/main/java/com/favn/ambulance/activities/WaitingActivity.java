@@ -302,6 +302,8 @@ public class WaitingActivity extends AppCompatActivity implements LocationChange
                     public void onClick(DialogInterface dialog, int which) {
                         declineTask();
                         mMediaPlayer.stop();
+                        mMediaPlayer.release();
+                        mMediaPlayer = null;
                     }
                 })
                 .setPositiveButton("OK", new DialogInterface.OnClickListener() {
@@ -309,6 +311,9 @@ public class WaitingActivity extends AppCompatActivity implements LocationChange
                     public void onClick(DialogInterface dialog, int which) {
                         acceptTask();
                         mMediaPlayer.stop();
+                        mMediaPlayer.release();
+                        mMediaPlayer = null;
+                        Log.d("testode", "code here");
                     }
                 })
                 .create()
@@ -320,17 +325,6 @@ public class WaitingActivity extends AppCompatActivity implements LocationChange
     }
 
     private void acceptTask() {
-//        TaskReporter taskReporter = new TaskReporter();
-//        taskReporter.readyToDoTask(ambulance.getId());
-//        AmbulanceInfoSender ambulanceInfoSender = new AmbulanceInfoSender();
-//        ambulanceInfoSender.setContext(WaitingActivity.this);
-//        ambulanceInfoSender.setUrlAddress(urlAddress);
-//        ambulanceInfoSender.setId(64);
-//        ambulanceInfoSender.setStatus("ok status");
-//        ambulanceInfoSender.setLatitude(123);
-//        ambulanceInfoSender.setLongitude(321);
-//        ambulanceInfoSender.setCaller_taking_id(1);
-//        ambulanceInfoSender.execute();
         TaskReporter taskReporter = new TaskReporter();
         taskReporter.acceptTask(ambulance.getId());
 
