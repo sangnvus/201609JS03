@@ -40,7 +40,7 @@ public class LocationFinder implements GoogleApiClient.ConnectionCallbacks,
     public static final long UPDATE_INTERVAL_IN_MILLISECONDS = 1000;
     public static final long FASTEST_UPDATE_INTERVAL_IN_MILLISECONDS =
             UPDATE_INTERVAL_IN_MILLISECONDS / 2;
-    public static final int UPDATE_SMALLEST_DISPLACEMENT = 1000;
+    public static final int UPDATE_SMALLEST_DISPLACEMENT = 20;
 
     public LocationFinder(Context mContext, LocationChangeListener locationChangeListener) {
         this.mContext = mContext;
@@ -120,12 +120,10 @@ public class LocationFinder implements GoogleApiClient.ConnectionCallbacks,
     public void onLocationChanged(Location location) {
         if (location == null) {
             Toast.makeText(mContext, "can't get current location", Toast.LENGTH_SHORT).show();
-            Toast.makeText(mContext, mCurrentLocation + "", Toast.LENGTH_SHORT).show();
         } else {
             LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
             mCurrentLocation = location;
             locationChangeListener.locationChangeSuccess(mCurrentLocation);
-            Toast.makeText(mContext, mCurrentLocation + "", Toast.LENGTH_SHORT).show();
         }
     }
 
